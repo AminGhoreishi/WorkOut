@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import Blog from "@/model/Blog";
-import User from "@/model/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +14,7 @@ async function generateUniqueSlug(title: string): Promise<string> {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-  let slug = baseSlug;
+  let slug = baseSlug || "article";
   let count = 1;
 
   while (await Blog.findOne({ slug })) {
@@ -25,8 +24,6 @@ async function generateUniqueSlug(title: string): Promise<string> {
 
   return slug;
 }
-
-
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,7 +37,7 @@ export async function GET(req: NextRequest) {
       if (!blog) {
         return NextResponse.json(
           { message: "مقاله مورد نظر پیدا نشد" },
-          { status: 404 },
+          { status: 404 }
         );
       }
       return NextResponse.json({ blog });
@@ -55,7 +52,7 @@ export async function GET(req: NextRequest) {
       if (!blog) {
         return NextResponse.json(
           { message: "مقاله مورد نظر پیدا نشد" },
-          { status: 404 },
+          { status: 404 }
         );
       }
       return NextResponse.json({ blog });
@@ -115,7 +112,10 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطایی در دریافت اطلاعات مقالات رخ داد" },
+      { status: 500 }
+    );
   }
 }
 
@@ -123,22 +123,19 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     const session = await getServerSession(authOptions);
-    let authorId = session?.user?.id;
 
-    if (!authorId) {
-      const adminUser = await User.findOne({ role: "admin" });
-      if (adminUser) {
-        authorId = adminUser._id;
-      } else {
-        return NextResponse.json(
-          {
-            message:
-              "کاربر ادمین برای انتساب نویسنده یافت نشد. لطفاً وارد سیستم شوید.",
-          },
-          { status: 401 },
-        );
-      }
+    if (
+      !session ||
+      !session.user ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز. فقط مدیران مجاز به انتشار مقاله هستند" },
+        { status: 403 }
+      );
     }
+
+    const authorId = session.user.id;
 
     const formData = await req.formData();
     const title = formData.get("title") as string;
@@ -188,6 +185,12 @@ export async function POST(req: NextRequest) {
 
     let imageUrl = "";
     if (imageFile && imageFile instanceof File && imageFile.size > 0) {
+      if (imageFile.size > 5 * 1024 * 1024) {
+        return NextResponse.json(
+          { message: "حجم تصویر شاخص نباید بیش از ۵ مگابایت باشد" },
+          { status: 400 }
+        );
+      }
       imageUrl = await uploadFileToS3(imageFile, "blogs");
     }
 
@@ -202,20 +205,36 @@ export async function POST(req: NextRequest) {
       publishDate: publishDate ? new Date(publishDate) : null,
       seoTitle: seoTitle || "",
       seoDescription: seoDescription || "",
-      tags: tags || [],
+      tags: Array.isArray(tags) ? tags : [],
       authorId,
       views: 0,
     });
 
     return NextResponse.json({ success: true, blog }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطایی در ثبت مقاله رخ داد" },
+      { status: 500 }
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
+    const session = await getServerSession(authOptions);
+
+    if (
+      !session ||
+      !session.user ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
+
     const formData = await req.formData();
     const id = formData.get("id") as string;
     const title = formData.get("title") as string;
@@ -266,7 +285,7 @@ export async function PUT(req: NextRequest) {
     if (!blog) {
       return NextResponse.json(
         { message: "مقاله مورد نظر پیدا نشد" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -279,6 +298,12 @@ export async function PUT(req: NextRequest) {
     if (excerpt !== undefined) blog.excerpt = excerpt;
 
     if (imageInput && imageInput instanceof File && imageInput.size > 0) {
+      if (imageInput.size > 5 * 1024 * 1024) {
+        return NextResponse.json(
+          { message: "حجم تصویر شاخص نباید بیش از ۵ مگابایت باشد" },
+          { status: 400 }
+        );
+      }
       blog.image = await uploadFileToS3(imageInput, "blogs");
     } else if (
       imageInput === "null" ||
@@ -294,26 +319,42 @@ export async function PUT(req: NextRequest) {
       blog.publishDate = publishDate ? new Date(publishDate) : null;
     if (seoTitle !== undefined) blog.seoTitle = seoTitle;
     if (seoDescription !== undefined) blog.seoDescription = seoDescription;
-    if (tags !== undefined) blog.tags = tags;
+    if (tags !== undefined && Array.isArray(tags)) blog.tags = tags;
 
     await blog.save();
 
     return NextResponse.json({ success: true, blog });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطایی در ویرایش مقاله رخ داد" },
+      { status: 500 }
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
     await dbConnect();
+    const session = await getServerSession(authOptions);
+
+    if (
+      !session ||
+      !session.user ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
     if (!id) {
       return NextResponse.json(
         { message: "شناسه مقاله الزامی است" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -322,7 +363,7 @@ export async function DELETE(req: NextRequest) {
     if (!blog) {
       return NextResponse.json(
         { message: "مقاله مورد نظر پیدا نشد" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -331,6 +372,9 @@ export async function DELETE(req: NextRequest) {
       message: "مقاله با موفقیت حذف شد",
     });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطایی در حذف مقاله رخ داد" },
+      { status: 500 }
+    );
   }
 }

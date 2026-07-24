@@ -1,63 +1,68 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import Link from "next/link";
 import { ArrowRight, Save, Eye, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { showAlert } from "@/utils/alert";
 import { useRouter } from "next/navigation";
+import type {
+  CreateArticleFormInputs,
+  CreateArticleProps,
+  ArticleAuthorInfo,
+} from "@/types/blog";
 
 const CKEditorWrapper = dynamic(() => import("./CKEditorWrapper"), {
   ssr: false,
 });
 
-type FormValues = {
-  title: string;
-  category: string;
-  content: string;
-  excerpt: string;
-  status: "draft" | "published" | "scheduled";
-  publishDate: string;
-  seoTitle: string;
-  seoDescription: string;
-};
+const CATEGORIES = ["بدنسازی", "تغذیه", "کاهش وزن", "سلامت", "مکمل", "تکنیک"];
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
-export default function CreateArticle() {
+export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
   const router = useRouter();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [featuredImage, setFeaturedImage] = useState("");
+  const [featuredImagePreview, setFeaturedImagePreview] = useState<string>("");
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
-  const [author, setAuthor] = useState<{ fullName?: string; username?: string; role?: string } | null>(null);
+  const [author, setAuthor] = useState<ArticleAuthorInfo | null>(initialAuthor || null);
 
   useEffect(() => {
-    async function loadAuthor() {
-      try {
-        const res = await fetch("/api/user/profile");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            setAuthor(data.user);
+    if (!initialAuthor) {
+      async function loadAuthor() {
+        try {
+          const res = await fetch("/api/user/profile");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.user) {
+              setAuthor(data.user);
+            }
           }
+        } catch (err) {
+          setAuthor(null);
         }
-      } catch (err) {
-        console.error("Failed to load author details:", err);
       }
+      loadAuthor();
     }
-    loadAuthor();
-  }, []);
+  }, [initialAuthor]);
 
-  const categories = ["بدنسازی", "تغذیه", "کاهش وزن", "سلامت", "مکمل", "تکنیک"];
+  useEffect(() => {
+    return () => {
+      if (featuredImagePreview && featuredImagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(featuredImagePreview);
+      }
+    };
+  }, [featuredImagePreview]);
 
   const {
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<CreateArticleFormInputs>({
     defaultValues: {
       title: "",
       category: "بدنسازی",
@@ -70,15 +75,16 @@ export default function CreateArticle() {
     },
   });
 
-  const watchedStatus = watch("status");
-  const watchedExcerpt = watch("excerpt");
-  const watchedContent = watch("content");
-  const watchedSeoTitle = watch("seoTitle");
-  const watchedSeoDescription = watch("seoDescription");
+  const watchedStatus = useWatch({ control, name: "status" });
+  const watchedExcerpt = useWatch({ control, name: "excerpt" }) || "";
+  const watchedContent = useWatch({ control, name: "content" }) || "";
+  const watchedSeoTitle = useWatch({ control, name: "seoTitle" }) || "";
+  const watchedSeoDescription = useWatch({ control, name: "seoDescription" }) || "";
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
+    const trimmed = tagInput.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
       setTagInput("");
     }
   };
@@ -89,17 +95,47 @@ export default function CreateArticle() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFeaturedImageFile(file);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFeaturedImage(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      showAlert({
+        title: "فرمت نامعتبر",
+        text: "لطفاً تصویر شاخص را با فرمت JPG، PNG یا WEBP انتخاب کنید.",
+        icon: "error",
+      });
+      return;
     }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      showAlert({
+        title: "حجم بالای تصویر",
+        text: "حداکثر حجم مجاز برای تصویر شاخص ۲ مگابایت است.",
+        icon: "error",
+      });
+      return;
+    }
+
+    if (featuredImagePreview && featuredImagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(featuredImagePreview);
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setFeaturedImageFile(file);
+    setFeaturedImagePreview(objectUrl);
   };
 
-  const onSubmit = async (data: FormValues, submitStatus: "draft" | "published") => {
+  const handleRemoveImage = () => {
+    if (featuredImagePreview && featuredImagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(featuredImagePreview);
+    }
+    setFeaturedImagePreview("");
+    setFeaturedImageFile(null);
+  };
+
+  const onSubmit = async (
+    data: CreateArticleFormInputs,
+    submitStatus: "draft" | "published"
+  ) => {
     setSaving(true);
     try {
       const formData = new FormData();
@@ -126,14 +162,15 @@ export default function CreateArticle() {
       const resData = await res.json();
 
       if (res.ok) {
-        showAlert({
+        await showAlert({
           title: "موفقیت‌آمیز",
-          text: `مقاله با موفقیت ${submitStatus === "draft" ? "به عنوان پیش‌نویس ذخیره" : "منتشر"} شد!`,
+          text: `مقاله با موفقیت ${
+            submitStatus === "draft" ? "به عنوان پیش‌نویس ذخیره" : "منتشر"
+          } شد!`,
           icon: "success",
-        }).then(() => {
-          router.push("/admin/articles");
-          router.refresh();
         });
+        router.push("/admin/articles");
+        router.refresh();
       } else {
         showAlert({
           title: "خطا",
@@ -142,7 +179,6 @@ export default function CreateArticle() {
         });
       }
     } catch (error) {
-      console.error(error);
       showAlert({
         title: "خطا",
         text: "خطا در ارتباط با سرور رخ داده است.",
@@ -152,6 +188,11 @@ export default function CreateArticle() {
       setSaving(false);
     }
   };
+
+  const wordCount = watchedContent
+    .replace(/<[^>]+>/g, "")
+    .split(/\s+/)
+    .filter((w) => w.length > 0).length;
 
   return (
     <div className="min-h-screen bg-gray-950 p-4 md:p-8" dir="rtl">
@@ -171,6 +212,7 @@ export default function CreateArticle() {
           </div>
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={handleSubmit((data) => onSubmit(data, "draft"))}
               disabled={saving}
               className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -183,6 +225,7 @@ export default function CreateArticle() {
               ذخیره پیش‌نویس
             </button>
             <button
+              type="button"
               onClick={handleSubmit((data) => onSubmit(data, "published"))}
               disabled={saving}
               className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-orange-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -207,29 +250,26 @@ export default function CreateArticle() {
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-xl placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 font-morabbaReg"
               />
               {errors.title && (
-                <p className="text-red-400 text-sm mt-2">
-                  {errors.title.message}
-                </p>
+                <p className="text-red-400 text-sm mt-2">{errors.title.message}</p>
               )}
             </div>
 
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
               <label className="block text-white mb-3">تصویر شاخص</label>
-              {featuredImage ? (
+              {featuredImagePreview ? (
                 <div className="relative">
                   <Image
-                    src={featuredImage}
+                    src={featuredImagePreview}
                     alt="Featured"
                     width={800}
                     height={256}
                     className="w-full h-64 object-cover rounded-lg"
+                    unoptimized
                   />
                   <button
-                    onClick={() => {
-                      setFeaturedImage("");
-                      setFeaturedImageFile(null);
-                    }}
-                    className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors"
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -237,15 +277,11 @@ export default function CreateArticle() {
               ) : (
                 <label className="border-2 border-dashed border-white/20 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500/50 transition-colors">
                   <ImageIcon className="w-12 h-12 text-white/40 mb-3" />
-                  <p className="text-white/60 mb-2">
-                    کلیک کنید یا تصویر را بکشید
-                  </p>
-                  <p className="text-white/40 text-sm">
-                    JPG, PNG یا WEBP (حداکثر ۲MB)
-                  </p>
+                  <p className="text-white/60 mb-2">کلیک کنید یا تصویر را بکشید</p>
+                  <p className="text-white/40 text-sm">JPG, PNG یا WEBP (حداکثر ۲MB)</p>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={handleImageUpload}
                     className="hidden"
                   />
@@ -282,25 +318,13 @@ export default function CreateArticle() {
                 />
               </div>
               {errors.content && (
-                <p className="text-red-400 text-sm mt-2">
-                  {errors.content.message}
-                </p>
+                <p className="text-red-400 text-sm mt-2">{errors.content.message}</p>
               )}
-              <div className="text-white/40 text-sm mt-2">
-                {
-                  watchedContent
-                    .replace(/<[^>]+>/g, "")
-                    .split(/\s+/)
-                    .filter((w) => w.length > 0).length
-                }{" "}
-                کلمه
-              </div>
+              <div className="text-white/40 text-sm mt-2">{wordCount} کلمه</div>
             </div>
 
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white text-lg mb-4 font-morabbaReg">
-                تنظیمات سئو
-              </h3>
+              <h3 className="text-white text-lg mb-4 font-morabbaReg">تنظیمات سئو</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-white/80 mb-2">عنوان سئو</label>
@@ -314,9 +338,7 @@ export default function CreateArticle() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-white/80 mb-2">
-                    توضیحات سئو
-                  </label>
+                  <label className="block text-white/80 mb-2">توضیحات سئو</label>
                   <textarea
                     {...register("seoDescription")}
                     placeholder="توضیحات برای موتورهای جستجو..."
@@ -333,9 +355,7 @@ export default function CreateArticle() {
 
           <div className="space-y-6">
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">
-                تنظیمات انتشار
-              </h3>
+              <h3 className="text-white mb-4 font-morabbaReg">تنظیمات انتشار</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-white/80 mb-2">وضعیت</label>
@@ -363,9 +383,7 @@ export default function CreateArticle() {
 
                 {watchedStatus === "scheduled" && (
                   <div>
-                    <label className="block text-white/80 mb-2">
-                      تاریخ انتشار
-                    </label>
+                    <label className="block text-white/80 mb-2">تاریخ انتشار</label>
                     <input
                       {...register("publishDate")}
                       type="datetime-local"
@@ -377,9 +395,7 @@ export default function CreateArticle() {
             </div>
 
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">
-                دسته‌بندی
-              </h3>
+              <h3 className="text-white mb-4 font-morabbaReg">دسته‌بندی</h3>
               <Controller
                 name="category"
                 control={control}
@@ -388,7 +404,7 @@ export default function CreateArticle() {
                     {...field}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
                   >
-                    {categories.map((cat) => (
+                    {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat} className="bg-gray-800">
                         {cat}
                       </option>
@@ -399,22 +415,25 @@ export default function CreateArticle() {
             </div>
 
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">
-                برچسب‌ها
-              </h3>
+              <h3 className="text-white mb-4 font-morabbaReg">برچسب‌ها</h3>
               <div className="flex gap-2 mb-3">
                 <input
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddTag();
+                    }
+                  }}
                   placeholder="برچسب جدید..."
                   className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
                 >
                   افزودن
                 </button>
@@ -429,7 +448,7 @@ export default function CreateArticle() {
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="hover:text-blue-300 transition-colors"
+                      className="hover:text-blue-300 transition-colors cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -442,19 +461,27 @@ export default function CreateArticle() {
             </div>
 
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">
-                اطلاعات نویسنده
-              </h3>
+              <h3 className="text-white mb-4 font-morabbaReg">اطلاعات نویسنده</h3>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center text-white text-xl font-bold">
-                  {author ? (author.fullName ? author.fullName.charAt(0) : author.username?.charAt(0) || "U") : "..."}
+                  {author
+                    ? author.fullName
+                      ? author.fullName.charAt(0)
+                      : author.username?.charAt(0) || "U"
+                    : "..."}
                 </div>
                 <div>
                   <div className="text-white">
                     {author ? author.fullName || author.username : "در حال بارگذاری..."}
                   </div>
                   <div className="text-white/60 text-sm">
-                    {author ? (author.role === "admin" ? "مدیر سایت" : author.role === "coach" ? "مربی مجرب" : "کاربر") : "..."}
+                    {author
+                      ? author.role === "admin"
+                        ? "مدیر سایت"
+                        : author.role === "coach"
+                        ? "مربی مجرب"
+                        : "کاربر"
+                      : "..."}
                   </div>
                 </div>
               </div>

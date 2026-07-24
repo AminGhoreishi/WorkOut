@@ -22,7 +22,18 @@ export interface Blog {
   updatedAt?: string;
 }
 
-export interface IBlog extends Omit<Blog, "_id" | "authorId" | "viewedUsers" | "likedUsers" | "publishDate" | "createdAt" | "updatedAt">, Document {
+export interface IBlog
+  extends Omit<
+      Blog,
+      | "_id"
+      | "authorId"
+      | "viewedUsers"
+      | "likedUsers"
+      | "publishDate"
+      | "createdAt"
+      | "updatedAt"
+    >,
+    Document {
   authorId: mongoose.Types.ObjectId;
   viewedUsers?: mongoose.Types.ObjectId[];
   likedUsers?: mongoose.Types.ObjectId[];
@@ -113,4 +124,30 @@ export interface ArticleDetailProps {
 
 export interface ArticlePageProps {
   params: Promise<{ slug: string }>;
+}
+
+export interface CreateArticleFormInputs {
+  title: string;
+  category: string;
+  content: string;
+  excerpt: string;
+  status: "draft" | "published" | "scheduled";
+  publishDate: string;
+  seoTitle: string;
+  seoDescription: string;
+}
+
+export interface ArticleAuthorInfo {
+  fullName?: string;
+  username?: string;
+  role?: string;
+}
+
+export interface CKEditorWrapperProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export interface CreateArticleProps {
+  initialAuthor?: ArticleAuthorInfo | null;
 }

@@ -1,13 +1,12 @@
 "use client";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import type { CKEditorWrapperProps } from "@/types/blog";
 
-type Props = {
-  value: string;
-  onChange: (value: string) => void;
-};
-
-export default function CKEditorWrapper({ value, onChange }: Props) {
+export default function CKEditorWrapper({
+  value,
+  onChange,
+}: CKEditorWrapperProps) {
   const CKEditorComponent = CKEditor as any;
   return (
     <CKEditorComponent
@@ -17,9 +16,7 @@ export default function CKEditorWrapper({ value, onChange }: Props) {
         >[0]["editor"]
       }
       data={value}
-      onChange={(_: any, editor: any) =>
-        onChange(editor.getData())
-      }
+      onChange={(_: any, editor: any) => onChange(editor.getData())}
       config={{
         licenseKey: "GPL",
         language: "fa",
