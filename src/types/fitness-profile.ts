@@ -1,17 +1,23 @@
 import mongoose, { Document } from "mongoose";
 
+export type FitnessGoal =
+  | "weight_loss"
+  | "muscle_gain"
+  | "endurance"
+  | "general_fitness"
+  | "rehabilitation";
+
+export type EquipmentOption = "none" | "home_basic" | "gym_full";
+
+export type TrainingExperienceOption = "beginner" | "intermediate" | "advanced";
+
 export interface FitnessProfile {
-  _id: string;
-  userId: string;
-  goal:
-    | "weight_loss"
-    | "muscle_gain"
-    | "endurance"
-    | "general_fitness"
-    | "rehabilitation";
+  _id?: string;
+  userId?: string;
+  goal: FitnessGoal;
   sessionsPerWeek: number;
-  equipment: "none" | "home_basic" | "gym_full";
-  trainingExperience: "beginner" | "intermediate" | "advanced";
+  equipment: EquipmentOption;
+  trainingExperience: TrainingExperienceOption;
   ageYears: number;
   heightCm: number;
   weightKg: number;
@@ -22,15 +28,10 @@ export interface FitnessProfile {
 }
 
 export interface FitnessProfileData {
-  goal:
-    | "weight_loss"
-    | "muscle_gain"
-    | "endurance"
-    | "general_fitness"
-    | "rehabilitation";
+  goal: FitnessGoal;
   sessionsPerWeek: number;
-  equipment: "none" | "home_basic" | "gym_full";
-  trainingExperience: "beginner" | "intermediate" | "advanced";
+  equipment: EquipmentOption;
+  trainingExperience: TrainingExperienceOption;
   ageYears: number;
   heightCm: number;
   weightKg: number;
@@ -39,23 +40,35 @@ export interface FitnessProfileData {
 }
 
 export interface FitnessFormInputs {
-  goal:
-    | "weight_loss"
-    | "muscle_gain"
-    | "endurance"
-    | "general_fitness"
-    | "rehabilitation";
+  goal: FitnessGoal;
   sessionsPerWeek: number;
-  equipment: "none" | "home_basic" | "gym_full";
-  trainingExperience: "beginner" | "intermediate" | "advanced";
+  equipment: EquipmentOption;
+  trainingExperience: TrainingExperienceOption;
   ageYears: string;
   heightCm: string;
   weightKg: string;
   notes: string;
 }
 
-// Mongoose / DB Schema Types
-export interface IFitnessProfile extends Omit<FitnessProfile, "_id" | "userId" | "createdAt" | "updatedAt">, Document {
+export interface OnboardingFormInputs {
+  goal: FitnessGoal;
+  sessionsPerWeek: number;
+  equipment: EquipmentOption;
+  trainingExperience: TrainingExperienceOption;
+  ageYears: number;
+  heightCm: number;
+  weightKg: number;
+  bodyPhotos: string[];
+  notes: string;
+}
+
+export interface OnboardingFormProps {
+  initialProfile?: FitnessProfileData | null;
+}
+
+export interface IFitnessProfile
+  extends Omit<FitnessProfile, "_id" | "userId" | "createdAt" | "updatedAt">,
+    Document {
   userId: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;

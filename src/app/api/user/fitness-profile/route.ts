@@ -6,8 +6,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { arvanClient } from "@/lib/arvan";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
+const VALID_GOALS = [
+  "weight_loss",
+  "muscle_gain",
+  "endurance",
+  "general_fitness",
+  "rehabilitation",
+];
+
+const VALID_EQUIPMENT = ["none", "home_basic", "gym_full"];
+
+const VALID_EXPERIENCE = ["beginner", "intermediate", "advanced"];
+
 async function uploadBase64ToS3(base64Data: string): Promise<string> {
-  const matches = base64Data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+  const matches = base64Data.match(
+    /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/
+  );
   if (!matches) {
     throw new Error("فرمت تصویر نامعتبر است");
   }
@@ -15,8 +29,15 @@ async function uploadBase64ToS3(base64Data: string): Promise<string> {
   const contentType = matches[1];
   const base64Content = matches[2];
   const buffer = Buffer.from(base64Content, "base64");
+
+  if (buffer.length > 7 * 1024 * 1024) {
+    throw new Error("حجم تصویر بیش از حد مجاز است");
+  }
+
   const ext = contentType.split("/")[1] || "jpg";
-  const imageKey = `fitness-profiles/${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+  const imageKey = `fitness-profiles/${Date.now()}-${Math.random()
+    .toString(36)
+    .substring(2, 7)}.${ext}`;
 
   await arvanClient.send(
     new PutObjectCommand({
@@ -35,17 +56,20 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     const session = await getServerSession(authOptions);
 
-    if (!session) {
+    if (!session || !session.user) {
       return NextResponse.json(
         { message: "شما وارد سیستم نشده‌اید" },
         { status: 401 }
       );
     }
 
-    const profile = await FitnessProfile.findOne({ userId: session.user.id });
+    const profile = await FitnessProfile.findOne({ userId: session.user.id }).lean();
     return NextResponse.json({ profile });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطایی در دریافت اطلاعات رخ داد" },
+      { status: 500 }
+    );
   }
 }
 
@@ -54,7 +78,7 @@ export async function POST(req: NextRequest) {
     await dbConnect();
     const session = await getServerSession(authOptions);
 
-    if (!session) {
+    if (!session || !session.user) {
       return NextResponse.json(
         { message: "شما وارد سیستم نشده‌اید" },
         { status: 401 }
@@ -74,16 +98,53 @@ export async function POST(req: NextRequest) {
       notes,
     } = body;
 
-    if (!goal || !sessionsPerWeek || !equipment || !trainingExperience || !ageYears || !heightCm || !weightKg) {
+    const parsedSessions = Number(sessionsPerWeek);
+    const parsedAge = Number(ageYears);
+    const parsedHeight = Number(heightCm);
+    const parsedWeight = Number(weightKg);
+
+    if (
+      !VALID_GOALS.includes(goal) ||
+      !VALID_EQUIPMENT.includes(equipment) ||
+      !VALID_EXPERIENCE.includes(trainingExperience)
+    ) {
       return NextResponse.json(
-        { message: "لطفاً تمامی فیلدهای الزامی را پر کنید" },
+        { message: "اطلاعات ورزشی ارسال‌شده نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    if (
+      isNaN(parsedSessions) ||
+      parsedSessions < 1 ||
+      parsedSessions > 7 ||
+      isNaN(parsedAge) ||
+      parsedAge < 10 ||
+      parsedAge > 100 ||
+      isNaN(parsedHeight) ||
+      parsedHeight < 100 ||
+      parsedHeight > 250 ||
+      isNaN(parsedWeight) ||
+      parsedWeight < 30 ||
+      parsedWeight > 250
+    ) {
+      return NextResponse.json(
+        { message: "مقادیر عددی وارد شده در محدوده مجاز نیستند" },
         { status: 400 }
       );
     }
 
     const uploadedPhotos: string[] = [];
     if (bodyPhotos && Array.isArray(bodyPhotos)) {
+      if (bodyPhotos.length > 4) {
+        return NextResponse.json(
+          { message: "حداکثر ۴ تصویر می‌توانید بارگذاری کنید" },
+          { status: 400 }
+        );
+      }
+
       for (const photo of bodyPhotos) {
+        if (typeof photo !== "string") continue;
         if (photo.startsWith("http://") || photo.startsWith("https://")) {
           uploadedPhotos.push(photo);
         } else if (photo.startsWith("data:")) {
@@ -93,36 +154,45 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const sanitizedNotes = typeof notes === "string" ? notes.slice(0, 1000) : "";
+
     let profile = await FitnessProfile.findOne({ userId: session.user.id });
 
     if (profile) {
       profile.goal = goal;
-      profile.sessionsPerWeek = sessionsPerWeek;
+      profile.sessionsPerWeek = parsedSessions;
       profile.equipment = equipment;
       profile.trainingExperience = trainingExperience;
-      profile.ageYears = ageYears;
-      profile.heightCm = heightCm;
-      profile.weightKg = weightKg;
+      profile.ageYears = parsedAge;
+      profile.heightCm = parsedHeight;
+      profile.weightKg = parsedWeight;
       profile.bodyPhotos = uploadedPhotos;
-      profile.notes = notes || "";
+      profile.notes = sanitizedNotes;
       await profile.save();
     } else {
       profile = await FitnessProfile.create({
         userId: session.user.id,
         goal,
-        sessionsPerWeek,
+        sessionsPerWeek: parsedSessions,
         equipment,
         trainingExperience,
-        ageYears,
-        heightCm,
-        weightKg,
+        ageYears: parsedAge,
+        heightCm: parsedHeight,
+        weightKg: parsedWeight,
         bodyPhotos: uploadedPhotos,
-        notes: notes || "",
+        notes: sanitizedNotes,
       });
     }
 
-    return NextResponse.json({ message: "پروفایل ورزشی با موفقیت ثبت شد", profile });
+    return NextResponse.json({
+      message: "پروفایل ورزشی با موفقیت ثبت شد",
+      profile,
+    });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    const isUserError = error.message === "فرمت تصویر نامعتبر است" || error.message === "حجم تصویر بیش از حد مجاز است";
+    return NextResponse.json(
+      { message: isUserError ? error.message : "خطایی در پردازش اطلاعات رخ داد" },
+      { status: isUserError ? 400 : 500 }
+    );
   }
 }
