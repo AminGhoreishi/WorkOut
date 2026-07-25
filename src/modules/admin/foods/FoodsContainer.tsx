@@ -3,8 +3,9 @@
 import React, { useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Apple } from "lucide-react";
+import { mutate } from "swr";
 import { showAlert } from "@/utils/alert";
-import { FoodFormData, FoodsTableRef } from "@/types/nutrition";
+import type { FoodFormData, FoodsTableRef } from "@/types/nutrition";
 import FoodForm from "./FoodForm";
 import FoodsTable from "./FoodsTable";
 
@@ -42,12 +43,13 @@ export default function FoodsContainer() {
       if (response.ok) {
         showAlert("موفقیت", "غذای جدید با موفقیت ثبت شد.", "success");
         reset();
+        mutate((key) => typeof key === "string" && key.startsWith("/api/food"));
         tableRef.current?.refresh();
       } else {
         const errorData = await response.json();
         showAlert("خطا", errorData.message || "خطا در ثبت غذا", "error");
       }
-    } catch (error) {
+    } catch {
       showAlert("خطا", "خطایی در برقراری ارتباط با سرور رخ داد.", "error");
     }
   };
@@ -76,7 +78,6 @@ export default function FoodsContainer() {
             register={register}
             errors={errors}
             isSubmitting={isSubmitting}
-            // eslint-disable-next-line react-hooks/refs
             onSubmit={handleSubmit(onSubmit)}
           />
         </div>

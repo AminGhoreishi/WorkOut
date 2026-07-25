@@ -190,3 +190,18 @@ export interface FoodsTableRef {
 }
 
 export interface FoodsTableProps {}
+
+export interface FoodsResponse {
+  foods: Food[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}
