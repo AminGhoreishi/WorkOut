@@ -34,3 +34,13 @@ export interface PaginationProps {
   totalPages: number;
   setCurrentPage: (page: number) => void;
 }
+
+export interface HomeStats {
+  todayUsersCount: string;
+  trendText: string;
+}
+
+export interface HomeTemplateProps {
+  articles: any[];
+  stats: HomeStats;
+}
