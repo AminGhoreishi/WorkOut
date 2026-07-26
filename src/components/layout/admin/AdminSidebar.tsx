@@ -1,12 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Dumbbell,
-  ChevronLeft,
-  Menu,
-  LogOut,
-  HelpCircle,
-} from "lucide-react";
+import { Dumbbell, ChevronLeft, Menu, LogOut, HelpCircle } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,7 +15,7 @@ export default function AdminSidebar({ isAdmin = false }) {
     subscriptions: 0,
     articles: 0,
     comments: 0,
-    wishlist: 0
+    wishlist: 0,
   });
 
   useEffect(() => {
@@ -35,7 +29,7 @@ export default function AdminSidebar({ isAdmin = false }) {
             users: data.usersCount || 0,
             subscriptions: data.subscriptionsCount || 0,
             articles: data.articlesCount || 0,
-            comments: data.commentsCount ?? data.pendingCommentsCount ?? 0
+            comments: data.commentsCount ?? data.pendingCommentsCount ?? 0,
           }));
         }
       } catch (err) {
@@ -50,7 +44,7 @@ export default function AdminSidebar({ isAdmin = false }) {
           const data = await res.json();
           setCounts((prev) => ({
             ...prev,
-            wishlist: data.count || 0
+            wishlist: data.count || 0,
           }));
         }
       } catch (err) {
@@ -101,7 +95,9 @@ export default function AdminSidebar({ isAdmin = false }) {
             <>
               <Link href="/" className="flex items-center gap-2">
                 <Dumbbell className="w-8 h-8 text-orange-500" />
-                <span className="font-bold text-lg text-white font-morabbaReg">استار فیت</span>
+                <span className="font-bold text-lg text-white font-morabbaReg">
+                  استار فیت
+                </span>
               </Link>
               <button
                 onClick={onToggle}
@@ -156,7 +152,7 @@ export default function AdminSidebar({ isAdmin = false }) {
                       className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
                         isActive
                           ? !isAdmin
-                              ? "text-white"
+                            ? "text-white"
                             : "bg-orange-500 text-white"
                           : "text-white/70 hover:bg-white/5 hover:text-white"
                       }`}
@@ -188,18 +184,7 @@ export default function AdminSidebar({ isAdmin = false }) {
           ))}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10 bg-black/20">
-          <Link
-            href={isAdmin ? "/admin/help" : "/dashboard/help"}
-            className="w-full flex items-center gap-3 px-3 py-3 text-white/70 hover:bg-white/5 hover:text-white rounded-lg transition-all"
-          >
-            <HelpCircle className="w-5 h-5 flex-shrink-0" />
-            {isOpen && (
-              <span className="flex-1 text-right text-sm">
-                راهنما و پشتیبانی
-              </span>
-            )}
-          </Link>
+        <div className="absolute bottom-0 bg-black left-0 right-0 p-3 border-t border-white/10">
           <Link
             href="/logout"
             className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-all mt-1"
