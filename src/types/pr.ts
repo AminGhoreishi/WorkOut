@@ -13,6 +13,10 @@ export interface IPr {
   updatedAt?: Date;
 }
 
+export interface AdminPRPageProps {
+  searchParams: Promise<{ userId?: string }>;
+}
+
 export interface PersonalRecordsProps {
   userId?: string;
 }
@@ -58,6 +62,7 @@ export interface TestMetricItem {
 
 export interface PRChartProps {
   userId?: string;
+  refreshKey?: number;
 }
 
 export interface PRRecordItem {
@@ -75,4 +80,8 @@ export interface PRRecordItem {
 
 export interface PRHistoryTableProps {
   sortedRecords: PRRecordItem[];
+}
+
+export interface PRErrorStateProps {
+  message?: string;
 }

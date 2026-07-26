@@ -47,8 +47,7 @@ export default function CreateMetricModal({
         const errData = await res.json();
         showAlert("خطا", errData.message || "خطا در ایجاد متس", "error");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
       showAlert("خطا", "خطا در برقراری ارتباط با سرور", "error");
     } finally {
       setSubmitting(false);
@@ -106,7 +105,7 @@ export default function CreateMetricModal({
               <label className="block text-white/80 text-sm mb-2">دسته‌بندی</label>
               <select
                 {...register("category", { required: true })}
-                className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm"
+                className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm cursor-pointer"
               >
                 <option value="strength">قدرت</option>
                 <option value="speed">سرعت</option>
@@ -124,7 +123,7 @@ export default function CreateMetricModal({
               </label>
               <select
                 {...register("unit", { required: true })}
-                className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm"
+                className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm cursor-pointer"
               >
                 <option value="kg">کیلوگرم (kg)</option>
                 <option value="sec">ثانیه (sec)</option>

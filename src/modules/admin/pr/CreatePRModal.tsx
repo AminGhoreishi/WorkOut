@@ -26,7 +26,7 @@ export default function CreatePRModal({
       category: "strength",
       testName: "",
       unit: "kg",
-      date: new Date().toLocaleDateString("fa-IR"),
+      date: new Date().toISOString().split("T")[0],
       notes: "",
     },
   });
@@ -93,8 +93,7 @@ export default function CreatePRModal({
         const errData = await res.json();
         showAlert("خطا", errData.message || "خطا در ثبت رکورد", "error");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
       showAlert("خطا", "خطا در برقراری ارتباط با سرور", "error");
     } finally {
       setSubmitting(false);
@@ -137,7 +136,7 @@ export default function CreatePRModal({
             </label>
             <select
               onChange={(e) => handleMetricSelect(e.target.value)}
-              className="w-full bg-gray-950 border border-purple-500/30 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm"
+              className="w-full bg-gray-950 border border-purple-500/30 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm cursor-pointer"
             >
               {metrics.length === 0 ? (
                 <option value="">در حال بارگذاری یا هیچ متسی ثبت نشده است...</option>
@@ -172,9 +171,9 @@ export default function CreatePRModal({
           <div>
             <label className="block text-white/80 text-sm mb-2">تاریخ ثبت</label>
             <input
-              type="text"
+              type="date"
               {...register("date", { required: true })}
-              className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans text-sm"
+              className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans text-sm cursor-pointer"
             />
           </div>
 

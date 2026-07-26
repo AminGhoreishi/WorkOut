@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Trophy } from "lucide-react";
-import UserSearchBar from "./UserSearchBar";
 import PRChart from "./chart/PRChart";
 import CreatePRModal from "./CreatePRModal";
 import CreateMetricModal from "./CreateMetricModal";
@@ -11,6 +10,11 @@ import type { PersonalRecordsProps } from "@/types/pr";
 export default function PersonalRecords({ userId }: PersonalRecordsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMetricModalOpen, setIsMetricModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleSuccess = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 p-4 md:p-8" dir="rtl">
@@ -28,7 +32,6 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
           </div>
 
           <div className="flex items-center gap-3 w-full md:w-auto flex-wrap">
-            <UserSearchBar />
             <button
               onClick={() => setIsMetricModalOpen(true)}
               className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300 text-sm whitespace-nowrap cursor-pointer"
@@ -37,24 +40,31 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/10 text-sm whitespace-nowrap cursor-pointer"
+              disabled={!userId}
+              className={`font-semibold px-4 py-2 rounded-xl transition-all duration-300 shadow-lg text-sm whitespace-nowrap ${
+                userId
+                  ? "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-500/10 cursor-pointer"
+                  : "bg-purple-600/40 text-white/40 cursor-not-allowed"
+              }`}
             >
               ثبت رکورد جدید
             </button>
           </div>
         </div>
 
-        <PRChart userId={userId} />
+        <PRChart userId={userId} refreshKey={refreshTrigger} />
 
         <CreatePRModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          onSuccess={handleSuccess}
           userId={userId}
         />
 
         <CreateMetricModal
           isOpen={isMetricModalOpen}
           onClose={() => setIsMetricModalOpen(false)}
+          onSuccess={handleSuccess}
         />
       </div>
     </div>
