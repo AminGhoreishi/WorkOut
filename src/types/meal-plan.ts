@@ -75,3 +75,24 @@ export interface MealPlanFormFieldsProps {
   onCancel: () => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
+
+export interface MealPlanListProps {
+  plans: MealPlanData[];
+  loading: boolean;
+  search: string;
+  setSearch: (value: string) => void;
+  expandedPlanId: string | null;
+  setExpandedPlanId: (id: string | null) => void;
+  onEdit: (plan: MealPlanData) => void;
+  onToggleActive: (plan: MealPlanData) => void;
+  onDelete: (id: string) => void;
+}
+
+export interface MealPlanItemProps {
+  plan: MealPlanData;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+  onEdit: (plan: MealPlanData) => void;
+  onToggleActive: (plan: MealPlanData) => void;
+  onDelete: (id: string) => void;
+}

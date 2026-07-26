@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Award } from "lucide-react";
 import type { PRHistoryTableProps } from "@/types/pr";
 

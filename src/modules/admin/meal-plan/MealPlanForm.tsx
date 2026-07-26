@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { X, Utensils } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import { MealPlanFormInputs, PlanMealItem, MealPlanFormProps } from "@/types/meal-plan";
+import type { MealPlanFormInputs, PlanMealItem, MealPlanFormProps } from "@/types/meal-plan";
 import MealPlanFormFields from "./MealPlanFormFields";
 
 export default function MealPlanForm({
@@ -71,7 +71,7 @@ export default function MealPlanForm({
 
   const onSubmit: SubmitHandler<MealPlanFormInputs> = async (data) => {
     try {
-      const sanitizeMeal = (items: any[]) =>
+      const sanitizeMeal = (items: { foodId: string; quantity: number | string; unit: string }[]) =>
         items.map((item) => ({
           foodId: item.foodId,
           quantity: Number(item.quantity),
@@ -107,7 +107,7 @@ export default function MealPlanForm({
         const errorData = await response.json();
         showAlert("خطا", errorData.error || "خطا در ثبت اطلاعات", "error");
       }
-    } catch (error) {
+    } catch {
       showAlert("خطا", "خطایی در برقراری ارتباط رخ داد.", "error");
     }
   };
@@ -124,7 +124,7 @@ export default function MealPlanForm({
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 hover:bg-white/5 border border-transparent hover:border-white/10 text-gray-400 hover:text-white rounded-xl transition-all"
+          className="p-2 hover:bg-white/5 border border-transparent hover:border-white/10 text-gray-400 hover:text-white rounded-xl transition-all cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>

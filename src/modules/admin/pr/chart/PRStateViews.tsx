@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { UserCheck, ArrowRight, Loader2 } from "lucide-react";
 import type { PRErrorStateProps } from "@/types/pr";
