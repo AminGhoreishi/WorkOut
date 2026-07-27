@@ -3,21 +3,21 @@ import Link from "next/link";
 
 export default function Breadcrumb({ packageName }: BreadcrumbProps) {
   return (
-    <section className="py-6 bg-black/10 border-b border-white/5 backdrop-blur-md sticky top-0 z-50">
+    <section className="py-6 bg-neutral-950/90 border-b border-amber-500/20 backdrop-blur-md sticky top-0 z-40">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2 text-sm text-white/50">
-          <Link href="/" className="hover:text-orange-500 transition-colors">
+        <div className="flex items-center gap-2 text-sm text-neutral-400 font-danaMed">
+          <Link href="/" className="hover:text-amber-400 transition-colors">
             خانه
           </Link>
           <span>/</span>
           <Link
             href="/packages"
-            className="hover:text-orange-500 transition-colors"
+            className="hover:text-amber-400 transition-colors"
           >
             پکیج‌ها
           </Link>
           <span>/</span>
-          <span className="text-white/80 font-medium">
+          <span className="text-amber-400 font-bold">
             {packageName}
           </span>
         </div>

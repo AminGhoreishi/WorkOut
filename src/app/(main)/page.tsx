@@ -4,8 +4,6 @@ import BlogModel from "@/model/Blog";
 import UserModel from "@/model/User";
 import HomeTemplate from "../../templates/HomeTemplate";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "استار فیت | سامانه تخصصی تناسب اندام و بدنسازی",
   description:
