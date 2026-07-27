@@ -42,13 +42,16 @@ export default function WorkoutPlans() {
   ];
 
   return (
-    <section className="py-20 font-danaMed">
+    <section className="py-20 font-danaMed relative">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            برنامه‌های تمرینی متناسب با هدف شما
+            برنامه‌های تمرینی{" "}
+            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+              ویژه و طلایی
+            </span>
           </h2>
-          <p className="text-white/70 text-lg">
+          <p className="text-neutral-400 text-lg">
             برنامه خود را بر اساس هدف و سطح انتخاب کنید
           </p>
         </div>
@@ -56,35 +59,37 @@ export default function WorkoutPlans() {
           {workoutPlans.map((plan, index) => (
             <div
               key={index}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all hover:scale-105"
+              className="bg-neutral-900/80 backdrop-blur-lg border border-amber-500/20 rounded-2xl p-8 hover:bg-neutral-900 transition-all hover:scale-105 hover:border-amber-400/50 shadow-[0_0_20px_rgba(234,179,8,0.05)] flex flex-col justify-between"
             >
-              <div className="text-6xl mb-6">{plan.icon}</div>
-              <h3 className="text-2xl font-bold text-white mb-3">
-                {plan.title}
-              </h3>
-              <p className="text-white/70 mb-6">{plan.description}</p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-2 text-white/80 text-sm">
-                  <BsClock className="w-4 h-4 text-amber-500" />
-                  <span>مدت: {plan.duration}</span>
+              <div>
+                <div className="text-6xl mb-6">{plan.icon}</div>
+                <h3 className="text-2xl font-bold text-white mb-3 hover:text-amber-300 transition-colors">
+                  {plan.title}
+                </h3>
+                <p className="text-neutral-400 mb-6">{plan.description}</p>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-neutral-300 text-sm">
+                    <BsClock className="w-4 h-4 text-amber-400" />
+                    <span>مدت: {plan.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-300 text-sm">
+                    <BiTrendingUp className="w-4 h-4 text-amber-400" />
+                    <span>سطح: {plan.level}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-white/80 text-sm">
-                  <BiTrendingUp className="w-4 h-4 text-amber-500" />
-                  <span>سطح: {plan.level}</span>
-                </div>
+                <ul className="space-y-2 mb-8">
+                  {plan.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2 text-neutral-300 text-sm"
+                    >
+                      <BiCheckCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2 mb-8">
-                {plan.features.map((feature, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-2 text-white/70 text-sm"
-                  >
-                    <BiCheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <button className="w-full bg-orange-500/20 hover:bg-orange-500 text-orange-400 hover:text-white border border-orange-500/50 py-3 rounded-lg transition-colors">
+              <button className="w-full bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-600/20 hover:from-amber-500 hover:to-yellow-500 text-amber-300 hover:text-neutral-950 font-bold border border-amber-500/40 py-3 rounded-xl transition-all shadow-sm hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]">
                 مشاهده جزئیات
               </button>
             </div>

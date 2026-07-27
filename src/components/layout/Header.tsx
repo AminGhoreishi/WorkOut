@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { BiDumbbell } from "react-icons/bi";
 import UserDropdown from "./UserDropdown";
 
 export default function Header({ session }: { session: any }) {
@@ -10,17 +10,23 @@ export default function Header({ session }: { session: any }) {
   const getLinkClass = (href: string) => {
     const isActive = pathname === href;
     return isActive
-      ? "text-amber-500 transition-colors"
-      : "text-white/80 hover:text-orange-500 transition-colors";
+      ? "text-amber-400 font-bold transition-colors"
+      : "text-neutral-300 hover:text-amber-400 transition-colors";
   };
 
   return (
-    <nav className="bg-black/30! backdrop-blur-lg border-b border-white/10">
+    <nav className="bg-neutral-950/80 backdrop-blur-lg border-b border-amber-500/20 sticky top-0 z-50">
       <div className="container mx-auto">
-        <div className="mx-auhref font-danaMed">
+        <div className="font-danaMed">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <BiDumbbell className="w-8 h-8 text-amber-500 " />
+            <Link href="/" className="flex items-center gap-2 group">
+              <Image
+                src="/android-chrome-192x192.png"
+                alt="لوگوی استارفیت"
+                width={36}
+                height={36}
+                className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
+              />
               <span className="font-bold text-xl text-white font-morabbaReg">
                 استارفیت
               </span>
@@ -56,7 +62,7 @@ export default function Header({ session }: { session: any }) {
             ) : (
               <Link
                 href="/login"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors"
+                className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold px-6 py-2 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)]"
               >
                 ورود / ثبت نام
               </Link>

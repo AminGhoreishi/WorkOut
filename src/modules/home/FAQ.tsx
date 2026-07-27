@@ -22,26 +22,29 @@ export default function FAQ() {
     },
   ];
   return (
-    <section className="py-20 bg-black/20 font-danaMed">
+    <section className="py-20 bg-neutral-950/90 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            سوالات متداول
+            سوالات{" "}
+            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+              متداول
+            </span>
           </h2>
-          <p className="text-white/70 text-lg">پاسخ سوالات رایج شما</p>
+          <p className="text-neutral-400 text-lg">پاسخ سوالات رایج شما</p>
         </div>
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-all"
+              className="bg-neutral-900/80 backdrop-blur-lg border border-amber-500/20 rounded-xl overflow-hidden hover:bg-neutral-900 hover:border-amber-400/50 transition-all shadow-[0_0_15px_rgba(234,179,8,0.04)]"
             >
               <details className="group">
                 <summary className="p-6 cursor-pointer list-none flex justify-between items-center">
-                  <h3 className="text-lg font-medium text-white">
+                  <h3 className="text-lg font-medium text-white group-open:text-amber-300 transition-colors">
                     {faq.question}
                   </h3>
-                  <div className="text-amber-500 group-open:rotate-180 transition-transform">
+                  <div className="text-amber-400 group-open:rotate-180 transition-transform">
                     <svg
                       className="w-6 h-6"
                       fill="none"
@@ -57,7 +60,9 @@ export default function FAQ() {
                     </svg>
                   </div>
                 </summary>
-                <div className="px-6 pb-6 text-white/70">{faq.answer}</div>
+                <div className="px-6 pb-6 text-neutral-300 leading-relaxed border-t border-amber-500/10 pt-4">
+                  {faq.answer}
+                </div>
               </details>
             </div>
           ))}

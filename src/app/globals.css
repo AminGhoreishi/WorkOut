@@ -48,36 +48,33 @@
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #050505;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #f97316 !important;
+  background: #eab308 !important;
   border-radius: 5px;
-  border: 2px solid #000000;
+  border: 2px solid #050505;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ea580c;
+  background: #ca8a04 !important;
 }
 
-/* Firefox Support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #f97316 #000000;
+  scrollbar-color: #eab308 #050505;
 }
 
-/* Responsive SweetAlert2 Font & Size Adjustments */
 @media (max-width: 768px) {
   .swal2-popup {
-    font-size: 0.85rem !important; /* Scales down text, icons, buttons and spacing proportionally */
+    font-size: 0.85rem !important;
   }
 }
 
@@ -86,5 +83,3 @@
     font-size: 0.75rem !important;
   }
 }
-
-
