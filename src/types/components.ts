@@ -44,3 +44,26 @@ export interface HomeTemplateProps {
   articles: any[];
   stats: HomeStats;
 }
+
+export interface HeaderSessionUser {
+  id?: string;
+  username?: string;
+  email?: string;
+  avatar?: string;
+  role?: string;
+}
+
+export interface HeaderSession {
+  user: HeaderSessionUser;
+}
+
+export interface HeaderProps {
+  session?: HeaderSession | null;
+}
+
+export interface MobileMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  session?: HeaderSession | null;
+  getLinkClass: (href: string) => string;
+}
