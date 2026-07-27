@@ -10,7 +10,7 @@ export default function AdminLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-gray-950 overflow-hidden" dir="rtl">
+      <div className="flex h-screen bg-neutral-950 text-white overflow-hidden" dir="rtl">
         <AdminSidebar isAdmin={true} />
         <MainWrapper>
           <AdminHeaderContainer />

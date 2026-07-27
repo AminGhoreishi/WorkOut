@@ -105,7 +105,7 @@ export default function MealPlanFormFields({
           <label className="text-xs text-gray-400">مربوط به پکیج</label>
           <select
             {...register("packageId", { required: "انتخاب پکیج الزامی است." })}
-            className="w-full bg-gray-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
+            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
           >
             <option value="">انتخاب پکیج...</option>
             {packages.map((pkg) => (
@@ -204,7 +204,7 @@ export default function MealPlanFormFields({
                 <select
                   value={selectedFoodIdToAdd}
                   onChange={(e) => setSelectedFoodIdToAdd(e.target.value)}
-                  className="w-full bg-gray-900 border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-all"
+                  className="w-full bg-neutral-900 border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-all"
                 >
                   <option value="">انتخاب غذا...</option>
                   {filteredFoodsForSelect.map((food) => (

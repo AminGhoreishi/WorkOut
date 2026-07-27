@@ -224,7 +224,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
       <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-black/20">
         <div className="flex gap-3 max-w-[85%] mr-auto flex-row-reverse">
-          <div className="w-8 h-8 rounded-full bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 text-xs font-bold flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold flex-shrink-0">
             {selectedTicket.userId?.username?.charAt(0) || "👤"}
           </div>
           <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-4 text-white text-sm">
@@ -281,7 +281,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border ${
                     isSupport
                       ? "bg-purple-500/20 border-purple-500/30 text-purple-400"
-                      : "bg-orange-500/20 border-orange-500/30 text-orange-400"
+                      : "bg-amber-500/10 border-amber-500/30 text-amber-400"
                   }`}
                 >
                   {isSupport
@@ -328,7 +328,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="پاسخ خود را در اینجا بنویسید..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder:text-white/45 focus:outline-none focus:border-orange-500/50 resize-none leading-relaxed h-11 min-h-[44px] max-h-24 overflow-y-auto"
+              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder:text-white/45 focus:outline-none focus:border-amber-500/30 resize-none leading-relaxed h-11 min-h-[44px] max-h-24 overflow-y-auto"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -339,7 +339,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
             <button
               type="submit"
               disabled={!replyText.trim() || sendingReply}
-              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:shadow-lg hover:shadow-orange-500/20 text-white w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] text-white w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send className="w-4 h-4 rotate-180" />
             </button>

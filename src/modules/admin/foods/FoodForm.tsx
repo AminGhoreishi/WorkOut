@@ -76,7 +76,7 @@ export default function FoodForm({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs text-orange-300">کربوهیدرات (گرم)</label>
+              <label className="text-xs text-amber-300">کربوهیدرات (گرم)</label>
               <input
                 type="number"
                 step="0.1"
@@ -107,7 +107,7 @@ export default function FoodForm({
               <label className="text-xs text-gray-400">مناسب برای وعده</label>
               <select
                 {...register("type")}
-                className="w-full bg-gray-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
+                className="w-full bg-neutral-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
               >
                 <option value="all">همه وعده‌ها</option>
                 <option value="breakfast">صبحانه</option>

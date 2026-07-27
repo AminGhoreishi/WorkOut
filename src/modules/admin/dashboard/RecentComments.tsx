@@ -33,15 +33,15 @@ export default function RecentComments({ limit = 3 }: RecentCommentsProps) {
   }, [limit]);
 
   return (
-    <div className="min-w-0 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl">
-      <div className="p-4 sm:p-6 border-b border-white/10">
+    <div className="min-w-0 bg-neutral-900/80 backdrop-blur-lg border border-amber-500/20 rounded-2xl shadow-[0_0_20px_rgba(234,179,8,0.05)] font-danaMed">
+      <div className="p-4 sm:p-6 border-b border-amber-500/20">
         <div className="flex justify-between items-center">
           <h2 className="text-lg sm:text-xl font-bold text-white font-morabbaReg">
             کامنت‌های جدید
           </h2>
           <Link
             href="/admin/comments"
-            className="text-orange-500 hover:text-orange-400 text-sm"
+            className="text-amber-400 hover:text-amber-300 text-sm font-bold transition-colors"
           >
             مشاهده همه
           </Link>
@@ -53,14 +53,14 @@ export default function RecentComments({ limit = 3 }: RecentCommentsProps) {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="p-3 sm:p-4 bg-white/5 rounded-lg animate-pulse h-20"
+                className="p-3 sm:p-4 bg-neutral-950/60 rounded-xl animate-pulse h-20 border border-amber-500/10"
               />
             ))}
           </div>
         ) : error ? (
-          <div className="text-center py-6 text-rose-400 text-sm">{error}</div>
+          <div className="text-center py-6 text-red-400 text-sm">{error}</div>
         ) : comments.length === 0 ? (
-          <div className="text-center py-6 text-white/40 text-sm">
+          <div className="text-center py-6 text-neutral-500 text-sm">
             دیدگاهی یافت نشد
           </div>
         ) : (
@@ -81,43 +81,43 @@ export default function RecentComments({ limit = 3 }: RecentCommentsProps) {
               return (
                 <div
                   key={comment._id}
-                  className="p-3 sm:p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                  className="p-3 sm:p-4 bg-neutral-950/60 border border-amber-500/10 hover:border-amber-500/30 rounded-xl hover:bg-neutral-950 transition-colors cursor-pointer"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <div className="text-white font-medium text-sm truncate">
+                    <div className="text-white font-semibold text-sm truncate">
                       {authorName}
                     </div>
                     <span
-                      className={`px-2 py-0.5 rounded-full text-xs flex items-center gap-1 ${
+                      className={`px-2 py-0.5 rounded-full text-xs flex items-center gap-1 font-medium ${
                         comment.isApproved
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-amber-500/20 text-amber-400"
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                          : "bg-neutral-800 text-neutral-400 border border-neutral-700"
                       }`}
                     >
                       {comment.isApproved ? (
                         <>
-                          <CheckCircle2 className="w-3 h-3" />
+                          <CheckCircle2 className="w-3 h-3 text-amber-400" />
                           تایید شده
                         </>
                       ) : (
                         <>
-                          <Clock3 className="w-3 h-3" />
+                          <Clock3 className="w-3 h-3 text-neutral-400" />
                           در انتظار تایید
                         </>
                       )}
                     </span>
                   </div>
                   {comment.blogId?.title && (
-                    <div className="text-orange-400/80 text-xs mb-1 truncate">
+                    <div className="text-amber-400/80 text-xs mb-1 truncate font-medium">
                       مقاله: {comment.blogId.title}
                     </div>
                   )}
-                  <div className="text-white/70 text-xs sm:text-sm mb-2 line-clamp-2">
+                  <div className="text-neutral-300 text-xs sm:text-sm mb-2 line-clamp-2">
                     {comment.text}
                   </div>
                   {dateStr && (
-                    <div className="flex items-center text-white/40 text-xs">
-                      <Clock className="w-3 h-3 ml-1" />
+                    <div className="flex items-center text-neutral-500 text-xs">
+                      <Clock className="w-3 h-3 ml-1 text-amber-400" />
                       {dateStr}
                     </div>
                   )}

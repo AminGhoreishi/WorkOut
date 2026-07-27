@@ -45,7 +45,7 @@ export default function PackagesManagLoement() {
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-orange-500/30 transition-all cursor-pointer font-semibold text-sm"
+            className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all cursor-pointer font-semibold text-sm"
           >
             <Plus className="w-5 h-5" />
             ایجاد پکیج جدید

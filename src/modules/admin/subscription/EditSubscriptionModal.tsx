@@ -76,7 +76,7 @@ export default function EditSubscriptionModal({
             </label>
             <select
               {...register("status", { required: true })}
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50 cursor-pointer"
+              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
             >
               <option value="active">فعال</option>
               <option value="trial">تست (Trial)</option>
@@ -92,7 +92,7 @@ export default function EditSubscriptionModal({
             <input
               type="date"
               {...register("endsAt", { required: true })}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30"
               required
             />
           </div>

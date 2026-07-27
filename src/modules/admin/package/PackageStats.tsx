@@ -60,12 +60,12 @@ const PackageStats = memo(function PackageStats({
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
         <div className="flex items-center justify-between mb-2">
           <div className="text-white/60 text-sm">درآمد کل تخمینی</div>
-          <DollarSign className="w-5 h-5 text-orange-400" />
+          <DollarSign className="w-5 h-5 text-amber-400" />
         </div>
         <div className="text-2xl text-white mb-1 font-morabbaReg">
           {formatNumber(stats.totalRevenue)} تومان
         </div>
-        <div className="text-orange-400 text-sm flex items-center gap-1">
+        <div className="text-amber-400 text-sm flex items-center gap-1">
           <TrendingUp className="w-4 h-4" />
           ماهانه
         </div>

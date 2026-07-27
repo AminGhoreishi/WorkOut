@@ -93,7 +93,7 @@ export default function PackageModal({
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-gray-900/80 backdrop-blur-lg z-10">
+        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg z-10">
           <h2 className="text-2xl text-white font-bold font-morabbaReg">
             {editingPackage ? "ویرایش پکیج" : "ایجاد پکیج جدید"}
           </h2>
@@ -111,7 +111,7 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="مثال: بسته طلایی"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
               {...register("name", {
                 required: "نام پکیج ضروری است",
                 minLength: 2,
@@ -129,7 +129,7 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="مثال: gold-package"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
               {...register("slug", {
                 required: "اسلاگ ضروری است",
                 pattern: {
@@ -150,7 +150,7 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="توضیح کوتاه و جذاب"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
               {...register("tagline", {
                 required: "تاگلاین ضروری است",
                 minLength: 2,
@@ -168,7 +168,7 @@ export default function PackageModal({
             <textarea
               rows={3}
               placeholder="توضیحات کامل درباره خدمات این پکیج..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 resize-none text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none text-sm"
               {...register("description", {
                 required: "توضیحات ضروری است",
                 minLength: 2,
@@ -187,7 +187,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="مثال: Package"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("icon")}
               />
             </div>
@@ -195,15 +195,15 @@ export default function PackageModal({
               <label className="block text-white mb-2 text-xs">کلاس رنگی</label>
               <input
                 type="text"
-                placeholder="text-orange-400"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                placeholder="text-amber-400"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("colorClass")}
               />
             </div>
             <div>
               <label className="block text-white mb-2 text-xs">سطح (Tier)</label>
               <select
-                className="w-full bg-white/5 *:bg-gray-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 text-sm cursor-pointer"
+                className="w-full bg-white/5 *:bg-gray-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 text-sm cursor-pointer"
                 {...register("tier")}
               >
                 <option value="basic">پایه (Basic)</option>
@@ -219,7 +219,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("price.monthly", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -239,7 +239,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("price.quarterly", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -259,7 +259,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("price.biannual", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -282,7 +282,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("originalPrice.monthly", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -302,7 +302,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("originalPrice.quarterly", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -322,7 +322,7 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 {...register("originalPrice.biannual", {
                   required: "ضروری است",
                   onChange: (e: any) => {
@@ -344,7 +344,7 @@ export default function PackageModal({
             <textarea
               rows={4}
               placeholder="برنامه تمرینی اختصاصی&#10;پشتیبانی ۲۴ ساعته&#10;برنامه غذایی هوشمند"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 resize-none text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none text-sm leading-relaxed"
               {...register("featuresText")}
             />
           </div>
@@ -353,7 +353,7 @@ export default function PackageModal({
             <label className="flex items-center gap-2 text-white text-xs cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 cursor-pointer"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
                 {...register("isPopular")}
               />
               بخش محبوب‌ترین بسته (Popular Badge)
@@ -361,18 +361,18 @@ export default function PackageModal({
             <label className="flex items-center gap-2 text-white text-xs cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 cursor-pointer"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
                 {...register("isActive")}
               />
               پکیج فعال باشد (نمایش در سایت)
             </label>
           </div>
 
-          <div className="p-6 border-t border-white/10 flex gap-3 bg-gray-950/20 -mx-6 -mb-6 sticky bottom-0 backdrop-blur-lg">
+          <div className="p-6 border-t border-white/10 flex gap-3 bg-neutral-950/20 -mx-6 -mb-6 sticky bottom-0 backdrop-blur-lg">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 disabled:opacity-50 text-white px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-orange-500/30 transition-all font-semibold text-sm cursor-pointer"
+              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold disabled:opacity-50 text-white px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all font-semibold text-sm cursor-pointer"
             >
               {isSubmitting ? "در حال ثبت..." : editingPackage ? "ذخیره تغییرات" : "ایجاد پکیج"}
             </button>

@@ -200,7 +200,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
                       <td className="py-3.5 text-center text-purple-400 font-semibold">
                         {food.protein}g
                       </td>
-                      <td className="py-3.5 text-center text-orange-400 font-semibold">
+                      <td className="py-3.5 text-center text-amber-400 font-semibold">
                         {food.carbs}g
                       </td>
                       <td className="py-3.5 text-center text-yellow-400 font-semibold">

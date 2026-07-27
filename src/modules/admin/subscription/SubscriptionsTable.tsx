@@ -162,7 +162,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
               placeholder="جستجو در نام، یوزرنیم، ایمیل یا شماره..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 transition-colors text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 transition-colors text-sm"
             />
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto py-1">
@@ -175,7 +175,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                 onClick={() => setStatusFilter(st)}
                 className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                   statusFilter === st
-                    ? "bg-orange-500 border-orange-500 text-white"
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 text-white"
                     : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
                 }`}
               >
@@ -211,7 +211,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                   <tr>
                     <td colSpan={6} className="p-8 text-center">
                       <div className="flex items-center justify-center gap-2 text-white/60">
-                        <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
+                        <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
                         <span>در حال بارگذاری اطلاعات...</span>
                       </div>
                     </td>
@@ -230,7 +230,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                     >
                       <td className="p-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-md shrink-0">
+                          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center font-bold text-white shadow-md shrink-0">
                             {sub.userId?.fullName?.charAt(0) ||
                               sub.userId?.username?.charAt(0) ||
                               "U"}
@@ -247,7 +247,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                         </div>
                       </td>
                       <td className="p-4 whitespace-nowrap">
-                        <span className="font-semibold text-orange-400">
+                        <span className="font-semibold text-amber-400">
                           {sub.packageId?.name || "پکیج حذف شده"}
                         </span>
                       </td>
@@ -282,7 +282,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                                 className="fixed inset-0 z-20"
                                 onClick={() => setOpenDropdownId(null)}
                               />
-                              <div className="absolute left-0 top-full mt-1.5 w-48 bg-gray-900/95 border border-white/15 rounded-xl shadow-2xl z-30 overflow-hidden py-1.5 backdrop-blur-xl">
+                              <div className="absolute left-0 top-full mt-1.5 w-48 bg-neutral-900/95 border border-white/15 rounded-xl shadow-2xl z-30 overflow-hidden py-1.5 backdrop-blur-xl">
                                 <button
                                   onClick={() => {
                                     setOpenDropdownId(null);

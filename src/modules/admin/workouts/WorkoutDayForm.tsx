@@ -88,7 +88,7 @@ export default function WorkoutDayForm({
           type="text"
           placeholder="نام روز (مثال: شنبه - سینه)"
           {...register("dayName", { required: true })}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
           required
         />
       </div>
@@ -97,7 +97,7 @@ export default function WorkoutDayForm({
           type="text"
           placeholder="عضله هدف (مثال: سینه و جلو بازو)"
           {...register("muscleGroup", { required: true })}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
           required
         />
       </div>
@@ -106,7 +106,7 @@ export default function WorkoutDayForm({
           type="number"
           placeholder="ترتیب نمایش"
           {...register("sortOrder", { required: true })}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
           required
         />
       </div>

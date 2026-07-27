@@ -12,7 +12,7 @@ export const getPackageIcon = (tier?: string) => {
     case "professional":
       return <Award className="w-8 h-8 text-purple-400" />;
     case "vip":
-      return <Crown className="w-8 h-8 text-orange-400" />;
+      return <Crown className="w-8 h-8 text-amber-400" />;
     default:
       return <PackageIcon className="w-8 h-8 text-gray-400" />;
   }
@@ -23,7 +23,7 @@ export const getPackageBadge = (tier?: string) => {
   const styles: Record<string, string> = {
     basic: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     professional: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-    vip: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+    vip: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   };
   const labels: Record<string, string> = {
     basic: "پایه",

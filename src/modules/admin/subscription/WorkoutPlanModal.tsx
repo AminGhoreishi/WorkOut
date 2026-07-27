@@ -368,7 +368,7 @@ export default function WorkoutPlanModal({
       <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-gray-955 border border-white/10 rounded-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
         <div className="p-6 border-b border-white/10 flex items-center justify-between bg-black/30">
           <div>
-            <span className="text-xs text-orange-400 font-bold bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/20">
+            <span className="text-xs text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
               پکیج: {selectedPackageForPlan.name}
             </span>
             <h2 className="text-2xl text-white font-bold mt-2 font-morabbaReg">
@@ -397,18 +397,18 @@ export default function WorkoutPlanModal({
                   <input
                     type="text"
                     {...registerPlan("title", { required: true })}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder:text-white/40 text-xs focus:outline-none focus:border-orange-500"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder:text-white/40 text-xs focus:outline-none focus:border-amber-400"
                     placeholder="عنوان برنامه..."
                     required
                   />
                   <textarea
                     {...registerPlan("description")}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder:text-white/40 text-xs focus:outline-none focus:border-orange-500 resize-none h-16"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder:text-white/40 text-xs focus:outline-none focus:border-amber-400 resize-none h-16"
                     placeholder="توضیحات برنامه..."
                   />
                   <button
                     type="submit"
-                    className="w-full bg-orange-500 text-white py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors text-xs cursor-pointer"
+                    className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold text-white py-2 rounded-lg font-medium hover:from-amber-400 hover:to-yellow-400 transition-colors text-xs cursor-pointer"
                   >
                     ایجاد برنامه تمرینی
                   </button>
@@ -424,12 +424,12 @@ export default function WorkoutPlanModal({
                     <input
                       type="text"
                       {...registerPlan("title", { required: true })}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-orange-500"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
                       required
                     />
                     <textarea
                       {...registerPlan("description")}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-orange-500 resize-none h-16"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400 resize-none h-16"
                     />
                     <div className="flex gap-2">
                       <button
@@ -494,7 +494,7 @@ export default function WorkoutPlanModal({
                       });
                       setShowDayForm(true);
                     }}
-                    className="bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                    className="bg-amber-500/10 hover:bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                   >
                     <Plus className="w-3 h-3" />
                     روز جدید
@@ -514,7 +514,7 @@ export default function WorkoutPlanModal({
                         type="text"
                         placeholder="نام روز (سینه / سرشانه / ...)"
                         {...registerDay("dayName", { required: true })}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                         required
                       />
                     </div>
@@ -523,7 +523,7 @@ export default function WorkoutPlanModal({
                         type="text"
                         placeholder="گروه عضلانی (مثلا: سینه، سرشانه، پا)"
                         {...registerDay("muscleGroup", { required: true })}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                         required
                       />
                     </div>
@@ -532,7 +532,7 @@ export default function WorkoutPlanModal({
                         type="number"
                         placeholder="ترتیب نمایش"
                         {...registerDay("sortOrder", { required: true })}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                         required
                       />
                     </div>
@@ -574,7 +574,7 @@ export default function WorkoutPlanModal({
                         }}
                         className={`p-3 rounded-lg border text-right cursor-pointer transition-all flex items-center justify-between ${
                           selectedDay?._id === day._id
-                            ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/20"
+                            ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 text-white shadow-lg shadow-[0_0_15px_rgba(234,179,8,0.2)]"
                             : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                         }`}
                       >
@@ -655,7 +655,7 @@ export default function WorkoutPlanModal({
                       });
                       setShowExerciseForm(true);
                     }}
-                    className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-orange-500/10 hover:shadow-orange-500/20 transition-all cursor-pointer"
+                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     حرکت تمرینی جدید
@@ -681,7 +681,7 @@ export default function WorkoutPlanModal({
                           type="text"
                           placeholder="مثلا: نشر جانب دمبل ایستاده"
                           {...registerExercise("name", { required: true })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                           required
                         />
                       </div>
@@ -691,7 +691,7 @@ export default function WorkoutPlanModal({
                         </label>
                         <select
                           {...registerExercise("videoId")}
-                          className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500 cursor-pointer"
+                          className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
                         >
                           <option value="">بدون ویدیو اول</option>
                           {videos.map((vid) => (
@@ -710,7 +710,7 @@ export default function WorkoutPlanModal({
                         </label>
                         <select
                           {...registerExercise("videoId2")}
-                          className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500 cursor-pointer"
+                          className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
                         >
                           <option value="">بدون ویدیو دوم</option>
                           {videos.map((vid) => (
@@ -737,7 +737,7 @@ export default function WorkoutPlanModal({
                             required: true,
                             min: 1,
                           })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                           required
                         />
                       </div>
@@ -749,7 +749,7 @@ export default function WorkoutPlanModal({
                           type="text"
                           placeholder="12-10-8 یا ۱۲"
                           {...registerExercise("reps", { required: true })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                           required
                         />
                       </div>
@@ -764,7 +764,7 @@ export default function WorkoutPlanModal({
                             required: true,
                             min: 0,
                           })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                           required
                         />
                       </div>
@@ -775,7 +775,7 @@ export default function WorkoutPlanModal({
                         <input
                           type="number"
                           {...registerExercise("sortOrder", { required: true })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                           required
                         />
                       </div>
@@ -817,7 +817,7 @@ export default function WorkoutPlanModal({
                           className="bg-white/5 border border-white/5 hover:border-white/10 rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all hover:bg-white/10"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-orange-500/10 border border-orange-500/20 text-orange-400 rounded-lg flex items-center justify-center font-bold text-sm">
+                            <div className="w-8 h-8 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center font-bold text-sm">
                               {ex.sortOrder}
                             </div>
                             <div>
@@ -855,7 +855,7 @@ export default function WorkoutPlanModal({
                                           setWatchingVideo(ex.videoId);
                                         }
                                       }}
-                                      className="text-orange-400 hover:text-orange-300 flex items-center gap-0.5 font-semibold cursor-pointer"
+                                      className="text-amber-400 hover:text-amber-300 flex items-center gap-0.5 font-semibold cursor-pointer"
                                     >
                                       <Play className="w-3 h-3 fill-current" />
                                       ویدیو ۱: {ex.videoId.title}

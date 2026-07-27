@@ -35,7 +35,7 @@ export default function CreatePlanForm({
 
   return (
     <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
-      <Info className="w-10 h-10 text-orange-500/60 mx-auto mb-3" />
+      <Info className="w-10 h-10 text-amber-400/60 mx-auto mb-3" />
       <h4 className="text-white font-bold text-lg mb-2">
         برنامه تمرینی یافت نشد
       </h4>
@@ -45,7 +45,7 @@ export default function CreatePlanForm({
       <form onSubmit={handleCreatePlan} className="max-w-xl mx-auto text-right">
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-orange-500/20 transition-all text-sm"
+          className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all text-sm"
         >
           ایجاد برنامه تمرینی جدید
         </button>

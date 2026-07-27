@@ -193,14 +193,14 @@ export default function UsersTable() {
               placeholder="جستجو براساس نام کاربری، ایمیل یا شماره تلفن..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
           <div className="flex gap-3">
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-white/5 *:bg-gray-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 text-sm cursor-pointer"
+              className="bg-white/5 *:bg-neutral-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="active">فعال</option>
@@ -311,7 +311,7 @@ export default function UsersTable() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center text-xl font-bold text-orange-400">
+                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center text-xl font-bold text-amber-400">
                           {user.avatar ||
                             user.username[0]?.toUpperCase() ||
                             "👤"}
@@ -340,7 +340,7 @@ export default function UsersTable() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2 text-white/80 text-sm">
-                        <Package className="w-4 h-4 text-orange-500" />
+                        <Package className="w-4 h-4 text-amber-400" />
                         {user.package || "—"}
                       </div>
                     </td>
@@ -427,7 +427,7 @@ export default function UsersTable() {
       </div>
 
       {selectedUsers.length > 0 && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-orange-500 backdrop-blur-lg border border-orange-400 rounded-xl p-4 shadow-2xl z-50">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold backdrop-blur-lg border border-amber-400 rounded-xl p-4 shadow-2xl z-50">
           <div className="flex items-center gap-4">
             <span className="text-white font-medium text-sm">
               {formatNumber(selectedUsers.length)} کاربر انتخاب شده

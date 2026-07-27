@@ -107,7 +107,7 @@ const TicketList: React.FC<TicketListProps> = ({
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
           <div className="flex gap-3">
@@ -117,7 +117,7 @@ const TicketList: React.FC<TicketListProps> = ({
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-white/5 *:bg-gray-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 text-sm"
+              className="bg-white/5 *:bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="pending">در انتظار پاسخ</option>
@@ -156,7 +156,7 @@ const TicketList: React.FC<TicketListProps> = ({
                     }}
                     className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${
                       isSelected
-                        ? "bg-gradient-to-br from-orange-500/20 to-pink-500/20 border-orange-500/80 text-white shadow-lg shadow-orange-500/10"
+                        ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg"
                         : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                     }`}
                   >
@@ -175,7 +175,7 @@ const TicketList: React.FC<TicketListProps> = ({
                     </p>
                     <div className="flex justify-between items-center text-[10px] text-white/50 pt-2 border-t border-white/5">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-5 h-5 bg-orange-500/20 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
+                        <div className="w-5 h-5 bg-amber-500/10 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
                           {t.userId?.username?.charAt(0) || "👤"}
                         </div>
                         <span>

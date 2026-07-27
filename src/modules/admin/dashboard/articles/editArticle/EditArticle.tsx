@@ -224,17 +224,17 @@ export default function EditArticle() {
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-white"
+        className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center text-white"
         dir="rtl"
       >
-        <Loader2 className="w-12 h-12 text-orange-500 animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 text-amber-400 animate-spin mb-4" />
         <p className="text-white/60">در حال بارگذاری اطلاعات مقاله...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-4 md:p-8" dir="rtl">
+    <div className="min-h-screen bg-neutral-950 p-4 md:p-8" dir="rtl">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -267,7 +267,7 @@ export default function EditArticle() {
             <button
               onClick={handleSubmit((data) => onSubmit(data, "published"))}
               disabled={saving}
-              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-orange-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {saving ? (
                 <Loader2 className="w-5 h-5 animate-spin text-white" />
@@ -286,7 +286,7 @@ export default function EditArticle() {
               <input
                 {...register("title", { required: "عنوان مقاله الزامی است" })}
                 placeholder="عنوان جذاب مقاله خود را وارد کنید..."
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-xl placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 font-morabbaReg"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-xl placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 font-morabbaReg"
               />
               {errors.title && (
                 <p className="text-red-400 text-sm mt-2">
@@ -318,7 +318,7 @@ export default function EditArticle() {
                   </button>
                 </div>
               ) : (
-                <label className="border-2 border-dashed border-white/20 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500/50 transition-colors">
+                <label className="border-2 border-dashed border-white/20 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-amber-500/30 transition-colors">
                   <ImageIcon className="w-12 h-12 text-white/40 mb-3" />
                   <p className="text-white/60 mb-2">
                     کلیک کنید یا تصویر را بکشید
@@ -342,7 +342,7 @@ export default function EditArticle() {
                 {...register("excerpt")}
                 placeholder="خلاصه‌ای کوتاه از محتوای مقاله..."
                 rows={3}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
               />
               <div className="text-white/40 text-sm mt-2">
                 {watchedExcerpt.length} / ۲۵۰ کاراکتر
@@ -390,7 +390,7 @@ export default function EditArticle() {
                   <input
                     {...register("seoTitle")}
                     placeholder="عنوان برای موتورهای جستجو..."
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
                   />
                   <div className="text-white/40 text-sm mt-1">
                     {watchedSeoTitle.length} / ۶۰ کاراکتر
@@ -404,7 +404,7 @@ export default function EditArticle() {
                     {...register("seoDescription")}
                     placeholder="توضیحات برای موتورهای جستجو..."
                     rows={3}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
                   />
                   <div className="text-white/40 text-sm mt-1">
                     {watchedSeoDescription.length} / ۱۶۰ کاراکتر
@@ -428,7 +428,7 @@ export default function EditArticle() {
                     render={({ field }) => (
                       <select
                         {...field}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
                       >
                         <option value="draft" className="bg-gray-800">
                           پیش‌نویس
@@ -452,7 +452,7 @@ export default function EditArticle() {
                     <input
                       {...register("publishDate")}
                       type="datetime-local"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30"
                     />
                   </div>
                 )}
@@ -469,7 +469,7 @@ export default function EditArticle() {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat} className="bg-gray-800">
@@ -492,12 +492,12 @@ export default function EditArticle() {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
                   placeholder="برچسب جدید..."
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   افزودن
                 </button>
@@ -529,7 +529,7 @@ export default function EditArticle() {
                 اطلاعات نویسنده
               </h3>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center text-white text-xl font-bold">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold flex items-center justify-center text-white text-xl font-bold">
                   {author
                     ? author.fullName
                       ? author.fullName.charAt(0)

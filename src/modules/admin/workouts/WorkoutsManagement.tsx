@@ -392,7 +392,7 @@ export default function WorkoutsManagement() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1 space-y-4">
               <h2 className="text-white font-bold text-lg flex items-center gap-2">
-                <Package className="w-5 h-5 text-orange-500" />
+                <Package className="w-5 h-5 text-amber-400" />
                 انتخاب پکیج
               </h2>
               <div className="space-y-3">
@@ -404,7 +404,7 @@ export default function WorkoutsManagement() {
                       onClick={() => handleSelectPackage(pkg)}
                       className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-2 ${
                         isSelected
-                          ? "bg-gradient-to-br from-orange-500/20 to-pink-500/20 border-orange-500 text-white shadow-lg shadow-orange-500/10"
+                          ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg"
                           : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"
                       }`}
                     >
@@ -426,7 +426,7 @@ export default function WorkoutsManagement() {
             <div className="lg:col-span-3">
               {!selectedPackage ? (
                 <div className="h-64 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center text-white/40 text-center p-8 bg-white/5">
-                  <Dumbbell className="w-16 h-16 mb-4 opacity-20 text-orange-500" />
+                  <Dumbbell className="w-16 h-16 mb-4 opacity-20 text-amber-400" />
                   <p className="font-semibold text-lg">
                     برای شروع، یک پکیج را از ستون سمت راست انتخاب کنید
                   </p>
@@ -441,9 +441,9 @@ export default function WorkoutsManagement() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-orange-500/5 to-pink-500/5">
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-amber-500/10 to-yellow-600/5">
                     <div>
-                      <div className="text-xs text-orange-400 font-bold mb-1">
+                      <div className="text-xs text-amber-400 font-bold mb-1">
                         پکیج انتخاب شده
                       </div>
                       <h3 className="text-xl font-bold text-white">
@@ -491,7 +491,7 @@ export default function WorkoutsManagement() {
                                   title: e.target.value,
                                 })
                               }
-                              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500"
+                              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-400"
                               required
                             />
                           </div>
@@ -507,7 +507,7 @@ export default function WorkoutsManagement() {
                                   description: e.target.value,
                                 })
                               }
-                              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500 resize-none h-24"
+                              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-400 resize-none h-24"
                             />
                           </div>
                           <div className="flex gap-2 justify-end">
@@ -566,7 +566,7 @@ export default function WorkoutsManagement() {
                               onClick={() =>
                                 setShowAddDropdown(!showAddDropdown)
                               }
-                              className="bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all"
+                              className="bg-amber-500/10 hover:bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all"
                             >
                               <Plus className="w-3.5 h-3.5" />
                               <span>افزودن جدید</span>
@@ -576,7 +576,7 @@ export default function WorkoutsManagement() {
                             </button>
 
                             {showAddDropdown && (
-                              <div className="absolute left-0 mt-2 w-36 bg-gray-900 border border-white/10 rounded-lg shadow-xl py-1.5 z-20">
+                              <div className="absolute left-0 mt-2 w-36 bg-neutral-900 border border-white/10 rounded-lg shadow-xl py-1.5 z-20">
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -598,7 +598,7 @@ export default function WorkoutsManagement() {
                                   }}
                                   className="w-full text-right px-4 py-2 text-xs text-white/80 disabled:opacity-50 disabled:cursor-not-allowed hover:text-white hover:bg-white/5 flex items-center gap-2 transition-colors"
                                 >
-                                  <Plus className="w-3.5 h-3.5 text-orange-400" />
+                                  <Plus className="w-3.5 h-3.5 text-amber-400" />
                                   <span>روز جدید</span>
                                 </button>
                               </div>
@@ -684,7 +684,7 @@ export default function WorkoutsManagement() {
                                   }}
                                   className={`p-4 rounded-xl border text-right cursor-pointer transition-all flex items-center justify-between ${
                                     isSelected
-                                      ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/20"
+                                      ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 text-white shadow-lg shadow-[0_0_15px_rgba(234,179,8,0.2)]"
                                       : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                                   }`}
                                 >
@@ -770,7 +770,7 @@ export default function WorkoutsManagement() {
                                   });
                                   setShowExerciseForm(true);
                                 }}
-                                className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-orange-500/10 hover:shadow-orange-500/20 transition-all"
+                                className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all"
                               >
                                 <Plus className="w-3.5 h-3.5" />
                                 حرکت جدید
@@ -802,7 +802,7 @@ export default function WorkoutsManagement() {
                                           name: e.target.value,
                                         })
                                       }
-                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
                                       required
                                     />
                                   </div>
@@ -818,7 +818,7 @@ export default function WorkoutsManagement() {
                                           videoId: e.target.value,
                                         })
                                       }
-                                      className="w-full bg-gray-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                     >
                                       <option value="">بدون ویدیو اول</option>
                                       {videos.map((vid) => (
@@ -841,7 +841,7 @@ export default function WorkoutsManagement() {
                                           videoId2: e.target.value,
                                         })
                                       }
-                                      className="w-full bg-gray-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                     >
                                       <option value="">بدون ویدیو دوم</option>
                                       {videos.map((vid) => (
@@ -867,7 +867,7 @@ export default function WorkoutsManagement() {
                                           sets: Number(e.target.value),
                                         })
                                       }
-                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                       required
                                     />
                                   </div>
@@ -885,7 +885,7 @@ export default function WorkoutsManagement() {
                                           reps: e.target.value,
                                         })
                                       }
-                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                       required
                                     />
                                   </div>
@@ -902,7 +902,7 @@ export default function WorkoutsManagement() {
                                           restSec: Number(e.target.value),
                                         })
                                       }
-                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                       required
                                     />
                                   </div>
@@ -919,7 +919,7 @@ export default function WorkoutsManagement() {
                                           sortOrder: Number(e.target.value),
                                         })
                                       }
-                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400"
                                       required
                                     />
                                   </div>
@@ -975,7 +975,7 @@ export default function WorkoutsManagement() {
                                           تکرار: {ex.reps}
                                         </span>
                                         <span className="flex items-center gap-1 ss02">
-                                          <Clock className="w-3.5 h-3.5 text-orange-400" />
+                                          <Clock className="w-3.5 h-3.5 text-amber-400" />
                                           استراحت: {ex.restSec} ثانیه
                                         </span>
                                         {ex.videoId && (
@@ -983,9 +983,9 @@ export default function WorkoutsManagement() {
                                             onClick={() =>
                                               setWatchingVideo(ex.videoId!)
                                             }
-                                            className="text-orange-400 hover:text-orange-300 flex items-center gap-1 transition-colors cursor-pointer"
+                                            className="text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer"
                                           >
-                                            <Play className="w-3 h-3 fill-orange-400/20" />
+                                            <Play className="w-3 h-3 fill-amber-400/20" />
                                             ویدیو ۱: {ex.videoId.title}
                                           </button>
                                         )}

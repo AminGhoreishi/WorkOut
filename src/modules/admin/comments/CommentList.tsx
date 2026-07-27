@@ -169,14 +169,14 @@ export default function CommentList() {
               placeholder="جستجو بر اساس نام نویسنده یا متن دیدگاه..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400"
             />
           </div>
           <div className="flex gap-3">
             <select
               value={filterApproved}
               onChange={(e) => setFilterApproved(e.target.value)}
-              className="bg-white/5 *:bg-gray-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500"
+              className="bg-white/5 *:bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="true">تایید شده</option>
@@ -246,7 +246,7 @@ export default function CommentList() {
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center text-white text-lg">
+                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center text-white text-lg">
                           {comment.avatar ||
                             (comment.name ? comment.name.charAt(0) : "👤")}
                         </div>
@@ -271,7 +271,7 @@ export default function CommentList() {
                           href={`/article/${comment.blogId.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 transition-colors"
+                          className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors"
                         >
                           <span className="line-clamp-1">
                             {comment.blogId.title}

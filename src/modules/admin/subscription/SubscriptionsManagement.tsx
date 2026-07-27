@@ -87,7 +87,7 @@ export default function SubscriptionsManagement() {
           <div className="flex gap-2">
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-orange-500/30 transition-all font-medium text-sm"
+              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all font-medium text-sm"
             >
               <Plus className="w-4 h-4" />
               ثبت اشتراک دستی
@@ -99,7 +99,7 @@ export default function SubscriptionsManagement() {
               }}
               className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-5 py-3 rounded-lg flex items-center gap-2 transition-all font-medium text-sm"
             >
-              <Film className="w-4 h-4 text-orange-400" />
+              <Film className="w-4 h-4 text-amber-400" />
               آپلود ویدیوی جدید
             </button>
           </div>
@@ -110,7 +110,7 @@ export default function SubscriptionsManagement() {
             onClick={() => setActiveTab("subscriptions")}
             className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 ${
               activeTab === "subscriptions"
-                ? "border-orange-500 text-white"
+                ? "border-amber-400 text-white"
                 : "border-transparent text-white/55 hover:text-white"
             }`}
           >
@@ -121,7 +121,7 @@ export default function SubscriptionsManagement() {
             onClick={() => setActiveTab("videos")}
             className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 ${
               activeTab === "videos"
-                ? "border-orange-500 text-white"
+                ? "border-amber-400 text-white"
                 : "border-transparent text-white/55 hover:text-white"
             }`}
           >

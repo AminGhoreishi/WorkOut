@@ -73,7 +73,7 @@ export default function UploadVideoModal({
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-gray-900/80 backdrop-blur-lg">
+        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             آپلود ویدیوی ورزشی جدید به آروان
           </h2>
@@ -89,7 +89,7 @@ export default function UploadVideoModal({
 
         {uploadingVideo ? (
           <div className="p-12 text-center text-white space-y-4">
-            <Loader2 className="w-12 h-12 animate-spin text-orange-500 mx-auto" />
+            <Loader2 className="w-12 h-12 animate-spin text-amber-400 mx-auto" />
             <div className="font-bold text-sm">
               در حال آپلود ویدیو به سرورهای ابری آروان...
             </div>
@@ -111,7 +111,7 @@ export default function UploadVideoModal({
                   onChange={(e) =>
                     setVideoFile(e.target.files?.[0] || null)
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-amber-400"
                   required
                 />
               </div>
@@ -125,7 +125,7 @@ export default function UploadVideoModal({
                   onChange={(e) =>
                     setThumbnailFile(e.target.files?.[0] || null)
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-orange-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-amber-400"
                   required
                 />
               </div>
@@ -140,7 +140,7 @@ export default function UploadVideoModal({
                 placeholder="مثال: جلو بازو دمبل تناوبی تمرکزی"
                 value={newVideoTitle}
                 onChange={(e) => setNewVideoTitle(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-orange-500"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
                 required
               />
             </div>
@@ -153,7 +153,7 @@ export default function UploadVideoModal({
                 placeholder="توضیح دهید حرکت چگونه انجام می‌شود..."
                 value={newVideoDesc}
                 onChange={(e) => setNewVideoDesc(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-orange-500 resize-none h-20"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 resize-none h-20"
               />
             </div>
 
@@ -165,7 +165,7 @@ export default function UploadVideoModal({
                 <select
                   value={newVideoLevel}
                   onChange={(e) => setNewVideoLevel(e.target.value)}
-                  className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-white text-xs focus:outline-none focus:border-orange-500"
+                  className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
                 >
                   <option value="beginner">مبتدی (Beginner)</option>
                   <option value="intermediate">
@@ -183,7 +183,7 @@ export default function UploadVideoModal({
                   placeholder="۶۰"
                   value={newVideoDuration}
                   onChange={(e) => setNewVideoDuration(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-orange-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
                 />
               </div>
             </div>
@@ -197,14 +197,14 @@ export default function UploadVideoModal({
                 placeholder="مثال: بازو, دمبل, سینه, سرشانه"
                 value={newVideoTags}
                 onChange={(e) => setNewVideoTags(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-orange-500"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
               />
             </div>
 
             <div className="flex gap-3 pt-4">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
+                className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
               >
                 شروع فرآیند آپلود
               </button>

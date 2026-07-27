@@ -79,7 +79,7 @@ export default function CreateSubscriptionModal({
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-gray-900/80 backdrop-blur-lg">
+        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             ثبت اشتراک جدید (دستی)
           </h2>
@@ -126,7 +126,7 @@ export default function CreateSubscriptionModal({
                   placeholder="نام کاربری یا ایمیل کاربر..."
                   value={userSearchTerm}
                   onChange={(e) => setUserSearchTerm(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-sm"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 />
                 {searchedUsers.length > 0 && (
                   <div className="absolute top-full right-0 left-0 bg-gray-800 border border-white/10 rounded-lg mt-1 overflow-hidden z-10 max-h-48 overflow-y-auto shadow-xl">
@@ -161,7 +161,7 @@ export default function CreateSubscriptionModal({
             <select
               value={selectedPackageId}
               onChange={(e) => setSelectedPackageId(e.target.value)}
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50 cursor-pointer"
+              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
               required
             >
               <option value="">انتخاب پکیج...</option>
@@ -184,7 +184,7 @@ export default function CreateSubscriptionModal({
                   e.target.value as SubscriptionItem["status"],
                 )
               }
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50 cursor-pointer"
+              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
             >
               <option value="active">فعال</option>
               <option value="trial">تست (Trial)</option>
@@ -200,14 +200,14 @@ export default function CreateSubscriptionModal({
               type="date"
               value={createEndsAt}
               onChange={(e) => setCreateEndsAt(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30"
             />
           </div>
 
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
+              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
             >
               ثبت اشتراک
             </button>

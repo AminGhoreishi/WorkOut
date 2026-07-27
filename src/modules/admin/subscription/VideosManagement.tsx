@@ -118,12 +118,12 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
               placeholder="جستجو در فیلم‌های آموزشی..."
               value={searchVideoTerm}
               onChange={(e) => setSearchVideoTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50 text-xs transition-colors"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-xs transition-colors"
             />
           </div>
           <button
             onClick={() => setShowUploadVideoModal(true)}
-            className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             آپلود ویدیوی ورزشی جدید
@@ -132,7 +132,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
 
         {isLoading ? (
           <div className="p-16 text-center text-white/60 flex items-center justify-center gap-2">
-            <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
+            <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
             <span>در حال بارگذاری بانک ویدیوها...</span>
           </div>
         ) : filteredVideos.length === 0 ? (
@@ -166,7 +166,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                       onClick={() => setWatchingVideo(vid)}
                       className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity animate-none"
                     >
-                      <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center text-white shadow-lg">
                         <Play className="w-5 h-5 fill-current ml-0.5" />
                       </div>
                     </button>

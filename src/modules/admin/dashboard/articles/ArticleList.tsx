@@ -80,7 +80,7 @@ export default function ArticleList({
               placeholder="جستجوی مقاله..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500/50"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
             />
           </div>
 
@@ -89,7 +89,7 @@ export default function ArticleList({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat} className="bg-gray-800">
@@ -104,7 +104,7 @@ export default function ArticleList({
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
             >
               {statuses.map((status) => (
                 <option key={status} value={status} className="bg-gray-800">
@@ -118,7 +118,7 @@ export default function ArticleList({
 
       {/* Bulk actions */}
       {selectedArticles.length > 0 && (
-        <div className="bg-orange-500/20 backdrop-blur-lg border border-orange-500/30 rounded-xl p-4 mb-6 flex items-center justify-between">
+        <div className="bg-amber-500/10 backdrop-blur-lg border border-amber-500/30 rounded-xl p-4 mb-6 flex items-center justify-between">
           <div className="text-white font-medium">
             <span className="font-bold">
               {formatNumber(selectedArticles.length)}
@@ -141,7 +141,7 @@ export default function ArticleList({
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="min-h-[350px] flex flex-col items-center justify-center text-white/60 gap-3">
-            <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
+            <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
             <span>در حال دریافت مقالات...</span>
           </div>
         ) : articles.length === 0 ? (
@@ -162,7 +162,7 @@ export default function ArticleList({
                         selectedArticles.length === articles.length
                       }
                       onChange={handleSelectAll}
-                      className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
                     />
                   </th>
                   <th className="text-right p-4 text-white/60">مقاله</th>
@@ -185,7 +185,7 @@ export default function ArticleList({
                         type="checkbox"
                         checked={selectedArticles.includes(article._id)}
                         onChange={() => handleSelectArticle(article._id)}
-                        className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
                       />
                     </td>
                     <td className="p-4">

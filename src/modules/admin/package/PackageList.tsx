@@ -191,7 +191,7 @@ export default function PackageList({
                         key={index}
                         className="flex items-start gap-2 text-white/70 text-sm"
                       >
-                        <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-1.5 h-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full mt-2 flex-shrink-0" />
                         <span>
                           {typeof feature === "string" ? feature : feature.name}
                         </span>
@@ -203,7 +203,7 @@ export default function PackageList({
                     </li>
                   )}
                   {pkg.features && pkg.features.length > 4 && (
-                    <li className="text-orange-400 text-sm">
+                    <li className="text-amber-400 text-sm">
                       +{pkg.features.length - 4} مورد دیگر
                     </li>
                   )}
@@ -212,7 +212,7 @@ export default function PackageList({
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEditClick(pkg)}
-                    className="flex-1 bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500/30 text-orange-400 px-4 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm cursor-pointer"
+                    className="flex-1 bg-amber-500/10 hover:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold/30 border border-amber-500/30 text-amber-400 px-4 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm cursor-pointer"
                   >
                     <Edit className="w-4 h-4" />
                     ویرایش

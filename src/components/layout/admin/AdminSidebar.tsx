@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Dumbbell, ChevronLeft, Menu, LogOut, HelpCircle } from "lucide-react";
+import Image from "next/image";
+import { ChevronLeft, Menu, LogOut } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -67,15 +68,13 @@ export default function AdminSidebar({ isAdmin = false }) {
     ? getAdminMenuItems(counts, formatNumber)
     : getUserMenuItems(counts, formatNumber);
 
-  const sidebarStyle = isAdmin
-    ? "bg-black/40 border-l border-white/10"
-    : "bg-[linear-gradient(180deg,#0f172a_0%,#1e1b4b_100%)] border-l border-purple-500/20";
+  const sidebarStyle = "bg-neutral-950/90 border-l border-amber-500/20";
 
   return (
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 md:hidden"
+          className="fixed inset-0 bg-black/70 z-40 md:hidden"
           onClick={onToggle}
         />
       )}
@@ -90,34 +89,40 @@ export default function AdminSidebar({ isAdmin = false }) {
           ${isOpen ? "md:w-64" : "md:w-18"}
         `}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-amber-500/20 font-danaMed">
           {isOpen ? (
             <>
-              <Link href="/" className="flex items-center gap-2">
-                <Dumbbell className="w-8 h-8 text-orange-500" />
+              <Link href="/" className="flex items-center gap-2 group">
+                <Image
+                  src="/android-chrome-192x192.png"
+                  alt="استار فیت"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain group-hover:scale-105 transition-transform"
+                />
                 <span className="font-bold text-lg text-white font-morabbaReg">
                   استار فیت
                 </span>
               </Link>
               <button
                 onClick={onToggle}
-                className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors"
+                className="w-8 h-8 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-white/70" />
+                <ChevronLeft className="w-5 h-5 text-amber-400" />
               </button>
             </>
           ) : (
             <button onClick={onToggle} className="w-full flex justify-center">
-              <Menu className="w-6 h-6 text-white/70" />
+              <Menu className="w-6 h-6 text-amber-400" />
             </button>
           )}
         </div>
 
-        <div className="h-[calc(100vh-8rem)] overflow-y-auto py-4 px-3">
+        <div className="h-[calc(100vh-8rem)] overflow-y-auto py-4 px-3 font-danaMed">
           {menuItems.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-6">
               {isOpen && (
-                <h3 className="text-white/50 text-xs font-medium mb-3 px-3">
+                <h3 className="text-amber-400/70 text-xs font-semibold mb-3 px-3">
                   {section.title}
                 </h3>
               )}
@@ -140,24 +145,13 @@ export default function AdminSidebar({ isAdmin = false }) {
                           onToggle();
                         }
                       }}
-                      style={
-                        isActive && !isAdmin
-                          ? {
-                              background:
-                                "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.3))",
-                              border: "1px solid rgba(124,58,237,0.4)",
-                            }
-                          : {}
-                      }
-                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                         isActive
-                          ? !isAdmin
-                            ? "text-white"
-                            : "bg-orange-500 text-white"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
+                          ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)]"
+                          : "text-neutral-300 hover:bg-amber-500/10 hover:text-amber-300"
                       }`}
                     >
-                      <item.icon className="w-5 h-5 flex-shrink-0" />
+                      <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-neutral-950" : "text-amber-400"}`} />
                       {isOpen && (
                         <>
                           <span className="flex-1 text-right text-sm">
@@ -167,8 +161,8 @@ export default function AdminSidebar({ isAdmin = false }) {
                             <span
                               className={`text-xs px-2 py-0.5 rounded-full ${
                                 isActive
-                                  ? "bg-white/20 text-white"
-                                  : "bg-white/10 text-white/60"
+                                  ? "bg-neutral-950/20 text-neutral-950 font-bold"
+                                  : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
                               }`}
                             >
                               {item.badge}
@@ -184,12 +178,12 @@ export default function AdminSidebar({ isAdmin = false }) {
           ))}
         </div>
 
-        <div className="absolute bottom-0 bg-black left-0 right-0 p-3 border-t border-white/10">
+        <div className="absolute bottom-0 bg-neutral-950 left-0 right-0 p-3 border-t border-amber-500/20 font-danaMed">
           <Link
             href="/logout"
-            className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-all mt-1"
+            className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" />
+            <LogOut className="w-5 h-5 shrink-0" />
             {isOpen && <span className="flex-1 text-right text-sm">خروج</span>}
           </Link>
         </div>

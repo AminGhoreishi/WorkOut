@@ -43,7 +43,7 @@ const ArticleStats = memo(function ArticleStats({
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
         <div className="flex items-center justify-between mb-2">
           <div className="text-white/60 text-sm">کل بازدیدها</div>
-          <TrendingUp className="w-5 h-5 text-orange-400" />
+          <TrendingUp className="w-5 h-5 text-amber-400" />
         </div>
         <div className="text-3xl text-white font-bold font-morabbaReg">
           {formatNumber(stats.totalViews)}
