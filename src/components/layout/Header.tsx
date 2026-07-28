@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Dumbbell } from "lucide-react";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
 import type { HeaderProps } from "@/types/components";
@@ -22,41 +22,58 @@ export default function Header({ session }: HeaderProps) {
 
   return (
     <nav className="bg-neutral-950/80 backdrop-blur-lg border-b border-amber-500/20 sticky top-0 z-50">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="font-danaMed">
-          <div className="flex justify-between items-center h-16 px-2 sm:px-0">
-            <Link href="/" className="flex items-center gap-2 group">
-              <Image
-                src="/android-chrome-192x192.png"
-                alt="لوگوی استارفیت"
-                width={36}
-                height={36}
-                className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
-              />
-              <span className="font-bold text-xl text-white font-morabbaReg">
-                استارفیت
-              </span>
-            </Link>
+          <div className="flex justify-between items-center h-16 relative">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-neutral-300 hover:text-amber-400 focus:outline-none transition-colors"
+              aria-label="منوی اصلی"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-7 h-7 text-amber-400" />
+              ) : (
+                <Menu className="w-7 h-7 text-amber-400" />
+              )}
+            </button>
 
-            <div className="hidden md:flex gap-8">
-              <Link href="/" className={getLinkClass("/")}>
-                خانه
-              </Link>
-              <Link href="/packages" className={getLinkClass("/packages")}>
-                پکیج‌ها
-              </Link>
-              <Link href="/nutrition" className={getLinkClass("/nutrition")}>
-                کالری شمار
-              </Link>
-              <Link href="/articles" className={getLinkClass("/articles")}>
-                مقالات
-              </Link>
+            <div className="flex items-center gap-8">
               <Link
-                href="/dashboard/tickets"
-                className={getLinkClass("/tickets")}
+                href="/"
+                className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center gap-2 group"
               >
-                پشتیبانی
+                <Image
+                  src="/android-chrome-192x192.png"
+                  alt="لوگوی استارفیت"
+                  width={36}
+                  height={36}
+                  className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
+                />
+                <span className="max-md:hidden font-bold text-xl text-white font-morabbaReg">
+                  استارفیت
+                </span>
               </Link>
+
+              <div className="hidden md:flex gap-8 mr-4">
+                <Link href="/" className={getLinkClass("/")}>
+                  خانه
+                </Link>
+                <Link href="/packages" className={getLinkClass("/packages")}>
+                  پکیج‌ها
+                </Link>
+                <Link href="/nutrition" className={getLinkClass("/nutrition")}>
+                  کالری شمار
+                </Link>
+                <Link href="/articles" className={getLinkClass("/articles")}>
+                  مقالات
+                </Link>
+                <Link
+                  href="/dashboard/tickets"
+                  className={getLinkClass("/tickets")}
+                >
+                  پشتیبانی
+                </Link>
+              </div>
             </div>
 
             <div className="hidden md:flex items-center">
@@ -77,17 +94,13 @@ export default function Header({ session }: HeaderProps) {
               )}
             </div>
 
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-neutral-300 hover:text-amber-400 focus:outline-none transition-colors"
-              aria-label="منوی اصلی"
+            <Link
+              href="/packages"
+              className="md:hidden p-2 text-neutral-300 hover:text-amber-400 transition-colors"
+              aria-label="پکیج‌های ورزشی"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-7 h-7 text-amber-400" />
-              ) : (
-                <Menu className="w-7 h-7 text-amber-400" />
-              )}
-            </button>
+              <Dumbbell className="w-7 h-7 text-amber-400" />
+            </Link>
           </div>
         </div>
       </div>
