@@ -2,16 +2,12 @@
 
 import React, { memo } from "react";
 import { Tag, Eye, Edit, TrendingUp } from "lucide-react";
+import { formatNumber } from "@/utils/numbers";
 import type { ArticleStatsProps } from "@/types/blog";
-
-const defaultFormatNumber = (num: number) => {
-  return new Intl.NumberFormat("fa-IR").format(num);
-};
 
 const ArticleStats = memo(function ArticleStats({
   stats,
   totalCount,
-  formatNumber = defaultFormatNumber,
 }: ArticleStatsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

@@ -6,6 +6,12 @@ import Image from "next/image";
 import useSWR from "swr";
 import Pagination from "@/components/AdminPagination";
 import { showAlert, showConfirm } from "@/utils/alert";
+import { formatNumber } from "@/utils/numbers";
+import {
+  ARTICLE_CATEGORIES,
+  ARTICLE_STATUSES,
+  mapStatusToEnglish,
+} from "@/constants/blog";
 import {
   Search,
   Filter,
@@ -18,35 +24,6 @@ import {
   Loader2,
 } from "lucide-react";
 import type { ArticleListProps, AdminBlog, AdminBlogStats } from "@/types/blog";
-
-const categories = [
-  "همه",
-  "بدنسازی",
-  "تغذیه",
-  "کاهش وزن",
-  "سلامت",
-  "مکمل",
-  "تکنیک",
-];
-
-const statuses = ["همه", "منتشر شده", "پیش‌نویس", "زمان‌بندی شده"];
-
-const formatNumber = (num: number) => {
-  return new Intl.NumberFormat("fa-IR").format(num);
-};
-
-const mapStatusToEnglish = (status: string) => {
-  switch (status) {
-    case "منتشر شده":
-      return "published";
-    case "پیش‌نویس":
-      return "draft";
-    case "زمان‌بندی شده":
-      return "scheduled";
-    default:
-      return "all";
-  }
-};
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -247,7 +224,7 @@ export default function ArticleList({ onStatsChange }: ArticleListProps) {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full bg-neutral-950 border border-amber-500/20 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-amber-500/60 appearance-none cursor-pointer text-sm"
             >
-              {categories.map((cat) => (
+              {ARTICLE_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat} className="bg-neutral-900 text-white">
                   {cat}
                 </option>
@@ -262,7 +239,7 @@ export default function ArticleList({ onStatsChange }: ArticleListProps) {
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="w-full bg-neutral-950 border border-amber-500/20 rounded-lg pr-10 pl-4 py-3 text-white focus:outline-none focus:border-amber-500/60 appearance-none cursor-pointer text-sm"
             >
-              {statuses.map((status) => (
+              {ARTICLE_STATUSES.map((status) => (
                 <option key={status} value={status} className="bg-neutral-900 text-white">
                   {status}
                 </option>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
 import { Search, User, Clock, BookOpen, Loader2, Inbox } from "lucide-react";
+import { ARTICLE_CATEGORIES } from "@/constants/blog";
 import type { PublicArticleItem } from "@/types/blog";
 
 const fetcher = async (url: string) => {
@@ -20,16 +21,6 @@ export default function Articles() {
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [category, setCategory] = useState<string>("همه");
   const [page, setPage] = useState<number>(1);
-
-  const categories = [
-    "همه",
-    "بدنسازی",
-    "تغذیه",
-    "کاهش وزن",
-    "سلامت",
-    "مکمل",
-    "تکنیک",
-  ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -115,7 +106,7 @@ export default function Articles() {
           </div>
 
           <div className="flex flex-wrap gap-2.5 justify-center">
-            {categories.map((cat) => (
+            {ARTICLE_CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}

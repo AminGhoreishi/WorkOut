@@ -69,7 +69,6 @@ export interface AdminBlogStats {
 export interface ArticleStatsProps {
   stats: AdminBlogStats;
   totalCount: number;
-  formatNumber?: (num: number) => string;
 }
 
 export interface ArticleListProps {
