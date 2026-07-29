@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import Link from "next/link";
 import { ArrowRight, Save, Eye, X, Image as ImageIcon, Loader2 } from "lucide-react";
@@ -11,6 +12,8 @@ import type {
   CreateArticleFormInputs,
   CreateArticleProps,
   ArticleAuthorInfo,
+  UserProfileResponse,
+  ArticleSubmitStatus,
 } from "@/types/blog";
 
 const CKEditorWrapper = dynamic(() => import("./CKEditorWrapper"), {
@@ -21,6 +24,14 @@ const CATEGORIES = ["بدنسازی", "تغذیه", "کاهش وزن", "سلام
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
+const profileFetcher = async (url: string): Promise<UserProfileResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error("خطا در دریافت اطلاعات کاربری");
+  }
+  return res.json();
+};
+
 export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
   const router = useRouter();
   const [tags, setTags] = useState<string[]>([]);
@@ -28,26 +39,17 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
   const [featuredImagePreview, setFeaturedImagePreview] = useState<string>("");
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
-  const [author, setAuthor] = useState<ArticleAuthorInfo | null>(initialAuthor || null);
 
-  useEffect(() => {
-    if (!initialAuthor) {
-      async function loadAuthor() {
-        try {
-          const res = await fetch("/api/user/profile");
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user) {
-              setAuthor(data.user);
-            }
-          }
-        } catch (err) {
-          setAuthor(null);
-        }
-      }
-      loadAuthor();
+  const { data: profileData } = useSWR<UserProfileResponse>(
+    !initialAuthor ? "/api/user/profile" : null,
+    profileFetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
     }
-  }, [initialAuthor]);
+  );
+
+  const author: ArticleAuthorInfo | null = initialAuthor || profileData?.user || null;
 
   useEffect(() => {
     return () => {
@@ -134,8 +136,9 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
 
   const onSubmit = async (
     data: CreateArticleFormInputs,
-    submitStatus: "draft" | "published"
+    submitStatus: ArticleSubmitStatus
   ) => {
+    if (saving) return;
     setSaving(true);
     try {
       const formData = new FormData();

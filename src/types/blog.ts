@@ -130,6 +130,12 @@ export interface CKEditorWrapperProps {
   onChange: (value: string) => void;
 }
 
+export type ArticleSubmitStatus = "draft" | "published";
+
+export interface UserProfileResponse {
+  user?: ArticleAuthorInfo;
+}
+
 export interface CreateArticleProps {
   initialAuthor?: ArticleAuthorInfo | null;
 }

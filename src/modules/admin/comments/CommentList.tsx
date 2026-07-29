@@ -20,7 +20,10 @@ import type { AdminComment, AdminCommentStats, AdminCommentsResponse } from "@/t
 
 const fetcher = async (url: string): Promise<AdminCommentsResponse> => {
   const res = await fetch(url);
-  if (!res.ok) throw new Error("خطا در دریافت لیست دیدگاه‌ها");
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "خطا در دریافت لیست دیدگاه‌ها");
+  }
   return res.json();
 };
 
@@ -50,7 +53,11 @@ export default function CommentList() {
     url += `&search=${encodeURIComponent(debouncedSearchQuery.trim())}`;
   }
 
-  const { data, error: swrError, isLoading, mutate } = useSWR(url, fetcher);
+  const { data, error: swrError, isLoading, mutate } = useSWR(url, fetcher, {
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+    dedupingInterval: 5000,
+  });
 
   const comments = data?.comments || [];
   const totalPages = data?.totalPages || 1;
@@ -60,7 +67,7 @@ export default function CommentList() {
     approvedCount: 0,
     pendingCount: 0,
   };
-  const error = swrError ? (swrError.message || "دریافت اطلاعات با خطا مواجه شد") : null;
+  const error = swrError ? swrError.message || "دریافت اطلاعات با خطا مواجه شد" : null;
 
   const handleToggleApproval = async (id: string, currentStatus: boolean) => {
     const nextStatus = !currentStatus;
@@ -76,15 +83,35 @@ export default function CommentList() {
       confirmButtonColor: nextStatus ? "#10b981" : "#eab308",
     });
 
-    if (confirm) {
-      try {
-        const res = await fetch("/api/admin/comment", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, isApproved: nextStatus }),
-        });
+    if (!confirm) return;
 
-        if (res.ok) {
+    const updatedComments = comments.map((c) =>
+      c._id === id ? { ...c, isApproved: nextStatus } : c
+    );
+    const updatedStats: AdminCommentStats = {
+      ...stats,
+      approvedCount: nextStatus ? stats.approvedCount + 1 : Math.max(0, stats.approvedCount - 1),
+      pendingCount: nextStatus ? Math.max(0, stats.pendingCount - 1) : stats.pendingCount + 1,
+    };
+
+    const optimisticPayload = data
+      ? { ...data, comments: updatedComments, stats: updatedStats }
+      : undefined;
+
+    try {
+      await mutate(
+        async () => {
+          const res = await fetch("/api/admin/comment", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, isApproved: nextStatus }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || "خطا در بروزرسانی وضعیت");
+          }
+
           showAlert({
             title: nextStatus ? "تایید شد" : "لغو تایید شد",
             text: nextStatus
@@ -93,18 +120,22 @@ export default function CommentList() {
             icon: "success",
             confirmButtonColor: "#7c3aed",
           });
-          mutate();
-        } else {
-          throw new Error("خطا در بروزرسانی وضعیت");
+
+          return data;
+        },
+        {
+          optimisticData: optimisticPayload,
+          rollbackOnError: true,
+          revalidate: true,
         }
-      } catch (err: any) {
-        showAlert({
-          title: "خطا",
-          text: err.message || "بروزرسانی با خطا مواجه شد.",
-          icon: "error",
-          confirmButtonColor: "#7c3aed",
-        });
-      }
+      );
+    } catch (err: any) {
+      showAlert({
+        title: "خطا",
+        text: err.message || "بروزرسانی با خطا مواجه شد.",
+        icon: "error",
+        confirmButtonColor: "#7c3aed",
+      });
     }
   };
 
@@ -121,31 +152,59 @@ export default function CommentList() {
       confirmButtonText: "بله، حذف شود",
     });
 
-    if (confirm) {
-      try {
-        const res = await fetch(`/api/admin/comment?id=${id}`, {
-          method: "DELETE",
-        });
+    if (!confirm) return;
 
-        if (res.ok) {
+    const target = comments.find((c) => c._id === id);
+    const updatedComments = comments.filter((c) => c._id !== id);
+    const updatedStats: AdminCommentStats = {
+      totalCount: Math.max(0, stats.totalCount - 1),
+      approvedCount: target?.isApproved ? Math.max(0, stats.approvedCount - 1) : stats.approvedCount,
+      pendingCount: !target?.isApproved ? Math.max(0, stats.pendingCount - 1) : stats.pendingCount,
+    };
+
+    const optimisticPayload = data
+      ? {
+          ...data,
+          comments: updatedComments,
+          total: Math.max(0, totalComments - 1),
+          stats: updatedStats,
+        }
+      : undefined;
+
+    try {
+      await mutate(
+        async () => {
+          const res = await fetch(`/api/admin/comment?id=${id}`, {
+            method: "DELETE",
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || "خطا در حذف دیدگاه");
+          }
+
           showAlert({
             title: "حذف شد",
             text: "دیدگاه با موفقیت حذف شد.",
             icon: "success",
             confirmButtonColor: "#7c3aed",
           });
-          mutate();
-        } else {
-          throw new Error("خطا در حذف دیدگاه");
+
+          return data;
+        },
+        {
+          optimisticData: optimisticPayload,
+          rollbackOnError: true,
+          revalidate: true,
         }
-      } catch (err: any) {
-        showAlert({
-          title: "خطا",
-          text: err.message || "حذف با خطا مواجه شد.",
-          icon: "error",
-          confirmButtonColor: "#7c3aed",
-        });
-      }
+      );
+    } catch (err: any) {
+      showAlert({
+        title: "خطا",
+        text: err.message || "حذف با خطا مواجه شد.",
+        icon: "error",
+        confirmButtonColor: "#7c3aed",
+      });
     }
   };
 
