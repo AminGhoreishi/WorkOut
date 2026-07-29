@@ -1,7 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { EditSubscriptionModalProps, EditSubscriptionFormInputs } from "@/types/workout";
+import type {
+  EditSubscriptionModalProps,
+  EditSubscriptionFormInputs,
+} from "@/types/workout";
 import { showAlert } from "@/utils/alert";
 
 export default function EditSubscriptionModal({

@@ -254,3 +254,15 @@ export interface VideosManagementProps {
   setWatchingVideo: (video: VideoInfo | null) => void;
   onVideosUpdate?: (videos: VideoInfo[]) => void;
 }
+
+export interface CreateSubscriptionModalProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  packages: PackageInfo[];
+}
+
+export interface UploadVideoModalProps {
+  onClose: () => void;
+  onUploadSuccess: () => void;
+}
+

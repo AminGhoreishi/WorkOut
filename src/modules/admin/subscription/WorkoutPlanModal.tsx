@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Plus, Edit, Trash2, Dumbbell, AlertCircle, Play } from "lucide-react";
-import {
+import type {
   WorkoutPlan,
   WorkoutDay,
   WorkoutExercise,
@@ -133,6 +133,9 @@ export default function WorkoutPlanModal({
         const resData = await res.json();
         setWorkoutPlan(resData.plan);
         showAlert("موفقیت", "برنامه تمرینی با موفقیت ایجاد شد", "success");
+      } else {
+        const err = await res.json();
+        showAlert("خطا", err.message || "خطا در ایجاد برنامه", "error");
       }
     } catch (e) {
       console.error(e);
@@ -157,9 +160,13 @@ export default function WorkoutPlanModal({
         setWorkoutPlan(resData.plan);
         setIsEditingPlanInfo(false);
         showAlert("موفقیت", "برنامه تمرینی با موفقیت بروزرسانی شد", "success");
+      } else {
+        const err = await res.json();
+        showAlert("خطا", err.message || "خطا در بروزرسانی برنامه", "error");
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در بروزرسانی برنامه", "error");
     }
   };
 
@@ -185,9 +192,13 @@ export default function WorkoutPlanModal({
         setSelectedDay(null);
         setExercises([]);
         showAlert("موفقیت", "برنامه تمرینی با موفقیت حذف شد", "success");
+      } else {
+        const err = await res.json();
+        showAlert("خطا", err.message || "خطا در حذف برنامه", "error");
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در حذف برنامه", "error");
     }
   };
 
@@ -222,6 +233,9 @@ export default function WorkoutPlanModal({
               sortOrder: Number(data.sortOrder),
             });
           }
+        } else {
+          const err = await res.json();
+          showAlert("خطا", err.message || "خطا در ویرایش روز", "error");
         }
       } else {
         const res = await fetch("/api/admin/subscription/workout-days", {
@@ -237,10 +251,14 @@ export default function WorkoutPlanModal({
         if (res.ok) {
           fetchDays(workoutPlan._id);
           setShowDayForm(false);
+        } else {
+          const err = await res.json();
+          showAlert("خطا", err.message || "خطا در ثبت روز جدید", "error");
         }
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در ثبت اطلاعات روز", "error");
     }
   };
 
@@ -262,9 +280,13 @@ export default function WorkoutPlanModal({
           setExercises([]);
         }
         if (workoutPlan) fetchDays(workoutPlan._id);
+      } else {
+        const err = await res.json();
+        showAlert("خطا", err.message || "خطا در حذف روز", "error");
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در حذف روز تمرینی", "error");
     }
   };
 
@@ -304,6 +326,9 @@ export default function WorkoutPlanModal({
           fetchExercises(selectedDay._id);
           setShowExerciseForm(false);
           setEditingExercise(null);
+        } else {
+          const err = await res.json();
+          showAlert("خطا", err.message || "خطا در ویرایش حرکت", "error");
         }
       } else {
         const res = await fetch("/api/admin/subscription/workout-exercises", {
@@ -323,10 +348,14 @@ export default function WorkoutPlanModal({
         if (res.ok) {
           fetchExercises(selectedDay._id);
           setShowExerciseForm(false);
+        } else {
+          const err = await res.json();
+          showAlert("خطا", err.message || "خطا در افزودن حرکت", "error");
         }
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در ثبت اطلاعات حرکت", "error");
     }
   };
 
@@ -347,9 +376,13 @@ export default function WorkoutPlanModal({
       );
       if (res.ok) {
         if (selectedDay) fetchExercises(selectedDay._id);
+      } else {
+        const err = await res.json();
+        showAlert("خطا", err.message || "خطا در حذف حرکت", "error");
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در حذف حرکت تمرینی", "error");
     }
   };
 
@@ -408,7 +441,7 @@ export default function WorkoutPlanModal({
                   />
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold text-white py-2 rounded-lg font-medium hover:from-amber-400 hover:to-yellow-400 transition-colors text-xs cursor-pointer"
+                    className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold py-2 rounded-lg hover:from-amber-400 hover:to-yellow-400 transition-colors text-xs cursor-pointer"
                   >
                     ایجاد برنامه تمرینی
                   </button>
@@ -574,7 +607,7 @@ export default function WorkoutPlanModal({
                         }}
                         className={`p-3 rounded-lg border text-right cursor-pointer transition-all flex items-center justify-between ${
                           selectedDay?._id === day._id
-                            ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 text-white shadow-lg shadow-[0_0_15px_rgba(234,179,8,0.2)]"
+                            ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 shadow-lg shadow-[0_0_15px_rgba(234,179,8,0.2)]"
                             : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                         }`}
                       >
@@ -583,7 +616,7 @@ export default function WorkoutPlanModal({
                             {day.dayName}
                           </div>
                           <div
-                            className={`text-[10px] ${selectedDay?._id === day._id ? "text-white/80" : "text-white/50"}`}
+                            className={`text-[10px] ${selectedDay?._id === day._id ? "text-neutral-900" : "text-white/50"}`}
                           >
                             عضله هدف: {day.muscleGroup}
                           </div>
@@ -602,13 +635,13 @@ export default function WorkoutPlanModal({
                               });
                               setShowDayForm(true);
                             }}
-                            className={`p-1 rounded cursor-pointer ${selectedDay?._id === day._id ? "hover:bg-white/20 text-white" : "hover:bg-white/5 text-blue-400"}`}
+                            className={`p-1 rounded cursor-pointer ${selectedDay?._id === day._id ? "hover:bg-black/10 text-neutral-900" : "hover:bg-white/5 text-blue-400"}`}
                           >
                             <Edit className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDeleteDay(day._id)}
-                            className={`p-1 rounded cursor-pointer ${selectedDay?._id === day._id ? "hover:bg-white/20 text-white" : "hover:bg-white/5 text-red-400"}`}
+                            className={`p-1 rounded cursor-pointer ${selectedDay?._id === day._id ? "hover:bg-black/10 text-neutral-900" : "hover:bg-white/5 text-red-400"}`}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -655,7 +688,7 @@ export default function WorkoutPlanModal({
                       });
                       setShowExerciseForm(true);
                     }}
-                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all cursor-pointer"
+                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 shadow-md shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     حرکت تمرینی جدید

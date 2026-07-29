@@ -3,7 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, Users, Check, X, Clock, Film } from "lucide-react";
 
-import { PackageInfo, SubscriptionItem, VideoInfo, SubscriptionsTableRef, VideosManagementRef } from "@/types/workout";
+import type {
+  PackageInfo,
+  SubscriptionItem,
+  VideoInfo,
+  SubscriptionsTableRef,
+  VideosManagementRef,
+} from "@/types/workout";
+import { showAlert } from "@/utils/alert";
 
 import UploadVideoModal from "./UploadVideoModal";
 import VideosManagement from "./VideosManagement";
@@ -49,9 +56,12 @@ export default function SubscriptionsManagement() {
       if (res.ok) {
         const data = await res.json();
         setPackages(data.packages || []);
+      } else {
+        showAlert("خطا", "دریافت لیست پکیج‌ها با خطا مواجه شد", "error");
       }
     } catch (e) {
       console.error(e);
+      showAlert("خطا", "خطا در برقراری ارتباط با سرور", "error");
     }
   };
 
@@ -87,7 +97,7 @@ export default function SubscriptionsManagement() {
           <div className="flex gap-2">
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all font-medium text-sm"
+              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-5 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all text-sm cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               ثبت اشتراک دستی

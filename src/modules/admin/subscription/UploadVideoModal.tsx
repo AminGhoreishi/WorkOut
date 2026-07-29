@@ -1,12 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
+import type { UploadVideoModalProps } from "@/types/workout";
 import { showAlert } from "@/utils/alert";
-
-interface UploadVideoModalProps {
-  onClose: () => void;
-  onUploadSuccess: () => void;
-}
 
 export default function UploadVideoModal({
   onClose,
@@ -204,7 +200,7 @@ export default function UploadVideoModal({
             <div className="flex gap-3 pt-4">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
+                className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold py-2.5 rounded-lg hover:opacity-90 text-sm cursor-pointer"
               >
                 شروع فرآیند آپلود
               </button>

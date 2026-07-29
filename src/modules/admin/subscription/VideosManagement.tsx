@@ -123,7 +123,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
           </div>
           <button
             onClick={() => setShowUploadVideoModal(true)}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             آپلود ویدیوی ورزشی جدید
@@ -166,7 +166,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                       onClick={() => setWatchingVideo(vid)}
                       className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity animate-none"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center text-white shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 rounded-full flex items-center justify-center shadow-lg">
                         <Play className="w-5 h-5 fill-current ml-0.5" />
                       </div>
                     </button>

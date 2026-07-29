@@ -17,7 +17,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
-import {
+import type {
   SubscriptionItem,
   SubscriptionsTableRef,
   SubscriptionsTableProps,
@@ -44,8 +44,6 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
         if (!res.ok) throw new Error("Failed to fetch subscriptions");
         const data = await res.json();
         setSubscriptions(data.subscriptions || []);
-        console.log(data);
-        
         setTotalPages(data.totalPages || 1);
 
         const statsRes = await fetch("/api/admin/subscription?limit=10000");
@@ -175,7 +173,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                 onClick={() => setStatusFilter(st)}
                 className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                   statusFilter === st
-                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 text-white"
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400"
                     : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
                 }`}
               >
@@ -230,7 +228,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                     >
                       <td className="p-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center font-bold text-white shadow-md shrink-0">
+                          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center shadow-md shrink-0">
                             {sub.userId?.fullName?.charAt(0) ||
                               sub.userId?.username?.charAt(0) ||
                               "U"}
