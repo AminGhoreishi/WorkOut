@@ -69,28 +69,11 @@ export interface AdminBlogStats {
 export interface ArticleStatsProps {
   stats: AdminBlogStats;
   totalCount: number;
-  formatNumber: (num: number) => string;
+  formatNumber?: (num: number) => string;
 }
 
 export interface ArticleListProps {
-  articles: AdminBlog[];
-  total: number;
-  loading: boolean;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (cat: string) => void;
-  selectedStatus: string;
-  setSelectedStatus: (status: string) => void;
-  selectedArticles: string[];
-  handleSelectAll: () => void;
-  handleSelectArticle: (id: string) => void;
-  handleDeleteArticle: (id: string) => void;
-  handleBulkDelete: () => void;
-  formatNumber: (num: number) => string;
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  totalPages: number;
+  onStatsChange?: (stats: AdminBlogStats, totalCount: number) => void;
 }
 
 export interface ArticleDetailAuthor {
