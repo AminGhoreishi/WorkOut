@@ -151,3 +151,26 @@ export interface CKEditorWrapperProps {
 export interface CreateArticleProps {
   initialAuthor?: ArticleAuthorInfo | null;
 }
+
+export interface PublicArticleItem {
+  _id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  image?: string;
+  category: string;
+  status: string;
+  publishDate?: string | null;
+  createdAt?: string;
+  authorId?: {
+    username?: string;
+    fullName?: string;
+  } | null;
+}
+
+export interface PublicArticlesProps {
+  initialArticles?: PublicArticleItem[];
+  initialTotal?: number;
+  initialTotalPages?: number;
+}

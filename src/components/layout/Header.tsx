@@ -37,43 +37,41 @@ export default function Header({ session }: HeaderProps) {
               )}
             </button>
 
-            <div className="flex items-center gap-8">
-              <Link
-                href="/"
-                className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center gap-2 group"
-              >
-                <Image
-                  src="/android-chrome-192x192.png"
-                  alt="لوگوی استارفیت"
-                  width={36}
-                  height={36}
-                  className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
-                />
-                <span className="max-md:hidden font-bold text-xl text-white font-morabbaReg">
-                  استارفیت
-                </span>
-              </Link>
+            <Link
+              href="/"
+              className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center gap-2 group"
+            >
+              <Image
+                src="/android-chrome-192x192.png"
+                alt="لوگوی استارفیت"
+                width={36}
+                height={36}
+                className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
+              />
+              <span className="font-bold text-xl text-white font-morabbaReg">
+                استارفیت
+              </span>
+            </Link>
 
-              <div className="hidden md:flex gap-8 mr-4">
-                <Link href="/" className={getLinkClass("/")}>
-                  خانه
-                </Link>
-                <Link href="/packages" className={getLinkClass("/packages")}>
-                  پکیج‌ها
-                </Link>
-                <Link href="/nutrition" className={getLinkClass("/nutrition")}>
-                  کالری شمار
-                </Link>
-                <Link href="/articles" className={getLinkClass("/articles")}>
-                  مقالات
-                </Link>
-                <Link
-                  href="/dashboard/tickets"
-                  className={getLinkClass("/tickets")}
-                >
-                  پشتیبانی
-                </Link>
-              </div>
+            <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+              <Link href="/" className={getLinkClass("/")}>
+                خانه
+              </Link>
+              <Link href="/packages" className={getLinkClass("/packages")}>
+                پکیج‌ها
+              </Link>
+              <Link href="/nutrition" className={getLinkClass("/nutrition")}>
+                کالری شمار
+              </Link>
+              <Link href="/articles" className={getLinkClass("/articles")}>
+                مقالات
+              </Link>
+              <Link
+                href="/dashboard/tickets"
+                className={getLinkClass("/tickets")}
+              >
+                پشتیبانی
+              </Link>
             </div>
 
             <div className="hidden md:flex items-center">
