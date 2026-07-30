@@ -72,3 +72,10 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export interface UserDropdownProps {
+  username?: string;
+  avatar?: string;
+  email?: string;
+  role?: string;
+}

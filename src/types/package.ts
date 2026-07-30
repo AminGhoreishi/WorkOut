@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import type { FeatureItem } from "./components";
 
 export interface Package {
   _id: string;
@@ -26,8 +27,18 @@ export interface Package {
   hasMealPlan: boolean;
   tier?: string;
   features?: string[] | { name: string }[];
+  highlights?: string[];
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface PackageSlugPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export interface PackageDetailsProps {
+  package: Package;
+  features: FeatureItem[];
 }
 
 export interface IPackage extends Omit<Package, "_id" | "createdAt" | "updatedAt">, Document {

@@ -1,3 +1,6 @@
+"use client";
+
+import useSWR from "swr";
 import FAQ from "@/modules/home/FAQ";
 import Testimonials from "@/modules/home/Testimonials";
 import Breadcrumb from "./Breadcrumb";
@@ -8,14 +11,32 @@ import PackageStats from "./PackageStats";
 import { Check, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { iconMap } from "@/utils/icons";
+import type { PackageDetailsProps } from "@/types/package";
+
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || "خطا در دریافت اطلاعات پکیج");
+  }
+  return res.json();
+};
 
 export default function PackageDetails({
-  package: packageData,
+  package: initialPackage,
   features,
-}: {
-  package: any;
-  features: any[];
-}) {
+}: PackageDetailsProps) {
+  const { data: fetchedPackage } = useSWR(
+    `/api/packages/${initialPackage.slug}`,
+    fetcher,
+    {
+      fallbackData: initialPackage,
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
+
+  const packageData = fetchedPackage || initialPackage;
   const PackageIcon = iconMap[packageData.icon] || Sparkles;
 
   return (
@@ -32,7 +53,7 @@ export default function PackageDetails({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 space-y-6 sm:space-y-10">
-              {packageData.popular && (
+              {packageData.isPopular && (
                 <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 sm:px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.1)]">
                   <Sparkles className="w-3.5 h-3.5 animate-pulse" />
                   <span>{packageData.tagline}</span>
@@ -56,7 +77,7 @@ export default function PackageDetails({
                           <Star
                             key={i}
                             className={`w-3.5 h-3.5 ${
-                              i < Math.floor(packageData.rating)
+                              i < Math.floor(packageData.rating || 5)
                                 ? "fill-amber-400 text-amber-400"
                                 : "text-neutral-600"
                             }`}
@@ -64,15 +85,11 @@ export default function PackageDetails({
                         ))}
                       </div>
                       <span className="text-amber-400 text-xs font-bold mr-1">
-                        {packageData.rating}
+                        {packageData.rating || 5}
                       </span>
                       <span className="text-neutral-600 text-xs">•</span>
                       <span className="text-neutral-400 text-xs font-medium">
-                        {(
-                          packageData.reviewCount ||
-                          packageData.reviews ||
-                          0
-                        ).toLocaleString("fa-IR")}{" "}
+                        {(packageData.reviewCount || 0).toLocaleString("fa-IR")}{" "}
                         نظر
                       </span>
                     </div>
@@ -86,13 +103,11 @@ export default function PackageDetails({
 
               <PackageStats
                 studentCount={packageData.studentCount ?? 0}
-                rating={packageData.rating}
-                reviewCount={
-                  packageData.reviewCount ?? packageData.reviews ?? 0
-                }
+                rating={packageData.rating ?? 5}
+                reviewCount={packageData.reviewCount ?? 0}
               />
 
-              {packageData.highlights?.length > 0 && (
+              {packageData.highlights && packageData.highlights.length > 0 && (
                 <div className="bg-neutral-900/80 backdrop-blur-xl border border-amber-500/20 rounded-3xl p-5 sm:p-8 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-2xl" />
                   <h3 className="text-sm sm:text-xl font-bold text-white mb-4 sm:mb-6 font-morabbaReg flex items-center gap-2">
