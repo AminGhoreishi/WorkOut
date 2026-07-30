@@ -67,3 +67,8 @@ export interface MobileMenuProps {
   session?: HeaderSession | null;
   getLinkClass: (href: string) => string;
 }
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}

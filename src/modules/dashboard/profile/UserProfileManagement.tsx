@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import useSWR from "swr";
 import {
   User,
   Mail,
@@ -15,16 +16,35 @@ import {
 import { showAlert } from "@/utils/alert";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { UserProfile, ProfileFormInputs } from "@/types/user-profile";
+import type { ProfileFormInputs, UserProfileResponse } from "@/types/user-profile";
+import UserProfileLoading from "./UserProfileLoading";
+import UserProfileError from "./UserProfileError";
+
+const fetcher = async (url: string): Promise<UserProfileResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "بارگذاری اطلاعات حساب کاربری با خطا مواجه شد.");
+  }
+  return res.json();
+};
 
 export default function UserProfileManagement() {
   const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const { data, error: swrError, isLoading, mutate } = useSWR<UserProfileResponse>(
+    "/api/user/profile",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
+
+  const profile = data?.user || null;
 
   const {
     register,
@@ -57,65 +77,42 @@ export default function UserProfileManagement() {
         message:
           "نام کاربری فقط می‌تواند شامل حروف انگلیسی، اعداد و خط تیره (_) باشد",
       },
-    },
+    }
   );
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/user/profile");
-      if (!res.ok) throw new Error("Failed to fetch profile");
-      const data = await res.json();
-      if (data.user) {
-        setProfile(data.user);
-        reset({
-          username: data.user.username || "",
-          fullName: data.user.fullName || "",
-          phone: data.user.phone || "",
-          email: data.user.email || "",
-          password: "",
-          confirmPassword: "",
-        });
-      }
-    } catch (e) {
-      console.error(e);
-      showAlert({
-        title: "خطا",
-        text: "بارگذاری اطلاعات حساب کاربری با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonText: "تلاش مجدد",
-        confirmButtonColor: "#7c3aed",
+    if (profile) {
+      reset({
+        username: profile.username || "",
+        fullName: profile.fullName || "",
+        phone: profile.phone || "",
+        email: profile.email || "",
+        password: "",
+        confirmPassword: "",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [profile, reset]);
 
-  const handleUpdateProfile: SubmitHandler<ProfileFormInputs> = async (
-    data,
-  ) => {
+  const handleUpdateProfile: SubmitHandler<ProfileFormInputs> = async (formData) => {
+    if (saving) return;
     setSaving(true);
     try {
       const res = await fetch("/api/user/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: data.username,
-          fullName: data.fullName,
-          phone: data.phone,
-          email: data.email,
-          password: data.password || undefined,
+          username: formData.username,
+          fullName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          password: formData.password || undefined,
         }),
       });
 
-      const resData = await res.json();
+      const resData = await res.json().catch(() => ({}));
 
       if (res.ok) {
-        setProfile(resData.user);
+        await mutate(resData, { revalidate: true });
         setValue("password", "");
         setValue("confirmPassword", "");
         router.refresh();
@@ -134,7 +131,6 @@ export default function UserProfileManagement() {
         });
       }
     } catch (e) {
-      console.error(e);
       showAlert({
         title: "خطا",
         text: "خطا در ارتباط با سرور رخ داده است.",
@@ -146,12 +142,16 @@ export default function UserProfileManagement() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
+    return <UserProfileLoading />;
+  }
+
+  if (swrError && !profile) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-white/60 gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-        <span>در حال بارگذاری اطلاعات پروفایل...</span>
-      </div>
+      <UserProfileError
+        errorMessage={swrError.message}
+        onRetry={() => mutate()}
+      />
     );
   }
 
@@ -162,7 +162,7 @@ export default function UserProfileManagement() {
           <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-500 rounded-full flex items-center justify-center font-bold text-3xl shadow-lg mb-4">
             {profile?.fullName
               ? profile.fullName.charAt(0)
-              : profile?.username.charAt(0) || "U"}
+              : profile?.username?.charAt(0) || "U"}
           </div>
           <h2 className="text-xl font-bold font-morabbaReg text-white">
             {profile?.fullName || "کاربر ورزشکار"}

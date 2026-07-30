@@ -14,3 +14,17 @@ export interface ProfileFormInputs {
   password?: string;
   confirmPassword?: string;
 }
+
+export interface UserProfileResponse {
+  user?: UserProfile;
+  message?: string;
+}
+
+export interface UserProfileLoadingProps {
+  message?: string;
+}
+
+export interface UserProfileErrorProps {
+  errorMessage?: string;
+  onRetry: () => void;
+}

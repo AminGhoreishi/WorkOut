@@ -1,22 +1,48 @@
+import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import OrderPage from "@/modules/order/OrderPage";
-import { OrderPackageInfo } from "@/types/order";
-import { getServerSession } from "next-auth";
-import { notFound, redirect } from "next/navigation";
+import type { OrderPackageInfo, OrderSlugPageProps } from "@/types/order";
 
-export default async function page({
+export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+}: OrderSlugPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    await dbConnect();
+    const pkg = await Package.findOne({ slug, isActive: true })
+      .select("name tagline")
+      .lean();
+
+    if (!pkg) {
+      return {
+        title: "استار فیت | پکیج یافت نشد",
+      };
+    }
+
+    return {
+      title: `استار فیت | خرید ${pkg.name}`,
+      description:
+        pkg.tagline ||
+        `تکمیل سفارش و فعال‌سازی آنلاین اشتراک ${pkg.name} در سیستم استار فیت`,
+    };
+  } catch (error) {
+    return {
+      title: "استار فیت | تکمیل سفارش",
+    };
+  }
+}
+
+export default async function OrderSlugPage({ params }: OrderSlugPageProps) {
   const { slug } = await params;
 
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user || !session.user.id) {
-    redirect("/");
+  if (!session?.user?.id) {
+    redirect(`/login?callbackUrl=/order/${slug}`);
   }
 
   await dbConnect();

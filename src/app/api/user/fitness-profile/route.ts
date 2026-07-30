@@ -15,8 +15,24 @@ const VALID_GOALS = [
 ];
 
 const VALID_EQUIPMENT = ["none", "home_basic", "gym_full"];
-
 const VALID_EXPERIENCE = ["beginner", "intermediate", "advanced"];
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_BUFFER_SIZE = 5 * 1024 * 1024;
+
+function sanitizeProfile(doc: any) {
+  if (!doc) return null;
+  return {
+    goal: doc.goal,
+    sessionsPerWeek: doc.sessionsPerWeek,
+    equipment: doc.equipment,
+    trainingExperience: doc.trainingExperience,
+    ageYears: doc.ageYears,
+    heightCm: doc.heightCm,
+    weightKg: doc.weightKg,
+    bodyPhotos: doc.bodyPhotos || [],
+    notes: doc.notes || "",
+  };
+}
 
 async function uploadBase64ToS3(base64Data: string): Promise<string> {
   const matches = base64Data.match(
@@ -28,9 +44,14 @@ async function uploadBase64ToS3(base64Data: string): Promise<string> {
 
   const contentType = matches[1];
   const base64Content = matches[2];
+
+  if (!ALLOWED_MIME_TYPES.includes(contentType)) {
+    throw new Error("فرمت تصویر پشتیبانی نمی‌شود");
+  }
+
   const buffer = Buffer.from(base64Content, "base64");
 
-  if (buffer.length > 7 * 1024 * 1024) {
+  if (buffer.length > MAX_IMAGE_BUFFER_SIZE) {
     throw new Error("حجم تصویر بیش از حد مجاز است");
   }
 
@@ -64,7 +85,7 @@ export async function GET(req: NextRequest) {
     }
 
     const profile = await FitnessProfile.findOne({ userId: session.user.id }).lean();
-    return NextResponse.json({ profile });
+    return NextResponse.json({ profile: sanitizeProfile(profile) });
   } catch (error: any) {
     return NextResponse.json(
       { message: "خطایی در دریافت اطلاعات رخ داد" },
@@ -186,10 +207,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       message: "پروفایل ورزشی با موفقیت ثبت شد",
-      profile,
+      profile: sanitizeProfile(profile),
     });
   } catch (error: any) {
-    const isUserError = error.message === "فرمت تصویر نامعتبر است" || error.message === "حجم تصویر بیش از حد مجاز است";
+    const isUserError =
+      error.message === "فرمت تصویر نامعتبر است" ||
+      error.message === "حجم تصویر بیش از حد مجاز است" ||
+      error.message === "فرمت تصویر پشتیبانی نمی‌شود";
     return NextResponse.json(
       { message: isUserError ? error.message : "خطایی در پردازش اطلاعات رخ داد" },
       { status: isUserError ? 400 : 500 }

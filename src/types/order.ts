@@ -28,6 +28,10 @@ export interface OrderPageProps {
   email?: string | null;
 }
 
+export interface OrderSlugPageProps {
+  params: Promise<{ slug: string }>;
+}
+
 export interface OrderFormData {
   selectedPackage: string;
   billingCycle: BillingCycle;
@@ -81,4 +85,3 @@ export interface IOrder extends OrderModelData, Document {
   createdAt: Date;
   updatedAt: Date;
 }
-

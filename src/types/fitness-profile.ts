@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import type React from "react";
 
 export type FitnessGoal =
   | "weight_loss"
@@ -10,6 +11,24 @@ export type FitnessGoal =
 export type EquipmentOption = "none" | "home_basic" | "gym_full";
 
 export type TrainingExperienceOption = "beginner" | "intermediate" | "advanced";
+
+export interface GoalOptionItem {
+  val: FitnessGoal;
+  label: string;
+  icon: React.ElementType;
+}
+
+export interface ExperienceOptionItem {
+  val: TrainingExperienceOption;
+  label: string;
+  desc: string;
+}
+
+export interface EquipmentOptionItem {
+  val: EquipmentOption;
+  label: string;
+  desc: string;
+}
 
 export interface FitnessProfile {
   _id?: string;
@@ -64,6 +83,11 @@ export interface OnboardingFormInputs {
 
 export interface OnboardingFormProps {
   initialProfile?: FitnessProfileData | null;
+}
+
+export interface FitnessProfileApiResponse {
+  profile?: FitnessProfileData | null;
+  message?: string;
 }
 
 export interface IFitnessProfile

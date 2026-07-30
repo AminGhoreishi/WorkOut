@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { useForm, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import {
@@ -10,72 +12,88 @@ import {
   Camera,
   ChevronLeft,
   ChevronRight,
-  TrendingUp,
-  Award,
-  Zap,
-  Heart,
   Plus,
   Trash2,
   Loader2,
   Smile,
 } from "lucide-react";
 import { showAlert } from "@/utils/alert";
+import {
+  GOAL_OPTIONS,
+  EXPERIENCE_OPTIONS,
+  EQUIPMENT_OPTIONS,
+  ALLOWED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+} from "@/constants/onboarding";
 import type {
   OnboardingFormInputs,
   OnboardingFormProps,
-  FitnessGoal,
-  EquipmentOption,
-  TrainingExperienceOption,
+  FitnessProfileApiResponse,
 } from "@/types/fitness-profile";
 
-const GOAL_OPTIONS: Array<{ val: FitnessGoal; label: string; icon: React.ElementType }> = [
-  { val: "weight_loss", label: "کاهش وزن و چربی‌سوزی", icon: TrendingUp },
-  { val: "muscle_gain", label: "عضله‌سازی و افزایش حجم", icon: Dumbbell },
-  { val: "endurance", label: "افزایش استقامت و کاردیو", icon: Zap },
-  { val: "general_fitness", label: "آمادگی جسمانی عمومی", icon: Award },
-  { val: "rehabilitation", label: "توان‌بخشی و بهبود آسیب", icon: Heart },
-];
-
-const EXPERIENCE_OPTIONS: Array<{ val: TrainingExperienceOption; label: string; desc: string }> = [
-  { val: "beginner", label: "مبتدی", desc: "زیر ۶ ماه" },
-  { val: "intermediate", label: "متوسط", desc: "۶ تا ۲۴ ماه" },
-  { val: "advanced", label: "حرفه‌ای", desc: "بیش از ۲ سال" },
-];
-
-const EQUIPMENT_OPTIONS: Array<{ val: EquipmentOption; label: string; desc: string }> = [
-  { val: "none", label: "بدون تجهیزات (فقط وزن بدن)", desc: "مناسب برای تمرین در خانه بدون وسیله" },
-  { val: "home_basic", label: "تجهیزات پایه خانگی", desc: "دمبل، کش ورزشی، مت یا ملزومات ساده" },
-  { val: "gym_full", label: "باشگاه ورزشی مجهز", desc: "دسترسی کامل به دستگاه‌ها و هالترها" },
-];
-
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const fetcher = async (url: string): Promise<FitnessProfileApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "خطا در دریافت اطلاعات پروفایل ورزشی");
+  }
+  return res.json();
+};
 
 export default function OnboardingForm({ initialProfile }: OnboardingFormProps) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const { data: profileResponse, mutate } = useSWR<FitnessProfileApiResponse>(
+    "/api/user/fitness-profile",
+    fetcher,
+    {
+      fallbackData: initialProfile ? { profile: initialProfile } : undefined,
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
+
+  const activeProfile = profileResponse?.profile || initialProfile || null;
+
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     trigger,
     control,
     formState: { errors },
   } = useForm<OnboardingFormInputs>({
     defaultValues: {
-      goal: initialProfile?.goal || "general_fitness",
-      sessionsPerWeek: initialProfile?.sessionsPerWeek || 3,
-      equipment: initialProfile?.equipment || "none",
-      trainingExperience: initialProfile?.trainingExperience || "beginner",
-      ageYears: initialProfile?.ageYears || 25,
-      heightCm: initialProfile?.heightCm || 175,
-      weightKg: initialProfile?.weightKg || 70,
-      bodyPhotos: initialProfile?.bodyPhotos || [],
-      notes: initialProfile?.notes || "",
+      goal: activeProfile?.goal || "general_fitness",
+      sessionsPerWeek: activeProfile?.sessionsPerWeek || 3,
+      equipment: activeProfile?.equipment || "none",
+      trainingExperience: activeProfile?.trainingExperience || "beginner",
+      ageYears: activeProfile?.ageYears || 25,
+      heightCm: activeProfile?.heightCm || 175,
+      weightKg: activeProfile?.weightKg || 70,
+      bodyPhotos: activeProfile?.bodyPhotos || [],
+      notes: activeProfile?.notes || "",
     },
   });
+
+  useEffect(() => {
+    if (activeProfile) {
+      reset({
+        goal: activeProfile.goal || "general_fitness",
+        sessionsPerWeek: activeProfile.sessionsPerWeek || 3,
+        equipment: activeProfile.equipment || "none",
+        trainingExperience: activeProfile.trainingExperience || "beginner",
+        ageYears: activeProfile.ageYears || 25,
+        heightCm: activeProfile.heightCm || 175,
+        weightKg: activeProfile.weightKg || 70,
+        bodyPhotos: activeProfile.bodyPhotos || [],
+        notes: activeProfile.notes || "",
+      });
+    }
+  }, [activeProfile, reset]);
 
   const watchedGoal = useWatch({ control, name: "goal" });
   const watchedExperience = useWatch({ control, name: "trainingExperience" });
@@ -143,6 +161,13 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
           setValue("bodyPhotos", [...watchedPhotos, base64String]);
         }
       };
+      reader.onerror = () => {
+        showAlert({
+          title: "خطا در خواندن فایل",
+          text: "بارگذاری تصویر با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+          icon: "error",
+        });
+      };
       reader.readAsDataURL(file);
     });
 
@@ -154,7 +179,8 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
     setValue("bodyPhotos", updated);
   };
 
-  const onSubmit = async (data: OnboardingFormInputs) => {
+  const onSubmit = async (formData: OnboardingFormInputs) => {
+    if (loading) return;
     setLoading(true);
     try {
       const res = await fetch("/api/user/fitness-profile", {
@@ -162,13 +188,16 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
+      const resData = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "خطا در ثبت اطلاعات");
+        throw new Error(resData.message || "خطا در ثبت اطلاعات ورزشی");
       }
+
+      await mutate(resData, { revalidate: true });
 
       await showAlert({
         title: "موفقیت‌آمیز",
@@ -195,7 +224,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
           <Activity className="w-10 h-10" />
         </div>
         <h2 className="text-3xl font-extrabold text-white" style={{ fontFamily: "Marbeh, sans-serif" }}>
-          به فیت‌کوچ خوش آمدید
+          به استار فیت خوش آمدید
         </h2>
         <p className="mt-2 text-sm text-white/60 max-w-sm mx-auto">
           برای طراحی برنامه ورزشی شخصی‌سازی شده، لطفاً فرم زیر را تکمیل کنید.
