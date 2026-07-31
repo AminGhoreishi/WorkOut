@@ -28,8 +28,8 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
     <div
       className="lg:col-span-1 rounded-2xl p-5"
       style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(234,179,8,0.15)",
       }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -37,7 +37,7 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
         {subscription && (
           <Link
             href="/dashboard/subscription"
-            className="text-purple-400 text-xs hover:text-purple-300 flex items-center gap-1"
+            className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium"
           >
             جزئیات <ChevronLeft size={14} />
           </Link>
@@ -47,52 +47,47 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
         <>
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, #7c3aed, #ec4899)",
-              }}
+              className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-md"
             >
-              <Award size={22} className="text-white" />
+              <Award size={22} className="text-neutral-950" />
             </div>
             <div>
               <p className="font-semibold text-white">
                 {subscription.packageName}
               </p>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 فعال
               </span>
             </div>
           </div>
           <div className="mb-3">
-            <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+            <div className="flex justify-between text-xs text-neutral-400 mb-1.5">
               <span>پیشرفت اشتراک</span>
               <span>{subscription.daysRemaining} روز مانده</span>
             </div>
             <div className="h-2 rounded-full bg-white/10">
               <div
-                className="h-2 rounded-full transition-all"
+                className="h-2 rounded-full transition-all bg-gradient-to-r from-amber-500 to-yellow-500"
                 style={{
                   width: `${progressPercent}%`,
-                  background:
-                    "linear-gradient(90deg, #7c3aed, #ec4899)",
                 }}
               ></div>
             </div>
           </div>
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-gray-500">تاریخ پایان</span>
+              <span className="text-neutral-400">تاریخ پایان</span>
               <span className="text-white">{subscription.endDate}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">پرداخت بعدی</span>
-              <span className="text-white">
+              <span className="text-neutral-400">پرداخت بعدی</span>
+              <span className="text-white font-sans">
                 {subscription.nextPayment} تومان
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">مربی</span>
-              <span className="text-purple-300">{coachName}</span>
+              <span className="text-neutral-400">مربی</span>
+              <span className="text-amber-400 font-medium">{coachName}</span>
             </div>
           </div>
         </>
@@ -104,7 +99,7 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
       )}
       <Link
         href="/packages"
-        className="mt-4 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium text-purple-300 border border-purple-500/30 hover:border-purple-500/60 transition-all"
+        className="mt-4 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all"
       >
         <Zap size={14} />
         ارتقا یا خرید پکیج

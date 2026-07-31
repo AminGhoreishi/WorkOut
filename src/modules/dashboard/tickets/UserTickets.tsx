@@ -28,7 +28,7 @@ export default function UserTickets() {
         const res = await fetch("/api/user/ticket");
         if (!res.ok) throw new Error("خطا در دریافت لیست تیکت‌ها");
         const data = await res.json();
-     
+
         const userTickets = data.tickets || [];
         setTickets(userTickets);
         if (selectIdAfterFetch) {
@@ -61,7 +61,7 @@ export default function UserTickets() {
 
   return (
     <div
-      className="min-h-screen bg-slate-950 p-4 md:p-8 font-danaMed text-white"
+      className="min-h-screen bg-neutral-950 p-4 md:p-8 font-danaMed text-white"
       dir="rtl"
     >
       <div className="max-w-7xl mx-auto">
@@ -70,14 +70,14 @@ export default function UserTickets() {
             <h1 className="text-3xl font-bold text-white mb-2 font-morabbaReg">
               تیکت‌های پشتیبانی و مشاوره
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="text-neutral-400 text-sm">
               سوالات بدنسازی، برنامه‌های ورزشی یا مشکلات فنی خود را با مربیان و
               کارشناسان در میان بگذارید.
             </p>
           </div>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="bg-gradient-to-r cursor-pointer from-purple-600 to-pink-500 hover:shadow-lg hover:shadow-purple-500/20 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition-all font-semibold text-sm"
+            className="bg-gradient-to-r cursor-pointer from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 px-5 py-3 rounded-xl flex items-center gap-2 transition-all font-bold text-sm shadow-md"
           >
             {showCreateForm ? (
               <>
@@ -94,11 +94,11 @@ export default function UserTickets() {
         </div>
 
         {isLoading ? (
-          <div className="p-12 text-center text-white/50 bg-white/5 border border-white/10 rounded-2xl">
+          <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
             در حال بارگذاری اطلاعات تیکت‌ها...
           </div>
         ) : error ? (
-          <div className="p-12 text-center text-red-400 bg-white/5 border border-white/10 rounded-2xl">
+          <div className="p-12 text-center text-amber-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
             {error}
           </div>
         ) : showCreateForm ? (

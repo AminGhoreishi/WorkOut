@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Calendar, Flame, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import useSWR from "swr";
+import { Calendar, Flame, ChevronDown, AlertCircle, RefreshCw } from "lucide-react";
 import WorkoutHeader from "./WorkoutHeader";
 import ExercisesList from "./ExercisesList";
 import WeeklyAdvice from "./WeeklyAdvice";
@@ -16,88 +17,80 @@ import type {
   SimpleWeek,
 } from "@/types/workout";
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "خطا در دریافت اطلاعات");
+  }
+  return res.json();
+};
+
 export default function WorkoutView({
   subscription,
   userId,
 }: WorkoutViewProps) {
-  const [activeWeekIndex, setActiveWeekIndex] = useState("");
-  const [activeDayIndex, setActiveDayIndex] = useState("");
-  const [workoutWeek, setWorkoutWeek] = useState<SimpleWeek[]>([]);
-  const [workoutDays, setWorkoutDays] = useState<DayItem[]>([]);
-  const [workoutExercises, setWorkoutExercises] = useState<ExerciseItem[]>([]);
-  const [isLoadingExercises, setIsLoadingExercises] = useState(false);
+  const [selectedWeekId, setSelectedWeekId] = useState<string>("");
+  const [selectedDayId, setSelectedDayId] = useState<string>("");
 
-  useEffect(() => {
-    const fetchWeeks = async () => {
-      if (!subscription?.packageId?._id) return;
-      try {
-        const res = await fetch(
-          `/api/admin/subscription/workout-week?packageId=${subscription.packageId._id}`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          const weeks = data.weeks || [];
-          setWorkoutWeek(weeks);
-          if (weeks.length > 0) {
-            setActiveWeekIndex(weeks[0]._id);
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchWeeks();
-  }, [subscription]);
+  const packageId = subscription?.packageId?._id || "";
 
-  useEffect(() => {
-    const fetchDays = async () => {
-      if (!activeWeekIndex) return;
-      try {
-        const res = await fetch(
-          `/api/admin/subscription/workout-days?planId=${activeWeekIndex}`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          const days = data.days || [];
-          setWorkoutDays(days);
-          if (days.length > 0) {
-            setActiveDayIndex(days[0]._id);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchDays();
-  }, [activeWeekIndex]);
+  const {
+    data: weeksData,
+    error: weeksError,
+    isLoading: isLoadingWeeks,
+    mutate: mutateWeeks,
+  } = useSWR<{ weeks: SimpleWeek[] }>(
+    packageId ? `/api/admin/subscription/workout-week?packageId=${packageId}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
 
-  useEffect(() => {
-    setIsLoadingExercises(true);
-    const fetchExcersice = async () => {
-      if (!activeDayIndex) return;
-      try {
-        const res = await fetch(
-          `/api/admin/subscription/workout-exercises?dayId=${activeDayIndex}`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setWorkoutExercises(data.exercises || []);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoadingExercises(false);
-      }
-    };
-    fetchExcersice();
-  }, [activeDayIndex]);
+  const workoutWeek = weeksData?.weeks || [];
+  const activeWeekId = selectedWeekId || workoutWeek[0]?._id || "";
 
-  if (workoutWeek.length === 0) {
+  const {
+    data: daysData,
+    error: daysError,
+    isLoading: isLoadingDays,
+    mutate: mutateDays,
+  } = useSWR<{ days: DayItem[] }>(
+    activeWeekId ? `/api/admin/subscription/workout-days?planId=${activeWeekId}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
+
+  const workoutDays = daysData?.days || [];
+  const activeDayId = selectedDayId || workoutDays[0]?._id || "";
+
+  const {
+    data: exercisesData,
+    error: exercisesError,
+    isLoading: isLoadingExercises,
+    mutate: mutateExercises,
+  } = useSWR<{ exercises: ExerciseItem[] }>(
+    activeDayId ? `/api/admin/subscription/workout-exercises?dayId=${activeDayId}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+    }
+  );
+
+  const workoutExercises = exercisesData?.exercises || [];
+
+  if (isLoadingWeeks) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center font-danaMed">
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed">
         <div className="text-center space-y-4">
-          <Flame className="w-12 h-12 text-purple-500 animate-pulse mx-auto" />
-          <p className="text-sm text-gray-400">
+          <Flame className="w-12 h-12 text-amber-400 animate-pulse mx-auto" />
+          <p className="text-sm text-neutral-400">
             در حال بارگذاری برنامه تمرینی...
           </p>
         </div>
@@ -105,10 +98,52 @@ export default function WorkoutView({
     );
   }
 
+  if (weeksError || daysError) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center font-danaMed p-4">
+        <div className="bg-white/[0.03] border border-amber-500/20 rounded-2xl p-8 max-w-md text-center space-y-4 shadow-xl">
+          <AlertCircle className="w-12 h-12 text-amber-400 mx-auto" />
+          <h3 className="text-lg font-bold font-morabbaReg text-white">
+            خطا در دریافت برنامه تمرینی
+          </h3>
+          <p className="text-xs text-neutral-400">
+            {weeksError?.message || daysError?.message || "دریافت اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش کنید."}
+          </p>
+          <button
+            onClick={() => {
+              mutateWeeks();
+              mutateDays();
+            }}
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-xs rounded-xl hover:opacity-95 transition-all cursor-pointer shadow-md"
+          >
+            <RefreshCw className="w-4 h-4 text-neutral-950" />
+            <span>تلاش مجدد</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (workoutWeek.length === 0) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed p-4">
+        <div className="text-center space-y-4 bg-white/[0.03] border border-amber-500/15 p-8 rounded-2xl max-w-md shadow-xl">
+          <Flame className="w-12 h-12 text-amber-400/40 mx-auto" />
+          <h3 className="text-lg font-bold font-morabbaReg text-white">
+            برنامه تمرینی ثبت نشده است
+          </h3>
+          <p className="text-xs text-neutral-400">
+            هنوز برنامه‌ای برای این دوره سرفصل‌بندی یا فعال نشده است.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const activeWeek =
-    workoutWeek.find((w) => w._id === activeWeekIndex) || workoutWeek[0];
+    workoutWeek.find((w) => w._id === activeWeekId) || workoutWeek[0];
   const activeDay =
-    workoutDays.find((d) => d._id === activeDayIndex) || workoutDays[0];
+    workoutDays.find((d) => d._id === activeDayId) || workoutDays[0];
 
   const workoutPlan = {
     _id: "plan",
@@ -122,10 +157,10 @@ export default function WorkoutView({
   const overallProgressPercent = 0;
 
   return (
-    <div className="min-h-screen text-white font-danaMed pb-12 bg-gray-950">
-      <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-purple-900/20 via-pink-900/5 to-transparent -z-10" />
-      <div className="absolute top-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10" />
-      <div className="absolute top-80 left-10 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl -z-10" />
+    <div className="min-h-screen text-white font-danaMed pb-12 bg-neutral-950">
+      <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-amber-500/10 via-yellow-500/5 to-transparent -z-10" />
+      <div className="absolute top-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute top-80 left-10 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-8 space-y-8">
         <WorkoutHeader
@@ -136,70 +171,76 @@ export default function WorkoutView({
 
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <h2 className="text-lg font-bold font-morabbaReg text-gray-300 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-bold font-morabbaReg text-neutral-300 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-amber-400" />
               <span>روزهای تمرینی هفته</span>
             </h2>
             <div className="relative w-full sm:w-48">
               <select
-                value={activeWeekIndex}
+                value={activeWeekId}
                 onChange={(e) => {
-                  setActiveWeekIndex(e.target.value);
-                  setActiveDayIndex("");
+                  setSelectedWeekId(e.target.value);
+                  setSelectedDayId("");
                 }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer text-right"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-amber-500/50 transition-all appearance-none cursor-pointer text-right"
               >
                 {workoutWeek.map((week, idx) => (
                   <option
-                    key={idx}
+                    key={week._id || idx}
                     value={week._id}
-                    className="bg-gray-900 text-white"
+                    className="bg-neutral-900 text-white"
                   >
                     هفته {week.title}
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-neutral-400">
                 <ChevronDown className="w-4 h-4" />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {workoutDays.map((day) => {
-              const isActive = day._id === activeDayIndex;
-              const isRest = !day.exercises || day.exercises.length === 0;
-              return (
-                <button
-                  key={day._id}
-                  onClick={() => {
-                    setActiveDayIndex(day._id);
-                  }}
-                  className={`
-                    flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center
-                    ${
-                      isActive
-                        ? "bg-gradient-to-b from-purple-600/30 to-pink-600/30 border-purple-500 text-white shadow-lg"
-                        : "bg-white/5 hover:bg-white/8 border-white/5 text-gray-400 hover:text-white"
-                    }
-                  `}
-                >
-                  <span className="text-sm font-bold">{day.dayName}</span>
-                  <span className="text-[10px] mt-1 opacity-70 truncate max-w-full">
-                    {isRest ? "ریکاوری" : day.muscleGroup}
-                  </span>
-                </button>
-              );
-            })}
+            {isLoadingDays ? (
+              <div className="col-span-3 text-center py-4 text-xs text-neutral-400">
+                در حال بارگذاری روزها...
+              </div>
+            ) : (
+              workoutDays.map((day) => {
+                const isActive = day._id === activeDayId;
+                const isRest = !day.exercises || day.exercises.length === 0;
+                return (
+                  <button
+                    key={day._id}
+                    onClick={() => {
+                      setSelectedDayId(day._id);
+                    }}
+                    className={`
+                      flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center cursor-pointer
+                      ${
+                        isActive
+                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-lg"
+                          : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-400 hover:text-white"
+                      }
+                    `}
+                  >
+                    <span className="text-sm font-bold">{day.dayName}</span>
+                    <span className="text-[10px] mt-1 opacity-70 truncate max-w-full">
+                      {isRest ? "ریکاوری" : day.muscleGroup}
+                    </span>
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             {activeDay && (
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/3 border border-white/5 p-5 rounded-2xl">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.03] border border-amber-500/15 p-5 rounded-2xl">
                 <div>
-                  <span className="text-xs text-purple-400 font-semibold">
+                  <span className="text-xs text-amber-400 font-semibold">
                     {activeDay.dayName} - تمرین امروز
                   </span>
                   <h3 className="text-xl font-bold font-morabbaReg text-white mt-1">
@@ -210,10 +251,10 @@ export default function WorkoutView({
                 {totalExercises > 0 && (
                   <div className="flex items-center gap-4 w-full sm:w-auto">
                     <div className="flex-1 sm:flex-none text-right">
-                      <div className="text-[10px] text-gray-400">
+                      <div className="text-[10px] text-neutral-400">
                         تعداد حرکات
                       </div>
-                      <div className="text-sm font-bold text-white">
+                      <div className="text-sm font-bold text-white ss02 font-sans">
                         {totalExercises} حرکت
                       </div>
                     </div>
@@ -224,6 +265,16 @@ export default function WorkoutView({
 
             {isLoadingExercises ? (
               <WorkoutExercisesSkeleton />
+            ) : exercisesError ? (
+              <div className="p-6 bg-white/[0.03] border border-amber-500/15 rounded-2xl text-center space-y-3">
+                <p className="text-xs text-amber-400">خطا در بارگذاری حرکات این روز تمرینی.</p>
+                <button
+                  onClick={() => mutateExercises()}
+                  className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-xl border border-amber-500/20 cursor-pointer"
+                >
+                  تلاش مجدد
+                </button>
+              </div>
             ) : totalExercises > 0 && activeDay ? (
               <ExercisesList
                 exercises={workoutExercises}

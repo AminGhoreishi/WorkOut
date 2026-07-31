@@ -5,7 +5,7 @@ const stats = [
     label: "روز تمرین",
     value: "۳۲",
     icon: Flame,
-    color: "from-orange-500 to-red-500",
+    color: "from-amber-500 to-amber-600",
     change: "+۴ این هفته",
   },
   {
@@ -13,7 +13,7 @@ const stats = [
     value: "۷۸",
     unit: "کیلو",
     icon: Activity,
-    color: "from-blue-500 to-cyan-500",
+    color: "from-amber-400 to-yellow-500",
     change: "-۲ کیلو",
   },
   {
@@ -21,14 +21,14 @@ const stats = [
     value: "۵/۷",
     unit: "جلسه",
     icon: Target,
-    color: "from-purple-500 to-pink-500",
+    color: "from-yellow-500 to-amber-600",
     change: "۵ جلسه تکمیل",
   },
   {
     label: "امتیاز",
     value: "۱,۲۴۰",
     icon: Star,
-    color: "from-yellow-500 to-orange-500",
+    color: "from-amber-500 to-yellow-400",
     change: "+۸۰ این هفته",
   },
 ];
@@ -41,29 +41,29 @@ export default function DashboardStats() {
         return (
           <div
             key={i}
-            className="rounded-2xl p-4"
+            className="rounded-2xl p-4 transition-all hover:border-amber-500/30"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(234,179,8,0.15)",
             }}
           >
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-gradient-to-br ${stat.color}`}
             >
-              <Icon size={18} className="text-white" />
+              <Icon size={18} className="text-neutral-950" />
             </div>
             <div className="flex items-end gap-1 mb-1">
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-white font-sans">
                 {stat.value}
               </span>
               {stat.unit && (
-                <span className="text-gray-400 text-sm mb-0.5">
+                <span className="text-neutral-400 text-sm mb-0.5">
                   {stat.unit}
                 </span>
               )}
             </div>
-            <p className="text-gray-500 text-xs">{stat.label}</p>
-            <p className="text-green-400 text-xs mt-1">{stat.change}</p>
+            <p className="text-neutral-400 text-xs">{stat.label}</p>
+            <p className="text-amber-400 text-xs mt-1 font-medium">{stat.change}</p>
           </div>
         );
       })}

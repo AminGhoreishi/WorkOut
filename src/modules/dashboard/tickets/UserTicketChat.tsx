@@ -56,13 +56,14 @@ export default function UserTicketChat({
       setSendingReply(false);
     }
   };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start font-danaMed">
       <div className="lg:col-span-5 space-y-4">
-        <h2 className="text-white font-bold text-lg mb-2">درخواست‌های من</h2>
+        <h2 className="text-white font-bold text-lg mb-2 font-morabbaReg">درخواست‌های من</h2>
         {tickets.length === 0 ? (
-          <div className="p-12 text-center text-white/40 bg-white/5 border border-white/10 rounded-2xl">
-            <MessageSquare className="w-12 h-12 mx-auto opacity-20 mb-3" />
+          <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
+            <MessageSquare className="w-12 h-12 mx-auto opacity-20 mb-3 text-amber-400" />
             شما هیچ تیکت پشتیبانی ثبت نکرده‌اید.
           </div>
         ) : (
@@ -75,8 +76,8 @@ export default function UserTicketChat({
                   onClick={() => setSelectedTicket(t)}
                   className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${
                     isSelected
-                      ? "bg-gradient-to-br from-purple-600/20 to-pink-500/20 border-purple-500 text-white shadow-lg shadow-purple-500/10"
-                      : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      ? "bg-amber-500/15 border-amber-500 text-white shadow-lg shadow-amber-500/10"
+                      : "bg-white/[0.03] border-white/10 text-white hover:bg-white/5"
                   }`}
                 >
                   <div className="flex justify-between items-start">
@@ -89,16 +90,16 @@ export default function UserTicketChat({
                       {getCategoryLabel(t.category)}
                     </span>
                   </div>
-                  <p className="text-xs text-white/60 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
                     {t.description}
                   </p>
-                  <div className="flex justify-between items-center text-[10px] text-white/50 pt-2 border-t border-white/5">
+                  <div className="flex justify-between items-center text-[10px] text-neutral-400 pt-2 border-t border-white/5">
                     <span
                       className={`px-2 py-0.5 rounded-full border text-[9px] ${getStatusBadge(t.status)}`}
                     >
                       {getStatusLabel(t.status)}
                     </span>
-                    <span className="ss02">
+                    <span className="ss02 font-sans">
                       {new Date(t.createdAt).toLocaleDateString("fa-IR")}
                     </span>
                   </div>
@@ -111,9 +112,9 @@ export default function UserTicketChat({
 
       <div className="lg:col-span-7">
         {!selectedTicket ? (
-          <div className="h-[480px] border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center text-white/40 p-8 text-center bg-white/5">
-            <MessageSquare className="w-16 h-16 mb-4 opacity-20 text-purple-400" />
-            <h4 className="font-bold text-lg text-white mb-2">
+          <div className="h-[480px] border border-dashed border-amber-500/20 rounded-2xl flex flex-col items-center justify-center text-neutral-400 p-8 text-center bg-white/[0.02]">
+            <MessageSquare className="w-16 h-16 mb-4 opacity-20 text-amber-400" />
+            <h4 className="font-bold text-lg text-white mb-2 font-morabbaReg">
               تیکتی انتخاب نشده است
             </h4>
             <p className="text-sm">
@@ -122,10 +123,10 @@ export default function UserTicketChat({
             </p>
           </div>
         ) : (
-          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col h-[580px] shadow-2xl">
-            <div className="p-4 border-b border-white/10 bg-black/30 flex justify-between items-center">
+          <div className="bg-white/[0.03] border border-amber-500/15 rounded-2xl overflow-hidden flex flex-col h-[580px] shadow-2xl">
+            <div className="p-4 border-b border-white/10 bg-black/40 flex justify-between items-center">
               <div>
-                <h3 className="text-md font-bold text-white line-clamp-1 mb-1">
+                <h3 className="text-md font-bold text-white line-clamp-1 mb-1 font-morabbaReg">
                   {selectedTicket.subject}
                 </h3>
                 <div className="flex flex-wrap gap-2 items-center">
@@ -139,7 +140,7 @@ export default function UserTicketChat({
                   >
                     {getCategoryLabel(selectedTicket.category)}
                   </span>
-                  <span className="text-[9px] text-white/40 ss02">
+                  <span className="text-[9px] text-neutral-400 ss02 font-sans">
                     ثبت:{" "}
                     {new Date(selectedTicket.createdAt).toLocaleDateString(
                       "fa-IR",
@@ -151,12 +152,12 @@ export default function UserTicketChat({
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/20">
               <div className="flex gap-3 max-w-[85%] mr-auto flex-row-reverse">
-                <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xs font-bold flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold flex-shrink-0">
                   من
                 </div>
-                <div className="bg-purple-950/20 border border-purple-500/20 rounded-2xl rounded-tl-none p-3 text-white text-xs">
-                  <div className="text-purple-400/60 text-[9px] mb-1">من</div>
-                  <p className="leading-relaxed whitespace-pre-line">
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl rounded-tl-none p-3 text-white text-xs">
+                  <div className="text-amber-400/70 text-[9px] mb-1 font-bold">من</div>
+                  <p className="leading-relaxed whitespace-pre-line text-neutral-200">
                     {selectedTicket.description}
                   </p>
                   {selectedTicket.videoUrl && (
@@ -204,12 +205,12 @@ export default function UserTicketChat({
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 border ${
                           isSupport
-                            ? "bg-pink-500/20 border-pink-500/30 text-pink-400"
-                            : "bg-purple-500/20 border-purple-500/30 text-purple-400"
+                            ? "bg-amber-500/20 border-amber-500/30 text-amber-400"
+                            : "bg-amber-500/10 border-amber-500/20 text-amber-300"
                         }`}
                       >
                         {isSupport ? (
-                          <Shield className="w-4 h-4 text-pink-400" />
+                          <Shield className="w-4 h-4 text-amber-400" />
                         ) : (
                           "من"
                         )}
@@ -218,19 +219,19 @@ export default function UserTicketChat({
                         className={`rounded-2xl p-3 text-white text-xs border ${
                           isSupport
                             ? "bg-white/5 border-white/10 rounded-tr-none"
-                            : "bg-purple-950/20 border-purple-500/20 rounded-tl-none"
+                            : "bg-amber-500/10 border-amber-500/20 rounded-tl-none"
                         }`}
                       >
-                        <div className="flex justify-between items-center gap-6 text-white/40 text-[9px] mb-1">
+                        <div className="flex justify-between items-center gap-6 text-neutral-400 text-[9px] mb-1">
                           <span>{isSupport ? "پشتیبان فیت‌کوچ" : "من"}</span>
-                          <span className="ss02">
+                          <span className="ss02 font-sans">
                             {new Date(msg.createdAt).toLocaleTimeString(
                               "fa-IR",
                               { hour: "2-digit", minute: "2-digit" },
                             )}
                           </span>
                         </div>
-                        <p className="leading-relaxed whitespace-pre-line">
+                        <p className="leading-relaxed whitespace-pre-line text-neutral-200">
                           {msg.text}
                         </p>
                       </div>
@@ -242,7 +243,7 @@ export default function UserTicketChat({
 
             <div className="p-4 border-t border-white/10 bg-black/40">
               {selectedTicket.status === "closed" ? (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-center text-red-400 text-xs flex items-center justify-center gap-2">
+                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center text-amber-400 text-xs flex items-center justify-center gap-2">
                   <Lock className="w-4 h-4" />
                   این تیکت پشتیبانی بسته شده است. در صورت نیاز تیکت جدیدی ایجاد
                   کنید.
@@ -254,7 +255,7 @@ export default function UserTicketChat({
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="پاسخ خود را در اینجا بنویسید..."
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder:text-white/45 focus:outline-none focus:border-purple-500/50 resize-none leading-relaxed h-11 min-h-[44px] max-h-24 overflow-y-auto"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:border-amber-500/50 resize-none leading-relaxed h-11 min-h-[44px] max-h-24 overflow-y-auto"
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
@@ -265,9 +266,9 @@ export default function UserTicketChat({
                   <button
                     type="submit"
                     disabled={!replyText.trim() || sendingReply}
-                    className="bg-gradient-to-r from-purple-600 to-pink-500 hover:shadow-lg hover:shadow-purple-500/20 text-white w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold hover:opacity-95 w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4 rotate-180" />
+                    <Send className="w-4 h-4 rotate-180 text-neutral-950" />
                   </button>
                 </form>
               )}

@@ -50,40 +50,40 @@ export default function FavoritesManagement({
         text: "عملیات با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
         icon: "error",
         confirmButtonText: "باشه",
-        confirmButtonColor: "#7c3aed",
+        confirmButtonColor: "#eab308",
       });
     }
   };
 
   return (
     <div
-      className="min-h-screen bg-gray-950 text-white"
+      className="min-h-screen bg-neutral-950 text-white"
       style={{ fontFamily: "Dana, Marbuta, sans-serif", direction: "rtl" }}
     >
       <main className="p-4 md:p-6 space-y-6">
         <div
           className="relative rounded-2xl p-6 overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #4c1d95, #1e1b4b)",
-            border: "1px solid rgba(139,92,246,0.3)",
+            background: "linear-gradient(135deg, #18181b, #09090b)",
+            border: "1px solid rgba(234,179,8,0.25)",
           }}
         >
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-purple-500 blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-pink-500 blur-2xl"></div>
+            <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-amber-500 blur-3xl"></div>
+            <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-yellow-500 blur-2xl"></div>
           </div>
           <div className="relative flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-white mb-2 font-morabbaReg">
                 علاقه‌مندی‌های من
               </h2>
-              <p className="text-gray-400 text-sm">
+              <p className="text-neutral-400 text-sm">
                 لیست مقالات علمی و ورزشی که نشانه‌گذاری کرده‌اید.
               </p>
             </div>
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white/80 hover:text-white bg-white/5 hover:bg-white/10 transition-all border border-white/10"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 transition-all border border-amber-500/20"
             >
               <ArrowRight size={16} />
               بازگشت به داشبورد
@@ -94,8 +94,8 @@ export default function FavoritesManagement({
         <div
           className="rounded-2xl p-5"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(234,179,8,0.15)",
           }}
         >
           {wishlist.length > 0 ? (
@@ -103,7 +103,7 @@ export default function FavoritesManagement({
               {wishlist.map((a) => (
                 <div
                   key={a.id}
-                  className="rounded-xl p-4 bg-white/[0.03] border border-white/[0.07] hover:border-purple-500/40 transition-all group relative"
+                  className="rounded-xl p-4 bg-white/[0.03] border border-amber-500/15 hover:border-amber-500/40 transition-all group relative"
                 >
                   {a.image ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3">
@@ -120,7 +120,7 @@ export default function FavoritesManagement({
                   )}
 
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                       {a.category}
                     </span>
                     <button
@@ -133,12 +133,12 @@ export default function FavoritesManagement({
                   </div>
 
                   <Link href={`/article/${a.slug}`} className="block">
-                    <h3 className="text-white text-sm font-semibold group-hover:text-purple-300 transition-colors line-clamp-2 leading-relaxed mb-3">
+                    <h3 className="text-white text-sm font-semibold group-hover:text-amber-300 transition-colors line-clamp-2 leading-relaxed mb-3">
                       {a.title}
                     </h3>
                   </Link>
 
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div className="flex items-center gap-1.5 text-xs text-neutral-400">
                     <Eye size={12} />
                     <span>
                       {new Intl.NumberFormat("fa-IR").format(a.views)} بازدید
@@ -148,12 +148,12 @@ export default function FavoritesManagement({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-white/40 text-sm bg-white/[0.02] border border-dashed border-white/10 rounded-xl">
+            <div className="text-center py-12 text-white/40 text-sm bg-white/[0.02] border border-dashed border-amber-500/20 rounded-xl">
               <BookOpen className="w-12 h-12 mx-auto mb-3 text-white/20" />
               <p className="mb-3">لیست علاقه‌مندی‌های شما خالی است.</p>
               <Link
                 href="/articles"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white transition-all hover:opacity-90 bg-gradient-to-r from-purple-600 to-pink-500"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-neutral-950 transition-all hover:opacity-95 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500"
               >
                 مشاهده مقالات ورزشی
               </Link>

@@ -75,7 +75,7 @@ export default function ExercisesList({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-danaMed">
       {exercises.map((exercise, idx) => {
         const isCompleted = !!completedExercises[exercise._id];
         const isExpanded = activeTipsId === exercise._id;
@@ -88,11 +88,11 @@ export default function ExercisesList({
           <div
             key={exercise._id}
             className={`
-              relative overflow-hidden rounded-2xl ss02 border transition-all duration-300 bg-white/4
+              relative overflow-hidden rounded-2xl ss02 border transition-all duration-300 bg-white/[0.03]
               ${
                 isCompleted
-                  ? "border-green-500/30 bg-green-500/5 shadow-inner"
-                  : "border-white/10 hover:border-white/20 hover:bg-white/6"
+                  ? "border-amber-500/40 bg-amber-500/10 shadow-inner"
+                  : "border-white/10 hover:border-amber-500/30 hover:bg-white/5"
               }
             `}
           >
@@ -101,11 +101,11 @@ export default function ExercisesList({
                 <button
                   onClick={() => toggleExercise(exercise._id)}
                   className={`
-                    w-7 h-7 rounded-lg border flex items-center justify-center flex-shrink-0 transition-all duration-200 mt-1
+                    w-7 h-7 rounded-lg border flex items-center justify-center flex-shrink-0 transition-all duration-200 mt-1 cursor-pointer
                     ${
                       isCompleted
-                        ? "bg-green-500 border-green-500 text-white"
-                        : "border-white/20 hover:border-white/40 bg-white/5 text-transparent"
+                        ? "bg-amber-400 border-amber-400 text-neutral-950"
+                        : "border-white/20 hover:border-amber-500/40 bg-white/5 text-transparent"
                     }
                   `}
                 >
@@ -114,30 +114,30 @@ export default function ExercisesList({
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs bg-purple-500/10 text-purple-300 border border-purple-500/20 px-2 py-0.5 rounded-md font-semibold">
+                    <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
                       {muscleGroup}
                     </span>
-                    <span className="text-xs bg-white/5 text-gray-400 px-2 py-0.5 rounded-md">
+                    <span className="text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
                       حرکت {idx + 1}
                     </span>
                   </div>
                   <h4
-                    className={`text-base font-bold transition-all ${isCompleted ? "text-gray-400 line-through" : "text-white"}`}
+                    className={`text-base font-bold transition-all ${isCompleted ? "text-neutral-400 line-through" : "text-white"}`}
                   >
                     {exercise.name}
                   </h4>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 pt-2 font-semibold font-mono">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 pt-2 font-semibold font-mono">
                     <div className="flex items-center gap-1">
-                      <Dumbbell className="w-3.5 h-3.5 text-gray-500" />
+                      <Dumbbell className="w-3.5 h-3.5 text-amber-400" />
                       <span>{exercise.sets} ست</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3.5 h-3.5 text-gray-500" />
+                      <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
                       <span>{exercise.reps} تکرار</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Timer className="w-3.5 h-3.5 text-gray-500" />
+                      <Timer className="w-3.5 h-3.5 text-amber-400" />
                       <span className="font-danaMed">
                         استراحت: {exercise.restSec} ثانیه
                       </span>
@@ -154,15 +154,15 @@ export default function ExercisesList({
                     )
                   }
                   className={`
-                    flex items-center gap-1 px-3 py-2 text-xs rounded-xl transition-all
+                    flex items-center gap-1 px-3 py-2 text-xs rounded-xl transition-all cursor-pointer
                     ${
                       isExpanded
                         ? "bg-white/10 text-white"
-                        : "text-gray-400 hover:text-white bg-white/3 hover:bg-white/5"
+                        : "text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10"
                     }
                   `}
                 >
-                  <Info className="w-3.5 h-3.5" />
+                  <Info className="w-3.5 h-3.5 text-amber-400" />
                   <span>نکات مربی</span>
                   <ChevronDown
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
@@ -178,7 +178,7 @@ export default function ExercisesList({
                           : exercise._id,
                       )
                     }
-                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 border border-purple-500/20 hover:border-purple-500/30 rounded-xl transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
                   >
                     <HelpCircle className="w-3.5 h-3.5" />
                     <span>سوالات</span>
@@ -192,9 +192,9 @@ export default function ExercisesList({
                         playingVideo === exercise._id ? null : exercise._id,
                       )
                     }
-                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 hover:text-orange-300 border border-orange-500/20 hover:border-orange-500/30 rounded-xl transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
                   >
-                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                     <span>ویدیو آموزش</span>
                   </button>
                 )}
@@ -204,7 +204,7 @@ export default function ExercisesList({
             {playingVideo === exercise._id &&
               (exercise.videoId?.url || exercise.videoId2?.url) && (
                 <div className="px-5 pb-5 border-t border-white/5 pt-4">
-                  <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center border border-white/10 shadow-lg">
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center border border-amber-500/20 shadow-lg">
                     <video
                       src={
                         exercise.videoId?.url || exercise.videoId2?.url || ""
@@ -222,11 +222,11 @@ export default function ExercisesList({
               )}
 
             {isExpanded && (
-              <div className="px-5 pb-5 border-t border-white/5 pt-4 text-xs md:text-sm text-gray-400 bg-white/[0.01]">
-                <div className="flex gap-2.5 items-start p-3 bg-purple-500/5 rounded-xl border border-purple-500/10 text-purple-200/95 leading-relaxed">
-                  <Info className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
+              <div className="px-5 pb-5 border-t border-white/5 pt-4 text-xs md:text-sm text-neutral-300 bg-white/[0.01]">
+                <div className="flex gap-2.5 items-start p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-neutral-200 leading-relaxed">
+                  <Info className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold block text-purple-300 mb-1">
+                    <span className="font-bold block text-amber-300 mb-1">
                       توصیه مربی برای اجرای صحیح:
                     </span>
                     {coachTips}

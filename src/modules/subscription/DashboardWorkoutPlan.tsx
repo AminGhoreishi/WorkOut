@@ -25,29 +25,27 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
 
   if (!plan) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center text-white/40">
-        <Dumbbell className="w-10 h-10 mx-auto mb-3 text-white/20" />
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center text-neutral-400 font-danaMed">
+        <Dumbbell className="w-10 h-10 mx-auto mb-3 text-amber-400/40" />
         <p className="text-sm">برنامه تمرینی برای این اشتراک ثبت نشده است</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      
-      <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl -z-10" />
+    <div className="space-y-6 font-danaMed">
+      <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -z-10" />
         <div className="flex items-center gap-3 mb-2">
-          <Dumbbell className="w-6 h-6 text-purple-400 animate-pulse" />
+          <Dumbbell className="w-6 h-6 text-amber-400 animate-pulse" />
           <h3 className="text-lg font-bold text-white font-morabbaReg">{plan.title}</h3>
         </div>
-        <p className="text-white/60 text-xs md:text-sm leading-relaxed">{plan.description || "بدون توضیحات"}</p>
+        <p className="text-neutral-300 text-xs md:text-sm leading-relaxed">{plan.description || "بدون توضیحات"}</p>
       </div>
 
-      
       <div className="space-y-4">
         {days.length === 0 ? (
-          <div className="text-center p-8 border border-dashed border-white/10 rounded-2xl text-white/40">
+          <div className="text-center p-8 border border-dashed border-amber-500/20 rounded-2xl text-neutral-400">
             روزی برای این برنامه تعریف نشده است
           </div>
         ) : (
@@ -56,39 +54,37 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
             return (
               <div
                 key={day._id}
-                className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-350"
+                className="bg-white/[0.03] border border-amber-500/15 rounded-2xl overflow-hidden transition-all duration-350"
               >
-                
                 <button
                   onClick={() => toggleDay(day._id)}
-                  className="w-full text-right p-5 flex items-center justify-between hover:bg-white/3 transition-colors cursor-pointer"
+                  className="w-full text-right p-5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-lg flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center font-bold">
                       <Calendar className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{day.dayName}</h4>
-                      <p className="text-white/50 text-[10px] md:text-xs">عضله هدف: <strong className="text-white">{day.muscleGroup}</strong></p>
+                      <h4 className="text-white font-bold text-sm font-morabbaReg">{day.dayName}</h4>
+                      <p className="text-neutral-400 text-[10px] md:text-xs">عضله هدف: <strong className="text-white">{day.muscleGroup}</strong></p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-white/70">
+                    <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded ss02 font-sans">
                       {day.exercises.length} حرکت
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-white/60" />
+                      <ChevronUp className="w-4 h-4 text-neutral-400" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-white/60" />
+                      <ChevronDown className="w-4 h-4 text-neutral-400" />
                     )}
                   </div>
                 </button>
 
-                
                 {isExpanded && (
-                  <div className="p-5 pt-0 border-t border-white/5 bg-black/10">
+                  <div className="p-5 pt-0 border-t border-white/5 bg-black/20">
                     {day.exercises.length === 0 ? (
-                      <div className="text-center py-6 text-white/30 text-xs">
+                      <div className="text-center py-6 text-neutral-400 text-xs">
                         امروز روز استراحت است.
                       </div>
                     ) : (
@@ -96,11 +92,11 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                         {day.exercises.map((ex) => (
                           <div
                             key={ex._id}
-                            className="bg-white/3 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-white/5 transition-all"
+                            className="bg-white/5 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-white/10 transition-all"
                           >
                             <div>
                               <h5 className="text-white font-bold text-xs md:text-sm">{ex.name}</h5>
-                              <div className="flex flex-wrap gap-x-3 gap-y-1 text-white/50 text-[10px] md:text-xs mt-1">
+                              <div className="flex flex-wrap gap-x-3 gap-y-1 text-neutral-400 text-[10px] md:text-xs mt-1 ss02 font-sans">
                                 <span>ست‌ها: <strong className="text-white">{ex.sets}</strong></span>
                                 <span>|</span>
                                 <span>تکرارها: <strong className="text-white">{ex.reps}</strong></span>
@@ -114,37 +110,37 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                                 <>
                                   <button
                                     onClick={() => setActiveVideo(ex.videoId!)}
-                                    className="w-full sm:w-auto bg-purple-500/10 hover:bg-purple-500/25 border border-purple-500/20 text-purple-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                                    className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                   >
-                                    <Play className="w-3.5 h-3.5 fill-current" />
+                                    <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                                     ویدیو آموزشی ۱
                                   </button>
                                   <button
                                     onClick={() => setActiveVideo(ex.videoId2!)}
-                                    className="w-full sm:w-auto bg-pink-500/10 hover:bg-pink-500/25 border border-pink-500/20 text-pink-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                                    className="w-full sm:w-auto bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                   >
-                                    <Play className="w-3.5 h-3.5 fill-current" />
+                                    <Play className="w-3.5 h-3.5 fill-current text-amber-300" />
                                     ویدیو آموزشی ۲
                                   </button>
                                 </>
                               ) : ex.videoId ? (
                                 <button
                                   onClick={() => setActiveVideo(ex.videoId!)}
-                                  className="w-full sm:w-auto bg-purple-500/10 hover:bg-purple-500/25 border border-purple-500/20 text-purple-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                                  className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                 >
-                                  <Play className="w-3.5 h-3.5 fill-current" />
+                                  <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                                   تماشای ویدیو آموزشی
                                 </button>
                               ) : ex.videoId2 ? (
                                 <button
                                   onClick={() => setActiveVideo(ex.videoId2!)}
-                                  className="w-full sm:w-auto bg-pink-500/10 hover:bg-pink-500/25 border border-pink-500/20 text-pink-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                                  className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                 >
-                                  <Play className="w-3.5 h-3.5 fill-current" />
+                                  <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                                   تماشای ویدیو آموزشی
                                 </button>
                               ) : (
-                                <span className="text-[10px] text-white/20 italic">بدون ویدیو</span>
+                                <span className="text-[10px] text-neutral-500 italic">بدون ویدیو</span>
                               )}
                             </div>
                           </div>
@@ -159,13 +155,12 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
         )}
       </div>
 
-      
       {activeVideo && (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-950 border border-white/10 rounded-2xl overflow-hidden w-full max-w-3xl relative">
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed">
+          <div className="bg-neutral-900 border border-amber-500/20 rounded-2xl overflow-hidden w-full max-w-3xl relative">
             <div className="p-4 bg-black/40 flex justify-between items-center text-white border-b border-white/10">
-              <h3 className="font-bold text-sm flex items-center gap-2">
-                <Film className="w-4 h-4 text-purple-400" />
+              <h3 className="font-bold text-sm flex items-center gap-2 font-morabbaReg">
+                <Film className="w-4 h-4 text-amber-400" />
                 {activeVideo.title}
               </h3>
               <button

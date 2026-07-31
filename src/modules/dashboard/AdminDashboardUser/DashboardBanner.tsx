@@ -14,25 +14,25 @@ export default function DashboardBanner({ userName, todayWorkout }: DashboardBan
     <div
       className="relative rounded-2xl p-6 overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, #4c1d95, #1e1b4b)",
-        border: "1px solid rgba(139,92,246,0.3)",
+        background: "linear-gradient(135deg, #18181b, #09090b)",
+        border: "1px solid rgba(234,179,8,0.25)",
       }}
     >
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-purple-500 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-pink-500 blur-2xl"></div>
+        <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-amber-500 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-yellow-500 blur-2xl"></div>
       </div>
       <div className="relative flex items-center justify-between flex-wrap gap-4">
         <div>
-          <p className="text-purple-300 text-sm mb-1">
+          <p className="text-amber-400 text-sm mb-1 font-medium">
             سلام، {userName} 👋
           </p>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-white mb-2 font-morabbaReg">
             بریم تمرین کنیم!
           </h2>
-          <p className="text-gray-400 text-sm">
+          <p className="text-neutral-400 text-sm">
             تمرین امروز:{" "}
-            <span className="text-white font-semibold">
+            <span className="text-amber-300 font-semibold">
               {todayWorkout
                 ? `${todayWorkout.type} (${todayWorkout.duration})`
                 : "روز استراحت و ریکاوری"}
@@ -41,12 +41,9 @@ export default function DashboardBanner({ userName, todayWorkout }: DashboardBan
         </div>
         <Link
           href="/dashboard/subscription"
-          className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-white transition-all hover:opacity-90"
-          style={{
-            background: "linear-gradient(135deg, #7c3aed, #ec4899)",
-          }}
+          className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-neutral-950 transition-all hover:opacity-95 shadow-[0_0_15px_rgba(234,179,8,0.2)] bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500"
         >
-          <Play size={16} />
+          <Play size={16} className="fill-neutral-950" />
           شروع تمرین
         </Link>
       </div>

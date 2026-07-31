@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-gray-950 overflow-hidden" dir="rtl">
+      <div className="flex h-screen bg-neutral-950 overflow-x-hidden overflow-y-hidden" dir="rtl">
         <AdminSidebar />
         <MainWrapper>
           <AdminHeaderContainer />

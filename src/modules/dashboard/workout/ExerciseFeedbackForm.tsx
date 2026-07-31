@@ -54,9 +54,9 @@ export default function ExerciseFeedbackForm({
   };
 
   return (
-    <div className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-5 mt-4 space-y-5 animate-fadeIn">
-      <div className="flex items-center gap-2 text-purple-400">
-        <HelpCircle className="w-5 h-5" />
+    <div className="w-full bg-white/[0.02] border border-amber-500/15 rounded-2xl p-5 mt-4 space-y-5 animate-fadeIn font-danaMed">
+      <div className="flex items-center gap-2 text-amber-400">
+        <HelpCircle className="w-5 h-5 text-amber-400" />
         <h4 className="text-sm font-bold font-morabbaReg text-white">
           ارزیابی و بازخورد جلسه تمرین
         </h4>
@@ -64,10 +64,10 @@ export default function ExerciseFeedbackForm({
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-right">
         <div className="space-y-2">
-          <label className="block text-xs text-gray-400 font-semibold">
+          <label className="block text-xs text-neutral-400 font-semibold">
             میزان سختی تمرین چطور بود؟
           </label>
-          <div className="flex gap-2 justify-start direction-ltr">
+          <div className="flex gap-2 justify-start direction-ltr font-sans">
             {[1, 2, 3, 4, 5].map((level) => {
               const isActive = difficulty === level;
               return (
@@ -75,10 +75,10 @@ export default function ExerciseFeedbackForm({
                   key={level}
                   type="button"
                   onClick={() => setDifficulty(level)}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 ${
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/20"
-                      : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                      ? "bg-amber-500 border-amber-400 text-neutral-950 shadow-md"
+                      : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
                   }`}
                 >
                   {level}
@@ -89,10 +89,10 @@ export default function ExerciseFeedbackForm({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-xs text-gray-400 font-semibold">
+          <label className="block text-xs text-neutral-400 font-semibold">
             میزان انرژی شما چطور بود؟
           </label>
-          <div className="flex gap-2 justify-start direction-ltr">
+          <div className="flex gap-2 justify-start direction-ltr font-sans">
             {[1, 2, 3, 4, 5].map((level) => {
               const isActive = energyLevel === level;
               return (
@@ -100,10 +100,10 @@ export default function ExerciseFeedbackForm({
                   key={level}
                   type="button"
                   onClick={() => setEnergyLevel(level)}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 ${
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-pink-600 border-pink-500 text-white shadow-md shadow-pink-500/20"
-                      : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                      ? "bg-gradient-to-r from-amber-500 to-yellow-500 border-amber-400 text-neutral-950 shadow-md"
+                      : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
                   }`}
                 >
                   {level}
@@ -114,17 +114,17 @@ export default function ExerciseFeedbackForm({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-xs text-gray-400 font-semibold">
+          <label className="block text-xs text-neutral-400 font-semibold">
             آیا در عضله یا مفصلی احساس درد غیرطبیعی دارید؟
           </label>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setHasPain(true)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                 hasPain
-                  ? "bg-red-500/25 border-red-500 text-red-300"
-                  : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                  ? "bg-amber-500/25 border-amber-500 text-amber-300"
+                  : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
               }`}
             >
               <AlertCircle className="w-3.5 h-3.5" />
@@ -133,10 +133,10 @@ export default function ExerciseFeedbackForm({
             <button
               type="button"
               onClick={() => setHasPain(false)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                 !hasPain
-                  ? "bg-green-500/25 border-green-500 text-green-300"
-                  : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                  ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                  : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
               }`}
             >
               <CheckCircle className="w-3.5 h-3.5" />
@@ -146,13 +146,13 @@ export default function ExerciseFeedbackForm({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-xs text-gray-400 font-semibold">
+          <label className="block text-xs text-neutral-400 font-semibold">
             توضیحات یا نظر شما (اختیاری)
           </label>
           <textarea
             {...register("comment")}
             placeholder="مثلاً تمرکز روی بخش منفی سنگین بود..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500 min-h-[80px] resize-y placeholder:text-gray-600"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/50 min-h-[80px] resize-y placeholder:text-neutral-500"
           />
         </div>
 
@@ -160,16 +160,16 @@ export default function ExerciseFeedbackForm({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white transition-all bg-white/5 rounded-xl border border-white/5"
+            className="px-4 py-2 text-xs font-bold text-neutral-400 hover:text-white transition-all bg-white/5 rounded-xl border border-white/5 cursor-pointer"
           >
             انصراف
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 text-xs font-bold bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white rounded-xl shadow-lg transition-all duration-200 disabled:opacity-55 flex items-center gap-1.5"
+            className="px-4 py-2 text-xs font-bold bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 rounded-xl shadow-lg transition-all duration-200 disabled:opacity-55 flex items-center gap-1.5 cursor-pointer"
           >
-            <Smile className="w-4 h-4" />
+            <Smile className="w-4 h-4 text-neutral-950" />
             <span>{isSubmitting ? "در حال ثبت..." : "ثبت بازخورد"}</span>
           </button>
         </div>

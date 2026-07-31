@@ -259,27 +259,27 @@ export default function NutritionTracker({ userId }: { userId: string }) {
   }, []);
 
   return (
-    <div className="font-danaMed pt-4 md:pt-8" dir="rtl">
-      <div className="container mx-auto">
+    <div className="font-danaMed pt-4 md:pt-8 bg-neutral-950 min-h-screen text-white" dir="rtl">
+      <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">
               <Salad className="w-8 h-8" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-3xl text-white font-bold">
+              <h1 className="text-xl sm:text-3xl text-white font-bold font-morabbaReg">
                 تغذیه و کالری‌شمار روزانه
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm mt-0.5">
+              <p className="text-neutral-400 text-xs sm:text-sm mt-0.5">
                 رهگیری دقیق کالری، درشت‌مغذی‌ها و آب مصرفی
               </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between w-full sm:w-auto bg-white/5 border border-white/10 rounded-2xl p-1 gap-1">
+          <div className="flex items-center justify-between w-full sm:w-auto bg-white/5 border border-amber-500/15 rounded-2xl p-1 gap-1">
             <button
               onClick={() => changeDate("prev")}
-              className="p-2 rounded-xl text-white/60 hover:text-emerald-400 hover:bg-white/5 transition-all cursor-pointer"
+              className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer"
               title="دیروز"
             >
               <ChevronRight className="w-4 h-4 sm:w-5 h-5" />
@@ -292,14 +292,14 @@ export default function NutritionTracker({ userId }: { userId: string }) {
                   setSelectedDate(todayStr);
                 }
               }}
-              className="px-3 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-white/80 hover:text-white rounded-xl hover:bg-white/5 transition-all cursor-pointer select-none flex-1 text-center"
+              className="px-3 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white rounded-xl hover:bg-amber-500/10 transition-all cursor-pointer select-none flex-1 text-center"
             >
               <span className="ss02">{getPersianDateLabel(selectedDate)}</span>
             </button>
 
             <button
               onClick={() => changeDate("next")}
-              className="p-2 rounded-xl text-white/60 hover:text-emerald-400 hover:bg-white/5 transition-all cursor-pointer"
+              className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer"
               title="فردا"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 h-5" />
@@ -308,16 +308,16 @@ export default function NutritionTracker({ userId }: { userId: string }) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-          <div className="lg:col-span-8 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
+          <div className="lg:col-span-8 bg-white/[0.03] border border-amber-500/15 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
 
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h3 className="text-base sm:text-lg text-white font-bold flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-orange-400" />
+                <h3 className="text-base sm:text-lg text-white font-bold flex items-center gap-2 font-morabbaReg">
+                  <Flame className="w-5 h-5 text-amber-400" />
                   وضعیت کالری روزانه
                 </h3>
-                <p className="text-white/50 text-[10px] sm:text-xs mt-1">
+                <p className="text-neutral-400 text-[10px] sm:text-xs mt-1">
                   ترازو و تحلیل کالری‌های وارد شده
                 </p>
               </div>
@@ -330,15 +330,15 @@ export default function NutritionTracker({ userId }: { userId: string }) {
               >
                 <div className="flex items-center gap-1">
                   {targetsLoaded ? (
-                    <span className="text-xl sm:text-2xl font-extrabold text-white ss02">
+                    <span className="text-xl sm:text-2xl font-extrabold text-amber-400 ss02">
                       {targetCalories}
                     </span>
                   ) : (
-                    <BeatLoader color="#10b981" size={6} />
+                    <BeatLoader color="#eab308" size={6} />
                   )}
-                  <Edit2 className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 transition-colors" />
+                  <Edit2 className="w-3.5 h-3.5 text-neutral-400 group-hover:text-amber-400 transition-colors" />
                 </div>
-                <span className="text-white/40 text-[10px] sm:text-xs">
+                <span className="text-neutral-400 text-[10px] sm:text-xs">
                   کالری هدف (کلیک برای ویرایش)
                 </span>
               </button>
@@ -346,19 +346,19 @@ export default function NutritionTracker({ userId }: { userId: string }) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="flex flex-col items-center justify-center">
-                <div className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center rounded-full bg-emerald-500/5 border-4 border-emerald-500/20">
+                <div className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center rounded-full bg-amber-500/5 border-4 border-amber-500/20">
                   <div
-                    className="absolute inset-0 rounded-full border-4 border-emerald-400 transition-all duration-500"
+                    className="absolute inset-0 rounded-full border-4 border-amber-400 transition-all duration-500"
                     style={{
                       clipPath: `polygon(50% 50%, 50% 0%, ${calPercent >= 25 ? "100% 0%" : "50% 0%"}, ${calPercent >= 50 ? "100% 100%" : "50% 0%"}, ${calPercent >= 75 ? "0% 100%" : "50% 0%"}, ${calPercent >= 100 ? "0% 0%" : "50% 0%"}, 50% 0%)`,
                       transform: "rotate(-90deg)",
                     }}
                   />
                   <div className="text-center z-10">
-                    <span className="block text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 ss02">
+                    <span className="block text-2xl sm:text-3xl font-extrabold text-amber-400 ss02 font-sans">
                       {dailyTotals.calories}
                     </span>
-                    <span className="text-white/40 text-[10px] sm:text-xs mt-0.5 block">
+                    <span className="text-neutral-400 text-[10px] sm:text-xs mt-0.5 block">
                       مصرف شده
                     </span>
                   </div>
@@ -367,41 +367,41 @@ export default function NutritionTracker({ userId }: { userId: string }) {
 
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                  <span className="text-white/60 text-xs sm:text-sm">
+                  <span className="text-neutral-400 text-xs sm:text-sm">
                     باقی‌مانده:
                   </span>
                   {targetsLoaded ? (
-                    <span className="text-white font-bold text-sm sm:text-lg ss02">
+                    <span className="text-white font-bold text-sm sm:text-lg ss02 font-sans">
                       {caloriesRemaining} kcal
                     </span>
                   ) : (
-                    <BeatLoader color="#10b981" size={5} />
+                    <BeatLoader color="#eab308" size={5} />
                   )}
                 </div>
                 <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                  <span className="text-white/60 text-xs sm:text-sm">
+                  <span className="text-neutral-400 text-xs sm:text-sm">
                     درصد تکمیل:
                   </span>
                   {targetsLoaded ? (
-                    <span className="text-emerald-400 font-bold text-xs sm:text-base ss02">
+                    <span className="text-amber-400 font-bold text-xs sm:text-base ss02 font-sans">
                       {calPercent}%
                     </span>
                   ) : (
-                    <BeatLoader color="#10b981" size={4} />
+                    <BeatLoader color="#eab308" size={4} />
                   )}
                 </div>
                 <div className="flex justify-between items-center pb-2">
-                  <span className="text-white/60 text-xs sm:text-sm">
+                  <span className="text-neutral-400 text-xs sm:text-sm">
                     رعایت رژیم:
                   </span>
                   {targetsLoaded ? (
                     <span
                       className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-md font-semibold ${
                         calPercent > 105
-                          ? "bg-red-500/20 text-red-400"
+                          ? "bg-amber-500/20 text-amber-400"
                           : calPercent >= 90
-                            ? "bg-emerald-500/20 text-emerald-400"
-                            : "bg-orange-500/20 text-orange-400"
+                            ? "bg-amber-500/10 text-amber-300 border border-amber-500/20"
+                            : "bg-amber-500/10 text-amber-400"
                       }`}
                     >
                       {calPercent > 105
@@ -411,31 +411,31 @@ export default function NutritionTracker({ userId }: { userId: string }) {
                           : "کمتر از کالری مورد نیاز"}
                     </span>
                   ) : (
-                    <BeatLoader color="#10b981" size={4} />
+                    <BeatLoader color="#eab308" size={4} />
                   )}
                 </div>
               </div>
 
-              <div className="space-y-3 bg-white/5 border border-white/5 rounded-2xl p-4">
-                <h4 className="text-white/80 text-[10px] sm:text-xs font-semibold mb-2">
+              <div className="space-y-3 bg-white/5 border border-amber-500/10 rounded-2xl p-4">
+                <h4 className="text-neutral-300 text-[10px] sm:text-xs font-semibold mb-2">
                   درشت‌مغذی‌ها (Macros)
                 </h4>
 
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-                    <span className="text-purple-300">پروتئین (عضله‌ساز)</span>
-                    <span className="text-white/60 flex items-center gap-1 ss02">
+                    <span className="text-amber-300">پروتئین (عضله‌ساز)</span>
+                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
                       {dailyTotals.protein} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.protein}g`
                       ) : (
-                        <BeatLoader color="#c084fc" size={4} />
+                        <BeatLoader color="#eab308" size={4} />
                       )}
                     </span>
                   </div>
                   <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-purple-500 rounded-full transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-300"
                       style={{
                         width: `${Math.min(100, (dailyTotals.protein / targetMacros.protein) * 100)}%`,
                       }}
@@ -445,19 +445,19 @@ export default function NutritionTracker({ userId }: { userId: string }) {
 
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-                    <span className="text-orange-300">کربوهیدرات (انرژی)</span>
-                    <span className="text-white/60 flex items-center gap-1 ss02">
+                    <span className="text-amber-400">کربوهیدرات (انرژی)</span>
+                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
                       {dailyTotals.carbs} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.carbs}g`
                       ) : (
-                        <BeatLoader color="#fb923c" size={4} />
+                        <BeatLoader color="#eab308" size={4} />
                       )}
                     </span>
                   </div>
                   <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-orange-500 rounded-full transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-300"
                       style={{
                         width: `${Math.min(100, (dailyTotals.carbs / targetMacros.carbs) * 100)}%`,
                       }}
@@ -467,19 +467,19 @@ export default function NutritionTracker({ userId }: { userId: string }) {
 
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-                    <span className="text-yellow-300">چربی (هورمون‌ساز)</span>
-                    <span className="text-white/60 flex items-center gap-1 ss02">
+                    <span className="text-yellow-400">چربی (هورمون‌ساز)</span>
+                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
                       {dailyTotals.fat} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.fat}g`
                       ) : (
-                        <BeatLoader color="#facc15" size={4} />
+                        <BeatLoader color="#eab308" size={4} />
                       )}
                     </span>
                   </div>
                   <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-yellow-500 rounded-full transition-all duration-300"
+                      className="h-full bg-amber-400 rounded-full transition-all duration-300"
                       style={{
                         width: `${Math.min(100, (dailyTotals.fat / targetMacros.fat) * 100)}%`,
                       }}
@@ -500,8 +500,8 @@ export default function NutritionTracker({ userId }: { userId: string }) {
           />
         </div>
 
-        <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2">
-          <Utensils className="w-5 h-5 text-emerald-400" />
+        <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2 font-morabbaReg">
+          <Utensils className="w-5 h-5 text-amber-400" />
           وعده‌های غذایی امروز
         </h3>
 

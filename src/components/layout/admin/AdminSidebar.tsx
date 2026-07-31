@@ -68,23 +68,23 @@ export default function AdminSidebar({ isAdmin = false }) {
     ? getAdminMenuItems(counts, formatNumber)
     : getUserMenuItems(counts, formatNumber);
 
-  const sidebarStyle = "bg-neutral-950/90 border-l border-amber-500/20";
+  const sidebarStyle = "bg-neutral-950/95 border-l border-amber-500/20";
 
   return (
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-40 md:hidden"
+          className="fixed inset-0 bg-black/70 z-40 md:hidden backdrop-blur-sm"
           onClick={onToggle}
         />
       )}
 
       <aside
         className={`
-          fixed top-0 right-0 h-full backdrop-blur-xl transition-all duration-300 z-50
+          fixed top-0 right-0 h-full backdrop-blur-xl transition-all duration-300 z-50 overflow-hidden
           w-64
           ${sidebarStyle}
-          ${isOpen ? "translate-x-0" : "translate-x-full"}
+          ${isOpen ? "translate-x-0 shadow-2xl" : "translate-x-full shadow-none"}
           md:translate-x-0
           ${isOpen ? "md:w-64" : "md:w-18"}
         `}
@@ -106,13 +106,13 @@ export default function AdminSidebar({ isAdmin = false }) {
               </Link>
               <button
                 onClick={onToggle}
-                className="w-8 h-8 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center transition-colors"
+                className="w-8 h-8 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
               >
                 <ChevronLeft className="w-5 h-5 text-amber-400" />
               </button>
             </>
           ) : (
-            <button onClick={onToggle} className="w-full flex justify-center">
+            <button onClick={onToggle} className="w-full flex justify-center cursor-pointer">
               <Menu className="w-6 h-6 text-amber-400" />
             </button>
           )}
@@ -147,7 +147,7 @@ export default function AdminSidebar({ isAdmin = false }) {
                       }}
                       className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                         isActive
-                          ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)]"
+                          ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold shadow-md"
                           : "text-neutral-300 hover:bg-amber-500/10 hover:text-amber-300"
                       }`}
                     >

@@ -38,12 +38,12 @@ export default function UserDashboard({
 
   return (
     <div
-      className="min-h-screen bg-gray-950 text-white"
+      className="min-h-screen bg-neutral-950 text-white"
       style={{ fontFamily: "Dana, Marbuta, sans-serif", direction: "rtl" }}
     >
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -74,8 +74,8 @@ export default function UserDashboard({
           <div
             className="rounded-2xl p-5"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(234,179,8,0.15)",
             }}
           >
             <div className="flex items-center justify-between mb-4">
@@ -84,15 +84,11 @@ export default function UserDashboard({
                 {["هفته", "ماه", "۳ ماه"].map((p, i) => (
                   <button
                     key={i}
-                    className={`text-xs px-3 py-1 rounded-lg transition-all ${i === 1 ? "text-white" : "text-gray-500 hover:text-white"}`}
-                    style={
+                    className={`text-xs px-3 py-1 rounded-lg transition-all ${
                       i === 1
-                        ? {
-                            background:
-                              "linear-gradient(135deg, #7c3aed, #ec4899)",
-                          }
-                        : { background: "rgba(255,255,255,0.05)" }
-                    }
+                        ? "text-neutral-950 font-bold bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500"
+                        : "text-neutral-400 hover:text-white bg-white/5"
+                    }`}
                   >
                     {p}
                   </button>
@@ -111,28 +107,28 @@ export default function UserDashboard({
                       height: `${h}%`,
                       background:
                         i === 5
-                          ? "linear-gradient(180deg, #7c3aed, #ec4899)"
-                          : "rgba(124,58,237,0.3)",
+                          ? "linear-gradient(180deg, #f59e0b, #d97706)"
+                          : "rgba(234,179,8,0.2)",
                     }}
                   ></div>
-                  <span className="text-gray-600 text-xs">
+                  <span className="text-neutral-500 text-xs">
                     {["ش", "ی", "د", "س", "چ", "پ", "ج"][i]}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+            <div className="flex items-center gap-4 mt-3 text-xs text-neutral-400">
               <div className="flex items-center gap-1.5">
                 <div
                   className="w-3 h-3 rounded-sm"
                   style={{
-                    background: "linear-gradient(135deg, #7c3aed, #ec4899)",
+                    background: "linear-gradient(135deg, #f59e0b, #d97706)",
                   }}
                 ></div>
                 بهترین روز
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm bg-purple-900/50"></div>
+                <div className="w-3 h-3 rounded-sm bg-amber-500/20"></div>
                 روزهای دیگر
               </div>
             </div>

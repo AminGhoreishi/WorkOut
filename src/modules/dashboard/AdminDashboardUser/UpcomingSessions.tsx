@@ -19,8 +19,8 @@ export default function UpcomingSessions() {
     <div
       className="rounded-2xl p-5"
       style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(234,179,8,0.15)",
       }}
     >
       <h3 className="font-bold text-white mb-4">رویدادهای پیش رو</h3>
@@ -28,15 +28,14 @@ export default function UpcomingSessions() {
         {upcomingSessions.map((s, i) => (
           <div
             key={i}
-            className="flex items-start gap-3 p-3 rounded-xl"
+            className="flex items-start gap-3 p-3 rounded-xl transition-all hover:border-amber-500/30"
             style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(234,179,8,0.12)",
             }}
           >
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-              style={{ background: "rgba(124,58,237,0.15)" }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-amber-500/10 border border-amber-500/20"
             >
               {s.icon}
             </div>
@@ -44,14 +43,10 @@ export default function UpcomingSessions() {
               <p className="text-white text-sm font-medium">
                 {s.title}
               </p>
-              <p className="text-gray-500 text-xs mt-0.5">{s.time}</p>
+              <p className="text-neutral-400 text-xs mt-0.5">{s.time}</p>
             </div>
             <span
-              className="text-xs px-2 py-0.5 rounded-full flex-shrink-0"
-              style={{
-                background: "rgba(124,58,237,0.2)",
-                color: "#a78bfa",
-              }}
+              className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium"
             >
               {s.type}
             </span>

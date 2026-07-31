@@ -75,26 +75,26 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm font-danaMed"
       dir="rtl"
     >
-      <div onClick={onClose} className="fixed inset-0 z-40 bg-black/75"></div>
-      <div className="bg-gray-900 border z-50 border-white/10 rounded-3xl w-full max-w-md p-6 shadow-2xl relative">
+      <div onClick={onClose} className="fixed inset-0 z-40 bg-black/80"></div>
+      <div className="bg-neutral-900 border z-50 border-amber-500/20 rounded-3xl w-full max-w-md p-6 shadow-2xl relative">
         <button
           onClick={onClose}
-          className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
+          className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-amber-500/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
         >
           <Plus className="w-5 h-5 rotate-45" />
         </button>
 
-        <h3 className="text-lg text-white font-bold mb-4 flex items-center gap-2">
-          <Flame className="w-5 h-5 text-emerald-400" />
+        <h3 className="text-lg text-white font-bold mb-4 flex items-center gap-2 font-morabbaReg">
+          <Flame className="w-5 h-5 text-amber-400" />
           تنظیم اهداف کالری و درشت‌مغذی‌ها
         </h3>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-white/80 mb-2 text-xs">
+            <label className="block text-neutral-300 mb-2 text-xs font-medium">
               کالری هدف روزانه:
             </label>
             <input
@@ -102,12 +102,12 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
               value={tempTargetCalories}
               onChange={(e) => setTempTargetCalories(e.target.value)}
               placeholder="مثال: ۲۲۰۰"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500/50 text-sm ss02"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500/50 text-sm ss02"
             />
           </div>
 
           <div>
-            <label className="block text-white/80 mb-2 text-xs">
+            <label className="block text-neutral-300 mb-2 text-xs font-medium">
               آب هدف روزانه (میلی‌لیتر):
             </label>
             <input
@@ -115,17 +115,17 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
               value={tempTargetWater}
               onChange={(e) => setTempTargetWater(e.target.value)}
               placeholder="مثال: ۲۵۰۰"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500/50 text-sm ss02"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500/50 text-sm ss02"
             />
           </div>
 
           <div className="border-t border-white/5 pt-4">
-            <p className="text-white/40 text-[10px] font-semibold uppercase tracking-wider mb-3">
+            <p className="text-amber-400/80 text-[10px] font-bold uppercase tracking-wider mb-3">
               اهداف درشت‌مغذی‌ها:
             </p>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-purple-300 mb-1 text-[10px]">
+                <label className="block text-amber-300 mb-1 text-[10px]">
                   پروتئین (g):
                 </label>
                 <input
@@ -133,11 +133,11 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
                   value={tempTargetProtein}
                   onChange={(e) => setTempTargetProtein(e.target.value)}
                   placeholder="140"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-purple-500/50 text-xs ss02"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500/50 text-xs ss02"
                 />
               </div>
               <div>
-                <label className="block text-orange-300 mb-1 text-[10px]">
+                <label className="block text-amber-400 mb-1 text-[10px]">
                   کربوهیدرات (g):
                 </label>
                 <input
@@ -145,11 +145,11 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
                   value={tempTargetCarbs}
                   onChange={(e) => setTempTargetCarbs(e.target.value)}
                   placeholder="240"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500/50 text-xs ss02"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500/50 text-xs ss02"
                 />
               </div>
               <div>
-                <label className="block text-yellow-300 mb-1 text-[10px]">
+                <label className="block text-yellow-400 mb-1 text-[10px]">
                   چربی (g):
                 </label>
                 <input
@@ -157,7 +157,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
                   value={tempTargetFat}
                   onChange={(e) => setTempTargetFat(e.target.value)}
                   placeholder="70"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-500/50 text-xs ss02"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500/50 text-xs ss02"
                 />
               </div>
             </div>
@@ -168,14 +168,14 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
           <button
             type="button"
             onClick={handleSave}
-            className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold py-2.5 rounded-xl shadow-lg transition-all cursor-pointer text-xs"
+            className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-bold py-2.5 rounded-xl shadow-lg transition-all cursor-pointer text-xs"
           >
             ثبت اهداف
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="px-5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white py-2.5 rounded-xl transition-all cursor-pointer text-xs"
+            className="px-5 bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 hover:text-white py-2.5 rounded-xl transition-all cursor-pointer text-xs"
           >
             انصراف
           </button>

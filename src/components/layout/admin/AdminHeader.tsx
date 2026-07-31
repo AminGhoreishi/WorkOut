@@ -19,7 +19,7 @@ export default function AdminHeader({
           <div className="flex items-center gap-4">
             <button
               onClick={onToggle}
-              className="lg:hidden w-10 h-10 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center transition-colors"
+              className="md:hidden w-10 h-10 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
             >
               <Menu className="w-6 h-6 text-amber-400" />
             </button>
