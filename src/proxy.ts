@@ -9,14 +9,12 @@ export async function proxy(request: NextRequest) {
   });
   const path = request.nextUrl.pathname;
 
-  // if (path.startsWith("/admin")) {
-  //   if (!token || token.role !== "admin") {
-  //     return NextResponse.redirect(new URL("/login", request.url));
-  //   }
-  // }
-
-  if (path.startsWith("/nutrition")) {
-    if (!token) {
+  if (token) {
+    if (path.startsWith("/login") || path.startsWith("/nutrition")) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  } else {
+    if (path.startsWith("/dashboard") || path.startsWith("/admin")) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
@@ -25,5 +23,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/dashboard/:path*",
+    "/login/:path*",
+    "/nutrition/:path*",
+  ],
 };
