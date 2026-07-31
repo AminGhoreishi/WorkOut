@@ -14,8 +14,8 @@ export default function WorkoutAchievements() {
             <Flame className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white">تمرین مداوم هفتگی</h4>
-            <p className="text-[10px] text-neutral-400">
+            <h4 className="text-sm sm:text-xs font-bold text-white">تمرین مداوم هفتگی</h4>
+            <p className="text-sm sm:text-[10px] text-neutral-400">
               ادامه دهید! ریتم فوق‌العاده‌ای دارید
             </p>
           </div>
@@ -26,8 +26,8 @@ export default function WorkoutAchievements() {
             <TrendingUp className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white">تعهد و انضباط</h4>
-            <p className="text-[10px] text-neutral-400">
+            <h4 className="text-sm sm:text-xs font-bold text-white">تعهد و انضباط</h4>
+            <p className="text-sm sm:text-[10px] text-neutral-400">
               پیشرفت چشمگیر در ثبت تمرینات روزانه
             </p>
           </div>

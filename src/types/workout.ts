@@ -266,3 +266,8 @@ export interface UploadVideoModalProps {
   onUploadSuccess: () => void;
 }
 
+export interface WorkoutErrorStateProps {
+  message?: string;
+  onRetry: () => void;
+}
+

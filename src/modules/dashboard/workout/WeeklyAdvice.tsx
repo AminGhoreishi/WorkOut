@@ -10,13 +10,13 @@ export default function WeeklyAdvice() {
         <span>توصیه عمومی هفته</span>
       </h3>
 
-      <p className="text-xs text-neutral-400 leading-relaxed">
+      <p className="text-sm sm:text-xs text-neutral-400 leading-relaxed">
         تلاش کنید تا به اصل اضافه بار تدریجی پایبند باشید. در صورتی که در ست اول
         حرکت توانستید به راحتی تکرارهای مشخص شده را بزنید، در ست‌های بعدی ۵ درصد
         به وزنه‌ها اضافه کنید.
       </p>
 
-      <div className="border-t border-white/10 pt-3 space-y-2 text-xs">
+      <div className="border-t border-white/10 pt-3 space-y-2 text-sm sm:text-xs">
         <div className="flex items-center gap-2 text-neutral-300">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
           <span>آب مصرفی حین تمرین: حداقل ۱ لیتر</span>

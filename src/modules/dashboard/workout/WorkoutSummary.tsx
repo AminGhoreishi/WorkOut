@@ -11,7 +11,7 @@ export default function WorkoutSummary({
 
       <div className="grid grid-cols-2 gap-3 text-center">
         <div className="bg-white/5 p-3 rounded-xl border border-white/5">
-          <span className="text-[10px] text-neutral-400 block">
+          <span className="text-sm sm:text-[10px] text-neutral-400 block">
             مدت تمرین تقریبی
           </span>
           <span className="text-sm font-bold ss02 text-amber-400 mt-1 block font-sans">
@@ -19,14 +19,14 @@ export default function WorkoutSummary({
           </span>
         </div>
         <div className="bg-white/5 p-3 rounded-xl border border-white/5">
-          <span className="text-[10px] text-neutral-400 block">تعداد حرکات</span>
+          <span className="text-sm sm:text-[10px] text-neutral-400 block">تعداد حرکات</span>
           <span className="text-sm font-bold ss02 text-yellow-400 mt-1 block font-sans">
             {totalExercises} حرکت
           </span>
         </div>
       </div>
 
-      <div className="bg-white/5 p-3 rounded-xl border border-white/5 flex justify-between items-center text-xs">
+      <div className="bg-white/5 p-3 rounded-xl border border-white/5 flex justify-between items-center text-sm sm:text-xs">
         <span className="text-neutral-400">شدت تمرین امروز:</span>
         <span className="font-bold text-amber-400">
           {totalExercises > 0 ? "متوسط مایل به بالا" : "ریکاوری"}

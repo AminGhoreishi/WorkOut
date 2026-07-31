@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Calendar, Flame, ChevronDown, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  Calendar,
+  Flame,
+  ChevronDown,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 import WorkoutHeader from "./WorkoutHeader";
 import ExercisesList from "./ExercisesList";
 import WeeklyAdvice from "./WeeklyAdvice";
@@ -10,6 +16,8 @@ import WorkoutSummary from "./WorkoutSummary";
 import WorkoutAchievements from "./WorkoutAchievements";
 import RestDayView from "./RestDayView";
 import WorkoutExercisesSkeleton from "./WorkoutExercisesSkeleton";
+import WorkoutErrorState from "./WorkoutErrorState";
+import NoWorkoutPlan from "./NoWorkoutPlan";
 import type {
   DayItem,
   ExerciseItem,
@@ -41,12 +49,14 @@ export default function WorkoutView({
     isLoading: isLoadingWeeks,
     mutate: mutateWeeks,
   } = useSWR<{ weeks: SimpleWeek[] }>(
-    packageId ? `/api/admin/subscription/workout-week?packageId=${packageId}` : null,
+    packageId
+      ? `/api/admin/subscription/workout-week?packageId=${packageId}`
+      : null,
     fetcher,
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    }
+    },
   );
 
   const workoutWeek = weeksData?.weeks || [];
@@ -58,12 +68,14 @@ export default function WorkoutView({
     isLoading: isLoadingDays,
     mutate: mutateDays,
   } = useSWR<{ days: DayItem[] }>(
-    activeWeekId ? `/api/admin/subscription/workout-days?planId=${activeWeekId}` : null,
+    activeWeekId
+      ? `/api/admin/subscription/workout-days?planId=${activeWeekId}`
+      : null,
     fetcher,
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    }
+    },
   );
 
   const workoutDays = daysData?.days || [];
@@ -75,12 +87,14 @@ export default function WorkoutView({
     isLoading: isLoadingExercises,
     mutate: mutateExercises,
   } = useSWR<{ exercises: ExerciseItem[] }>(
-    activeDayId ? `/api/admin/subscription/workout-exercises?dayId=${activeDayId}` : null,
+    activeDayId
+      ? `/api/admin/subscription/workout-exercises?dayId=${activeDayId}`
+      : null,
     fetcher,
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    }
+    },
   );
 
   const workoutExercises = exercisesData?.exercises || [];
@@ -100,44 +114,18 @@ export default function WorkoutView({
 
   if (weeksError || daysError) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center font-danaMed p-4">
-        <div className="bg-white/[0.03] border border-amber-500/20 rounded-2xl p-8 max-w-md text-center space-y-4 shadow-xl">
-          <AlertCircle className="w-12 h-12 text-amber-400 mx-auto" />
-          <h3 className="text-lg font-bold font-morabbaReg text-white">
-            خطا در دریافت برنامه تمرینی
-          </h3>
-          <p className="text-xs text-neutral-400">
-            {weeksError?.message || daysError?.message || "دریافت اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش کنید."}
-          </p>
-          <button
-            onClick={() => {
-              mutateWeeks();
-              mutateDays();
-            }}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-xs rounded-xl hover:opacity-95 transition-all cursor-pointer shadow-md"
-          >
-            <RefreshCw className="w-4 h-4 text-neutral-950" />
-            <span>تلاش مجدد</span>
-          </button>
-        </div>
-      </div>
+      <WorkoutErrorState
+        message={weeksError?.message || daysError?.message}
+        onRetry={() => {
+          mutateWeeks();
+          mutateDays();
+        }}
+      />
     );
   }
 
   if (workoutWeek.length === 0) {
-    return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed p-4">
-        <div className="text-center space-y-4 bg-white/[0.03] border border-amber-500/15 p-8 rounded-2xl max-w-md shadow-xl">
-          <Flame className="w-12 h-12 text-amber-400/40 mx-auto" />
-          <h3 className="text-lg font-bold font-morabbaReg text-white">
-            برنامه تمرینی ثبت نشده است
-          </h3>
-          <p className="text-xs text-neutral-400">
-            هنوز برنامه‌ای برای این دوره سرفصل‌بندی یا فعال نشده است.
-          </p>
-        </div>
-      </div>
-    );
+    return <NoWorkoutPlan />;
   }
 
   const activeWeek =
@@ -158,10 +146,6 @@ export default function WorkoutView({
 
   return (
     <div className="min-h-screen text-white font-danaMed pb-12 bg-neutral-950">
-      <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-amber-500/10 via-yellow-500/5 to-transparent -z-10" />
-      <div className="absolute top-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -z-10" />
-      <div className="absolute top-80 left-10 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
-
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-8 space-y-8">
         <WorkoutHeader
           workoutPlan={workoutPlan}
@@ -182,13 +166,13 @@ export default function WorkoutView({
                   setSelectedWeekId(e.target.value);
                   setSelectedDayId("");
                 }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-amber-500/50 transition-all appearance-none cursor-pointer text-right"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm sm:text-xs font-semibold text-white focus:outline-none focus:border-amber-500/50 transition-all appearance-none cursor-pointer text-right"
               >
                 {workoutWeek.map((week, idx) => (
                   <option
                     key={week._id || idx}
                     value={week._id}
-                    className="bg-neutral-900 text-white"
+                    className="bg-neutral-900 text-white text-sm sm:text-xs"
                   >
                     هفته {week.title}
                   </option>
@@ -202,7 +186,7 @@ export default function WorkoutView({
 
           <div className="grid grid-cols-3 gap-2">
             {isLoadingDays ? (
-              <div className="col-span-3 text-center py-4 text-xs text-neutral-400">
+              <div className="col-span-3 text-center py-4 text-sm sm:text-xs text-neutral-400">
                 در حال بارگذاری روزها...
               </div>
             ) : (
@@ -225,7 +209,7 @@ export default function WorkoutView({
                     `}
                   >
                     <span className="text-sm font-bold">{day.dayName}</span>
-                    <span className="text-[10px] mt-1 opacity-70 truncate max-w-full">
+                    <span className="text-sm sm:text-[10px] mt-1 opacity-70 truncate max-w-full">
                       {isRest ? "ریکاوری" : day.muscleGroup}
                     </span>
                   </button>
@@ -240,7 +224,7 @@ export default function WorkoutView({
             {activeDay && (
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.03] border border-amber-500/15 p-5 rounded-2xl">
                 <div>
-                  <span className="text-xs text-amber-400 font-semibold">
+                  <span className="text-sm sm:text-xs text-amber-400 font-semibold">
                     {activeDay.dayName} - تمرین امروز
                   </span>
                   <h3 className="text-xl font-bold font-morabbaReg text-white mt-1">
@@ -251,7 +235,7 @@ export default function WorkoutView({
                 {totalExercises > 0 && (
                   <div className="flex items-center gap-4 w-full sm:w-auto">
                     <div className="flex-1 sm:flex-none text-right">
-                      <div className="text-[10px] text-neutral-400">
+                      <div className="text-sm sm:text-[10px] text-neutral-400">
                         تعداد حرکات
                       </div>
                       <div className="text-sm font-bold text-white ss02 font-sans">
@@ -263,24 +247,26 @@ export default function WorkoutView({
               </div>
             )}
 
-            {isLoadingExercises ? (
+            {isLoadingDays || isLoadingExercises || !activeDay ? (
               <WorkoutExercisesSkeleton />
             ) : exercisesError ? (
               <div className="p-6 bg-white/[0.03] border border-amber-500/15 rounded-2xl text-center space-y-3">
-                <p className="text-xs text-amber-400">خطا در بارگذاری حرکات این روز تمرینی.</p>
+                <p className="text-sm sm:text-xs text-amber-400">
+                  خطا در بارگذاری حرکات این روز تمرینی.
+                </p>
                 <button
                   onClick={() => mutateExercises()}
-                  className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-xl border border-amber-500/20 cursor-pointer"
+                  className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm sm:text-xs font-semibold rounded-xl border border-amber-500/20 cursor-pointer"
                 >
                   تلاش مجدد
                 </button>
               </div>
-            ) : totalExercises > 0 && activeDay ? (
+            ) : totalExercises > 0 ? (
               <ExercisesList
                 exercises={workoutExercises}
                 muscleGroup={activeDay.muscleGroup}
                 userId={userId}
-                dayId={activeDay?._id}
+                dayId={activeDay._id}
               />
             ) : (
               <RestDayView />

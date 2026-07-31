@@ -11,11 +11,11 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex h-screen bg-neutral-950 overflow-x-hidden overflow-y-hidden" dir="rtl">
-        <AdminSidebar />
         <MainWrapper>
           <AdminHeaderContainer />
           {children}
         </MainWrapper>
+        <AdminSidebar />
       </div>
     </SidebarProvider>
   );

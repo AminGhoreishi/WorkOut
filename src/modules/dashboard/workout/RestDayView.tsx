@@ -18,7 +18,7 @@ export default function RestDayView() {
       </div>
       <div className="flex justify-center gap-4 pt-2">
         <div className="bg-white/5 px-4 py-3 rounded-2xl border border-white/5 text-center w-36">
-          <span className="text-[10px] text-neutral-400 block">
+          <span className="text-sm sm:text-[10px] text-neutral-400 block">
             مدت استراحت
           </span>
           <span className="text-sm font-bold text-white mt-1 block font-sans">
@@ -26,7 +26,7 @@ export default function RestDayView() {
           </span>
         </div>
         <div className="bg-white/5 px-4 py-3 rounded-2xl border border-white/5 text-center w-36">
-          <span className="text-[10px] text-neutral-400 block">
+          <span className="text-sm sm:text-[10px] text-neutral-400 block">
             هدف امروز
           </span>
           <span className="text-sm font-bold text-amber-400 mt-1 block">

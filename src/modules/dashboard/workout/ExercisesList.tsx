@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Play,
   HelpCircle,
+  SlidersHorizontal,
 } from "lucide-react";
 import type { ExercisesListProps } from "@/types/workout";
 import ExerciseFeedbackForm from "./ExerciseFeedbackForm";
@@ -26,6 +27,7 @@ export default function ExercisesList({
     null,
   );
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -88,7 +90,7 @@ export default function ExercisesList({
           <div
             key={exercise._id}
             className={`
-              relative overflow-hidden rounded-2xl ss02 border transition-all duration-300 bg-white/[0.03]
+              relative overflow-visible rounded-2xl ss02 border transition-all duration-300 bg-white/[0.03]
               ${
                 isCompleted
                   ? "border-amber-500/40 bg-amber-500/10 shadow-inner"
@@ -96,7 +98,7 @@ export default function ExercisesList({
               }
             `}
           >
-            <div className="p-4 md:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex items-start gap-4 flex-1">
                 <button
                   onClick={() => toggleExercise(exercise._id)}
@@ -114,10 +116,10 @@ export default function ExercisesList({
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
+                    <span className="text-sm sm:text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
                       {muscleGroup}
                     </span>
-                    <span className="text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
+                    <span className="text-sm sm:text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
                       حرکت {idx + 1}
                     </span>
                   </div>
@@ -127,7 +129,7 @@ export default function ExercisesList({
                     {exercise.name}
                   </h4>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 pt-2 font-semibold font-mono">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm sm:text-xs text-neutral-400 pt-2 font-semibold font-mono">
                     <div className="flex items-center gap-1">
                       <Dumbbell className="w-3.5 h-3.5 text-amber-400" />
                       <span>{exercise.sets} ست</span>
@@ -146,7 +148,7 @@ export default function ExercisesList({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 w-full md:w-auto self-stretch md:self-auto justify-end border-t border-white/5 md:border-t-0 pt-3 md:pt-0">
+              <div className="hidden sm:flex items-center gap-3 w-full sm:w-auto self-stretch sm:self-auto justify-end border-t border-white/5 sm:border-t-0 pt-3 sm:pt-0">
                 <button
                   onClick={() =>
                     setActiveTipsId(
@@ -154,7 +156,7 @@ export default function ExercisesList({
                     )
                   }
                   className={`
-                    flex items-center gap-1 px-3 py-2 text-xs rounded-xl transition-all cursor-pointer
+                    flex items-center gap-1 px-3 py-2 text-sm sm:text-xs rounded-xl transition-all cursor-pointer
                     ${
                       isExpanded
                         ? "bg-white/10 text-white"
@@ -178,7 +180,7 @@ export default function ExercisesList({
                           : exercise._id,
                       )
                     }
-                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm sm:text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
                   >
                     <HelpCircle className="w-3.5 h-3.5" />
                     <span>سوالات</span>
@@ -192,11 +194,112 @@ export default function ExercisesList({
                         playingVideo === exercise._id ? null : exercise._id,
                       )
                     }
-                    className="flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm sm:text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                     <span>ویدیو آموزش</span>
                   </button>
+                )}
+              </div>
+
+              <div className="relative sm:hidden w-full pt-3 border-t border-white/5">
+                <button
+                  onClick={() =>
+                    setOpenDropdownId(
+                      openDropdownId === exercise._id ? null : exercise._id,
+                    )
+                  }
+                  className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-amber-500/20 text-amber-400 text-sm font-semibold rounded-xl transition-all cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-4 h-4 text-amber-400" />
+                    <span>گزینه‌های حرکت</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${openDropdownId === exercise._id ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {openDropdownId === exercise._id && (
+                  <div className="absolute right-0 left-0 mt-2 bg-neutral-900 border border-amber-500/20 rounded-xl p-1.5 shadow-2xl z-30 space-y-1 font-danaMed">
+                    <button
+                      onClick={() => {
+                        setActiveTipsId(
+                          activeTipsId === exercise._id ? null : exercise._id,
+                        );
+                        setOpenDropdownId(null);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                        isExpanded
+                          ? "bg-amber-500/20 text-amber-300 font-bold"
+                          : "text-neutral-300 hover:bg-white/5"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Info className="w-4 h-4 text-amber-400" />
+                        <span>نکات مربی</span>
+                      </div>
+                      {isExpanded && (
+                        <span className="text-xs text-amber-400 font-bold">
+                          نمایش داده شد
+                        </span>
+                      )}
+                    </button>
+
+                    {isCompleted && (
+                      <button
+                        onClick={() => {
+                          setActiveQuestionsId(
+                            activeQuestionsId === exercise._id
+                              ? null
+                              : exercise._id,
+                          );
+                          setOpenDropdownId(null);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                          activeQuestionsId === exercise._id
+                            ? "bg-amber-500/20 text-amber-300 font-bold"
+                            : "text-neutral-300 hover:bg-white/5"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <HelpCircle className="w-4 h-4 text-amber-400" />
+                          <span>ثبت سوالات و ارزیابی</span>
+                        </div>
+                        {activeQuestionsId === exercise._id && (
+                          <span className="text-xs text-amber-400 font-bold">
+                            نمایش داده شد
+                          </span>
+                        )}
+                      </button>
+                    )}
+
+                    {(exercise.videoId?.url || exercise.videoId2?.url) && (
+                      <button
+                        onClick={() => {
+                          setPlayingVideo(
+                            playingVideo === exercise._id ? null : exercise._id,
+                          );
+                          setOpenDropdownId(null);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                          playingVideo === exercise._id
+                            ? "bg-amber-500/20 text-amber-300 font-bold"
+                            : "text-neutral-300 hover:bg-white/5"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Play className="w-4 h-4 text-amber-400 fill-current" />
+                          <span>مشاهده ویدیو آموزش</span>
+                        </div>
+                        {playingVideo === exercise._id && (
+                          <span className="text-xs text-amber-400 font-bold">
+                            نمایش داده شد
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

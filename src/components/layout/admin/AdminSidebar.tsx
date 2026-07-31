@@ -74,14 +74,14 @@ export default function AdminSidebar({ isAdmin = false }) {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/70 z-[90] md:hidden backdrop-blur-sm"
           onClick={onToggle}
         />
       )}
 
       <aside
         className={`
-          fixed top-0 right-0 h-full backdrop-blur-xl transition-all duration-300 z-50 overflow-hidden
+          fixed top-0 right-0 h-full backdrop-blur-xl transition-all duration-300 z-[100] overflow-hidden
           w-64
           ${sidebarStyle}
           ${isOpen ? "translate-x-0 shadow-2xl" : "translate-x-full shadow-none"}

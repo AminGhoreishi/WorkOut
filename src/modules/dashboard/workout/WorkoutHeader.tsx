@@ -12,7 +12,7 @@ export default function WorkoutHeader({
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
         <div className="space-y-3">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
             <Sparkles className="w-3.5 h-3.5" />
             برنامه فعال شما
           </span>
@@ -24,7 +24,7 @@ export default function WorkoutHeader({
               {workoutPlan.description}
             </p>
           )}
-          <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-300 pt-2">
+          <div className="flex flex-wrap items-center gap-4 text-sm sm:text-xs text-neutral-300 pt-2">
             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
               <span className="text-neutral-400">وضعیت برنامه:</span>
               <span className="font-semibold text-amber-400">
