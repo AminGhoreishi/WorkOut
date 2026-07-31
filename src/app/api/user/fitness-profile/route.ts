@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import FitnessProfile from "@/model/Fitnessprofile";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { arvanClient } from "@/lib/arvan";
 import { PutObjectCommand } from "@aws-sdk/client-s3";

@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Blog from "@/model/Blog";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadFileToS3 } from "@/lib/arvan";
 import { validateBlog, validateBlogUpdate } from "@/validator/blog";

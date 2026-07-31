@@ -1,6 +1,6 @@
 import CreateArticle from "@/modules/admin/dashboard/articles/createArticle/CreateArticle";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import type { ArticleAuthorInfo } from "@/types/blog";
 
 export default async function CreateArticlePage() {

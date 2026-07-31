@@ -4,6 +4,7 @@ import { danaMedium, danaLight, danaBold, morabbaReg } from "./fonts";
 import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
+  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },

@@ -4,7 +4,7 @@ import Wish from "@/model/Wish";
 import ArticleDetail from "@/modules/article/ArticleDetail";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import type { Metadata } from "next";
 import type { ArticlePageProps } from "@/types/blog";
 import "@/model/Comment";

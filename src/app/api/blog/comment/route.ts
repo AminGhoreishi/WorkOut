@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Comment from "@/model/Comment";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

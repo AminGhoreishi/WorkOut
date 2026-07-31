@@ -2,7 +2,7 @@ import NutritionTracker from "@/modules/dashboard/nutrition/NutritionTracker";
 import NutritionLock from "@/modules/dashboard/nutrition/NutritionLock";
 import dbConnect from "@/lib/dbConnect";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import SubscriptionModel from "@/model/Subscription";
 import { redirect } from "next/navigation";
 

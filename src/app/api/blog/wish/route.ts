@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import Wish from "@/model/Wish";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

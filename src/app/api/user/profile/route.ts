@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import bcrypt from "bcrypt";
 
 export async function GET(req: NextRequest) {

@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import WorkoutProgram from "@/modules/subscription/WorkoutProgram";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";

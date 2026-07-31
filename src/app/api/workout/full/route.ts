@@ -5,7 +5,7 @@ import WorkoutExercise from "@/model/WorkoutExercise";
 import Subscription from "@/model/Subscription";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import "@/model/Video"
 
 export async function GET(req: NextRequest) {

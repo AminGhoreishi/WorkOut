@@ -3,7 +3,7 @@ import OnboardingForm from "@/modules/onboarding/OnboardingForm";
 import dbConnect from "@/lib/dbConnect";
 import FitnessProfile from "@/model/Fitnessprofile";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import type { FitnessProfileData } from "@/types/fitness-profile";
 
 export const metadata = {

@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Order from "@/model/Order";
 import Subscription from "@/model/Subscription";

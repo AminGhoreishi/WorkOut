@@ -3,7 +3,7 @@ import WorkoutView from "@/modules/dashboard/workout/WorkoutView";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Subscription from "@/model/Subscription";
 

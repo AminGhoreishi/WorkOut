@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import TestMetric from "@/model/TestMetric";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {

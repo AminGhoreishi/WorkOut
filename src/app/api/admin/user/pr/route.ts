@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Pr from "@/model/Pr";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
