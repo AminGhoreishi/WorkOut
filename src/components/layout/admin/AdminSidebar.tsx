@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { getAdminMenuItems, getUserMenuItems } from "./sidebarItems";
 
 export default function AdminSidebar({ isAdmin = false }) {
-  const { isOpen, onToggle } = useSidebar();
+  const { isOpen, onToggle, closeSidebar } = useSidebar();
   const pathname = usePathname();
 
   const [counts, setCounts] = useState({
@@ -75,7 +75,7 @@ export default function AdminSidebar({ isAdmin = false }) {
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/70 z-[90] lg:hidden backdrop-blur-sm"
-          onClick={onToggle}
+          onClick={closeSidebar}
         />
       )}
 

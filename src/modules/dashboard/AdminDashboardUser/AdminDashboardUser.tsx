@@ -37,17 +37,7 @@ export default function UserDashboard({
     recentWorkouts.find((w) => w.day.includes(todayNameFa)) || null;
 
   return (
-    <div
-      className="min-h-screen bg-neutral-950 text-white"
-      style={{ fontFamily: "Dana, Marbuta, sans-serif", direction: "rtl" }}
-    >
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
+    <div className="min-h-screen bg-neutral-950 text-white">
       <div className="transition-all duration-300">
         <main className="p-4 md:p-6 space-y-6">
           <DashboardBanner userName={user.name} todayWorkout={todayWorkout} />
