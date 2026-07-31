@@ -23,7 +23,7 @@ export default function SubscriptionPackages({ packages }: { packages: any }) {
 
       <section className="pb-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {packages.map((pkg: any) => (
               <div
                 key={pkg._id || pkg.id}

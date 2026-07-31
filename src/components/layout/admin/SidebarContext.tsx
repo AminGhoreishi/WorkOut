@@ -7,7 +7,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth >= 768) {
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
       setIsOpen(true);
     }
   }, []);

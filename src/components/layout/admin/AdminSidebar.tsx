@@ -74,7 +74,7 @@ export default function AdminSidebar({ isAdmin = false }) {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-[90] md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/70 z-[90] lg:hidden backdrop-blur-sm"
           onClick={onToggle}
         />
       )}
@@ -85,8 +85,8 @@ export default function AdminSidebar({ isAdmin = false }) {
           w-64
           ${sidebarStyle}
           ${isOpen ? "translate-x-0 shadow-2xl" : "translate-x-full shadow-none"}
-          md:translate-x-0
-          ${isOpen ? "md:w-64" : "md:w-18"}
+          lg:translate-x-0
+          ${isOpen ? "lg:w-64" : "lg:w-18"}
         `}
       >
         <div className="h-16 flex items-center justify-between px-4 border-b border-amber-500/20 font-danaMed">
@@ -140,7 +140,7 @@ export default function AdminSidebar({ isAdmin = false }) {
                       onClick={() => {
                         if (
                           typeof window !== "undefined" &&
-                          window.innerWidth < 768
+                          window.innerWidth < 1024
                         ) {
                           onToggle();
                         }

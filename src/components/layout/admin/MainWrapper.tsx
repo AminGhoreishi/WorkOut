@@ -10,7 +10,7 @@ export default function MainWrapper({
   return (
     <main
       className={`flex-1 overflow-y-auto transition-all font-danaMed! duration-300 ${
-        isOpen ? "md:mr-64" : "md:mr-20"
+        isOpen ? "lg:mr-64" : "lg:mr-20"
       }`}
     >
       {children}

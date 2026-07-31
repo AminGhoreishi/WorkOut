@@ -88,33 +88,42 @@ export default function LoginForm() {
   };
 
   const inputClass = (hasError?: boolean) =>
-    `w-full bg-white/5 border ${hasError ? "border-red-500" : "border-white/10"} rounded-lg pl-12 pr-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-orange-500`;
+    `w-full bg-zinc-900/60 border ${
+      hasError
+        ? "border-red-500/80"
+        : "border-amber-500/20 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
+    } rounded-xl pl-12 pr-4 py-3 text-amber-100 placeholder:text-zinc-500 focus:outline-none transition-all`;
 
   return (
     <div
-      className="min-h-screen bg-linear-to-br font-danaMed from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4"
+      className="min-h-screen bg-black font-danaMed flex items-center justify-center p-4 relative overflow-hidden"
       dir="rtl"
     >
-      <div className="w-full max-w-md">
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <BiDumbbell className="w-12 h-12 text-orange-500" />
-            <span className="font-bold text-3xl text-white">استارفیت</span>
+          <Link href="/" className="inline-flex items-center gap-2 mb-3 group">
+            <BiDumbbell className="w-12 h-12 text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
+            <span className="font-bold text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
+              استارفیت
+            </span>
           </Link>
-          <p className="text-white/60">به جامعه فیتنس ما بپیوندید</p>
+          <p className="text-amber-100/60 text-sm">به جامعه فیتنس ما بپیوندید</p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8">
-          <div className="flex gap-2 mb-8 bg-white/5 p-1 rounded-lg">
+        <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-8">
+          <div className="flex gap-2 mb-8 bg-zinc-900/90 p-1.5 rounded-xl border border-amber-500/10">
             <button
               onClick={() => {
                 setIsRegister(false);
                 setServerError("");
               }}
-              className={`flex-1 py-3 rounded-lg transition-colors ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
                 !isRegister
-                  ? "bg-orange-500 text-white"
-                  : "text-white/60 hover:text-white"
+                  ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
+                  : "text-zinc-400 hover:text-amber-300"
               }`}
             >
               ورود
@@ -124,10 +133,10 @@ export default function LoginForm() {
                 setIsRegister(true);
                 setServerError("");
               }}
-              className={`flex-1 py-3 rounded-lg transition-colors ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
                 isRegister
-                  ? "bg-orange-500 text-white"
-                  : "text-white/60 hover:text-white"
+                  ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
+                  : "text-zinc-400 hover:text-amber-300"
               }`}
             >
               ثبت نام
@@ -135,7 +144,7 @@ export default function LoginForm() {
           </div>
 
           {serverError && (
-            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm text-center">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm text-center">
               {serverError}
             </div>
           )}
@@ -146,11 +155,11 @@ export default function LoginForm() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-white/80 mb-2 text-sm">
+                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
                   شماره تلفن
                 </label>
                 <div className="relative">
-                  <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                  <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
                   <input
                     type="text"
                     placeholder="۰۹۱۲۳۴۵۶۷۸۹"
@@ -174,7 +183,7 @@ export default function LoginForm() {
               <button
                 type="submit"
                 disabled={loginForm.formState.isSubmitting}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
               >
                 {loginForm.formState.isSubmitting
                   ? "در حال ارسال کد..."
@@ -189,11 +198,11 @@ export default function LoginForm() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-white/80 mb-2 text-sm">
+                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
                   نام کاربری
                 </label>
                 <div className="relative">
-                  <BiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                  <BiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
                   <input
                     type="text"
                     placeholder="نام خانوادگی خود را وارد کنید"
@@ -217,11 +226,11 @@ export default function LoginForm() {
               </div>
 
               <div>
-                <label className="block text-white/80 mb-2 text-sm">
+                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
                   شماره تلفن
                 </label>
                 <div className="relative">
-                  <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                  <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
                   <input
                     type="text"
                     placeholder="۰۹۱۲۳۴۵۶۷۸۹"
@@ -245,7 +254,7 @@ export default function LoginForm() {
               </div>
 
               <div>
-                <label className="block text-white/80 mb-2 text-sm">
+                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
                   رمز عبور
                 </label>
                 <div className="relative">
@@ -268,7 +277,7 @@ export default function LoginForm() {
                     onClick={() =>
                       setShowRegisterPassword(!showRegisterPassword)
                     }
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors cursor-pointer"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/60 hover:text-amber-300 transition-colors cursor-pointer"
                   >
                     {showRegisterPassword ? (
                       <AiOutlineEyeInvisible className="w-5 h-5" />
@@ -285,7 +294,7 @@ export default function LoginForm() {
               </div>
 
               <div>
-                <label className="block text-white/80 mb-2 text-sm">
+                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
                   تکرار رمز عبور
                 </label>
                 <div className="relative">
@@ -309,7 +318,7 @@ export default function LoginForm() {
                         !showRegisterConfirmPassword
                       )
                     }
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors cursor-pointer"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/60 hover:text-amber-300 transition-colors cursor-pointer"
                   >
                     {showRegisterConfirmPassword ? (
                       <AiOutlineEyeInvisible className="w-5 h-5" />
@@ -328,7 +337,7 @@ export default function LoginForm() {
               <button
                 type="submit"
                 disabled={registerForm.formState.isSubmitting}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
               >
                 {registerForm.formState.isSubmitting
                   ? "در حال ثبت نام..."
@@ -340,10 +349,10 @@ export default function LoginForm() {
           <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
+                <div className="w-full border-t border-amber-500/15"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-transparent text-white/50">
+                <span className="px-4 bg-zinc-950 text-amber-200/50">
                   یا ورود با
                 </span>
               </div>
@@ -351,7 +360,7 @@ export default function LoginForm() {
             <div className="mt-6">
               <button
                 onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-                className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white py-3 rounded-lg transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-zinc-900/80 hover:bg-zinc-800/80 border border-amber-500/20 hover:border-amber-500/40 text-amber-100 py-3 rounded-xl transition-all cursor-pointer shadow-md"
               >
                 <svg
                   className="w-5 h-5"
@@ -369,8 +378,8 @@ export default function LoginForm() {
           </div>
         </div>
 
-        <div className="text-center mt-6 text-white/60 text-sm">
-          <Link href="/" className="hover:text-orange-500 transition-colors">
+        <div className="text-center mt-6 text-zinc-400 text-sm">
+          <Link href="/" className="hover:text-amber-400 transition-colors">
             بازگشت به صفحه اصلی
           </Link>
         </div>

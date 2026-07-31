@@ -22,7 +22,7 @@ export default function Header({ session }: HeaderProps) {
 
   return (
     <nav className="bg-neutral-950/80 backdrop-blur-lg border-b border-amber-500/20 sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="font-danaMed">
           <div className="flex justify-between items-center h-16 relative">
             <button
@@ -48,7 +48,7 @@ export default function Header({ session }: HeaderProps) {
                 height={36}
                 className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
               />
-              <span className="font-bold text-xl text-white font-morabbaReg">
+              <span className="font-bold max-sm:hidden text-xl text-white font-morabbaReg">
                 استارفیت
               </span>
             </Link>
@@ -68,7 +68,7 @@ export default function Header({ session }: HeaderProps) {
               </Link>
               <Link
                 href="/dashboard/tickets"
-                className={getLinkClass("/tickets")}
+                className={`${getLinkClass("/tickets")} max-lg:hidden `}
               >
                 پشتیبانی
               </Link>

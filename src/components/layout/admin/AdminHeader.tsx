@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Bell, Menu, Settings } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import type { AdminHeaderProps } from "@/types/admin";
 
@@ -19,7 +19,7 @@ export default function AdminHeader({
           <div className="flex items-center gap-4">
             <button
               onClick={onToggle}
-              className="md:hidden w-10 h-10 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
+              className="lg:hidden w-10 h-10 bg-neutral-900 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
             >
               <Menu className="w-6 h-6 text-amber-400" />
             </button>
@@ -44,7 +44,7 @@ export default function AdminHeader({
               )}
             </Link>
 
-            <div className="hidden md:flex items-center gap-3 pr-4 border-r border-amber-500/20">
+            <div className="hidden lg:flex items-center gap-3 pr-4 border-r border-amber-500/20">
               <div className="text-left">
                 <div className="text-white text-sm font-semibold">
                   {username}
