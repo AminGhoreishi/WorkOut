@@ -6,20 +6,41 @@ import { BiDumbbell, BiUser, BiPhone } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { LoginFormData, RegisterFormData, AuthApiResponse } from "@/types/auth";
+import type {
+  LoginFormData,
+  RegisterFormData,
+  AuthApiResponse,
+} from "@/types/auth";
 import { toEnglishDigits } from "@/utils/numbers";
 
 function LoginFormContent() {
   const [isRegister, setIsRegister] = useState(false);
   const [serverError, setServerError] = useState("");
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
-  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] = useState(false);
+  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] =
+    useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
-  const loginForm = useForm<LoginFormData>();
-  const registerForm = useForm<RegisterFormData>();
+  const rawCallbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl =
+    rawCallbackUrl.startsWith("/") && !rawCallbackUrl.startsWith("//")
+      ? rawCallbackUrl
+      : "/dashboard";
+
+  const loginForm = useForm<LoginFormData>({
+    mode: "onTouched",
+  });
+  const registerForm = useForm<RegisterFormData>({
+    mode: "onTouched",
+  });
+
+  const handleTabChange = (registerMode: boolean) => {
+    setIsRegister(registerMode);
+    setServerError("");
+    loginForm.reset();
+    registerForm.reset();
+  };
 
   const onLogin = async (data: LoginFormData) => {
     setServerError("");
@@ -41,9 +62,11 @@ function LoginFormContent() {
         return;
       }
 
-      router.push(`/otp?phone=${encodeURIComponent(cleanPhone)}`);
+      router.push(
+        `/otp?phone=${encodeURIComponent(cleanPhone)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+      );
     } catch {
-      setServerError("خطا در ارتباط با سرور");
+      setServerError("خطا در ارتباط با سرور، لطفاً اتصال اینترنت خود را بررسی کنید");
     }
   };
 
@@ -56,8 +79,10 @@ function LoginFormContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...data,
+          username: data.username.trim(),
           phone: cleanPhone,
+          password: data.password,
+          confirmPassword: data.confirmPassword,
         }),
       });
 
@@ -77,7 +102,7 @@ function LoginFormContent() {
       });
 
       if (signInRes?.error) {
-        setServerError("ثبت‌نام با موفقیت انجام شد، لطفاً وارد شوید");
+        setServerError("ثبت‌نام انجام شد، لطفاً از بخش ورود وارد شوید");
         setIsRegister(false);
         return;
       }
@@ -85,14 +110,14 @@ function LoginFormContent() {
       router.push(callbackUrl);
       router.refresh();
     } catch {
-      setServerError("خطا در ارتباط با سرور");
+      setServerError("خطا در ارتباط با سرور، لطفاً دوباره تلاش کنید");
     }
   };
 
   const inputClass = (hasError?: boolean) =>
     `w-full bg-zinc-900/60 border ${
       hasError
-        ? "border-red-500/80"
+        ? "border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/40"
         : "border-amber-500/20 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
     } rounded-xl pl-12 pr-4 py-3 text-amber-100 placeholder:text-zinc-500 focus:outline-none transition-all`;
 
@@ -112,17 +137,16 @@ function LoginFormContent() {
               استارفیت
             </span>
           </Link>
-          <p className="text-amber-100/60 text-sm">به جامعه فیتنس ما بپیوندید</p>
+          <p className="text-amber-100/60 text-sm">
+            به جامعه فیتنس ما بپیوندید
+          </p>
         </div>
 
         <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-8">
           <div className="flex gap-2 mb-8 bg-zinc-900/90 p-1.5 rounded-xl border border-amber-500/10">
             <button
               type="button"
-              onClick={() => {
-                setIsRegister(false);
-                setServerError("");
-              }}
+              onClick={() => handleTabChange(false)}
               className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
                 !isRegister
                   ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
@@ -133,10 +157,7 @@ function LoginFormContent() {
             </button>
             <button
               type="button"
-              onClick={() => {
-                setIsRegister(true);
-                setServerError("");
-              }}
+              onClick={() => handleTabChange(true)}
               className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
                 isRegister
                   ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
@@ -165,14 +186,17 @@ function LoginFormContent() {
                 <div className="relative">
                   <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
                   <input
-                    type="text"
+                    type="tel"
                     placeholder="۰۹۱۲۳۴۵۶۷۸۹"
                     className={inputClass(!!loginForm.formState.errors.phone)}
                     {...loginForm.register("phone", {
                       required: "شماره تلفن الزامی است",
                       validate: (val) => {
                         const clean = toEnglishDigits(val);
-                        return /^09\d{9}$/.test(clean) || "شماره تلفن معتبر نیست (مثال: 09123456789)";
+                        return (
+                          /^09\d{9}$/.test(clean) ||
+                          "شماره تلفن معتبر نیست (مثال: 09123456789)"
+                        );
                       },
                     })}
                   />
@@ -203,7 +227,7 @@ function LoginFormContent() {
             >
               <div>
                 <label className="block text-amber-100/90 mb-2 text-sm font-medium">
-                  نام کاربری
+                  نام و نام خانوادگی
                 </label>
                 <div className="relative">
                   <BiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
@@ -211,7 +235,7 @@ function LoginFormContent() {
                     type="text"
                     placeholder="نام خانوادگی خود را وارد کنید"
                     className={inputClass(
-                      !!registerForm.formState.errors.username
+                      !!registerForm.formState.errors.username,
                     )}
                     {...registerForm.register("username", {
                       required: "نام خانوادگی الزامی است",
@@ -236,16 +260,19 @@ function LoginFormContent() {
                 <div className="relative">
                   <BiPhone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/60" />
                   <input
-                    type="text"
+                    type="tel"
                     placeholder="۰۹۱۲۳۴۵۶۷۸۹"
                     className={inputClass(
-                      !!registerForm.formState.errors.phone
+                      !!registerForm.formState.errors.phone,
                     )}
                     {...registerForm.register("phone", {
                       required: "شماره تلفن الزامی است",
                       validate: (val) => {
                         const clean = toEnglishDigits(val);
-                        return /^09\d{9}$/.test(clean) || "شماره تلفن معتبر نیست (مثال: 09123456789)";
+                        return (
+                          /^09\d{9}$/.test(clean) ||
+                          "شماره تلفن معتبر نیست (مثال: 09123456789)"
+                        );
                       },
                     })}
                   />
@@ -266,7 +293,7 @@ function LoginFormContent() {
                     type={showRegisterPassword ? "text" : "password"}
                     placeholder="رمز عبور خود را وارد کنید"
                     className={inputClass(
-                      !!registerForm.formState.errors.password
+                      !!registerForm.formState.errors.password,
                     )}
                     {...registerForm.register("password", {
                       required: "رمز عبور الزامی است",
@@ -306,7 +333,7 @@ function LoginFormContent() {
                     type={showRegisterConfirmPassword ? "text" : "password"}
                     placeholder="رمز عبور را دوباره وارد کنید"
                     className={inputClass(
-                      !!registerForm.formState.errors.confirmPassword
+                      !!registerForm.formState.errors.confirmPassword,
                     )}
                     {...registerForm.register("confirmPassword", {
                       required: "تکرار رمز عبور الزامی است",
@@ -319,7 +346,7 @@ function LoginFormContent() {
                     type="button"
                     onClick={() =>
                       setShowRegisterConfirmPassword(
-                        !showRegisterConfirmPassword
+                        !showRegisterConfirmPassword,
                       )
                     }
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/60 hover:text-amber-300 transition-colors cursor-pointer"
@@ -397,7 +424,7 @@ export default function LoginForm() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400">
+        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed">
           بارگذاری...
         </div>
       }

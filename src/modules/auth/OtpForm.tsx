@@ -4,38 +4,64 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BiDumbbell, BiArrowBack } from "react-icons/bi";
 import { signIn } from "next-auth/react";
-import { showAlert } from "@/utils/alert";
+import { toEnglishDigits } from "@/utils/numbers";
+import type { AuthApiResponse } from "@/types/auth";
 
 function OtpFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const phone = searchParams.get("phone") || searchParams.get("email") || "";
+
+  const rawPhone = searchParams.get("phone") || searchParams.get("email") || "";
+  const phone = toEnglishDigits(rawPhone);
+
+  const rawCallbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl =
+    rawCallbackUrl.startsWith("/") && !rawCallbackUrl.startsWith("//")
+      ? rawCallbackUrl
+      : "/dashboard";
 
   const [otp, setOtp] = useState<string[]>(["", "", "", "", ""]);
-  const [timeLeft, setTimeLeft] = useState(120);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number>(120);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isResending, setIsResending] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
+    if (!phone || !/^09\d{9}$/.test(phone)) {
+      router.replace("/login");
     }
+  }, [phone, router]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
   }, [timeLeft]);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    const val = value.slice(-1);
+    setServerError("");
+    setSuccessMessage("");
+    const cleanVal = toEnglishDigits(value).replace(/\D/g, "");
+    if (!cleanVal && value !== "") return;
+
+    const digit = cleanVal.slice(-1);
     const newOtp = [...otp];
-    newOtp[index] = val;
+    newOtp[index] = digit;
     setOtp(newOtp);
 
-    if (val && index < 4) {
+    if (digit && index < 4) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -44,72 +70,66 @@ function OtpFormContent() {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (e.key === "Backspace") {
+      if (!otp[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+      }
+    } else if (e.key === "ArrowLeft" && index > 0) {
       inputRefs.current[index - 1]?.focus();
+    } else if (e.key === "ArrowRight" && index < 4) {
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const pastedData = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, 5);
+    setServerError("");
+    setSuccessMessage("");
+    const rawPasted = e.clipboardData.getData("text");
+    const cleanDigits = toEnglishDigits(rawPasted).replace(/\D/g, "").slice(0, 5);
 
-    if (!pastedData) return;
+    if (!cleanDigits) return;
 
     const newOtp = ["", "", "", "", ""];
-    for (let i = 0; i < pastedData.length; i++) {
-      newOtp[i] = pastedData[i];
+    for (let i = 0; i < cleanDigits.length; i++) {
+      newOtp[i] = cleanDigits[i];
     }
     setOtp(newOtp);
 
-    const targetIndex = Math.min(pastedData.length, 4);
+    const targetIndex = Math.min(cleanDigits.length, 4);
     inputRefs.current[targetIndex]?.focus();
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError("");
+    setSuccessMessage("");
     const code = otp.join("");
 
     if (code.length < 5) {
-      showAlert("خطا", "لطفاً کد ۵ رقمی را کامل وارد کنید", "error");
+      setServerError("لطفاً کد ۵ رقمی را کامل وارد کنید");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const pendingDataStr =
-        typeof window !== "undefined"
-          ? sessionStorage.getItem("pendingRegister")
-          : null;
-      const pendingData = pendingDataStr ? JSON.parse(pendingDataStr) : null;
-
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phone,
           code,
-          username: pendingData?.username,
-          password: pendingData?.password,
         }),
       });
 
-      const resData = await res.json();
-      setIsSubmitting(false);
+      const resData: AuthApiResponse = await res.json().catch(() => ({
+        message: "خطا در دریافت پاسخ از سرور",
+      }));
 
       if (!res.ok) {
-        showAlert(
-          "خطا",
-          resData.message || "کد تایید اشتباه یا منقضی شده است",
-          "error",
-        );
+        setIsSubmitting(false);
+        setServerError(resData.message || "کد تایید اشتباه یا منقضی شده است");
         return;
-      }
-
-      if (typeof window !== "undefined") {
-        sessionStorage.removeItem("pendingRegister");
       }
 
       const signInRes = await signIn("credentials", {
@@ -119,36 +139,47 @@ function OtpFormContent() {
       });
 
       if (signInRes?.error) {
-        showAlert("خطا", "ایجاد نشست کاربر با مشکل مواجه شد", "error");
+        setIsSubmitting(false);
+        setServerError("ایجاد نشست کاربر با مشکل مواجه شد");
         return;
       }
 
-      showAlert("موفقیت", "تایید با موفقیت انجام شد", "success");
-      window.location.href = "/dashboard";
+      router.push(callbackUrl);
+      router.refresh();
     } catch {
       setIsSubmitting(false);
-      showAlert("خطا", "خطایی در تایید کد رخ داد", "error");
+      setServerError("خطایی در تایید کد رخ داد، لطفاً دوباره تلاش کنید");
     }
   };
 
   const handleResendCode = async () => {
+    if (timeLeft > 0 || isResending) return;
+
+    setServerError("");
+    setSuccessMessage("");
+    setIsResending(true);
     try {
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, type: "login" }),
       });
-      const resData = await res.json();
+      const resData: AuthApiResponse = await res.json().catch(() => ({
+        message: "خطا در دریافت پاسخ از سرور",
+      }));
+      setIsResending(false);
+
       if (res.ok) {
         setTimeLeft(120);
         setOtp(["", "", "", "", ""]);
         inputRefs.current[0]?.focus();
-        showAlert("موفقیت", "کد تایید جدید ارسال شد", "success");
+        setSuccessMessage("کد تایید جدید ارسال شد");
       } else {
-        showAlert("خطا", resData.message || "خطا در ارسال کد", "error");
+        setServerError(resData.message || "خطا در ارسال کد");
       }
     } catch {
-      showAlert("خطا", "خطایی در ارتباط با سرور رخ داد", "error");
+      setIsResending(false);
+      setServerError("خطایی در ارتباط با سرور رخ داد");
     }
   };
 
@@ -164,10 +195,7 @@ function OtpFormContent() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-3 group">
             <BiDumbbell className="w-12 h-12 text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
-            <span
-              className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500"
-              style={{ fontFamily: "Marbeh, sans-serif" }}
-            >
+            <span className="font-bold text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
               استارفیت
             </span>
           </Link>
@@ -192,6 +220,18 @@ function OtpFormContent() {
                 </p>
               </div>
             </div>
+
+            {serverError && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm text-center">
+                {serverError}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-sm text-center">
+                {successMessage}
+              </div>
+            )}
 
             <form onSubmit={handleVerifyOtp} className="space-y-6">
               <div>
@@ -225,9 +265,10 @@ function OtpFormContent() {
                   <button
                     type="button"
                     onClick={handleResendCode}
-                    className="text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors"
+                    disabled={isResending}
+                    className="text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors disabled:opacity-50"
                   >
-                    ارسال مجدد کد تایید
+                    {isResending ? "در حال ارسال..." : "ارسال مجدد کد تایید"}
                   </button>
                 )}
                 <Link
@@ -240,7 +281,7 @@ function OtpFormContent() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || otp.join("").length < 5}
                 className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35"
               >
                 {isSubmitting ? "در حال تایید..." : "ورود به حساب کاربری"}
@@ -263,7 +304,7 @@ export default function OtpForm() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400">
+        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed">
           بارگذاری...
         </div>
       }

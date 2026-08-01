@@ -15,5 +15,6 @@ export interface OtpFormData {
 }
 
 export interface AuthApiResponse {
-  message: string;
+  message?: string;
+  error?: string;
 }
