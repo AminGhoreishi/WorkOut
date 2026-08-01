@@ -2,17 +2,25 @@ import dbConnect from "@/lib/dbConnect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import BlogModel from "@/model/Blog";
 import WishModel from "@/model/Wish";
 import FavoritesManagement from "@/modules/dashboard/favorites/FavoritesManagement";
+import type { FavoriteArticleItem } from "@/types/favorites";
 
-export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "استارفیت | مقالات علاقه‌مندی‌های من",
+  description:
+    "مدیریت و مشاهده مقالات علمی و ورزشی نشانه‌گذاری شده در استارفیت",
+};
 
-export default async function page() {
-  await dbConnect();
+export default async function Page() {
+  try {
+    await dbConnect();
+  } catch {
+    redirect("/login");
+  }
 
   const session = await getServerSession(authOptions);
-  if (!session) {
+  if (!session || !session.user?.id) {
     redirect("/login");
   }
 
@@ -20,7 +28,7 @@ export default async function page() {
     .populate("blogId")
     .lean();
 
-  const wishlistProps: any[] = dbWishlist
+  const wishlistProps: FavoriteArticleItem[] = (dbWishlist || [])
     .map((w: any) => {
       const b = w.blogId;
       if (!b) return null;
@@ -29,11 +37,13 @@ export default async function page() {
         title: b.title || "",
         slug: b.slug || "",
         image: b.image || "",
-        category: b.category || "",
+        category: b.category || "مقاله",
         views: b.views || 0,
       };
     })
-    .filter(Boolean);
+    .filter(
+      (item): item is FavoriteArticleItem => item !== null && Boolean(item.id),
+    );
 
   return <FavoritesManagement initialWishlist={wishlistProps} />;
 }

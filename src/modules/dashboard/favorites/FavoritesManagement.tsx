@@ -1,78 +1,66 @@
 "use client";
+
 import { useState } from "react";
-import { BookOpen, Eye, ArrowRight, Trash2 } from "lucide-react";
+import { BookOpen, Eye, ArrowRight, Trash2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { showAlert } from "@/utils/alert";
-
-interface FavoritesManagementProps {
-  initialWishlist: {
-    id: string;
-    title: string;
-    slug: string;
-    image: string;
-    category: string;
-    views: number;
-  }[];
-}
+import type { FavoritesManagementProps, FavoriteArticleItem } from "@/types/favorites";
 
 export default function FavoritesManagement({
   initialWishlist = [],
 }: FavoritesManagementProps) {
-  const [wishlist, setWishlist] = useState(initialWishlist);
+  const [wishlist, setWishlist] = useState<FavoriteArticleItem[]>(initialWishlist);
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   const handleRemove = async (blogId: string) => {
+    if (removingId) return;
+
+    const previousWishlist = [...wishlist];
+    setWishlist((prev) => prev.filter((item) => item.id !== blogId));
+    setRemovingId(blogId);
+
     try {
       const res = await fetch("/api/blog/wish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ blogId }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (!data.wished) {
-          setWishlist((prev) => prev.filter((item) => item.id !== blogId));
-          showAlert({
-            title: "حذف شد",
-            text: "این مقاله از لیست علاقه‌مندی‌های شما حذف شد.",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false,
-          });
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        }
+
+      const resData = await res.json().catch(() => ({}));
+
+      if (!res.ok || resData.wished) {
+        setWishlist(previousWishlist);
+        showAlert({
+          title: "خطا",
+          text: resData.message || "امکان حذف مقاله وجود ندارد، لطفاً دوباره تلاش کنید.",
+          icon: "error",
+          confirmButtonText: "متوجه شدم",
+          confirmButtonColor: "#f59e0b",
+        });
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setWishlist(previousWishlist);
       showAlert({
-        title: "خطا",
-        text: "عملیات با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+        title: "خطای ارتباط",
+        text: "ارتباط با سرور برقرار نشد، لطفاً اتصال اینترنت خود را بررسی کنید.",
         icon: "error",
-        confirmButtonText: "باشه",
-        confirmButtonColor: "#eab308",
+        confirmButtonText: "متوجه شدم",
+        confirmButtonColor: "#f59e0b",
       });
+    } finally {
+      setRemovingId(null);
     }
   };
 
   return (
-    <div
-      className="min-h-screen bg-neutral-950 text-white"
-      style={{ fontFamily: "Dana, Marbuta, sans-serif", direction: "rtl" }}
-    >
+    <div className="min-h-screen bg-neutral-950 text-white font-danaMed" dir="rtl">
       <main className="p-4 md:p-6 space-y-6">
-        <div
-          className="relative rounded-2xl p-6 overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, #18181b, #09090b)",
-            border: "1px solid rgba(234,179,8,0.25)",
-          }}
-        >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-amber-500 blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-yellow-500 blur-2xl"></div>
+        <div className="relative rounded-2xl p-6 overflow-hidden bg-gradient-to-br from-zinc-900 to-zinc-950 border border-amber-500/25 shadow-2xl">
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-amber-500 blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-yellow-500 blur-2xl" />
           </div>
-          <div className="relative flex items-center justify-between flex-wrap gap-4">
+          <div className="relative flex items-center justify-between flex-wrap gap-4 z-10">
             <div>
               <h2 className="text-2xl font-bold text-white mb-2 font-morabbaReg">
                 علاقه‌مندی‌های من
@@ -83,7 +71,7 @@ export default function FavoritesManagement({
             </div>
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 transition-all border border-amber-500/20"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 transition-all border border-amber-500/20"
             >
               <ArrowRight size={16} />
               بازگشت به داشبورد
@@ -91,56 +79,58 @@ export default function FavoritesManagement({
           </div>
         </div>
 
-        <div
-          className="rounded-2xl p-5"
-          style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(234,179,8,0.15)",
-          }}
-        >
+        <div className="bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-5 shadow-xl">
           {wishlist.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {wishlist.map((a) => (
                 <div
                   key={a.id}
-                  className="rounded-xl p-4 bg-white/[0.03] border border-amber-500/15 hover:border-amber-500/40 transition-all group relative"
+                  className="rounded-xl p-4 bg-white/[0.03] border border-amber-500/15 hover:border-amber-500/40 transition-all group relative flex flex-col justify-between"
                 >
-                  {a.image ? (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3">
-                      <img
-                        src={a.image}
-                        alt={a.title}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full aspect-video bg-white/5 rounded-lg flex items-center justify-center text-3xl mb-3">
-                      📚
-                    </div>
-                  )}
+                  <div>
+                    {a.image ? (
+                      <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3">
+                        <img
+                          src={a.image}
+                          alt={a.title}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-video bg-white/5 rounded-lg flex items-center justify-center text-3xl mb-3">
+                        📚
+                      </div>
+                    )}
 
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                      {a.category}
-                    </span>
-                    <button
-                      onClick={() => handleRemove(a.id)}
-                      className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all cursor-pointer"
-                      title="حذف از علاقه‌مندی‌ها"
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">
+                        {a.category}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(a.id)}
+                        disabled={removingId === a.id}
+                        className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all cursor-pointer disabled:opacity-50"
+                        title="حذف از علاقه‌مندی‌ها"
+                      >
+                        {removingId === a.id ? (
+                          <Loader2 size={15} className="animate-spin" />
+                        ) : (
+                          <Trash2 size={15} />
+                        )}
+                      </button>
+                    </div>
+
+                    <Link href={`/article/${a.slug}`} className="block">
+                      <h3 className="text-white text-sm font-semibold group-hover:text-amber-300 transition-colors line-clamp-2 leading-relaxed mb-3">
+                        {a.title}
+                      </h3>
+                    </Link>
                   </div>
 
-                  <Link href={`/article/${a.slug}`} className="block">
-                    <h3 className="text-white text-sm font-semibold group-hover:text-amber-300 transition-colors line-clamp-2 leading-relaxed mb-3">
-                      {a.title}
-                    </h3>
-                  </Link>
-
-                  <div className="flex items-center gap-1.5 text-xs text-neutral-400">
+                  <div className="flex items-center gap-1.5 text-xs text-neutral-400 border-t border-white/5 pt-3 mt-2">
                     <Eye size={12} />
-                    <span>
+                    <span className="font-sans">
                       {new Intl.NumberFormat("fa-IR").format(a.views)} بازدید
                     </span>
                   </div>
@@ -153,7 +143,7 @@ export default function FavoritesManagement({
               <p className="mb-3">لیست علاقه‌مندی‌های شما خالی است.</p>
               <Link
                 href="/articles"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-neutral-950 transition-all hover:opacity-95 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-neutral-950 transition-all hover:scale-[1.02] bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-md shadow-amber-500/10"
               >
                 مشاهده مقالات ورزشی
               </Link>
