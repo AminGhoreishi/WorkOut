@@ -1,10 +1,5 @@
-import FitnessProfileManagement from "@/modules/dashboard/fitness-profile/FitnessProfileManagement";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "فیت‌کوچ | پروفایل ورزشی من",
-  description: "مشاهده و ویرایش مشخصات فیزیکی، اهداف ورزشی و سابقه تمرین در فیت‌کوچ",
-};
-
-export default function FittnessProfilePage() {
-  return <FitnessProfileManagement />;
+export default function FittnessProfileRedirectPage() {
+  redirect("/dashboard/fitness-profile");
 }

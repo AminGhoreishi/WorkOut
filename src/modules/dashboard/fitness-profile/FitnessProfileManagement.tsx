@@ -1,51 +1,53 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
-import {
-  Activity,
-  Target,
-  Dumbbell,
-  Scale,
-  Camera,
-  Loader2,
-  Save,
-  Plus,
-  Trash2,
-  Calendar,
-  Sparkles,
-} from "lucide-react";
+import { Activity, Scale, Loader2, Save, Sparkles } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import { FitnessProfileData, FitnessFormInputs } from "@/types/fitness-profile";
+import { toEnglishDigits } from "@/utils/numbers";
+import {
+  GOAL_OPTIONS,
+  EXPERIENCE_OPTIONS,
+  EQUIPMENT_OPTIONS,
+} from "@/constants/onboarding";
+import PhysicalTab from "./PhysicalTab";
+import TrainingTab from "./TrainingTab";
+import PhotosTab from "./PhotosTab";
+import type {
+  FitnessFormInputs,
+  FitnessProfileTab,
+  FitnessProfileApiResponse,
+} from "@/types/fitness-profile";
 
-const GOAL_LABELS = {
-  weight_loss: "کاهش وزن و چربی‌سوزی",
-  muscle_gain: "عضله‌سازی و افزایش حجم",
-  endurance: "افزایش استقامت و کاردیو",
-  general_fitness: "آمادگی جسمانی عمومی",
-  rehabilitation: "توان‌بخشی و بهبود آسیب",
-};
-
-const EXPERIENCE_LABELS = {
-  beginner: "مبتدی (زیر ۶ ماه)",
-  intermediate: "متوسط (۶ تا ۲۴ ماه)",
-  advanced: "حرفه‌ای (بیش از ۲ سال)",
-};
-
-const EQUIPMENT_LABELS = {
-  none: "بدون تجهیزات (فقط وزن بدن)",
-  home_basic: "تجهیزات پایه خانگی",
-  gym_full: "باشگاه ورزشی مجهز",
+const fetcher = async (url: string): Promise<FitnessProfileApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(
+      errorData.message || "خطا در دریافت اطلاعات پروفایل ورزشی",
+    );
+  }
+  return res.json();
 };
 
 export default function FitnessProfileManagement() {
-  const [profile, setProfile] = useState<FitnessProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const {
+    data: profileResponse,
+    isLoading,
+    mutate,
+  } = useSWR<FitnessProfileApiResponse>(
+    "/api/user/fitness-profile",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 15000,
+    },
+  );
+
+  const [saving, setSaving] = useState<boolean>(false);
   const [bodyPhotos, setBodyPhotos] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<
-    "physical" | "training" | "photos"
-  >("physical");
+  const [activeTab, setActiveTab] = useState<FitnessProfileTab>("physical");
 
   const {
     register,
@@ -68,6 +70,24 @@ export default function FitnessProfileManagement() {
     },
   });
 
+  const profile = profileResponse?.profile || null;
+
+  useEffect(() => {
+    if (profile) {
+      reset({
+        goal: profile.goal || "general_fitness",
+        sessionsPerWeek: profile.sessionsPerWeek || 3,
+        equipment: profile.equipment || "none",
+        trainingExperience: profile.trainingExperience || "beginner",
+        ageYears: String(profile.ageYears || 25),
+        heightCm: String(profile.heightCm || 175),
+        weightKg: String(profile.weightKg || 70),
+        notes: profile.notes || "",
+      });
+      setBodyPhotos(profile.bodyPhotos || []);
+    }
+  }, [profile, reset]);
+
   const watchedGoal = watch("goal");
   const watchedSessions = watch("sessionsPerWeek");
   const watchedEquipment = watch("equipment");
@@ -76,49 +96,21 @@ export default function FitnessProfileManagement() {
   const watchedWeight = watch("weightKg") || "70";
   const watchedAge = watch("ageYears") || "25";
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/user/fitness-profile");
-      if (!res.ok) throw new Error("Failed to fetch fitness profile");
-      const data = await res.json();
-      if (data.profile) {
-        const p = data.profile;
-        setProfile(p);
-        reset({
-          goal: p.goal,
-          sessionsPerWeek: p.sessionsPerWeek || 3,
-          equipment: p.equipment || "none",
-          trainingExperience: p.trainingExperience || "beginner",
-          ageYears: String(p.ageYears || 25),
-          heightCm: String(p.heightCm || 175),
-          weightKg: String(p.weightKg || 70),
-          notes: p.notes || "",
-        });
-        setBodyPhotos(p.bodyPhotos || []);
-      }
-    } catch (e) {
-      console.error(e);
-      showAlert({
-        title: "خطا",
-        text: "بارگذاری اطلاعات پروفایل ورزشی با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonText: "تلاش مجدد",
-        confirmButtonColor: "#eab308",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      Array.from(files).forEach((file) => {
+      const fileArray = Array.from(files);
+      if (bodyPhotos.length + fileArray.length > 4) {
+        showAlert({
+          title: "محدودیت تصویر",
+          text: "حداکثر ۴ تصویر می‌توانید بارگذاری کنید.",
+          icon: "warning",
+          confirmButtonColor: "#f59e0b",
+        });
+        return;
+      }
+
+      fileArray.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           if (event.target?.result) {
@@ -138,6 +130,10 @@ export default function FitnessProfileManagement() {
   const onSubmit: SubmitHandler<FitnessFormInputs> = async (data) => {
     setSaving(true);
     try {
+      const cleanAge = parseInt(toEnglishDigits(data.ageYears)) || 25;
+      const cleanHeight = parseInt(toEnglishDigits(data.heightCm)) || 175;
+      const cleanWeight = parseInt(toEnglishDigits(data.weightKg)) || 70;
+
       const res = await fetch("/api/user/fitness-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,34 +142,35 @@ export default function FitnessProfileManagement() {
           sessionsPerWeek: data.sessionsPerWeek,
           equipment: data.equipment,
           trainingExperience: data.trainingExperience,
-          ageYears: parseInt(data.ageYears),
-          heightCm: parseInt(data.heightCm),
-          weightKg: parseInt(data.weightKg),
+          ageYears: cleanAge,
+          heightCm: cleanHeight,
+          weightKg: cleanWeight,
           bodyPhotos,
           notes: data.notes,
         }),
       });
 
-      const resData = await res.json();
+      const resData: FitnessProfileApiResponse = await res
+        .json()
+        .catch(() => ({}));
 
       if (res.ok) {
-        setProfile(resData.profile);
+        await mutate(resData, { revalidate: true });
         showAlert({
           title: "موفقیت‌آمیز",
           text: "پروفایل ورزشی شما با موفقیت بروزرسانی شد.",
           icon: "success",
-          confirmButtonColor: "#eab308",
+          confirmButtonColor: "#f59e0b",
         });
       } else {
         throw new Error(resData.message || "بروزرسانی پروفایل ناموفق بود");
       }
     } catch (err: any) {
-      console.error(err);
       showAlert({
         title: "خطا",
         text: err.message || "خطا در ارتباط با سرور رخ داده است.",
         icon: "error",
-        confirmButtonColor: "#eab308",
+        confirmButtonColor: "#f59e0b",
       });
     } finally {
       setSaving(false);
@@ -187,13 +184,13 @@ export default function FitnessProfileManagement() {
         title: "خطای اعتبارسنجی",
         text: "لطفاً خطاهای مربوط به فیلدهای مشخصات بدنی را تصحیح کنید.",
         icon: "warning",
-        confirmButtonColor: "#eab308",
+        confirmButtonColor: "#f59e0b",
       });
     }
   };
 
-  const parsedHeight = parseInt(watchedHeight) || 0;
-  const parsedWeight = parseInt(watchedWeight) || 0;
+  const parsedHeight = parseInt(toEnglishDigits(watchedHeight)) || 0;
+  const parsedWeight = parseInt(toEnglishDigits(watchedWeight)) || 0;
   const bmi =
     parsedHeight >= 100 && parsedWeight >= 30
       ? parseFloat(
@@ -236,9 +233,18 @@ export default function FitnessProfileManagement() {
 
   const bmiCategory = getBMICategory(bmi);
 
-  if (loading) {
+  const selectedGoalLabel =
+    GOAL_OPTIONS.find((g) => g.val === watchedGoal)?.label || "تعیین نشده";
+  const selectedExpLabel =
+    EXPERIENCE_OPTIONS.find((e) => e.val === watchedExperience)?.label ||
+    "تعیین نشده";
+  const selectedEqLabel =
+    EQUIPMENT_OPTIONS.find((eq) => eq.val === watchedEquipment)?.label ||
+    "تعیین نشده";
+
+  if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-neutral-400 gap-3">
+      <div className="min-h-[60vh] flex items-center justify-center text-neutral-400 gap-3 font-danaMed">
         <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
         <span>در حال بارگذاری اطلاعات پروفایل ورزشی...</span>
       </div>
@@ -246,10 +252,13 @@ export default function FitnessProfileManagement() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 text-white font-danaMed" dir="rtl">
+    <div
+      className="max-w-6xl mx-auto px-4 py-6 text-white font-danaMed"
+      dir="rtl"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white/[0.03] border border-amber-500/15 rounded-2xl p-6 flex flex-col items-center shadow-xl relative overflow-hidden">
+          <div className="bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 flex flex-col items-center shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl -z-10" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl -z-10" />
 
@@ -315,20 +324,20 @@ export default function FitnessProfileManagement() {
               <div className="bg-amber-500/5 border border-amber-500/15 rounded-xl p-4 space-y-3">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-neutral-400">هدف ورزشی:</span>
-                  <span className="text-amber-300 font-semibold">
-                    {GOAL_LABELS[watchedGoal] || "تعیین نشده"}
+                  <span className="text-amber-300 font-semibold truncate max-w-[140px]">
+                    {selectedGoalLabel}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-neutral-400">سابقه ورزشی:</span>
-                  <span className="text-amber-300 font-semibold">
-                    {EXPERIENCE_LABELS[watchedExperience] || "تعیین نشده"}
+                  <span className="text-amber-300 font-semibold truncate max-w-[140px]">
+                    {selectedExpLabel}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-neutral-400">تجهیزات در دسترس:</span>
-                  <span className="text-amber-300 font-semibold">
-                    {EQUIPMENT_LABELS[watchedEquipment] || "تعیین نشده"}
+                  <span className="text-amber-300 font-semibold truncate max-w-[140px]">
+                    {selectedEqLabel}
                   </span>
                 </div>
               </div>
@@ -336,7 +345,7 @@ export default function FitnessProfileManagement() {
           </div>
         </div>
 
-        <div className="lg:col-span-2 bg-white/[0.03] border border-amber-500/15 rounded-2xl p-6 md:p-8 shadow-xl">
+        <div className="lg:col-span-2 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 md:p-8 shadow-xl">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-400" />
             <h3 className="text-xl font-bold font-morabbaReg text-white">
@@ -344,10 +353,11 @@ export default function FitnessProfileManagement() {
             </h3>
           </div>
 
-          <div className="flex border-b border-white/10 mb-6">
+          <div className="flex border-b border-white/10 mb-6 overflow-x-auto">
             <button
+              type="button"
               onClick={() => setActiveTab("physical")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer ${
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
                 activeTab === "physical"
                   ? "text-amber-400 font-bold"
                   : "text-neutral-400 hover:text-white"
@@ -359,8 +369,9 @@ export default function FitnessProfileManagement() {
               )}
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab("training")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer ${
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
                 activeTab === "training"
                   ? "text-amber-400 font-bold"
                   : "text-neutral-400 hover:text-white"
@@ -372,8 +383,9 @@ export default function FitnessProfileManagement() {
               )}
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab("photos")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer ${
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
                 activeTab === "photos"
                   ? "text-amber-400 font-bold"
                   : "text-neutral-400 hover:text-white"
@@ -391,262 +403,33 @@ export default function FitnessProfileManagement() {
             className="space-y-6"
           >
             {activeTab === "physical" && (
-              <div className="space-y-5 animate-fadeIn">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  <div>
-                    <label className="block text-neutral-300 text-xs mb-2 font-medium">
-                      سن (سال)
-                    </label>
-                    <input
-                      type="text"
-                      {...register("ageYears", {
-                        required: "وارد کردن سن الزامی است",
-                        pattern: {
-                          value: /^([1-9][0-9]?|100)$/,
-                          message: "سن باید عدد و حداکثر ۱۰۰ سال باشد",
-                        },
-                      })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
-                    />
-                    {errors.ageYears && (
-                      <p className="text-amber-400 text-[10px] mt-1 font-semibold">
-                        {errors.ageYears.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-neutral-300 text-xs mb-2 font-medium">
-                      قد (سانتی‌متر)
-                    </label>
-                    <input
-                      type="text"
-                      {...register("heightCm", {
-                        required: "وارد کردن قد الزامی است",
-                        pattern: {
-                          value: /^([1-9][0-9]?|[1-2][0-9]{2})$/,
-                          message: "قد باید عدد و زیر ۳۰۰ سانتی‌متر باشد",
-                        },
-                      })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
-                    />
-                    {errors.heightCm && (
-                      <p className="text-amber-400 text-[10px] mt-1 font-semibold">
-                        {errors.heightCm.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-neutral-300 text-xs mb-2 font-medium">
-                      وزن (کیلوگرم)
-                    </label>
-                    <input
-                      type="text"
-                      {...register("weightKg", {
-                        required: "وارد کردن وزن الزامی است",
-                        pattern: {
-                          value: /^([1-9][0-9]?|[1-2][0-9]{2})$/,
-                          message: "وزن باید عدد و زیر ۳۰۰ کیلوگرم باشد",
-                        },
-                      })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
-                    />
-                    {errors.weightKg && (
-                      <p className="text-amber-400 text-[10px] mt-1 font-semibold">
-                        {errors.weightKg.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex gap-3 items-center">
-                  <Activity className="w-8 h-8 text-amber-400 flex-shrink-0" />
-                  <div className="text-xs leading-relaxed text-neutral-300">
-                    <span className="font-bold text-amber-300 block mb-0.5">
-                      محاسبه دقیق BMI
-                    </span>
-                    {bmi > 0 ? (
-                      <>
-                        شاخص توده بدنی شما بر اساس وزن {watchedWeight} کیلوگرم و
-                        قد {watchedHeight} سانتی‌متر برابر با{" "}
-                        <strong className="text-white font-sans">{bmi}</strong>{" "}
-                        است که در محدوده{" "}
-                        <strong className={bmiCategory.color}>
-                          {bmiCategory.label}
-                        </strong>{" "}
-                        قرار دارد.
-                      </>
-                    ) : (
-                      <>
-                        لطفاً قد (بالای ۱۰۰ سانتی‌متر) و وزن (بالای ۳۰ کیلوگرم)
-                        خود را به درستی وارد کنید تا شاخص BMI محاسبه شود.
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <PhysicalTab
+                register={register}
+                errors={errors}
+                watchedHeight={watchedHeight}
+                watchedWeight={watchedWeight}
+                bmi={bmi}
+                bmiCategory={bmiCategory}
+              />
             )}
 
             {activeTab === "training" && (
-              <div className="space-y-5 animate-fadeIn">
-                <div>
-                  <label className="block text-neutral-300 text-xs mb-3 font-medium flex items-center gap-1.5">
-                    <Target className="w-4 h-4 text-amber-400" />
-                    هدف ورزشی شما چیست؟
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {Object.entries(GOAL_LABELS).map(([val, label]) => (
-                      <button
-                        key={val}
-                        type="button"
-                        onClick={() => setValue("goal", val as any)}
-                        className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${
-                          watchedGoal === val
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                        }`}
-                      >
-                        <span className="font-medium text-sm">{label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-neutral-300 text-xs mb-3 font-medium flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-amber-400" />
-                      تعداد جلسات تمرین در هفته
-                    </label>
-                    <div className="flex justify-between gap-1">
-                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                        <button
-                          key={num}
-                          type="button"
-                          onClick={() => setValue("sessionsPerWeek", num)}
-                          className={`w-9 h-9 rounded-lg border flex items-center justify-center font-semibold font-sans transition-all duration-200 cursor-pointer ${
-                            watchedSessions === num
-                              ? "bg-amber-500 border-amber-500 text-neutral-950 font-bold scale-105"
-                              : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                          }`}
-                        >
-                          {num}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-neutral-300 text-xs mb-3 font-medium flex items-center gap-1.5">
-                      <Dumbbell className="w-4 h-4 text-amber-400" />
-                      سابقه تمرین شما
-                    </label>
-                    <select
-                      value={watchedExperience}
-                      onChange={(e) =>
-                        setValue("trainingExperience", e.target.value as any)
-                      }
-                      className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors"
-                    >
-                      {Object.entries(EXPERIENCE_LABELS).map(([val, label]) => (
-                        <option
-                          key={val}
-                          value={val}
-                          className="bg-neutral-900 text-white"
-                        >
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-neutral-300 text-xs mb-3 font-medium flex items-center gap-1.5">
-                    <Dumbbell className="w-4 h-4 text-amber-400" />
-                    تجهیزات ورزشی در دسترس
-                  </label>
-                  <div className="space-y-2">
-                    {Object.entries(EQUIPMENT_LABELS).map(([val, label]) => (
-                      <button
-                        key={val}
-                        type="button"
-                        onClick={() => setValue("equipment", val as any)}
-                        className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${
-                          watchedEquipment === val
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                        }`}
-                      >
-                        <span className="font-semibold text-sm">{label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <TrainingTab
+                watchedGoal={watchedGoal}
+                watchedSessions={watchedSessions}
+                watchedExperience={watchedExperience}
+                watchedEquipment={watchedEquipment}
+                setValue={setValue}
+              />
             )}
 
             {activeTab === "photos" && (
-              <div className="space-y-5 animate-fadeIn">
-                <div>
-                  <label className="block text-neutral-300 text-xs mb-3 font-medium flex items-center gap-1.5">
-                    <Camera className="w-4 h-4 text-amber-400" />
-                    تصاویر وضعیت فیزیکی شما (اختیاری)
-                  </label>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                    {bodyPhotos.map((photo, index) => (
-                      <div
-                        key={index}
-                        className="relative aspect-square border border-amber-500/20 rounded-xl overflow-hidden group"
-                      >
-                        <img
-                          src={photo}
-                          alt="Physical state"
-                          className="w-full h-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(index)}
-                          className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-300 cursor-pointer"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    ))}
-                    {bodyPhotos.length < 4 && (
-                      <label className="aspect-square border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-500/50 hover:bg-amber-500/5 transition-all">
-                        <Plus className="w-5 h-5 text-neutral-400 mb-1" />
-                        <span className="text-[10px] text-neutral-400">
-                          افزودن تصویر
-                        </span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handlePhotoUpload}
-                          className="hidden"
-                          multiple
-                        />
-                      </label>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-neutral-400 leading-relaxed">
-                    می‌توانید تا حداکثر ۴ تصویر از وضعیت بدنی خود (جلو، پشت،
-                    پهلوها) بارگذاری کنید.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-neutral-300 text-xs mb-2 font-medium">
-                    یادداشت‌های اضافی برای مربی (اختیاری)
-                  </label>
-                  <textarea
-                    rows={4}
-                    {...register("notes")}
-                    placeholder="بیماری خاص، آسیب‌دیدگی‌ها، حساسیت‌های غذایی یا نکته مهمی اگر هست اینجا بنویسید..."
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 text-sm focus:outline-none focus:border-amber-500/50 resize-none"
-                  />
-                </div>
-              </div>
+              <PhotosTab
+                register={register}
+                bodyPhotos={bodyPhotos}
+                handlePhotoUpload={handlePhotoUpload}
+                removePhoto={removePhoto}
+              />
             )}
 
             <div className="pt-4 flex justify-end border-t border-white/5">

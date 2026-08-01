@@ -1,5 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import type React from "react";
+import type { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 
 export type FitnessGoal =
   | "weight_loss"
@@ -11,6 +12,8 @@ export type FitnessGoal =
 export type EquipmentOption = "none" | "home_basic" | "gym_full";
 
 export type TrainingExperienceOption = "beginner" | "intermediate" | "advanced";
+
+export type FitnessProfileTab = "physical" | "training" | "photos";
 
 export interface GoalOptionItem {
   val: FitnessGoal;
@@ -96,4 +99,35 @@ export interface IFitnessProfile
   userId: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface BMICategoryDisplay {
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+}
+
+export interface PhysicalTabProps {
+  register: UseFormRegister<FitnessFormInputs>;
+  errors: FieldErrors<FitnessFormInputs>;
+  watchedHeight: string;
+  watchedWeight: string;
+  bmi: number;
+  bmiCategory: BMICategoryDisplay;
+}
+
+export interface TrainingTabProps {
+  watchedGoal: FitnessGoal;
+  watchedSessions: number;
+  watchedExperience: TrainingExperienceOption;
+  watchedEquipment: EquipmentOption;
+  setValue: UseFormSetValue<FitnessFormInputs>;
+}
+
+export interface PhotosTabProps {
+  register: UseFormRegister<FitnessFormInputs>;
+  bodyPhotos: string[];
+  handlePhotoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  removePhoto: (index: number) => void;
 }
