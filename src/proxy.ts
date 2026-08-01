@@ -10,11 +10,15 @@ export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (token) {
-    if (path.startsWith("/login") || path.startsWith("/nutrition")) {
+    if (path.startsWith("/login")) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } else {
-    if (path.startsWith("/dashboard") || path.startsWith("/admin")) {
+    if (
+      path.startsWith("/dashboard") ||
+      path.startsWith("/admin") ||
+      path.startsWith("/nutrition")
+    ) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }

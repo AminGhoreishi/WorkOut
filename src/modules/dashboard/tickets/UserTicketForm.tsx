@@ -75,7 +75,9 @@ export default function UserTicketForm({
       </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-neutral-300 text-xs mb-2 font-medium">موضوع تیکت</label>
+          <label className="block text-neutral-300 text-xs mb-2 font-medium">
+            موضوع تیکت
+          </label>
           <input
             type="text"
             placeholder="مثال: سوال در مورد شیوه اجرای حرکت اسکات"

@@ -68,14 +68,35 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }: any) {
       if (account?.provider === "google") {
         await dbConnect();
-        const existing = await User.findOne({ email: user.email });
+        if (!user?.email) return false;
+
+        const emailClean = user.email.toLowerCase();
+        const existing = await User.findOne({ email: emailClean });
+
         if (!existing) {
+          const fallbackUsername = user.name || emailClean.split("@")[0] || "user";
           await User.create({
-            username: user.name,
-            email: user.email,
-            avatar: user.image,
+            username: fallbackUsername,
+            fullName: user.name || "",
+            email: emailClean,
+            avatar: user.image || "",
             password: "",
+            role: "user",
+            status: "active",
           });
+        } else {
+          let updated = false;
+          if (user.image && !existing.avatar) {
+            existing.avatar = user.image;
+            updated = true;
+          }
+          if (user.name && !existing.fullName) {
+            existing.fullName = user.name;
+            updated = true;
+          }
+          if (updated) {
+            await existing.save();
+          }
         }
         return true;
       }
@@ -84,30 +105,33 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user }: any) {
       await dbConnect();
-      const userId = user?.id || token?.id || token?.sub;
-      if (userId) {
-        const dbUser = await User.findById(userId);
-        if (dbUser) {
-          token.id = dbUser._id.toString();
-          token.username = dbUser.username;
-          token.role = dbUser.role;
-          token.avatar = dbUser.avatar;
-          token.email = dbUser.email || "";
-          token.phone = dbUser.phone || "";
-        }
-      } else if (user) {
-        const dbUser = await User.findOne({
-          $or: [{ phone: user.phone }, { email: user.email || token.email }],
-        });
-        if (dbUser) {
-          token.id = dbUser._id.toString();
-          token.username = dbUser.username;
-          token.role = dbUser.role;
-          token.avatar = dbUser.avatar;
-          token.email = dbUser.email || "";
-          token.phone = dbUser.phone || "";
+      let dbUser = null;
+
+      const email = user?.email || token?.email;
+      if (email) {
+        dbUser = await User.findOne({ email: String(email).toLowerCase() });
+      }
+
+      if (!dbUser) {
+        const potentialId = user?.id || token?.id || token?.sub;
+        if (typeof potentialId === "string" && /^[0-9a-fA-F]{24}$/.test(potentialId)) {
+          dbUser = await User.findById(potentialId);
         }
       }
+
+      if (!dbUser && user?.phone) {
+        dbUser = await User.findOne({ phone: user.phone });
+      }
+
+      if (dbUser) {
+        token.id = dbUser._id.toString();
+        token.username = dbUser.username || dbUser.fullName || "";
+        token.role = dbUser.role || "user";
+        token.avatar = dbUser.avatar || "";
+        token.email = dbUser.email || "";
+        token.phone = dbUser.phone || "";
+      }
+
       return token;
     },
 

@@ -1,20 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { BiDumbbell, BiUser, BiPhone } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { LoginFormData, RegisterFormData, AuthApiResponse } from "@/types/auth";
 import { toEnglishDigits } from "@/utils/numbers";
 
-export default function LoginForm() {
+function LoginFormContent() {
   const [isRegister, setIsRegister] = useState(false);
   const [serverError, setServerError] = useState("");
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const loginForm = useForm<LoginFormData>();
   const registerForm = useForm<RegisterFormData>();
@@ -80,7 +82,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.push("/dashboard");
+      router.push(callbackUrl);
       router.refresh();
     } catch {
       setServerError("خطا در ارتباط با سرور");
@@ -116,6 +118,7 @@ export default function LoginForm() {
         <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-8">
           <div className="flex gap-2 mb-8 bg-zinc-900/90 p-1.5 rounded-xl border border-amber-500/10">
             <button
+              type="button"
               onClick={() => {
                 setIsRegister(false);
                 setServerError("");
@@ -129,6 +132,7 @@ export default function LoginForm() {
               ورود
             </button>
             <button
+              type="button"
               onClick={() => {
                 setIsRegister(true);
                 setServerError("");
@@ -359,7 +363,8 @@ export default function LoginForm() {
             </div>
             <div className="mt-6">
               <button
-                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                type="button"
+                onClick={() => signIn("google", { callbackUrl })}
                 className="w-full flex items-center justify-center gap-2 bg-zinc-900/80 hover:bg-zinc-800/80 border border-amber-500/20 hover:border-amber-500/40 text-amber-100 py-3 rounded-xl transition-all cursor-pointer shadow-md"
               >
                 <svg
@@ -385,5 +390,19 @@ export default function LoginForm() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400">
+          بارگذاری...
+        </div>
+      }
+    >
+      <LoginFormContent />
+    </Suspense>
   );
 }

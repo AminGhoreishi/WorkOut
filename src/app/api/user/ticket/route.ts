@@ -101,6 +101,21 @@ export async function POST(req: NextRequest) {
       .populate("userId", "username fullName email avatar role")
       .lean();
 
+    fetch(
+      "https://amin13w.app.n8n.cloud/webhook/23c27848-2fa9-4a10-a5e5-12a547bfbc70",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event: "ticket_created",
+          ticket: populatedTicket,
+          user: session.user,
+        }),
+      },
+    ).catch((err) => console.error("n8n Webhook Error:", err));
+
     return NextResponse.json(
       { success: true, ticket: populatedTicket },
       { status: 201 },
