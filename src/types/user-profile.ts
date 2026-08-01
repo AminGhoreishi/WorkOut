@@ -1,3 +1,5 @@
+import type { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
+
 export interface UserProfile {
   username: string;
   fullName: string;
@@ -27,4 +29,16 @@ export interface UserProfileLoadingProps {
 export interface UserProfileErrorProps {
   errorMessage?: string;
   onRetry: () => void;
+}
+
+export interface UserProfileCardProps {
+  profile: UserProfile | null;
+}
+
+export interface UserProfileFormProps {
+  register: UseFormRegister<ProfileFormInputs>;
+  errors: FieldErrors<ProfileFormInputs>;
+  setValue: UseFormSetValue<ProfileFormInputs>;
+  saving: boolean;
+  onSubmit: () => void;
 }

@@ -1,131 +1,156 @@
 export const modifiedFiles = [
   {
     id: 1,
+    filePath: "src/modules/dashboard/profile/UserProfileCard.tsx",
+    description: "Extracted left-side user profile card (avatar, role badge, username, verified status) into a dedicated component without comments."
+  },
+  {
+    id: 2,
+    filePath: "src/modules/dashboard/profile/UserProfileForm.tsx",
+    description: "Extracted user profile update form (fullName, username, phone, email, password fields) into a dedicated component without comments."
+  },
+  {
+    id: 3,
+    filePath: "src/modules/dashboard/profile/UserProfileManagement.tsx",
+    description: "Refactored user profile management module with SWR integration, modular sub-component architecture (UserProfileCard, UserProfileForm), automatic cache revalidation upon submission, external type imports, and zero code comments."
+  },
+  {
+    id: 4,
+    filePath: "src/app/(dashboard)/dashboard/profile/page.tsx",
+    description: "Server Component wrapper for user profile page with updated app metadata."
+  },
+  {
+    id: 5,
+    filePath: "src/types/user-profile.ts",
+    description: "Updated TypeScript interfaces for user profile data and sub-component prop interfaces (UserProfileCardProps, UserProfileFormProps)."
+  },
+  {
+    id: 6,
     filePath: "src/modules/dashboard/fitness-profile/PhysicalTab.tsx",
     description: "Extracted physical metrics form tab (age, height, weight, BMI display) into a dedicated modular component without comments."
   },
   {
-    id: 2,
+    id: 7,
     filePath: "src/modules/dashboard/fitness-profile/TrainingTab.tsx",
     description: "Extracted training program & background form tab (goals, weekly sessions, experience, equipment) into a dedicated modular component without comments."
   },
   {
-    id: 3,
+    id: 8,
     filePath: "src/modules/dashboard/fitness-profile/PhotosTab.tsx",
     description: "Extracted body photos upload & coach notes form tab into a dedicated modular component without comments."
   },
   {
-    id: 4,
+    id: 9,
     filePath: "src/modules/dashboard/fitness-profile/FitnessProfileManagement.tsx",
     description: "Refactored fitness profile management module with SWR integration, modular sub-component architecture (PhysicalTab, TrainingTab, PhotosTab), automatic cache revalidation upon submission, external type imports, and zero code comments."
   },
   {
-    id: 5,
+    id: 10,
     filePath: "src/types/fitness-profile.ts",
     description: "Updated TypeScript interfaces for fitness profile data, tabs, and sub-component prop interfaces (PhysicalTabProps, TrainingTabProps, PhotosTabProps)."
   },
   {
-    id: 6,
+    id: 11,
     filePath: "src/app/(dashboard)/dashboard/fitness-profile/page.tsx",
     description: "Server Component wrapper for fitness profile page with updated app metadata."
   },
   {
-    id: 7,
+    id: 12,
     filePath: "src/app/(dashboard)/dashboard/fittness-profile/page.tsx",
     description: "Redirected legacy typo route fittness-profile to standard fitness-profile page."
   },
   {
-    id: 8,
+    id: 13,
     filePath: "src/modules/dashboard/favorites/FavoritesManagement.tsx",
     description: "Refactored favorites management module with optimistic state updates, removed window.location.reload performance bottleneck, extracted types into src/types/favorites.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 9,
+    id: 14,
     filePath: "src/app/(dashboard)/dashboard/favorites/page.tsx",
     description: "Refactored favorites page server component with safe DB error handling, metadata, and clean comment-free code."
   },
   {
-    id: 10,
+    id: 15,
     filePath: "src/types/favorites.ts",
     description: "Created TypeScript interfaces for favorite article items and favorites management props without comments."
   },
   {
-    id: 11,
+    id: 16,
     filePath: "src/modules/dashboard/AdminDashboardUser/WeeklyWorkouts.tsx",
     description: "Refactored weekly workouts sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 12,
+    id: 17,
     filePath: "src/modules/dashboard/AdminDashboardUser/RecentTickets.tsx",
     description: "Refactored recent tickets sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 13,
+    id: 18,
     filePath: "src/modules/dashboard/AdminDashboardUser/UpcomingSessions.tsx",
     description: "Refactored upcoming sessions sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 14,
+    id: 19,
     filePath: "src/modules/dashboard/AdminDashboardUser/DashboardStats.tsx",
     description: "Refactored dashboard stats sub-component: converted inline CSS to Tailwind utilities with zero code comments."
   },
   {
-    id: 15,
+    id: 20,
     filePath: "src/modules/dashboard/AdminDashboardUser/DashboardBanner.tsx",
     description: "Refactored dashboard banner sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 16,
+    id: 21,
     filePath: "src/modules/dashboard/AdminDashboardUser/ActiveSubscription.tsx",
     description: "Refactored active subscription sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 17,
+    id: 22,
     filePath: "src/modules/dashboard/AdminDashboardUser/WishlistArticles.tsx",
     description: "Refactored wishlist articles sub-component: extracted types into src/types/user-dashboard.ts, converted inline CSS to Tailwind, and added zero code comments."
   },
   {
-    id: 18,
+    id: 23,
     filePath: "src/modules/dashboard/AdminDashboardUser/AdminDashboardUser.tsx",
     description: "Refactored dashboard container client component with strict TypeScript types, clean Tailwind styling replacing inline CSS, and safe array fallbacks."
   },
   {
-    id: 19,
+    id: 24,
     filePath: "src/app/(dashboard)/dashboard/page.tsx",
     description: "Refactored user dashboard server component with parallel database query fetching (Promise.all), null-safe user property access, and error-resilient DB connection wrapping."
   },
   {
-    id: 20,
+    id: 25,
     filePath: "src/types/user-dashboard.ts",
     description: "Defined exported interfaces for dashboard user, subscription, workout day, ticket, wishlist items, and sub-component props."
   },
   {
-    id: 21,
+    id: 26,
     filePath: "src/app/(dashboard)/dashboard/bmi/page.tsx",
     description: "Server Component wrapper for BMI calculation page with updated app metadata."
   },
   {
-    id: 22,
+    id: 27,
     filePath: "src/modules/dashboard/bmi/BMICalculator.tsx",
     description: "Refactored client component for dynamic BMI computation, SWR auto-population from user fitness profile, real mathematical formula, ideal weight calculation, animated WHO standard scale gauge, and edge-case validation."
   },
   {
-    id: 23,
+    id: 28,
     filePath: "src/types/bmi.ts",
     description: "Created TypeScript interfaces for BMI calculations, form inputs, categories, and recommendation states."
   },
   {
-    id: 24,
+    id: 29,
     filePath: "src/modules/auth/LoginForm.tsx",
     description: "Refactored login & register forms with strict validation, open-redirect prevention for callbackUrl, form reset on mode tab toggle, tel input mode, and zero code comments."
   },
   {
-    id: 25,
+    id: 30,
     filePath: "src/modules/auth/OtpForm.tsx",
     description: "Refactored OTP validation form to eliminate SweetAlert (swal) popups, replaced with smooth inline messages, fixed timer memory leak, supported Persian/Arabic clipboard paste, eliminated sessionStorage plaintext credential usage, and used Next Router transitions."
   },
   {
-    id: 26,
+    id: 31,
     filePath: "src/types/auth.ts",
     description: "Updated AuthApiResponse type interface to optional message and error properties."
   }
