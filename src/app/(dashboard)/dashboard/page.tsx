@@ -21,7 +21,6 @@ const registerPageModels = () => {
   return [TicketModel, BlogModel, WishModel];
 };
 
-export const dynamic = "force-dynamic";
 
 export default async function page() {
   registerModels();
