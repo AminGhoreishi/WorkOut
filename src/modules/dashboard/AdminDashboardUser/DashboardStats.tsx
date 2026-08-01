@@ -41,14 +41,10 @@ export default function DashboardStats() {
         return (
           <div
             key={i}
-            className="rounded-2xl p-4 transition-all hover:border-amber-500/30"
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(234,179,8,0.15)",
-            }}
+            className="rounded-2xl p-4 transition-all hover:border-amber-500/30 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 shadow-xl"
           >
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-gradient-to-br ${stat.color}`}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-gradient-to-br ${stat.color} shadow-md`}
             >
               <Icon size={18} className="text-neutral-950" />
             </div>
@@ -63,7 +59,9 @@ export default function DashboardStats() {
               )}
             </div>
             <p className="text-neutral-400 text-xs">{stat.label}</p>
-            <p className="text-amber-400 text-xs mt-1 font-medium">{stat.change}</p>
+            <p className="text-amber-400 text-xs mt-1 font-medium">
+              {stat.change}
+            </p>
           </div>
         );
       })}

@@ -1,37 +1,24 @@
 import Link from "next/link";
 import { ChevronLeft, BookOpen } from "lucide-react";
+import type { WishlistArticlesProps } from "@/types/user-dashboard";
 
-interface WishlistItem {
-  id: string;
-  title: string;
-  slug: string;
-  image: string;
-  category: string;
-  views: number;
-}
-
-interface WishlistArticlesProps {
-  wishlist: WishlistItem[];
-}
-
-export default function WishlistArticles({ wishlist }: WishlistArticlesProps) {
+export default function WishlistArticles({
+  wishlist = [],
+}: WishlistArticlesProps) {
   return (
-    <div
-      className="rounded-2xl p-5"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(234,179,8,0.15)",
-      }}
-    >
+    <div className="rounded-2xl p-5 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 shadow-xl">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-white">علاقه‌مندی‌های شما</h3>
+        <h3 className="font-bold text-white font-morabbaReg">
+          علاقه‌مندی‌های شما
+        </h3>
         <Link
           href="/articles"
-          className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium"
+          className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium transition-colors"
         >
           مشاهده همه مقالات <ChevronLeft size={14} />
         </Link>
       </div>
+
       {wishlist.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {wishlist.map((a) => (
@@ -45,7 +32,7 @@ export default function WishlistArticles({ wishlist }: WishlistArticlesProps) {
                   <img
                     src={a.image}
                     alt={a.title}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               ) : (
@@ -54,7 +41,7 @@ export default function WishlistArticles({ wishlist }: WishlistArticlesProps) {
                 </div>
               )}
               <span className="text-xs px-2 py-0.5 rounded-full mb-2 inline-block bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                {a.category}
+                {a.category || "مقاله"}
               </span>
               <p className="text-white text-sm font-medium group-hover:text-amber-300 transition-colors line-clamp-2 leading-relaxed">
                 {a.title}
@@ -68,7 +55,7 @@ export default function WishlistArticles({ wishlist }: WishlistArticlesProps) {
           <p className="mb-2">لیست علاقه‌مندی‌های شما خالی است</p>
           <Link
             href="/articles"
-            className="text-amber-400 hover:text-amber-300 font-semibold"
+            className="text-amber-400 hover:text-amber-300 font-semibold transition-colors"
           >
             مشاهده و نشانه‌گذاری مقالات علمی
           </Link>

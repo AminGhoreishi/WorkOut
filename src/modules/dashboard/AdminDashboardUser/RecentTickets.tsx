@@ -1,42 +1,33 @@
 import Link from "next/link";
-import { ChevronLeft, CheckCircle, AlertCircle, MessageSquare } from "lucide-react";
+import {
+  ChevronLeft,
+  CheckCircle,
+  AlertCircle,
+  MessageSquare,
+} from "lucide-react";
+import type { RecentTicketsProps } from "@/types/user-dashboard";
 
-interface TicketItem {
-  id: string;
-  subject: string;
-  status: string;
-  rawStatus: string;
-  time: string;
-}
-
-interface RecentTicketsProps {
-  recentTickets: TicketItem[];
-}
-
-export default function RecentTickets({ recentTickets }: RecentTicketsProps) {
+export default function RecentTickets({
+  recentTickets = [],
+}: RecentTicketsProps) {
   return (
-    <div
-      className="rounded-2xl p-5"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(234,179,8,0.15)",
-      }}
-    >
+    <div className="rounded-2xl p-5 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 shadow-xl">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-white">تیکت‌های اخیر</h3>
+        <h3 className="font-bold text-white font-morabbaReg">تیکت‌های اخیر</h3>
         <Link
           href="/dashboard/tickets"
-          className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium"
+          className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium transition-colors"
         >
           همه تیکت‌ها <ChevronLeft size={14} />
         </Link>
       </div>
+
       {recentTickets.length > 0 ? (
         <div className="space-y-3">
           {recentTickets.map((t) => (
             <div
               key={t.id}
-              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-500/10 transition-all border border-amber-500/15"
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-500/10 transition-all border border-amber-500/15 bg-white/[0.02]"
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -62,7 +53,7 @@ export default function RecentTickets({ recentTickets }: RecentTicketsProps) {
                 <p className="text-neutral-400 text-xs mt-0.5">{t.time}</p>
               </div>
               <span
-                className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-medium ${
+                className={`text-xs px-2.5 py-0.5 rounded-full flex-shrink-0 font-medium ${
                   t.rawStatus === "answered"
                     ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                     : t.rawStatus === "closed"
@@ -81,9 +72,10 @@ export default function RecentTickets({ recentTickets }: RecentTicketsProps) {
           <p>تیکتی ثبت نکرده‌اید</p>
         </div>
       )}
+
       <Link
         href="/dashboard/tickets"
-        className="mt-3 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm text-amber-400 hover:text-amber-300 border border-amber-500/20 hover:bg-amber-500/10 transition-all font-medium"
+        className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm text-amber-400 hover:text-amber-300 border border-amber-500/20 hover:bg-amber-500/10 transition-all font-medium"
       >
         <MessageSquare size={14} />
         ارسال تیکت جدید

@@ -1,21 +1,11 @@
 import Link from "next/link";
 import { ChevronLeft, Award, AlertCircle, Zap } from "lucide-react";
+import type { ActiveSubscriptionProps } from "@/types/user-dashboard";
 
-interface SubscriptionInfo {
-  packageName: string;
-  status: string;
-  daysRemaining: number;
-  totalDays: number;
-  endDate: string;
-  nextPayment: string;
-}
-
-interface ActiveSubscriptionProps {
-  subscription: SubscriptionInfo | null;
-  coachName: string;
-}
-
-export default function ActiveSubscription({ subscription, coachName }: ActiveSubscriptionProps) {
+export default function ActiveSubscription({
+  subscription,
+  coachName,
+}: ActiveSubscriptionProps) {
   const progressPercent = subscription
     ? Math.round(
         ((subscription.totalDays - subscription.daysRemaining) /
@@ -25,30 +15,23 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
     : 0;
 
   return (
-    <div
-      className="lg:col-span-1 rounded-2xl p-5"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(234,179,8,0.15)",
-      }}
-    >
+    <div className="lg:col-span-1 rounded-2xl p-5 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 shadow-xl">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-white">اشتراک فعال</h3>
+        <h3 className="font-bold text-white font-morabbaReg">اشتراک فعال</h3>
         {subscription && (
           <Link
             href="/dashboard/subscription"
-            className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium"
+            className="text-amber-400 text-xs hover:text-amber-300 flex items-center gap-1 font-medium transition-colors"
           >
             جزئیات <ChevronLeft size={14} />
           </Link>
         )}
       </div>
+
       {subscription ? (
         <>
           <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-md"
-            >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-md">
               <Award size={22} className="text-neutral-950" />
             </div>
             <div>
@@ -60,20 +43,22 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
               </span>
             </div>
           </div>
+
           <div className="mb-3">
             <div className="flex justify-between text-xs text-neutral-400 mb-1.5">
               <span>پیشرفت اشتراک</span>
               <span>{subscription.daysRemaining} روز مانده</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
               <div
                 className="h-2 rounded-full transition-all bg-gradient-to-r from-amber-500 to-yellow-500"
                 style={{
-                  width: `${progressPercent}%`,
+                  width: `${Math.min(100, Math.max(0, progressPercent))}%`,
                 }}
-              ></div>
+              />
             </div>
           </div>
+
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
               <span className="text-neutral-400">تاریخ پایان</span>
@@ -97,9 +82,10 @@ export default function ActiveSubscription({ subscription, coachName }: ActiveSu
           <p>اشتراک فعالی برای شما ثبت نشده است</p>
         </div>
       )}
+
       <Link
         href="/packages"
-        className="mt-4 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all"
+        className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all"
       >
         <Zap size={14} />
         ارتقا یا خرید پکیج

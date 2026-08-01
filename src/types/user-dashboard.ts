@@ -41,10 +41,42 @@ export interface DashboardWishlistItem {
   views: number;
 }
 
+export interface UpcomingSessionItem {
+  title: string;
+  time: string;
+  type: string;
+  icon: string;
+}
+
 export interface UserDashboardProps {
   initialUser: DashboardUser;
   initialSubscription: DashboardSubscription | null;
   initialWorkouts: DashboardWorkoutDay[];
   initialTickets: DashboardTicket[];
   initialWishlist?: DashboardWishlistItem[];
+}
+
+export interface WeeklyWorkoutsProps {
+  recentWorkouts: DashboardWorkoutDay[];
+}
+
+export interface RecentTicketsProps {
+  recentTickets: DashboardTicket[];
+}
+
+export interface DashboardBannerProps {
+  userName: string;
+  todayWorkout: {
+    type: string;
+    duration: string;
+  } | null;
+}
+
+export interface ActiveSubscriptionProps {
+  subscription: DashboardSubscription | null;
+  coachName: string;
+}
+
+export interface WishlistArticlesProps {
+  wishlist: DashboardWishlistItem[];
 }
