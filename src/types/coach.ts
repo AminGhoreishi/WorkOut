@@ -1,6 +1,6 @@
-import mongoose, { Document } from "mongoose";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
 
-// Client-Side Types
 export interface Coach {
   _id: string;
   userId: string;
@@ -15,7 +15,6 @@ export interface Coach {
   updatedAt?: string;
 }
 
-// Mongoose / DB Schema Types
 export interface ICoach extends Omit<Coach, "_id" | "userId" | "createdAt" | "updatedAt">, Document {
   userId: mongoose.Types.ObjectId;
   createdAt: Date;

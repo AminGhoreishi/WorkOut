@@ -1,4 +1,5 @@
-import mongoose, { Document } from "mongoose";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
 
 export interface UserInfo {
   _id: string;
@@ -106,8 +107,8 @@ export interface IWorkoutPlan extends Document {
 export interface IWorkoutweek extends Document {
   packageId: mongoose.Types.ObjectId;
   title?: string;
-  workoutdays?: any[];
-  workoutexcersice?: any[];
+  workoutdays?: unknown[];
+  workoutexcersice?: unknown[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -116,7 +117,7 @@ export interface IWorkoutmonth extends Document {
   packageId: mongoose.Types.ObjectId;
   title?: string;
   description?: string;
-  workoutweeks?: any[];
+  workoutweeks?: unknown[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -270,4 +271,3 @@ export interface WorkoutErrorStateProps {
   message?: string;
   onRetry: () => void;
 }
-

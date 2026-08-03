@@ -40,8 +40,21 @@ export interface HomeStats {
   trendText: string;
 }
 
+export interface HomeArticleItem {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  image: string;
+  category: string;
+  readingTime: string;
+  authorName: string;
+  authorInitial: string;
+  publishDate: string;
+}
+
 export interface HomeTemplateProps {
-  articles: any[];
+  articles: HomeArticleItem[];
   stats: HomeStats;
 }
 

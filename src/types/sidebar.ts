@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 export interface SidebarCounts {
   users: number;
@@ -11,7 +11,7 @@ export interface SidebarCounts {
 export interface MenuItem {
   id: string;
   label: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   badge: string | null;
   href: string;
 }

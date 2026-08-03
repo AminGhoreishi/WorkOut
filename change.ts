@@ -428,8 +428,94 @@ export const modifiedFiles = [
     id: 86,
     filePath: "src/modules/admin/foods/FoodsContainer.tsx",
     description: "Refactored FoodsContainer container component with clean form submission, SWR cache revalidation, and zero code comments."
+  },
+  {
+    id: 87,
+    filePath: "src/types/adminAi.ts",
+    description: "Cleaned adminAi.ts type definitions without comments."
+  },
+  {
+    id: 88,
+    filePath: "src/types/admin.ts",
+    description: "Cleaned admin.ts type definitions without comments."
+  },
+  {
+    id: 89,
+    filePath: "src/types/ai-tools.ts",
+    description: "Cleaned ai-tools.ts type definitions without comments."
+  },
+  {
+    id: 90,
+    filePath: "src/types/animation.ts",
+    description: "Cleaned animation.ts type definitions without comments."
+  },
+  {
+    id: 91,
+    filePath: "src/types/blog.ts",
+    description: "Cleaned blog.ts type definitions without comments."
+  },
+  {
+    id: 92,
+    filePath: "src/types/coach.ts",
+    description: "Cleaned coach.ts type definitions without comments."
+  },
+  {
+    id: 93,
+    filePath: "src/types/components.ts",
+    description: "Cleaned components.ts type definitions without comments."
+  },
+  {
+    id: 94,
+    filePath: "src/types/declarations.d.ts",
+    description: "Cleaned declarations.d.ts type definitions without comments."
+  },
+  {
+    id: 95,
+    filePath: "src/types/feedback.ts",
+    description: "Cleaned feedback.ts type definitions without comments."
+  },
+  {
+    id: 96,
+    filePath: "src/types/next-auth.d.ts",
+    description: "Cleaned next-auth.d.ts type definitions without comments."
+  },
+  {
+    id: 97,
+    filePath: "src/types/order.ts",
+    description: "Cleaned order.ts type definitions without comments."
+  },
+  {
+    id: 98,
+    filePath: "src/types/otp.ts",
+    description: "Cleaned otp.ts type definitions without comments."
+  },
+  {
+    id: 99,
+    filePath: "src/types/progress.ts",
+    description: "Cleaned progress.ts type definitions without comments."
+  },
+  {
+    id: 100,
+    filePath: "src/types/pr.ts",
+    description: "Cleaned pr.ts type definitions without comments."
+  },
+  {
+    id: 101,
+    filePath: "src/types/sidebar.ts",
+    description: "Cleaned sidebar.ts type definitions without comments."
+  },
+  {
+    id: 102,
+    filePath: "src/types/video.ts",
+    description: "Cleaned video.ts type definitions without comments."
+  },
+  {
+    id: 103,
+    filePath: "src/types/workout.ts",
+    description: "Cleaned workout.ts type definitions without comments."
   }
 ];
+
 
 
 

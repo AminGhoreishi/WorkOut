@@ -1,3 +1,5 @@
+import type { Document } from "mongoose";
+
 export type BillingCycle = "monthly" | "quarterly" | "biannual";
 
 export type PaymentMethod = "gateway" | "card_to_card";
