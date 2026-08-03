@@ -1,10 +1,10 @@
+import React from "react";
 import Link from "next/link";
 import {
   Calendar,
   Clock,
   Award,
   User,
-  CheckCircle,
   Activity,
   Zap,
   ArrowUpLeft,
@@ -14,17 +14,25 @@ import DashboardWorkoutPlan from "./DashboardWorkoutPlan";
 import NoSubscriptionView from "./NoSubscriptionView";
 import PurchaseHistory from "./PurchaseHistory";
 import ActiveAccesses from "./ActiveAccesses";
-import { SubscriptionViewProps } from "@/types/subscription";
+import type { SubscriptionViewProps } from "@/types/subscription";
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(date));
+const formatDate = (dateVal?: Date | string) => {
+  if (!dateVal) return "";
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
+    return new Intl.DateTimeFormat("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(d);
+  } catch {
+    return String(dateVal);
+  }
 };
 
-const getCycleLabel = (cycle: string) => {
+const getCycleLabel = (cycle?: string) => {
+  if (!cycle) return "نامشخص";
   switch (cycle) {
     case "monthly":
       return "ماهانه (۳۰ روزه)";
@@ -37,7 +45,7 @@ const getCycleLabel = (cycle: string) => {
   }
 };
 
-const getStatusBadge = (status: string) => {
+const getStatusBadge = (status?: string) => {
   switch (status) {
     case "active":
       return (
@@ -73,30 +81,32 @@ const getStatusBadge = (status: string) => {
 export default function SubscriptionView({
   subscription,
   workoutPlan,
-  workoutDays,
-  orders,
+  workoutDays = [],
+  orders = [],
 }: SubscriptionViewProps) {
   let daysRemaining = 0;
   let totalDays = 1;
   let progressPercent = 0;
 
-  if (subscription) {
+  if (subscription?.endsAt && subscription?.startsAt) {
     const now = new Date();
     const endsAt = new Date(subscription.endsAt);
     const startsAt = new Date(subscription.startsAt);
 
-    const totalTime = endsAt.getTime() - startsAt.getTime();
-    const remainingTime = endsAt.getTime() - now.getTime();
+    if (!isNaN(endsAt.getTime()) && !isNaN(startsAt.getTime())) {
+      const totalTime = endsAt.getTime() - startsAt.getTime();
+      const remainingTime = endsAt.getTime() - now.getTime();
 
-    daysRemaining = Math.max(
-      0,
-      Math.ceil(remainingTime / (1000 * 60 * 60 * 24)),
-    );
-    totalDays = Math.max(1, Math.ceil(totalTime / (1000 * 60 * 60 * 24)));
-    progressPercent = Math.min(
-      100,
-      Math.max(0, Math.round(((totalDays - daysRemaining) / totalDays) * 100)),
-    );
+      daysRemaining = Math.max(
+        0,
+        Math.ceil(remainingTime / (1000 * 60 * 60 * 24)),
+      );
+      totalDays = Math.max(1, Math.ceil(totalTime / (1000 * 60 * 60 * 24)));
+      progressPercent = Math.min(
+        100,
+        Math.max(0, Math.round(((totalDays - daysRemaining) / totalDays) * 100)),
+      );
+    }
   }
 
   return (
@@ -115,7 +125,7 @@ export default function SubscriptionView({
             <Link
               href="/packages"
               id="sub-upgrade-btn"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 text-sm font-bold rounded-xl transition-all duration-300 shadow-md"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 text-sm font-bold rounded-xl transition-all duration-300 shadow-md cursor-pointer"
             >
               <Zap className="w-4 h-4 text-neutral-950" />
               <span>ارتقا یا تمدید اشتراک</span>
@@ -214,8 +224,8 @@ export default function SubscriptionView({
                           className="w-14 h-14 rounded-full object-cover border-2 border-amber-500/30"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border-2 border-amber-500/30">
-                          {subscription.coachId.name.charAt(0)}
+                        <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border-2 border-amber-500/30 font-sans">
+                          {subscription.coachId.name?.charAt(0) || "M"}
                         </div>
                       )}
                       <div>
@@ -236,7 +246,7 @@ export default function SubscriptionView({
                     )}
                     <Link
                       href="/dashboard/tickets"
-                      className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white rounded-xl transition-all"
+                      className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white rounded-xl transition-all cursor-pointer"
                     >
                       <span>گفتگو با مربی</span>
                       <ArrowUpLeft className="w-4 h-4 text-amber-400" />
@@ -276,7 +286,7 @@ export default function SubscriptionView({
                     <div className="flex justify-between py-2 border-b border-white/5">
                       <span className="text-neutral-400">مبلغ پرداخت شده</span>
                       <span className="text-white font-semibold ss02 font-sans">
-                        {subscription.orderId.amountPaid.toLocaleString(
+                        {(subscription.orderId.amountPaid ?? 0).toLocaleString(
                           "fa-IR",
                         )}{" "}
                         تومان

@@ -1,16 +1,24 @@
 import React from "react";
 import { FileText, AlertCircle } from "lucide-react";
-import { PurchaseHistoryProps } from "@/types/subscription";
+import type { PurchaseHistoryProps } from "@/types/subscription";
 
-const formatDate = (date: Date | string) => {
-  return new Intl.DateTimeFormat("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(date));
+const formatDate = (dateVal?: Date | string) => {
+  if (!dateVal) return "";
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
+    return new Intl.DateTimeFormat("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(d);
+  } catch {
+    return String(dateVal);
+  }
 };
 
-const getCycleLabel = (cycle: string) => {
+const getCycleLabel = (cycle?: string) => {
+  if (!cycle) return "نامشخص";
   switch (cycle) {
     case "monthly":
       return "ماهانه (۳۰ روزه)";
@@ -23,7 +31,9 @@ const getCycleLabel = (cycle: string) => {
   }
 };
 
-export default function PurchaseHistory({ orders }: PurchaseHistoryProps) {
+export default function PurchaseHistory({ orders = [] }: PurchaseHistoryProps) {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+
   return (
     <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl font-danaMed">
       <h3 className="text-lg font-bold font-morabbaReg text-white mb-6 flex items-center gap-2">
@@ -31,7 +41,7 @@ export default function PurchaseHistory({ orders }: PurchaseHistoryProps) {
         <span>سوابق تراکنش‌ها و خریدها</span>
       </h3>
 
-      {orders.length > 0 ? (
+      {safeOrders.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse">
             <thead>
@@ -45,7 +55,7 @@ export default function PurchaseHistory({ orders }: PurchaseHistoryProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-xs md:text-sm text-neutral-200">
-              {orders.map((order) => (
+              {safeOrders.map((order) => (
                 <tr
                   key={order._id}
                   className="hover:bg-white/5 transition-colors"
@@ -57,7 +67,7 @@ export default function PurchaseHistory({ orders }: PurchaseHistoryProps) {
                     {getCycleLabel(order.billingCycle)}
                   </td>
                   <td className="py-3.5 font-bold text-white ss02 font-sans">
-                    {order.amountPaid.toLocaleString("fa-IR")} تومان
+                    {(order.amountPaid ?? 0).toLocaleString("fa-IR")} تومان
                   </td>
                   <td className="py-3.5 text-neutral-300 ss02 font-sans">
                     {formatDate(order.createdAt)}
