@@ -10,7 +10,7 @@ import Order from "@/model/Order";
 import type { PaymentSuccessPageProps } from "@/types/payment";
 
 export const metadata: Metadata = {
-  title: "پرداخت موفقیت‌آمیز | فیت‌کوچ",
+  title: "پرداخت موفقیت‌آمیز | استارفیت",
   description: "پرداخت شما با موفقیت تایید و اشتراک ورزشی شما فعال گردید.",
 };
 

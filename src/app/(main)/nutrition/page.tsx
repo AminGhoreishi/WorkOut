@@ -7,9 +7,9 @@ import SubscriptionModel from "@/model/Subscription";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "فیت‌کوچ | مدیریت تغذیه و کالری‌شمار روزانه",
+  title: "استار فیت | مدیریت تغذیه و کالری‌شمار روزانه",
   description:
-    "ثبت روزانه وعده‌های غذایی، کنترل کالری دریافتی، پروتئین و هیدراتاسیون بدن در فیت‌کوچ",
+    "ثبت روزانه وعده‌های غذایی، کنترل کالری دریافتی، پروتئین و هیدراتاسیون بدن در استار فیت",
 };
 
 export default async function NutritionPage() {

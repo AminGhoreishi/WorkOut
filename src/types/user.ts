@@ -1,4 +1,5 @@
-import mongoose, { Document } from "mongoose";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
 
 export interface IUser extends Document {
   email?: string;
@@ -39,6 +40,17 @@ export interface UserEditModalProps {
   user: IAdminUser;
   onClose: () => void;
   onSaveSuccess: () => void;
+}
+
+export interface AdminUsersApiResponse {
+  users?: IAdminUser[];
+  userFind?: IAdminUser[];
+  totalPage?: number;
+  totalUsers?: number;
+  activeUsers?: number;
+  expiredUsers?: number;
+  blockedUsers?: number;
+  message?: string;
 }
 
 export type { IOtp } from "./otp";

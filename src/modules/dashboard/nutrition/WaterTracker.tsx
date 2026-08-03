@@ -1,4 +1,5 @@
 import React from "react";
+import { useSWRConfig } from "swr";
 import { Droplet, Plus } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import type { WaterTrackerProps } from "@/types/nutrition";
@@ -10,16 +11,18 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
   onWaterChange,
   isLoading,
 }) => {
-  const currentWater = waterIntake;
+  const { mutate } = useSWRConfig();
+  const currentWater = waterIntake || 0;
+  const safeTargetWater = targetWater > 0 ? targetWater : 2500;
   const waterPercent = Math.min(
     100,
-    Math.round((currentWater / targetWater) * 100)
+    Math.round((currentWater / safeTargetWater) * 100),
   );
 
   const handleAddWater = async (amount: number) => {
     if (isLoading) return;
     const previousAmount = currentWater;
-    const newAmount = Math.min(4000, currentWater + amount);
+    const newAmount = Math.min(10000, currentWater + amount);
     onWaterChange(newAmount);
 
     try {
@@ -35,6 +38,8 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
       });
       if (!res.ok) {
         onWaterChange(previousAmount);
+      } else {
+        mutate(`/api/nutrition?date=${selectedDate}`);
       }
     } catch {
       onWaterChange(previousAmount);
@@ -59,6 +64,8 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
       });
       if (!res.ok) {
         onWaterChange(previousAmount);
+      } else {
+        mutate(`/api/nutrition?date=${selectedDate}`);
       }
     } catch {
       onWaterChange(previousAmount);
@@ -82,7 +89,7 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
         <button
           onClick={handleResetWater}
           disabled={isLoading}
-          className="text-[10px] text-red-400 hover:bg-red-500/10 px-2 py-1 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="text-[10px] text-red-400 hover:bg-red-500/10 px-2 py-1 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           صفر کردن
         </button>
@@ -97,7 +104,7 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
               {currentWater}
             </span>
             <span className="text-white/40 text-[10px] sm:text-xs mr-1 ss02">
-              / {targetWater} میلی‌لیتر
+              / {safeTargetWater} میلی‌لیتر
             </span>
           </>
         )}
@@ -118,7 +125,7 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
         >
           <Plus className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
           <span className="hidden sm:inline ss02">۲۵۰ میلی‌لیتر (۱ لیوان)</span>
-          <span className="sm:hidden ss02">۲۵0 میلی‌لیتر</span>
+          <span className="sm:hidden ss02">۲۵۰ میلی‌لیتر</span>
         </button>
         <button
           onClick={() => handleAddWater(500)}

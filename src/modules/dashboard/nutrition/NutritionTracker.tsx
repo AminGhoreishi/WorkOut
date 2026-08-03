@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
+import useSWR from "swr";
 import {
   Salad,
   Flame,
@@ -9,7 +10,13 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
-import type { FoodItem, MealData } from "@/types/nutrition";
+import type {
+  FoodItem,
+  MealData,
+  MealItem,
+  NutritionLog,
+  NutritionTrackerProps,
+} from "@/types/nutrition";
 import WaterTracker from "./WaterTracker";
 import AddFoodModal from "./AddFoodModal";
 import EditTargetModal from "./EditTargetModal";
@@ -17,118 +24,75 @@ import MealsGrid from "./MealsGrid";
 import { BeatLoader } from "react-spinners";
 import { getLocalDateString, getPersianDateLabel } from "@/utils/date";
 
-export default function NutritionTracker({ userId }: { userId: string }) {
+const fetcher = async (url: string): Promise<NutritionLog | null> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    return null;
+  }
+  return res.json();
+};
+
+export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
-    getLocalDateString(0)
+    getLocalDateString(0),
   );
-
-  const [mealsData, setMealsData] = useState<Record<string, MealData>>({});
-  const [waterData, setWaterData] = useState<Record<string, number>>({});
-
-  const [targetCalories, setTargetCalories] = useState<number>(2200);
-  const [targetMacros, setTargetMacros] = useState({
-    protein: 140,
-    carbs: 240,
-    fat: 70,
-  });
-  const [targetWater, setTargetWater] = useState<number>(2500);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMealType, setActiveMealType] =
     useState<keyof MealData>("breakfast");
-
   const [isEditingTarget, setIsEditingTarget] = useState(false);
-  const [targetsLoaded, setTargetsLoaded] = useState(false);
-  const [isLoadingMeals, setIsLoadingMeals] = useState(true);
 
-  const currentMeals = mealsData[selectedDate] || {
-    breakfast: [],
-    lunch: [],
-    dinner: [],
-    snack: [],
-  };
+  const { data: logData, isLoading: isLoadingMeals, mutate } = useSWR<NutritionLog | null>(
+    `/api/nutrition?date=${selectedDate}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 5000,
+    },
+  );
 
-  useEffect(() => {
-    const fetchDailyLog = async () => {
-      if (mealsData[selectedDate] !== undefined) {
-        return;
-      }
-      setIsLoadingMeals(true);
-      try {
-        const res = await fetch(`/api/nutrition?date=${selectedDate}`);
-        if (res.ok) {
-          const data = await res.json();
+  const targetCalories = logData?.targetCalories ?? 2200;
+  const targetMacros = useMemo(
+    () => ({
+      protein: logData?.targetProtein ?? 140,
+      carbs: logData?.targetCarbs ?? 240,
+      fat: logData?.targetFat ?? 70,
+    }),
+    [logData?.targetProtein, logData?.targetCarbs, logData?.targetFat],
+  );
+  const targetWater = logData?.targetWater ?? 2500;
 
-          if (data) {
-            if (data.targetCalories) setTargetCalories(data.targetCalories);
-            if (data.targetProtein || data.targetCarbs || data.targetFat) {
-              setTargetMacros({
-                protein: data.targetProtein || 140,
-                carbs: data.targetCarbs || 240,
-                fat: data.targetFat || 70,
-              });
-            }
-            if (data.targetWater) setTargetWater(data.targetWater);
-            setMealsData((prev) => ({
-              ...prev,
-              [selectedDate]: data.meals || {
-                breakfast: [],
-                lunch: [],
-                dinner: [],
-                snack: [],
-              },
-            }));
-            setWaterData((prev) => ({
-              ...prev,
-              [selectedDate]: data.waterIntake || 0,
-            }));
-          } else {
-            setMealsData((prev) => ({
-              ...prev,
-              [selectedDate]: {
-                breakfast: [],
-                lunch: [],
-                dinner: [],
-                snack: [],
-              },
-            }));
-            setWaterData((prev) => ({
-              ...prev,
-              [selectedDate]: 0,
-            }));
-          }
-        } else {
-          setMealsData((prev) => ({
-            ...prev,
-            [selectedDate]: {
-              breakfast: [],
-              lunch: [],
-              dinner: [],
-              snack: [],
-            },
-          }));
-          setWaterData((prev) => ({
-            ...prev,
-            [selectedDate]: 0,
-          }));
-        }
-      } catch {
-        setMealsData((prev) => ({
-          ...prev,
-          [selectedDate]: {
-            breakfast: [],
-            lunch: [],
-            dinner: [],
-            snack: [],
-          },
-        }));
-      } finally {
-        setIsLoadingMeals(false);
-        setTargetsLoaded(true);
-      }
+  const currentMeals = useMemo<MealData>(() => {
+    if (!logData || !logData.meals) {
+      return {
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: [],
+      };
+    }
+
+    const mapItems = (items: MealItem[] = []): FoodItem[] =>
+      items.map((item, idx) => ({
+        id: item.id || item._id || `item-${idx}`,
+        name: item.name || "",
+        quantity: item.quantity || 1,
+        unit: item.unit || "واحد",
+        calories: item.calories || 0,
+        protein: item.protein || 0,
+        carbs: item.carbs || 0,
+        fat: item.fat || 0,
+      }));
+
+    return {
+      breakfast: mapItems(logData.meals.breakfast),
+      lunch: mapItems(logData.meals.lunch),
+      dinner: mapItems(logData.meals.dinner),
+      snack: mapItems(logData.meals.snack),
     };
-    fetchDailyLog();
-  }, [selectedDate, mealsData]);
+  }, [logData]);
+
+  const currentWater = logData?.waterIntake ?? 0;
+  const targetsLoaded = !isLoadingMeals;
 
   const changeDate = (direction: "next" | "prev") => {
     const [year, month, day] = selectedDate.split("-").map(Number);
@@ -148,11 +112,11 @@ export default function NutritionTracker({ userId }: { userId: string }) {
     let fat = 0;
 
     Object.values(currentMeals).forEach((mealItems) => {
-      mealItems.forEach((item: FoodItem) => {
-        calories += item.calories;
-        protein += item.protein;
-        carbs += item.carbs;
-        fat += item.fat;
+      (mealItems || []).forEach((item: FoodItem) => {
+        calories += item.calories || 0;
+        protein += item.protein || 0;
+        carbs += item.carbs || 0;
+        fat += item.fat || 0;
       });
     });
 
@@ -165,34 +129,35 @@ export default function NutritionTracker({ userId }: { userId: string }) {
   }, [currentMeals]);
 
   const caloriesRemaining = Math.max(0, targetCalories - dailyTotals.calories);
-  const calPercent = Math.min(
-    100,
-    Math.round((dailyTotals.calories / targetCalories) * 100)
-  );
+  const calPercent = targetCalories > 0
+    ? Math.min(100, Math.round((dailyTotals.calories / targetCalories) * 100))
+    : 0;
 
   const handleDeleteFood = useCallback(
     async (mealType: keyof MealData, itemId: string) => {
-      const dayMeals = mealsData[selectedDate] || {
-        breakfast: [],
-        lunch: [],
-        dinner: [],
-        snack: [],
-      };
-
-      const previousMeals = { ...dayMeals };
-      const updatedMeal = dayMeals[mealType].filter(
-        (item) => item.id !== itemId
+      const updatedMeal = (currentMeals[mealType] || []).filter(
+        (item) => item.id !== itemId,
       );
 
       const updatedMealsForDate = {
-        ...dayMeals,
+        ...currentMeals,
         [mealType]: updatedMeal,
       };
 
-      setMealsData((prev) => ({
-        ...prev,
-        [selectedDate]: updatedMealsForDate,
-      }));
+      const updatedLog: NutritionLog = {
+        _id: logData?._id || "",
+        userId,
+        date: selectedDate,
+        meals: updatedMealsForDate,
+        waterIntake: currentWater,
+        targetCalories,
+        targetProtein: targetMacros.protein,
+        targetCarbs: targetMacros.carbs,
+        targetFat: targetMacros.fat,
+        targetWater,
+      };
+
+      mutate(updatedLog, false);
 
       try {
         const response = await fetch("/api/nutrition", {
@@ -206,51 +171,52 @@ export default function NutritionTracker({ userId }: { userId: string }) {
           }),
         });
         if (!response.ok) {
-          setMealsData((prev) => ({
-            ...prev,
-            [selectedDate]: previousMeals,
-          }));
+          mutate();
+        } else {
+          mutate();
         }
       } catch {
-        setMealsData((prev) => ({
-          ...prev,
-          [selectedDate]: previousMeals,
-        }));
+        mutate();
       }
     },
-    [selectedDate, mealsData]
+    [currentMeals, currentWater, targetCalories, targetMacros, targetWater, logData?._id, selectedDate, userId, mutate],
   );
 
   const handleSaveFood = useCallback(
     (newItem: FoodItem) => {
-      setMealsData((prev) => {
-        const dayMeals = prev[selectedDate] || {
-          breakfast: [],
-          lunch: [],
-          dinner: [],
-          snack: [],
-        };
-        return {
-          ...prev,
-          [selectedDate]: {
-            ...dayMeals,
-            [activeMealType]: [...dayMeals[activeMealType], newItem],
-          },
-        };
-      });
+      const updatedMeals = {
+        ...currentMeals,
+        [activeMealType]: [...(currentMeals[activeMealType] || []), newItem],
+      };
+
+      const updatedLog: NutritionLog = {
+        _id: logData?._id || "",
+        userId,
+        date: selectedDate,
+        meals: updatedMeals,
+        waterIntake: currentWater,
+        targetCalories,
+        targetProtein: targetMacros.protein,
+        targetCarbs: targetMacros.carbs,
+        targetFat: targetMacros.fat,
+        targetWater,
+      };
+
+      mutate(updatedLog, false);
       setIsModalOpen(false);
     },
-    [selectedDate, activeMealType]
+    [currentMeals, activeMealType, logData?._id, userId, selectedDate, currentWater, targetCalories, targetMacros, targetWater, mutate],
   );
 
   const handleWaterChange = useCallback(
     (newAmount: number) => {
-      setWaterData((prev) => ({
-        ...prev,
-        [selectedDate]: newAmount,
-      }));
+      if (logData) {
+        mutate({ ...logData, waterIntake: newAmount }, false);
+      } else {
+        mutate();
+      }
     },
-    [selectedDate]
+    [logData, mutate],
   );
 
   const handleAddFoodClick = useCallback((mealType: keyof MealData) => {
@@ -437,7 +403,7 @@ export default function NutritionTracker({ userId }: { userId: string }) {
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-300"
                       style={{
-                        width: `${Math.min(100, (dailyTotals.protein / targetMacros.protein) * 100)}%`,
+                        width: `${targetMacros.protein > 0 ? Math.min(100, (dailyTotals.protein / targetMacros.protein) * 100) : 0}%`,
                       }}
                     />
                   </div>
@@ -459,7 +425,7 @@ export default function NutritionTracker({ userId }: { userId: string }) {
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-300"
                       style={{
-                        width: `${Math.min(100, (dailyTotals.carbs / targetMacros.carbs) * 100)}%`,
+                        width: `${targetMacros.carbs > 0 ? Math.min(100, (dailyTotals.carbs / targetMacros.carbs) * 100) : 0}%`,
                       }}
                     />
                   </div>
@@ -481,7 +447,7 @@ export default function NutritionTracker({ userId }: { userId: string }) {
                     <div
                       className="h-full bg-amber-400 rounded-full transition-all duration-300"
                       style={{
-                        width: `${Math.min(100, (dailyTotals.fat / targetMacros.fat) * 100)}%`,
+                        width: `${targetMacros.fat > 0 ? Math.min(100, (dailyTotals.fat / targetMacros.fat) * 100) : 0}%`,
                       }}
                     />
                   </div>
@@ -494,7 +460,7 @@ export default function NutritionTracker({ userId }: { userId: string }) {
             selectedDate={selectedDate}
             targetWater={targetWater}
             userId={userId}
-            waterIntake={waterData[selectedDate] || 0}
+            waterIntake={currentWater}
             onWaterChange={handleWaterChange}
             isLoading={isLoadingMeals}
           />
@@ -531,9 +497,21 @@ export default function NutritionTracker({ userId }: { userId: string }) {
         targetMacros={targetMacros}
         targetWater={targetWater}
         onSaveTargets={(calories, protein, carbs, fat, water) => {
-          setTargetCalories(calories);
-          setTargetMacros({ protein, carbs, fat });
-          setTargetWater(water);
+          if (logData) {
+            mutate(
+              {
+                ...logData,
+                targetCalories: calories,
+                targetProtein: protein,
+                targetCarbs: carbs,
+                targetFat: fat,
+                targetWater: water,
+              },
+              false,
+            );
+          } else {
+            mutate();
+          }
           setIsEditingTarget(false);
         }}
       />

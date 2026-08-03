@@ -29,7 +29,7 @@ const MealsGrid: React.FC<MealsGridProps> = ({
       {mealTypes.map((mealType) => {
         const mealItems = currentMeals[mealType] || [];
         const mealCalories = mealItems.reduce(
-          (sum, item) => sum + item.calories,
+          (sum, item) => sum + (item.calories || 0),
           0,
         );
 
@@ -54,7 +54,7 @@ const MealsGrid: React.FC<MealsGridProps> = ({
                 </h4>
               </div>
               <span className="text-white/60 text-[10px] sm:text-xs bg-white/5 border border-white/5 px-2 py-1 rounded-md ss02">
-                {mealCalories}  کالری
+                {mealCalories} کالری
               </span>
             </div>
 
@@ -72,17 +72,18 @@ const MealsGrid: React.FC<MealsGridProps> = ({
                         {item.name}
                       </span>
                       <span className="text-white/40 text-[9px] sm:text-[10px] block mt-0.5 ss02">
-                        {item.quantity} {item.unit} | پ: {item.protein}g، ک:{" "}
-                        {item.carbs}g، چ: {item.fat}g
+                        {item.quantity} {item.unit} | پ: {item.protein || 0}g، ک:{" "}
+                        {item.carbs || 0}g، چ: {item.fat || 0}g
                       </span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3">
                       <span className="text-white/80 font-semibold text-xs sm:text-sm ss02">
-                        {item.calories} kcal
+                        {item.calories || 0} kcal
                       </span>
                       <button
                         onClick={() => onDeleteFood(mealType, item.id)}
                         className="text-white/30 hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-white/5 cursor-pointer"
+                        title="حذف غذا"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

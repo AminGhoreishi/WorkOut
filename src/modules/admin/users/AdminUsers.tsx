@@ -1,3 +1,4 @@
+import React from "react";
 import UsersTable from "./UsersTable";
 
 export default function AdminUsers() {
@@ -9,7 +10,7 @@ export default function AdminUsers() {
             مدیریت کاربران
           </h1>
           <p className="text-white/60 text-sm">
-            مشاهده و ویرایش دسترسی‌های کاربران سیستم
+            مشاهده، ویرایش و مدیریت دسترسی‌های کاربران سیستم استار فیت
           </p>
         </div>
 

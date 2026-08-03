@@ -1,8 +1,9 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import type { FoodFormValues } from "@/types/nutrition";
 
 const ManualFoodInput: React.FC = () => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FoodFormValues>();
 
   return (
     <div className="space-y-4 font-danaMed">

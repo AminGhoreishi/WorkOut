@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import useSWR, { useSWRConfig } from "swr";
 import { X, Search, Zap } from "lucide-react";
 import type {
   AddFoodModalProps,
@@ -9,6 +10,13 @@ import type {
 import ManualFoodInput from "./ManualFoodInput";
 import { useForm, FormProvider } from "react-hook-form";
 
+const foodFetcher = async (url: string): Promise<Food[]> => {
+  const res = await fetch(url);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+};
+
 const AddFoodModal: React.FC<AddFoodModalProps> = ({
   isOpen,
   onClose,
@@ -18,16 +26,13 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({
   selectedDate,
   currentMeals,
 }) => {
+  const { mutate } = useSWRConfig();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedPresetFood, setSelectedPresetFood] = useState<Food | null>(
     null,
   );
   const [isManualInput, setIsManualInput] = useState(false);
-  const [dbFoods, setDbFoods] = useState<Food[]>([]);
-  const [searchResults, setSearchResults] = useState<Food[]>([]);
-  const [isFetchingPopular, setIsFetchingPopular] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,54 +42,30 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  useEffect(() => {
-    const fetchPopularFoods = async () => {
-      if (!isOpen) return;
-      setIsFetchingPopular(true);
-      try {
-        const res = await fetch(
-          `/api/food?isAddModal=true&type=${activeMealType}`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-console.log(data);
+  const popularFoodsKey = isOpen
+    ? `/api/food?isAddModal=true&type=${activeMealType}`
+    : null;
+  const { data: dbFoodsData, isLoading: isFetchingPopular } = useSWR<Food[]>(
+    popularFoodsKey,
+    foodFetcher,
+    { revalidateOnFocus: false, dedupingInterval: 10000 },
+  );
 
-          setDbFoods(data || []);
-        }
-      } catch (err) {
-        console.error("Error fetching popular foods:", err);
-      } finally {
-        setIsFetchingPopular(false);
-      }
-    };
-    fetchPopularFoods();
-  }, [isOpen, activeMealType]);
+  const searchFoodsKey =
+    isOpen && debouncedSearchQuery.trim()
+      ? `/api/food?search=${encodeURIComponent(debouncedSearchQuery)}&isAddModal=true&type=${activeMealType}`
+      : null;
+  const { data: searchResultsData, isLoading: isSearching } = useSWR<Food[]>(
+    searchFoodsKey,
+    foodFetcher,
+    { revalidateOnFocus: false, dedupingInterval: 5000 },
+  );
 
-  useEffect(() => {
-    const searchFoods = async () => {
-      if (!debouncedSearchQuery.trim()) {
-        setSearchResults([]);
-        return;
-      }
-
-      setIsSearching(true);
-      try {
-        const res = await fetch(
-          `/api/food?search=${encodeURIComponent(debouncedSearchQuery)}&isAddModal=true&type=${activeMealType}`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setSearchResults(data || []);
-        }
-      } catch (err) {
-        console.error("Error searching foods:", err);
-      } finally {
-        setIsSearching(false);
-      }
-    };
-
-    searchFoods();
-  }, [debouncedSearchQuery, activeMealType]);
+  const dbFoods = useMemo(() => dbFoodsData || [], [dbFoodsData]);
+  const searchResults = useMemo(
+    () => searchResultsData || [],
+    [searchResultsData],
+  );
 
   const methods = useForm<FoodFormValues>({
     defaultValues: {
@@ -99,7 +80,6 @@ console.log(data);
 
   const { register, watch, setValue, handleSubmit, reset } = methods;
 
-  const foodQuantity = watch("foodQuantity");
   const manualName = watch("manualName");
   const manualCalories = watch("manualCalories");
 
@@ -107,7 +87,6 @@ console.log(data);
     if (!isOpen) {
       setSearchQuery("");
       setDebouncedSearchQuery("");
-      setSearchResults([]);
       setSelectedPresetFood(null);
       setIsManualInput(false);
       reset();
@@ -115,7 +94,9 @@ console.log(data);
   }, [isOpen, reset]);
 
   const popularFoods = useMemo(() => {
-    return dbFoods.filter((f) => f.type === activeMealType || f.type === "all");
+    return dbFoods.filter(
+      (f) => f.type === activeMealType || f.type === "all",
+    );
   }, [dbFoods, activeMealType]);
 
   const handleSelectPreset = (food: Food) => {
@@ -137,7 +118,7 @@ console.log(data);
 
     if (isManualInput) {
       if (!values.manualName || !values.manualCalories) return;
-      const qty = parseFloat(values.foodQuantity) || 1;
+      const qty = Math.max(0.1, parseFloat(values.foodQuantity) || 1);
       const cals = (parseFloat(values.manualCalories) || 0) * qty;
       const prot = (parseFloat(values.manualProtein) || 0) * qty;
       const crbs = (parseFloat(values.manualCarbs) || 0) * qty;
@@ -145,7 +126,7 @@ console.log(data);
 
       newItem = {
         id: Date.now().toString(),
-        name: values.manualName,
+        name: values.manualName.trim(),
         quantity: qty,
         unit: "واحد",
         calories: Math.round(cals),
@@ -155,7 +136,7 @@ console.log(data);
       };
     } else {
       if (!selectedPresetFood) return;
-      const qty = parseFloat(values.foodQuantity) || 100;
+      const qty = Math.max(0.1, parseFloat(values.foodQuantity) || 100);
 
       let multiplier = 1;
       let unitStr = "گرم";
@@ -190,29 +171,27 @@ console.log(data);
 
     onSaveFood(newItem);
 
-    const dateStr = selectedDate;
-    const updatedMeals = { ...currentMeals };
-    updatedMeals[activeMealType] = [
-      ...(updatedMeals[activeMealType] || []),
-      newItem,
-    ];
+    const updatedMeals = {
+      ...currentMeals,
+      [activeMealType]: [...(currentMeals[activeMealType] || []), newItem],
+    };
 
     try {
-      const response = await fetch(`/api/nutrition?userId=${userId}`, {
+      const response = await fetch("/api/nutrition", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          date: dateStr,
+          date: selectedDate,
           meals: updatedMeals,
         }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to save food log to server");
+      if (response.ok) {
+        mutate(`/api/nutrition?date=${selectedDate}`);
       }
-    } catch (error) {
-      console.error("Error saving food log:", error);
+    } catch {
+      mutate(`/api/nutrition?date=${selectedDate}`);
     }
   };
 
@@ -242,7 +221,7 @@ console.log(data);
       <div className="bg-gray-900 border z-50 border-white/10 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative">
         <button
           onClick={onClose}
-          className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+          className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -256,7 +235,7 @@ console.log(data);
           <button
             type="button"
             onClick={() => setIsManualInput(false)}
-            className={`py-2 text-xs rounded-lg transition-all ${
+            className={`py-2 text-xs rounded-lg transition-all cursor-pointer ${
               !isManualInput
                 ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/10"
                 : "text-white/60 hover:text-white"
@@ -267,7 +246,7 @@ console.log(data);
           <button
             type="button"
             onClick={() => setIsManualInput(true)}
-            className={`py-2 text-xs rounded-lg transition-all ${
+            className={`py-2 text-xs rounded-lg transition-all cursor-pointer ${
               isManualInput
                 ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/10"
                 : "text-white/60 hover:text-white"
@@ -306,7 +285,7 @@ console.log(data);
                         type="button"
                         key={food._id}
                         onClick={() => handleSelectPreset(food)}
-                        className="w-full text-right text-xs text-white/80 hover:text-white bg-white/5 hover:bg-emerald-500/20 border border-white/5 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all flex justify-between items-center"
+                        className="w-full text-right text-xs text-white/80 hover:text-white bg-white/5 hover:bg-emerald-500/20 border border-white/5 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all flex justify-between items-center cursor-pointer"
                       >
                         <span>{food.name}</span>
                         <span className="text-white/40">
@@ -339,7 +318,7 @@ console.log(data);
                               type="button"
                               key={food._id}
                               onClick={() => handleSelectPreset(food)}
-                              className="text-right text-xs bg-white/5 hover:bg-white/10 hover:text-white text-white/70 border border-white/5 px-3 py-2.5 rounded-xl transition-all"
+                              className="text-right text-xs bg-white/5 hover:bg-white/10 hover:text-white text-white/70 border border-white/5 px-3 py-2.5 rounded-xl transition-all cursor-pointer"
                             >
                               <span className="block font-medium">
                                 {food.name}

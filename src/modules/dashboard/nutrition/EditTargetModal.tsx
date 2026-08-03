@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSWRConfig } from "swr";
 import { Flame, Plus } from "lucide-react";
 import type { EditTargetModalProps } from "@/types/nutrition";
 
@@ -11,6 +12,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
   targetWater,
   onSaveTargets,
 }) => {
+  const { mutate } = useSWRConfig();
   const [tempTargetCalories, setTempTargetCalories] = useState(
     targetCalories.toString(),
   );
@@ -40,14 +42,16 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
   if (!isOpen) return null;
 
   const handleSave = async () => {
-    const calories = parseInt(tempTargetCalories) || 2200;
-    const protein = parseInt(tempTargetProtein) || 140;
-    const carbs = parseInt(tempTargetCarbs) || 240;
-    const fat = parseInt(tempTargetFat) || 70;
-    const water = parseInt(tempTargetWater) || 2500;
+    const calories = Math.max(0, parseInt(tempTargetCalories) || 2200);
+    const protein = Math.max(0, parseInt(tempTargetProtein) || 140);
+    const carbs = Math.max(0, parseInt(tempTargetCarbs) || 240);
+    const fat = Math.max(0, parseInt(tempTargetFat) || 70);
+    const water = Math.max(0, parseInt(tempTargetWater) || 2500);
+
+    onSaveTargets(calories, protein, carbs, fat, water);
 
     try {
-      const response = await fetch(`/api/nutrition?userId=${userId}`, {
+      const response = await fetch("/api/nutrition", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -62,15 +66,11 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
       });
 
       if (response.ok) {
-        localStorage.removeItem("targetCalories");
-        localStorage.removeItem("targetMacros");
-        localStorage.removeItem("targetWater");
+        mutate((key: unknown) => typeof key === "string" && key.startsWith("/api/nutrition"));
       }
-    } catch (e) {
-      console.error("Error updating targets via PUT:", e);
+    } catch {
+      mutate((key: unknown) => typeof key === "string" && key.startsWith("/api/nutrition"));
     }
-
-    onSaveTargets(calories, protein, carbs, fat, water);
   };
 
   return (

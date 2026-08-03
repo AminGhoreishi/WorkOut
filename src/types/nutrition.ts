@@ -1,7 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 
-// Client-Side Types
 export interface Food {
   _id: string;
   name: string;
@@ -17,6 +16,7 @@ export interface Food {
 }
 
 export interface MealItem {
+  id?: string;
   _id?: string;
   foodId?: string | null;
   name: string;
@@ -31,14 +31,14 @@ export interface MealItem {
 export interface NutritionLog {
   _id: string;
   userId: string;
-  date: string; // Format: YYYY-MM-DD
+  date: string;
   meals: {
     breakfast: MealItem[];
     lunch: MealItem[];
     dinner: MealItem[];
     snack: MealItem[];
   };
-  waterIntake: number; // in ml
+  waterIntake: number;
   targetCalories: number;
   targetProtein: number;
   targetCarbs: number;
@@ -48,7 +48,6 @@ export interface NutritionLog {
   updatedAt?: string;
 }
 
-// Mongoose / DB Schema Types
 export interface IFood extends Omit<Food, "_id" | "createdAt" | "updatedAt">, Document {
   createdAt: Date;
   updatedAt: Date;
@@ -88,7 +87,9 @@ export interface MealData {
   snack: FoodItem[];
 }
 
-
+export interface NutritionTrackerProps {
+  userId: string;
+}
 
 export interface AddFoodModalProps {
   isOpen: boolean;
@@ -165,7 +166,6 @@ export interface FoodFormValues {
   manualCarbs: string;
   manualFat: string;
 }
-
 
 export interface FoodFormData {
   name: string;
