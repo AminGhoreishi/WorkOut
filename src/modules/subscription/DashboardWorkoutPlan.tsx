@@ -1,25 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import { Dumbbell, Calendar, Play, ChevronDown, ChevronUp, Film } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Dumbbell, Calendar, Play, ChevronDown, ChevronUp, Film, X } from "lucide-react";
+import type { VideoInfo, WorkoutPlanProps } from "@/types/workout";
 
-import {
-  VideoInfo,
-  ExerciseItem,
-  DayItem,
-  WorkoutPlanProps,
-} from "@/types/workout";
-
-export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
-  const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>({
-    [days[0]?._id]: true 
+export default function DashboardWorkoutPlan({ plan, days = [] }: WorkoutPlanProps) {
+  const safeDays = Array.isArray(days) ? days : [];
+  
+  const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>(() => {
+    if (safeDays.length > 0 && safeDays[0]?._id) {
+      return { [safeDays[0]._id]: true };
+    }
+    return {};
   });
+  
   const [activeVideo, setActiveVideo] = useState<VideoInfo | null>(null);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && activeVideo) {
+        setActiveVideo(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeVideo]);
+
   const toggleDay = (dayId: string) => {
-    setExpandedDays(prev => ({
+    setExpandedDays((prev) => ({
       ...prev,
-      [dayId]: !prev[dayId]
+      [dayId]: !prev[dayId],
     }));
   };
 
@@ -44,19 +54,21 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
       </div>
 
       <div className="space-y-4">
-        {days.length === 0 ? (
+        {safeDays.length === 0 ? (
           <div className="text-center p-8 border border-dashed border-amber-500/20 rounded-2xl text-neutral-400">
             روزی برای این برنامه تعریف نشده است
           </div>
         ) : (
-          days.map((day) => {
+          safeDays.map((day) => {
             const isExpanded = !!expandedDays[day._id];
+            const exercises = Array.isArray(day.exercises) ? day.exercises : [];
             return (
               <div
                 key={day._id}
                 className="bg-white/[0.03] border border-amber-500/15 rounded-2xl overflow-hidden transition-all duration-350"
               >
                 <button
+                  type="button"
                   onClick={() => toggleDay(day._id)}
                   className="w-full text-right p-5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer"
                 >
@@ -71,7 +83,7 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded ss02 font-sans">
-                      {day.exercises.length} حرکت
+                      {exercises.length} حرکت
                     </span>
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4 text-neutral-400" />
@@ -83,13 +95,13 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
 
                 {isExpanded && (
                   <div className="p-5 pt-0 border-t border-white/5 bg-black/20">
-                    {day.exercises.length === 0 ? (
+                    {exercises.length === 0 ? (
                       <div className="text-center py-6 text-neutral-400 text-xs">
                         امروز روز استراحت است.
                       </div>
                     ) : (
                       <div className="space-y-3 pt-4">
-                        {day.exercises.map((ex) => (
+                        {exercises.map((ex) => (
                           <div
                             key={ex._id}
                             className="bg-white/5 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-white/10 transition-all"
@@ -109,6 +121,7 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                               {ex.videoId && ex.videoId2 ? (
                                 <>
                                   <button
+                                    type="button"
                                     onClick={() => setActiveVideo(ex.videoId!)}
                                     className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                   >
@@ -116,6 +129,7 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                                     ویدیو آموزشی ۱
                                   </button>
                                   <button
+                                    type="button"
                                     onClick={() => setActiveVideo(ex.videoId2!)}
                                     className="w-full sm:w-auto bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                   >
@@ -125,6 +139,7 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                                 </>
                               ) : ex.videoId ? (
                                 <button
+                                  type="button"
                                   onClick={() => setActiveVideo(ex.videoId!)}
                                   className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                 >
@@ -133,6 +148,7 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
                                 </button>
                               ) : ex.videoId2 ? (
                                 <button
+                                  type="button"
                                   onClick={() => setActiveVideo(ex.videoId2!)}
                                   className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                                 >
@@ -156,18 +172,25 @@ export default function DashboardWorkoutPlan({ plan, days }: WorkoutPlanProps) {
       </div>
 
       {activeVideo && (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed">
-          <div className="bg-neutral-900 border border-amber-500/20 rounded-2xl overflow-hidden w-full max-w-3xl relative">
+        <div
+          onClick={() => setActiveVideo(null)}
+          className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-neutral-900 border border-amber-500/20 rounded-2xl overflow-hidden w-full max-w-3xl relative shadow-2xl"
+          >
             <div className="p-4 bg-black/40 flex justify-between items-center text-white border-b border-white/10">
               <h3 className="font-bold text-sm flex items-center gap-2 font-morabbaReg">
                 <Film className="w-4 h-4 text-amber-400" />
                 {activeVideo.title}
               </h3>
               <button
+                type="button"
                 onClick={() => setActiveVideo(null)}
-                className="bg-white/10 text-white p-1 rounded-full hover:bg-white/20 cursor-pointer"
+                className="bg-white/10 text-white p-1.5 rounded-full hover:bg-white/20 cursor-pointer transition-colors"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
             <div className="aspect-video w-full bg-black relative flex items-center justify-center">

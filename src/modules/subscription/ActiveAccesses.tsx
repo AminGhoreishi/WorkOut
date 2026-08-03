@@ -1,15 +1,16 @@
 import React from "react";
 import { ShieldCheck, CheckCircle } from "lucide-react";
+import type { ActiveAccessesProps } from "@/types/subscription";
 
-export default function ActiveAccesses() {
+export default function ActiveAccesses({ className = "" }: ActiveAccessesProps) {
   return (
-    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl font-danaMed">
+    <div className={`rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl font-danaMed ${className}`}>
       <h3 className="text-lg font-bold font-morabbaReg text-white mb-4 flex items-center gap-2">
         <ShieldCheck className="w-5 h-5 text-amber-400" />
         <span>دسترسی‌های فعال شما</span>
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/20 transition-all">
           <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-white">
@@ -20,7 +21,7 @@ export default function ActiveAccesses() {
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/20 transition-all">
           <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-white">
@@ -31,7 +32,7 @@ export default function ActiveAccesses() {
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/20 transition-all">
           <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-white">
@@ -42,7 +43,7 @@ export default function ActiveAccesses() {
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/20 transition-all">
           <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-white">
