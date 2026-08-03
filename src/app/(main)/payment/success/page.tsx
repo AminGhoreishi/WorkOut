@@ -1,46 +1,57 @@
-import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/dbConnect";
-import Order from "@/model/Order";
-import Package from "@/model/Package";
+import type { Metadata } from "next";
+import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, ArrowLeft, ShieldCheck, Zap, Calendar } from "lucide-react";
+import { CheckCircle, ArrowLeft, ShieldCheck, Zap, Calendar, LayoutDashboard } from "lucide-react";
+import { authOptions } from "@/lib/auth";
+import dbConnect from "@/lib/dbConnect";
+import Order from "@/model/Order";
+import type { PaymentSuccessPageProps } from "@/types/payment";
+
+export const metadata: Metadata = {
+  title: "پرداخت موفقیت‌آمیز | فیت‌کوچ",
+  description: "پرداخت شما با موفقیت تایید و اشتراک ورزشی شما فعال گردید.",
+};
 
 export default async function PaymentSuccessPage({
   searchParams,
-}: {
-  searchParams: Promise<{ orderId?: string }>;
-}) {
+}: PaymentSuccessPageProps) {
   const { orderId } = await searchParams;
 
+  if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
+    redirect("/");
+  }
+
   const session = await getServerSession(authOptions);
-  if (!session || !session.user || !session.user.id) {
-    redirect("/");
+  if (!session?.user?.id) {
+    redirect("/login");
   }
 
-  if (!orderId) {
+  let order: any = null;
+
+  try {
+    await dbConnect();
+    order = await Order.findOne({
+      _id: orderId,
+      userId: session.user.id,
+      status: "paid",
+    })
+      .populate("packageId", "name tagline")
+      .lean();
+  } catch {
     redirect("/");
   }
-
-  await dbConnect();
-
-  const order = await Order.findOne({
-    _id: orderId,
-    userId: session.user.id,
-    status: "paid",
-  }).lean();
 
   if (!order) {
     redirect("/");
   }
 
-  const orderPackage = await Package.findById(order.packageId).lean();
+  const packageName = (order.packageId as any)?.name || "پکیج اختصاصی فیت‌کوچ";
 
   return (
     <div
-      className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-12 px-4"
-      style={{ fontFamily: "Dana, sans-serif" }}
+      className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 py-12 px-4 font-danaMed"
       dir="rtl"
     >
       <div className="max-w-md w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center shadow-[0_0_50px_-12px_rgba(16,185,129,0.25)] relative overflow-hidden">
@@ -50,10 +61,7 @@ export default async function PaymentSuccessPage({
           <CheckCircle className="w-12 h-12 text-emerald-400 animate-pulse" />
         </div>
 
-        <h1
-          className="text-3xl font-extrabold text-white mb-3 tracking-tight"
-          style={{ fontFamily: "Marbeh, sans-serif" }}
-        >
+        <h1 className="text-3xl font-extrabold text-white mb-3 tracking-tight font-morabbaReg">
           پرداخت موفقیت‌آمیز
         </h1>
         
@@ -64,8 +72,8 @@ export default async function PaymentSuccessPage({
         <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 mb-8 space-y-4 text-right">
           <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
             <span className="text-white/40">نام پکیج</span>
-            <span className="text-white font-medium">
-              {orderPackage?.name || "پکیج تمرینی"}
+            <span className="text-white font-medium font-morabbaReg">
+              {packageName}
             </span>
           </div>
 
@@ -94,29 +102,30 @@ export default async function PaymentSuccessPage({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 font-danaDemiBold">
           <Link
-            href="/onboarding"
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 text-center"
+            href="/dashboard"
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
-            ورود به پنل کاربری و شروع دوره
+            <LayoutDashboard className="w-4 h-4" />
+            <span>ورود به پنل کاربری و شروع دوره</span>
           </Link>
           
           <Link
-            href="/onboarding"
-            className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white font-medium py-3.5 rounded-xl transition-all duration-300 text-center flex items-center justify-center gap-2"
+            href="/dashboard/fitness-profile"
+            className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white font-medium py-3.5 rounded-xl transition-all duration-300 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Calendar className="w-4 h-4 text-orange-400" />
-            تکمیل مشخصات و برنامه تمرینی
+            <Calendar className="w-4 h-4 text-amber-400" />
+            <span>تکمیل مشخصات و وضعیت ورزشی</span>
           </Link>
         </div>
 
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors mt-8 group"
+          className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors mt-8 group cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-          بازگشت به صفحه اصلی
+          <span>بازگشت به صفحه اصلی</span>
         </Link>
       </div>
     </div>
