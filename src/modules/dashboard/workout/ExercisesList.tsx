@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import {
   CheckCircle2,
@@ -24,7 +26,7 @@ export default function ExercisesList({
   >({});
   const [activeTipsId, setActiveTipsId] = useState<string | null>(null);
   const [activeQuestionsId, setActiveQuestionsId] = useState<string | null>(
-    null,
+    null
   );
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -35,17 +37,19 @@ export default function ExercisesList({
       try {
         const res = await fetch(`/api/user/workout-progress?userid=${userId}`);
         if (res.ok) {
-          const data = await res.json();
+          const data = await res.json().catch(() => ({}));
           const progressMap: Record<string, boolean> = {};
-          data.progress.forEach(
-            (item: { exerciseId: string; completed: boolean }) => {
-              progressMap[item.exerciseId] = item.completed;
-            },
-          );
+          if (Array.isArray(data.progress)) {
+            data.progress.forEach(
+              (item: { exerciseId: string; completed: boolean }) => {
+                progressMap[item.exerciseId] = item.completed;
+              }
+            );
+          }
           setCompletedExercises(progressMap);
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
+        setCompletedExercises({});
       }
     };
     fetchProgress();
@@ -67,8 +71,7 @@ export default function ExercisesList({
         },
         body: JSON.stringify({ userId, completed: isSelect, exerciseId }),
       });
-    } catch (err) {
-      console.error(err);
+    } catch {
       setCompletedExercises((prev) => ({
         ...prev,
         [exerciseId]: !isSelect,
@@ -77,7 +80,7 @@ export default function ExercisesList({
   };
 
   return (
-    <div className="space-y-4 font-danaMed">
+    <div className="space-y-4 font-danaMed" dir="rtl">
       {exercises.map((exercise, idx) => {
         const isCompleted = !!completedExercises[exercise._id];
         const isExpanded = activeTipsId === exercise._id;
@@ -101,6 +104,7 @@ export default function ExercisesList({
             <div className="p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex items-start gap-4 flex-1">
                 <button
+                  type="button"
                   onClick={() => toggleExercise(exercise._id)}
                   className={`
                     w-7 h-7 rounded-lg border flex items-center justify-center flex-shrink-0 transition-all duration-200 mt-1 cursor-pointer
@@ -150,9 +154,10 @@ export default function ExercisesList({
 
               <div className="hidden sm:flex items-center gap-3 w-full sm:w-auto self-stretch sm:self-auto justify-end border-t border-white/5 sm:border-t-0 pt-3 sm:pt-0">
                 <button
+                  type="button"
                   onClick={() =>
                     setActiveTipsId(
-                      activeTipsId === exercise._id ? null : exercise._id,
+                      activeTipsId === exercise._id ? null : exercise._id
                     )
                   }
                   className={`
@@ -173,11 +178,12 @@ export default function ExercisesList({
 
                 {isCompleted && (
                   <button
+                    type="button"
                     onClick={() =>
                       setActiveQuestionsId(
                         activeQuestionsId === exercise._id
                           ? null
-                          : exercise._id,
+                          : exercise._id
                       )
                     }
                     className="flex items-center gap-1.5 px-3 py-2 text-sm sm:text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
@@ -189,9 +195,10 @@ export default function ExercisesList({
 
                 {(exercise.videoId?.url || exercise.videoId2?.url) && (
                   <button
+                    type="button"
                     onClick={() =>
                       setPlayingVideo(
-                        playingVideo === exercise._id ? null : exercise._id,
+                        playingVideo === exercise._id ? null : exercise._id
                       )
                     }
                     className="flex items-center gap-1.5 px-3 py-2 text-sm sm:text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
@@ -204,9 +211,10 @@ export default function ExercisesList({
 
               <div className="relative sm:hidden w-full pt-3 border-t border-white/5">
                 <button
+                  type="button"
                   onClick={() =>
                     setOpenDropdownId(
-                      openDropdownId === exercise._id ? null : exercise._id,
+                      openDropdownId === exercise._id ? null : exercise._id
                     )
                   }
                   className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-amber-500/20 text-amber-400 text-sm font-semibold rounded-xl transition-all cursor-pointer"
@@ -223,9 +231,10 @@ export default function ExercisesList({
                 {openDropdownId === exercise._id && (
                   <div className="absolute right-0 left-0 mt-2 bg-neutral-900 border border-amber-500/20 rounded-xl p-1.5 shadow-2xl z-30 space-y-1 font-danaMed">
                     <button
+                      type="button"
                       onClick={() => {
                         setActiveTipsId(
-                          activeTipsId === exercise._id ? null : exercise._id,
+                          activeTipsId === exercise._id ? null : exercise._id
                         );
                         setOpenDropdownId(null);
                       }}
@@ -248,11 +257,12 @@ export default function ExercisesList({
 
                     {isCompleted && (
                       <button
+                        type="button"
                         onClick={() => {
                           setActiveQuestionsId(
                             activeQuestionsId === exercise._id
                               ? null
-                              : exercise._id,
+                              : exercise._id
                           );
                           setOpenDropdownId(null);
                         }}
@@ -276,9 +286,10 @@ export default function ExercisesList({
 
                     {(exercise.videoId?.url || exercise.videoId2?.url) && (
                       <button
+                        type="button"
                         onClick={() => {
                           setPlayingVideo(
-                            playingVideo === exercise._id ? null : exercise._id,
+                            playingVideo === exercise._id ? null : exercise._id
                           );
                           setOpenDropdownId(null);
                         }}

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Utensils, Eye, EyeOff, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import type { MealPlanItemProps } from "@/types/meal-plan";
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { WorkoutDayFormProps, WorkoutDayFormInputs, WorkoutDay } from "@/types/workout";
 import { showAlert } from "@/utils/alert";

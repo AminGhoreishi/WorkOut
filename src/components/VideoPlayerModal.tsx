@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { VideoPlayerModalProps } from "@/types/workout";
 
 export default function VideoPlayerModal({ video, onClose }: VideoPlayerModalProps) {

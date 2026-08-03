@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import type { AdminBlogStats } from "@/types/blog";

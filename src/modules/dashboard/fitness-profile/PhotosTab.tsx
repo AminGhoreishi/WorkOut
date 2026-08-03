@@ -1,4 +1,3 @@
-import React from "react";
 import { Camera, Trash2, Plus } from "lucide-react";
 import type { PhotosTabProps } from "@/types/fitness-profile";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { Tag, Eye, Edit, TrendingUp } from "lucide-react";
 import { formatNumber } from "@/utils/numbers";
 import type { ArticleStatsProps } from "@/types/blog";

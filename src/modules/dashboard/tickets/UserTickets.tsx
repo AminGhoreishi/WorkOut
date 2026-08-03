@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
 import { Plus, ArrowRight, RefreshCw } from "lucide-react";
 import type { IClientTicket, UserTicketsApiResponse } from "@/types/ticket";

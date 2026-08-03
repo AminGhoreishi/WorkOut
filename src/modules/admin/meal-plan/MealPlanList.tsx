@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Activity, Search, ShieldAlert } from "lucide-react";
 import type { MealPlanListProps } from "@/types/meal-plan";
 import MealPlanItem from "./MealPlanItem";

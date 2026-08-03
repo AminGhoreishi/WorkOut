@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { MessageSquare, Shield, Lock, Send } from "lucide-react";
 import type { UserTicketChatProps } from "@/types/ticket";
 import { showAlert } from "@/utils/alert";

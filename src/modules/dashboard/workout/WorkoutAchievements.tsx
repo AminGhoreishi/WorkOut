@@ -2,7 +2,7 @@ import { Award, Flame, TrendingUp } from "lucide-react";
 
 export default function WorkoutAchievements() {
   return (
-    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 font-danaMed">
+    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 font-danaMed" dir="rtl">
       <h3 className="font-bold font-morabbaReg text-white text-base flex items-center gap-2">
         <Award className="w-5 h-5 text-amber-400" />
         <span>افتخارات ورزشی شما</span>

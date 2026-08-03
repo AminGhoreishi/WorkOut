@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { Plus, Search, Trash2, Salad, Sparkles } from "lucide-react";
 import { showAlert } from "@/utils/alert";

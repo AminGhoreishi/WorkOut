@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Users, UserCheck, Calendar, Ban } from "lucide-react";
 import type { UsersStatsProps } from "@/types/user";
 

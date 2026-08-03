@@ -77,7 +77,7 @@ export default function WorkoutPdfDocument({
             {day.exercises.map((ex, index) => (
               <Text key={ex._id} style={styles.details}>
                 {formatFaText(
-                  `${index + 1}. ${ex.name} - ${ex.sets} ست - ${ex.reps} تکرار`,
+                  `${index + 1}. ${ex.name} - ${ex.sets} ست - ${ex.reps} تکرار`
                 )}
               </Text>
             ))}

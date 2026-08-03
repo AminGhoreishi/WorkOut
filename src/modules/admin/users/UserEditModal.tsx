@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { showAlert } from "@/utils/alert";
 import type { UserEditModalProps } from "@/types/user";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { MessageSquare, Clock, CheckCircle, XCircle } from "lucide-react";
 import type { TicketStatsProps } from "@/types/ticket";
 

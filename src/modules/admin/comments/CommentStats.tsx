@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { MessageSquare, CheckCircle, Clock } from "lucide-react";
 import type { CommentStatsProps } from "@/types/comment";
 

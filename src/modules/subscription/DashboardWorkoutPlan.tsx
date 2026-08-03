@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Dumbbell, Calendar, Play, ChevronDown, ChevronUp, Film, X } from "lucide-react";
 import type { VideoInfo, WorkoutPlanProps } from "@/types/workout";
 

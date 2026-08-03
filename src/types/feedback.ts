@@ -19,3 +19,7 @@ export interface ExerciseFeedbackFormProps {
   exerciseId: string;
   onClose: () => void;
 }
+
+export interface FeedbackFormInputs {
+  comment: string;
+}

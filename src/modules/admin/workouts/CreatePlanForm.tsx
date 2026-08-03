@@ -1,4 +1,3 @@
-import React from "react";
 import { Info } from "lucide-react";
 import { showAlert } from "@/utils/alert";
 import { PackageInfo, WorkoutPlan } from "@/types/workout";

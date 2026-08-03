@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, memo } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { X, Search, Zap } from "lucide-react";
 import type {
@@ -397,4 +397,4 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({
   );
 };
 
-export default React.memo(AddFoodModal);
+export default memo(AddFoodModal);

@@ -2,7 +2,7 @@ import { Zap } from "lucide-react";
 
 export default function WeeklyAdvice() {
   return (
-    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 relative overflow-hidden font-danaMed">
+    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 relative overflow-hidden font-danaMed" dir="rtl">
       <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full blur-2xl" />
 
       <h3 className="font-bold font-morabbaReg text-white text-base flex items-center gap-2">

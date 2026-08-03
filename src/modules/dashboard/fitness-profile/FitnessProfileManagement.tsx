@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { Activity, Scale, Loader2, Save, Sparkles } from "lucide-react";

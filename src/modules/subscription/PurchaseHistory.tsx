@@ -1,4 +1,3 @@
-import React from "react";
 import { FileText, AlertCircle } from "lucide-react";
 import type { PurchaseHistoryProps } from "@/types/subscription";
 

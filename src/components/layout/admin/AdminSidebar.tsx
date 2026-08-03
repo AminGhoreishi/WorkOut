@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, Menu, LogOut } from "lucide-react";
 import { useSidebar } from "./SidebarContext";

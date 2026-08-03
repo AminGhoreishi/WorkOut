@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import type { UploadVideoModalProps } from "@/types/workout";
 import { showAlert } from "@/utils/alert";

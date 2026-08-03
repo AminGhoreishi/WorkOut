@@ -1,4 +1,3 @@
-import React from "react";
 import { ShieldCheck, CheckCircle } from "lucide-react";
 import type { ActiveAccessesProps } from "@/types/subscription";
 

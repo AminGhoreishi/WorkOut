@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Smile, AlertCircle, CheckCircle, HelpCircle } from "lucide-react";
-import type { ExerciseFeedbackFormProps } from "@/types/feedback";
-
-interface FeedbackFormInputs {
-  comment: string;
-}
+import type { ExerciseFeedbackFormProps, FeedbackFormInputs } from "@/types/feedback";
 
 export default function ExerciseFeedbackForm({
   userId,
@@ -48,13 +44,13 @@ export default function ExerciseFeedbackForm({
       if (res.ok) {
         onClose();
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      onClose();
     }
   };
 
   return (
-    <div className="w-full bg-white/[0.02] border border-amber-500/15 rounded-2xl p-5 mt-4 space-y-5 animate-fadeIn font-danaMed">
+    <div className="w-full bg-white/[0.02] border border-amber-500/15 rounded-2xl p-5 mt-4 space-y-5 animate-fadeIn font-danaMed" dir="rtl">
       <div className="flex items-center gap-2 text-amber-400">
         <HelpCircle className="w-5 h-5 text-amber-400" />
         <h4 className="text-sm font-bold font-morabbaReg text-white">

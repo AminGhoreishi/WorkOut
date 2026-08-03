@@ -2,7 +2,7 @@ import { Flame } from "lucide-react";
 
 export default function RestDayView() {
   return (
-    <div className="rounded-3xl border border-amber-500/15 bg-white/[0.03] p-8 text-center space-y-6 shadow-xl py-16 font-danaMed">
+    <div className="rounded-3xl border border-amber-500/15 bg-white/[0.03] p-8 text-center space-y-6 shadow-xl py-16 font-danaMed" dir="rtl">
       <div className="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
         <Flame className="w-10 h-10 animate-pulse" />
       </div>
@@ -21,7 +21,7 @@ export default function RestDayView() {
           <span className="text-sm sm:text-[10px] text-neutral-400 block">
             مدت استراحت
           </span>
-          <span className="text-sm font-bold text-white mt-1 block font-sans">
+          <span className="text-sm font-bold text-white mt-1 block font-sans ss02">
             ۲۴ ساعت
           </span>
         </div>

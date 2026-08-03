@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useForm } from "react-hook-form";
 import { HelpCircle, Plus } from "lucide-react";
 import { showAlert } from "@/utils/alert";

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import type {
   PackageInfo,

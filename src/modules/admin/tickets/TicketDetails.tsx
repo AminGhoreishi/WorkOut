@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, memo } from "react";
+import { useRef, useEffect, useState, memo } from "react";
 import { Lock, CheckCircle, Trash2, AlertCircle, Send } from "lucide-react";
 import type { TicketDetailsProps, TicketMutateApiResponse } from "@/types/ticket";
 import EmptyTicketState from "./EmptyTicketState";

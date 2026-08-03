@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { useFormContext } from "react-hook-form";
 import type { FoodFormValues } from "@/types/nutrition";
 
@@ -88,4 +88,4 @@ const ManualFoodInput: React.FC = () => {
   );
 };
 
-export default React.memo(ManualFoodInput);
+export default memo(ManualFoodInput);

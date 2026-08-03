@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useSWRConfig } from "swr";
 import { Flame, Plus } from "lucide-react";
 import type { EditTargetModalProps } from "@/types/nutrition";
@@ -185,4 +185,4 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
   );
 };
 
-export default React.memo(EditTargetModal);
+export default memo(EditTargetModal);

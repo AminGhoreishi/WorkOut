@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Trash2, Users, DollarSign, Edit } from "lucide-react";
 import { showAlert, showConfirm } from "@/utils/alert";
 import { formatToPersianWithCommas } from "@/utils/price";

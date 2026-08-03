@@ -6,8 +6,6 @@ import {
   Calendar,
   Flame,
   ChevronDown,
-  AlertCircle,
-  RefreshCw,
 } from "lucide-react";
 import WorkoutHeader from "./WorkoutHeader";
 import ExercisesList from "./ExercisesList";
@@ -56,7 +54,7 @@ export default function WorkoutView({
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    },
+    }
   );
 
   const workoutWeek = weeksData?.weeks || [];
@@ -75,7 +73,7 @@ export default function WorkoutView({
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    },
+    }
   );
 
   const workoutDays = daysData?.days || [];
@@ -94,14 +92,14 @@ export default function WorkoutView({
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000,
-    },
+    }
   );
 
   const workoutExercises = exercisesData?.exercises || [];
 
   if (isLoadingWeeks) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed">
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed" dir="rtl">
         <div className="text-center space-y-4">
           <Flame className="w-12 h-12 text-amber-400 animate-pulse mx-auto" />
           <p className="text-sm text-neutral-400">
@@ -145,7 +143,7 @@ export default function WorkoutView({
   const overallProgressPercent = 0;
 
   return (
-    <div className="min-h-screen text-white font-danaMed pb-12 bg-neutral-950">
+    <div className="min-h-screen text-white font-danaMed pb-12 bg-neutral-950" dir="rtl">
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-8 space-y-8">
         <WorkoutHeader
           workoutPlan={workoutPlan}
@@ -196,6 +194,7 @@ export default function WorkoutView({
                 return (
                   <button
                     key={day._id}
+                    type="button"
                     onClick={() => {
                       setSelectedDayId(day._id);
                     }}
@@ -255,6 +254,7 @@ export default function WorkoutView({
                   خطا در بارگذاری حرکات این روز تمرینی.
                 </p>
                 <button
+                  type="button"
                   onClick={() => mutateExercises()}
                   className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm sm:text-xs font-semibold rounded-xl border border-amber-500/20 cursor-pointer"
                 >

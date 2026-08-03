@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { MessageSquare, ExternalLink, X } from "lucide-react";
 import type { ViewCommentModalProps } from "@/types/comment";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { showAlert } from "@/utils/alert";
 import { formatToPersianWithCommas, parsePersianPrice } from "@/utils/price";

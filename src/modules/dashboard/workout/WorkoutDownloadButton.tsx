@@ -13,16 +13,19 @@ export default function WorkoutDownloadButton({
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setIsClient(true);
     }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (!isClient) {
     return (
       <button
+        type="button"
         disabled
-        className="flex items-center justify-center gap-2 bg-amber-500/20 text-neutral-400 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg"
+        className="flex items-center justify-center gap-2 bg-amber-500/20 text-neutral-400 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg font-danaMed"
       >
         <Download className="w-4 h-4 animate-pulse" />
         <span>دانلود فایل PDF برنامه</span>
@@ -42,7 +45,7 @@ export default function WorkoutDownloadButton({
     >
       {({ loading }) => (
         <span
-          className={`flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg cursor-pointer ${
+          className={`flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg cursor-pointer font-danaMed ${
             loading ? "pointer-events-none opacity-60" : ""
           }`}
         >

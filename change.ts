@@ -548,8 +548,79 @@ export const modifiedFiles = [
     id: 110,
     filePath: "src/modules/admin/tickets/AdminTickets.tsx",
     description: "Refactored AdminTickets.tsx container component with clean code and zero comments."
+  },
+  {
+    id: 111,
+    filePath: "src/app/(dashboard)/dashboard/workout/page.tsx",
+    description: "Refactored user workout page server component with StarFit metadata and zero code comments."
+  },
+  {
+    id: 112,
+    filePath: "src/modules/dashboard/workout/WorkoutView.tsx",
+    description: "Refactored WorkoutView.tsx container component with SWR data fetching and zero code comments."
+  },
+  {
+    id: 113,
+    filePath: "src/modules/dashboard/workout/ExercisesList.tsx",
+    description: "Refactored ExercisesList.tsx with progress tracking, video player dropdown, and zero code comments."
+  },
+  {
+    id: 114,
+    filePath: "src/modules/dashboard/workout/ExerciseFeedbackForm.tsx",
+    description: "Refactored ExerciseFeedbackForm.tsx with clean form handlers and zero code comments."
+  },
+  {
+    id: 115,
+    filePath: "src/modules/dashboard/workout/WorkoutHeader.tsx",
+    description: "Refactored WorkoutHeader.tsx with clean layout and zero code comments."
+  },
+  {
+    id: 116,
+    filePath: "src/modules/dashboard/workout/WorkoutAchievements.tsx",
+    description: "Refactored WorkoutAchievements.tsx with clean layout and zero code comments."
+  },
+  {
+    id: 117,
+    filePath: "src/modules/dashboard/workout/WorkoutSummary.tsx",
+    description: "Refactored WorkoutSummary.tsx with zero code comments."
+  },
+  {
+    id: 118,
+    filePath: "src/modules/dashboard/workout/WeeklyAdvice.tsx",
+    description: "Refactored WeeklyAdvice.tsx with zero code comments."
+  },
+  {
+    id: 119,
+    filePath: "src/modules/dashboard/workout/RestDayView.tsx",
+    description: "Refactored RestDayView.tsx with zero code comments."
+  },
+  {
+    id: 120,
+    filePath: "src/modules/dashboard/workout/NoWorkoutPlan.tsx",
+    description: "Refactored NoWorkoutPlan.tsx with zero code comments."
+  },
+  {
+    id: 121,
+    filePath: "src/modules/dashboard/workout/WorkoutDownloadButton.tsx",
+    description: "Refactored WorkoutDownloadButton.tsx with client-side PDF renderer and zero code comments."
+  },
+  {
+    id: 122,
+    filePath: "src/modules/dashboard/workout/WorkoutPdfDocument.tsx",
+    description: "Refactored WorkoutPdfDocument.tsx with PDF styling and zero code comments."
+  },
+  {
+    id: 123,
+    filePath: "src/modules/dashboard/workout/WorkoutErrorState.tsx",
+    description: "Refactored WorkoutErrorState.tsx with zero code comments."
+  },
+  {
+    id: 124,
+    filePath: "src/modules/dashboard/workout/WorkoutExercisesSkeleton.tsx",
+    description: "Refactored WorkoutExercisesSkeleton.tsx with zero code comments."
   }
 ];
+
 
 
 

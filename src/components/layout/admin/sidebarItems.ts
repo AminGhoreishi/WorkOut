@@ -18,7 +18,6 @@ import {
   Trophy,
   Sparkles,
 } from "lucide-react";
-import React from "react";
 import { SidebarCounts, MenuItem, MenuSection } from "@/types/sidebar";
 
 export function getAdminMenuItems(

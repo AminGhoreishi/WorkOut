@@ -1,19 +1,18 @@
-import React from "react";
-import WorkoutView from "@/modules/dashboard/workout/WorkoutView";
-import dbConnect from "@/lib/dbConnect";
-import registerModels from "@/lib/registerModels";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import dbConnect from "@/lib/dbConnect";
+import registerModels from "@/lib/registerModels";
 import Subscription from "@/model/Subscription";
+import WorkoutView from "@/modules/dashboard/workout/WorkoutView";
 
-export const metadata = {
-  title: "استار فیت | برنامه تمرینی من",
-  description:
-    "مشاهده برنامه تمرینی اختصاصی، آموزش حرکات و ثبت رکوردها در استار فیت",
+export const metadata: Metadata = {
+  title: "برنامه تمرینی من | استار فیت",
+  description: "مشاهده برنامه تمرینی اختصاصی، آموزش حرکات و ثبت رکوردهای ورزشی در استار فیت",
 };
 
-export default async function page() {
+export default async function UserWorkoutPage() {
   registerModels();
   await dbConnect();
   const session = await getServerSession(authOptions);
@@ -24,7 +23,7 @@ export default async function page() {
 
   const subscription = await Subscription.findOne(
     { userId: session.user.id },
-    "packageId",
+    "packageId"
   )
     .populate("packageId", "tagline isActive name")
     .lean();

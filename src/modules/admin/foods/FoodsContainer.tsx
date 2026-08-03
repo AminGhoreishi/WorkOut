@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Apple } from "lucide-react";
 import { mutate } from "swr";

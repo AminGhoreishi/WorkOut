@@ -7,7 +7,7 @@ export default function WorkoutHeader({
   workoutDays,
 }: WorkoutHeaderProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-amber-500/20 bg-white/[0.03] p-6 md:p-8 shadow-2xl font-danaMed">
+    <div className="relative overflow-hidden rounded-3xl border border-amber-500/20 bg-white/[0.03] p-6 md:p-8 shadow-2xl font-danaMed" dir="rtl">
       <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-tr from-amber-500 to-yellow-500 rounded-full blur-2xl opacity-10" />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
@@ -33,8 +33,8 @@ export default function WorkoutHeader({
             </div>
             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
               <span className="text-neutral-400">تعداد روزهای تمرین:</span>
-              <span className="font-semibold text-amber-400">
-                روز در هفته
+              <span className="font-semibold text-amber-400 ss02 font-sans">
+                {workoutDays.length} روز در هفته
               </span>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { Coffee, Utensils, Salad, Sparkles, Trash2, Plus } from "lucide-react";
 import type { MealData, MealsGridProps } from "@/types/nutrition";
 import MealSkeleton from "./MealSkeleton";
@@ -111,4 +111,4 @@ const MealsGrid: React.FC<MealsGridProps> = ({
   );
 };
 
-export default React.memo(MealsGrid);
+export default memo(MealsGrid);

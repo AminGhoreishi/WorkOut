@@ -1,4 +1,3 @@
-import React from "react";
 import { Target, Calendar, Dumbbell } from "lucide-react";
 import {
   GOAL_OPTIONS,

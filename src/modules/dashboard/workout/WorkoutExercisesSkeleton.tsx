@@ -1,6 +1,7 @@
+
 export default function WorkoutExercisesSkeleton() {
   return (
-    <div className="space-y-4 animate-pulse">
+    <div className="space-y-4 animate-pulse" dir="rtl">
       {[1, 2, 3].map((i) => (
         <div
           key={i}

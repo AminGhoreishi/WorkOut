@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { useSWRConfig } from "swr";
 import { Droplet, Plus } from "lucide-react";
 import { BeatLoader } from "react-spinners";
@@ -141,4 +141,4 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
   );
 };
 
-export default React.memo(WaterTracker);
+export default memo(WaterTracker);

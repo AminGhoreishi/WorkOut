@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";

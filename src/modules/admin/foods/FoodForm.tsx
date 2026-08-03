@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Plus, Sparkles } from "lucide-react";
 import type { FoodFormProps } from "@/types/nutrition";
 

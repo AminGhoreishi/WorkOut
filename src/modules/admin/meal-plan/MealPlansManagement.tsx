@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { Plus, Utensils } from "lucide-react";
 import { showAlert, showConfirm } from "@/utils/alert";

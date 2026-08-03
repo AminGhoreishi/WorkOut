@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Package as PackageIcon, Users, DollarSign, TrendingUp, Award } from "lucide-react";
 import type { PackageStatsProps, PackageStats as IPackageStats } from "@/types/package";
 

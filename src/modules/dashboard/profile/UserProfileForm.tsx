@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2, Save } from "lucide-react";
 import type { UserProfileFormProps } from "@/types/user-profile";
 

@@ -4,7 +4,7 @@ export default function WorkoutSummary({
   totalExercises,
 }: WorkoutSummaryProps) {
   return (
-    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 font-danaMed">
+    <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 font-danaMed" dir="rtl">
       <h3 className="font-bold font-morabbaReg text-white text-base">
         خلاصه تمرین امروز
       </h3>
