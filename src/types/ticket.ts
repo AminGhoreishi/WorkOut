@@ -1,7 +1,7 @@
-import mongoose, { Document } from "mongoose";
-import type { ReactNode, FormEvent, RefObject } from "react";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
+import type { ReactNode, RefObject } from "react";
 
-// Mongoose / DB Schema Types
 export interface IMessage {
   senderId: mongoose.Types.ObjectId;
   senderName: string;
@@ -21,7 +21,6 @@ export interface ITicket extends Document {
   updatedAt: Date;
 }
 
-// Client-Side Populated Types
 export interface IClientUser {
   _id: string;
   username: string;
@@ -64,8 +63,6 @@ export interface TicketStatsProps {
   formatNumber: (num: number) => string;
 }
 
-
-
 export interface TicketListProps {
   children?: ReactNode;
   selectedTicket: IClientTicket | null;
@@ -78,7 +75,6 @@ export interface TicketDetailsProps {
   setSelectedTicket: (ticket: IClientTicket | null) => void;
 }
 
-
 export interface TicketFormValues {
   subject: string;
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
@@ -88,7 +84,7 @@ export interface TicketFormValues {
 
 export interface UserTicketFormProps {
   setShowCreateForm: (show: boolean) => void;
-  fetchTickets: (selectIdAfterFetch?: string) => Promise<void>;
+  onTicketCreated?: (ticketId: string) => void;
 }
 
 export interface UserTicketChatProps {
@@ -96,5 +92,16 @@ export interface UserTicketChatProps {
   selectedTicket: IClientTicket | null;
   setSelectedTicket: (ticket: IClientTicket | null) => void;
   chatEndRef: RefObject<HTMLDivElement | null>;
-  fetchTickets: (selectIdAfterFetch?: string) => Promise<void>;
+  onTicketUpdated?: () => void;
+}
+
+export interface UserTicketsApiResponse {
+  tickets?: IClientTicket[];
+  message?: string;
+}
+
+export interface TicketMutateApiResponse {
+  success?: boolean;
+  ticket?: IClientTicket;
+  message?: string;
 }

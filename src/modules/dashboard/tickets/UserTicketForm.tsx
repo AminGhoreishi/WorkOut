@@ -1,13 +1,14 @@
 "use client";
 
+import React from "react";
 import { useForm } from "react-hook-form";
 import { HelpCircle, Plus } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import { TicketFormValues, UserTicketFormProps } from "@/types/ticket";
+import type { TicketFormValues, UserTicketFormProps } from "@/types/ticket";
 
 export default function UserTicketForm({
   setShowCreateForm,
-  fetchTickets,
+  onTicketCreated,
 }: UserTicketFormProps) {
   const {
     register,
@@ -31,13 +32,24 @@ export default function UserTicketForm({
   const selectedFile = file && file.length > 0 ? file[0] : null;
 
   const onSubmit = async (data: TicketFormValues) => {
-    if (!data.subject.trim() || !data.description.trim() || isSubmitting)
+    const trimmedSubject = data.subject.trim();
+    const trimmedDescription = data.description.trim();
+
+    if (!trimmedSubject || !trimmedDescription || isSubmitting) return;
+
+    if (selectedFile && selectedFile.size > 50 * 1024 * 1024) {
+      showAlert(
+        "حجم فایل زیاد است",
+        "حداکثر حجم فایل مجاز ۵۰ مگابایت می‌باشد.",
+        "error",
+      );
       return;
+    }
 
     try {
       const formData = new FormData();
-      formData.append("subject", data.subject.trim());
-      formData.append("description", data.description.trim());
+      formData.append("subject", trimmedSubject);
+      formData.append("description", trimmedDescription);
       formData.append("category", data.category);
       if (selectedFile) {
         formData.append("file", selectedFile);
@@ -48,8 +60,9 @@ export default function UserTicketForm({
         body: formData,
       });
 
-      if (res.ok) {
-        const resData = await res.json();
+      const resData = await res.json().catch(() => ({}));
+
+      if (res.ok && resData.ticket?._id) {
         reset();
         setShowCreateForm(false);
         showAlert(
@@ -57,10 +70,11 @@ export default function UserTicketForm({
           "تیکت شما با موفقیت ثبت شد و به زودی توسط مربیان یا پشتیبانان فیت‌کوچ پاسخ داده خواهد شد.",
           "success",
         );
-        fetchTickets(resData.ticket._id);
+        if (onTicketCreated) {
+          onTicketCreated(resData.ticket._id);
+        }
       } else {
-        const err = await res.json();
-        throw new Error(err.message || "خطا در ثبت تیکت");
+        throw new Error(resData.message || "خطا در ثبت تیکت");
       }
     } catch (err: any) {
       showAlert("خطا", err.message || "ثبت تیکت با خطا مواجه شد.", "error");

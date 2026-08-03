@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { MessageSquare, Shield, Lock, Send } from "lucide-react";
-import { IClientTicket as ITicket, UserTicketChatProps } from "@/types/ticket";
+import type { UserTicketChatProps } from "@/types/ticket";
 import { showAlert } from "@/utils/alert";
 import {
   getStatusBadge,
@@ -11,9 +11,33 @@ import {
   getCategoryLabel,
 } from "./ticketHelpers";
 
-const isVideo = (url: string) => {
+const isVideo = (url?: string) => {
+  if (!url) return false;
   const videoExtensions = [".mp4", ".mov", ".webm", ".avi", ".mkv"];
-  return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+  const lowerUrl = url.toLowerCase().split("?")[0];
+  return videoExtensions.some((ext) => lowerUrl.endsWith(ext));
+};
+
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("fa-IR");
+  } catch {
+    return dateStr;
+  }
+};
+
+const formatTime = (dateStr?: string) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
 };
 
 export default function UserTicketChat({
@@ -21,14 +45,15 @@ export default function UserTicketChat({
   selectedTicket,
   setSelectedTicket,
   chatEndRef,
-  fetchTickets,
+  onTicketUpdated,
 }: UserTicketChatProps) {
   const [replyText, setReplyText] = useState("");
   const [sendingReply, setSendingReply] = useState(false);
 
   const handleSendReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedTicket || !replyText.trim() || sendingReply) return;
+    const trimmed = replyText.trim();
+    if (!selectedTicket || !trimmed || sendingReply) return;
 
     setSendingReply(true);
     try {
@@ -37,18 +62,20 @@ export default function UserTicketChat({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: selectedTicket._id,
-          messageText: replyText.trim(),
+          messageText: trimmed,
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ticket) {
         setReplyText("");
         setSelectedTicket(data.ticket);
-        fetchTickets(selectedTicket._id);
+        if (onTicketUpdated) {
+          onTicketUpdated();
+        }
       } else {
-        const err = await res.json();
-        throw new Error(err.message || "خطا در ارسال پیام");
+        throw new Error(data.message || "خطا در ارسال پیام");
       }
     } catch (err: any) {
       showAlert("خطا", err.message || "ارسال پاسخ ناموفق بود.", "error");
@@ -60,7 +87,9 @@ export default function UserTicketChat({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start font-danaMed">
       <div className="lg:col-span-5 space-y-4">
-        <h2 className="text-white font-bold text-lg mb-2 font-morabbaReg">درخواست‌های من</h2>
+        <h2 className="text-white font-bold text-lg mb-2 font-morabbaReg">
+          درخواست‌های من
+        </h2>
         {tickets.length === 0 ? (
           <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
             <MessageSquare className="w-12 h-12 mx-auto opacity-20 mb-3 text-amber-400" />
@@ -100,7 +129,7 @@ export default function UserTicketChat({
                       {getStatusLabel(t.status)}
                     </span>
                     <span className="ss02 font-sans">
-                      {new Date(t.createdAt).toLocaleDateString("fa-IR")}
+                      {formatDate(t.createdAt)}
                     </span>
                   </div>
                 </div>
@@ -141,10 +170,7 @@ export default function UserTicketChat({
                     {getCategoryLabel(selectedTicket.category)}
                   </span>
                   <span className="text-[9px] text-neutral-400 ss02 font-sans">
-                    ثبت:{" "}
-                    {new Date(selectedTicket.createdAt).toLocaleDateString(
-                      "fa-IR",
-                    )}
+                    ثبت: {formatDate(selectedTicket.createdAt)}
                   </span>
                 </div>
               </div>
@@ -192,10 +218,11 @@ export default function UserTicketChat({
 
               {selectedTicket.messages &&
                 selectedTicket.messages.map((msg) => {
-                  const isSupport = (msg.senderId as any)?._id
-                    ? (msg.senderId as any).role === "admin" ||
-                      (msg.senderId as any).role === "coach"
-                    : true;
+                  const isSupport =
+                    typeof msg.senderId === "object" && msg.senderId !== null
+                      ? (msg.senderId as any).role === "admin" ||
+                        (msg.senderId as any).role === "coach"
+                      : true;
 
                   return (
                     <div
@@ -219,16 +246,13 @@ export default function UserTicketChat({
                         className={`rounded-2xl p-3 text-white text-xs border ${
                           isSupport
                             ? "bg-white/5 border-white/10 rounded-tr-none"
-                            : "bg-amber-500/10 border-amber-500/20 rounded-tl-none"
+                            : "bg-amber-500/10 border-amber-500/20 rounded-tr-none"
                         }`}
                       >
                         <div className="flex justify-between items-center gap-6 text-neutral-400 text-[9px] mb-1">
                           <span>{isSupport ? "پشتیبان فیت‌کوچ" : "من"}</span>
                           <span className="ss02 font-sans">
-                            {new Date(msg.createdAt).toLocaleTimeString(
-                              "fa-IR",
-                              { hour: "2-digit", minute: "2-digit" },
-                            )}
+                            {formatTime(msg.createdAt)}
                           </span>
                         </div>
                         <p className="leading-relaxed whitespace-pre-line text-neutral-200">
@@ -266,7 +290,7 @@ export default function UserTicketChat({
                   <button
                     type="submit"
                     disabled={!replyText.trim() || sendingReply}
-                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold hover:opacity-95 w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold hover:opacity-95 w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <Send className="w-4 h-4 rotate-180 text-neutral-950" />
                   </button>

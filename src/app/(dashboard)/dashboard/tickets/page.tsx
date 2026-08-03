@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import UserTickets from "@/modules/dashboard/tickets/UserTickets";
 
-export default function page() {
+export const metadata: Metadata = {
+  title: "تیکت‌های پشتیبانی | استار فیت",
+  description: "مدیریت تیکت‌ها، مشاوره ورزشی و بررسی فرم حرکات در فیت‌کوچ",
+};
+
+export default function TicketsPage() {
   return <UserTickets />;
 }
