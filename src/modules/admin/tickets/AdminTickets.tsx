@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import React, { useState } from "react";
 import type {
   IClientTicket as ITicket,
   ITicketStats as IStats,
@@ -26,8 +27,7 @@ export default function AdminTickets() {
             مدیریت تیکت‌های پشتیبانی
           </h1>
           <p className="text-white/60 text-sm">
-            تیکت‌های ارسالی کاربران را پاسخ داده و مشکلات فنی یا مالی آن‌ها را
-            برطرف کنید.
+            تیکت‌های ارسالی کاربران را پاسخ داده و مشکلات تمرینی، تغذیه‌ای یا پشتیبانی آن‌ها را برطرف کنید.
           </p>
         </div>
 

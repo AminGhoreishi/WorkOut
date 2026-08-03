@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Search, MessageCircle } from "lucide-react";
+"use client";
+
+import React, { useState, useEffect, memo } from "react";
+import useSWR from "swr";
+import { Search, MessageCircle, RefreshCw } from "lucide-react";
 import type {
   TicketListProps,
   IClientTicket as ITicket,
+  ITicketStats,
 } from "@/types/ticket";
 import {
   getStatusBadge,
@@ -12,25 +16,44 @@ import {
 } from "./ticketHelpers";
 import Pagination from "@/components/AdminPagination";
 
-const TicketList: React.FC<TicketListProps> = ({
+interface TicketsApiResponse {
+  tickets: ITicket[];
+  total: number;
+  totalPages: number;
+  stats?: ITicketStats;
+  message?: string;
+}
+
+const fetcher = async (url: string): Promise<TicketsApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "خطا در دریافت لیست تیکت‌ها");
+  }
+  return res.json();
+};
+
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return "—";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("fa-IR");
+  } catch {
+    return dateStr;
+  }
+};
+
+const TicketList = memo(function TicketList({
   children,
   selectedTicket,
   setSelectedTicket,
   onStatsUpdate,
-}) => {
-  const [tickets, setTickets] = useState<ITicket[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+}: TicketListProps) {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const lastUpdatedRef = useRef<string | number | undefined>(undefined);
-  const lastMsgCountRef = useRef<number>(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,62 +64,36 @@ const TicketList: React.FC<TicketListProps> = ({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const loadTickets = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      let url = `/api/admin/ticket?page=${currentPage}&limit=8`;
-      if (statusFilter !== "all") {
-        url += `&status=${statusFilter}`;
-      }
-      if (debouncedSearchQuery.trim()) {
-        url += `&search=${encodeURIComponent(debouncedSearchQuery)}`;
-      }
+  let url = `/api/admin/ticket?page=${currentPage}&limit=8`;
+  if (statusFilter !== "all") {
+    url += `&status=${statusFilter}`;
+  }
+  if (debouncedSearchQuery.trim()) {
+    url += `&search=${encodeURIComponent(debouncedSearchQuery.trim())}`;
+  }
 
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("خطا در دریافت لیست تیکت‌ها");
-      const data = await res.json();
-      setTickets(data.tickets || []);
-      setTotalPages(data.totalPages || 1);
-      if (data.stats) {
-        onStatsUpdate(data.stats);
-      }
-    } catch (err: any) {
-      setError(err.message || "دریافت اطلاعات با خطا مواجه شد");
-    } finally {
-      setIsLoading(false);
+  const { data, error: swrError, isLoading, mutate } = useSWR<TicketsApiResponse>(
+    url,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+      dedupingInterval: 5000,
     }
-  }, [currentPage, statusFilter, debouncedSearchQuery, onStatsUpdate]);
+  );
+
+  const tickets = data?.tickets || [];
+  const totalPages = data?.totalPages || 1;
+  const stats = data?.stats;
 
   useEffect(() => {
-    loadTickets();
-  }, [loadTickets]);
-
-  useEffect(() => {
-    if (!selectedTicket) {
-      if (lastUpdatedRef.current) {
-        loadTickets();
-      }
-      lastUpdatedRef.current = undefined;
-      lastMsgCountRef.current = 0;
-      return;
+    if (stats && onStatsUpdate) {
+      onStatsUpdate(stats);
     }
-
-    if (
-      lastUpdatedRef.current &&
-      (selectedTicket.updatedAt !== lastUpdatedRef.current ||
-        (selectedTicket.messages?.length || 0) !== lastMsgCountRef.current)
-    ) {
-      loadTickets();
-    }
-
-    lastUpdatedRef.current = selectedTicket.updatedAt;
-    lastMsgCountRef.current = selectedTicket.messages?.length || 0;
-  }, [selectedTicket, loadTickets]);
+  }, [stats, onStatsUpdate]);
 
   return (
     <>
-      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 mb-6">
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 mb-6 font-danaMed">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
@@ -104,9 +101,7 @@ const TicketList: React.FC<TicketListProps> = ({
               type="text"
               placeholder="جستجو در موضوع، متن تیکت یا نام کاربر..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
@@ -117,7 +112,7 @@ const TicketList: React.FC<TicketListProps> = ({
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-white/5 *:bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm"
+              className="bg-neutral-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="pending">در انتظار پاسخ</option>
@@ -128,19 +123,33 @@ const TicketList: React.FC<TicketListProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start font-danaMed">
         <div className="lg:col-span-5 space-y-4">
-          <h2 className="text-white font-bold text-lg mb-2">لیست تیکت‌ها</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-white font-bold text-lg font-morabbaReg">لیست تیکت‌ها</h2>
+            <button
+              type="button"
+              onClick={() => mutate()}
+              className="p-1.5 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg transition-colors cursor-pointer"
+              title="بروزرسانی"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+          </div>
+
           {isLoading && tickets.length === 0 ? (
-            <div className="p-12 text-center text-white/50 bg-white/5 border border-white/10 rounded-xl">
-              در حال بارگذاری تیکت‌ها...
+            <div className="p-12 text-center text-white/50 bg-white/5 border border-white/10 rounded-xl text-sm">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                در حال بارگذاری تیکت‌ها...
+              </div>
             </div>
-          ) : error ? (
-            <div className="p-12 text-center text-red-400 bg-white/5 border border-white/10 rounded-xl">
-              {error}
+          ) : swrError ? (
+            <div className="p-12 text-center text-red-400 bg-white/5 border border-white/10 rounded-xl text-sm">
+              {swrError.message || "دریافت اطلاعات با خطا مواجه شد"}
             </div>
           ) : tickets.length === 0 ? (
-            <div className="p-12 text-center text-white/40 bg-white/5 border border-white/10 rounded-xl">
+            <div className="p-12 text-center text-white/40 bg-white/5 border border-white/10 rounded-xl text-sm">
               <MessageCircle className="w-12 h-12 mx-auto opacity-20 mb-3" />
               تیکتی یافت نشد.
             </div>
@@ -151,9 +160,7 @@ const TicketList: React.FC<TicketListProps> = ({
                 return (
                   <div
                     key={t._id}
-                    onClick={() => {
-                      setSelectedTicket(t);
-                    }}
+                    onClick={() => setSelectedTicket(t)}
                     className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${
                       isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg"
@@ -175,8 +182,8 @@ const TicketList: React.FC<TicketListProps> = ({
                     </p>
                     <div className="flex justify-between items-center text-[10px] text-white/50 pt-2 border-t border-white/5">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-5 h-5 bg-amber-500/10 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
-                          {t.userId?.username?.charAt(0) || "👤"}
+                        <div className="w-5 h-5 bg-amber-500/10 rounded-full flex items-center justify-center text-[10px] text-amber-400 font-bold">
+                          {t.userId?.username?.charAt(0)?.toUpperCase() || "👤"}
                         </div>
                         <span>
                           {t.userId?.fullName ||
@@ -186,12 +193,12 @@ const TicketList: React.FC<TicketListProps> = ({
                       </div>
                       <div className="flex items-center gap-2">
                         <span
-                          className={`px-2 py-0.5 rounded-full border text-[9px] ${getStatusBadge(t.status)}`}
+                          className={`px-2 py-0.5 rounded-full border text-[9px] font-semibold ${getStatusBadge(t.status)}`}
                         >
                           {getStatusLabel(t.status)}
                         </span>
-                        <span className="ss02">
-                          {new Date(t.createdAt).toLocaleDateString("fa-IR")}
+                        <span className="ss02 font-sans">
+                          {formatDate(t.createdAt)}
                         </span>
                       </div>
                     </div>
@@ -211,6 +218,6 @@ const TicketList: React.FC<TicketListProps> = ({
       </div>
     </>
   );
-};
+});
 
-export default React.memo(TicketList);
+export default TicketList;

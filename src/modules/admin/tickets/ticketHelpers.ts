@@ -3,9 +3,9 @@ import type { IClientTicket as ITicket } from "@/types/ticket";
 export const getStatusBadge = (status: ITicket["status"]) => {
   switch (status) {
     case "pending":
-      return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
+      return "bg-amber-500/20 text-amber-400 border-amber-500/50";
     case "answered":
-      return "bg-green-500/20 text-green-400 border-green-500/50";
+      return "bg-emerald-500/20 text-emerald-400 border-emerald-500/50";
     case "closed":
       return "bg-white/10 text-white/50 border-white/20";
     default:
@@ -60,8 +60,6 @@ export const getCategoryLabel = (category: ITicket["category"]) => {
   }
 };
 
-
-
 export const formatNumber = (num: number) => {
-  return new Intl.NumberFormat("fa-IR").format(num);
+  return new Intl.NumberFormat("fa-IR").format(num || 0);
 };
