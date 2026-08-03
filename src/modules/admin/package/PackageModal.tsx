@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
-import { SubmitHandler } from "react-hook-form";
+
+import React, { useEffect } from "react";
+import type { SubmitHandler } from "react-hook-form";
 import { showAlert } from "@/utils/alert";
 import { formatToPersianWithCommas, parsePersianPrice } from "@/utils/price";
-import { PackageFormData, PackageModalProps } from "@/types/package";
+import type { PackageFormData, PackageModalProps } from "@/types/package";
 
 export default function PackageModal({
   isOpen,
@@ -12,12 +13,22 @@ export default function PackageModal({
   setEditingPackage,
   reset,
   handleSubmit,
-  fetchPackages,
+  onSuccess,
   register,
   errors,
   isSubmitting,
   setValue,
 }: PackageModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        handleCloseModal();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleCloseModal = () => {
@@ -67,8 +78,8 @@ export default function PackageModal({
           body: JSON.stringify(payload),
         });
         if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || "خطا در ویرایش پکیج");
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || err.message || "خطا در ویرایش پکیج");
         }
         showAlert("موفقیت", "پکیج با موفقیت ویرایش شد", "success");
       } else {
@@ -78,28 +89,37 @@ export default function PackageModal({
           body: JSON.stringify(payload),
         });
         if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || "خطا در ایجاد پکیج");
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || err.message || "خطا در ایجاد پکیج");
         }
         showAlert("موفقیت", "پکیج با موفقیت ایجاد شد", "success");
       }
       handleCloseModal();
-      fetchPackages();
-    } catch (err: any) {
-      showAlert("خطا", err.message || "عملیات ناموفق بود", "error");
+      onSuccess();
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : "عملیات ناموفق بود";
+      showAlert("خطا", errMessage, "error");
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg z-10">
+    <div
+      onClick={handleCloseModal}
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed"
+      dir="rtl"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-gradient-to-br from-neutral-900 via-neutral-850 to-neutral-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+      >
+        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/90 backdrop-blur-lg z-10">
           <h2 className="text-2xl text-white font-bold font-morabbaReg">
             {editingPackage ? "ویرایش پکیج" : "ایجاد پکیج جدید"}
           </h2>
           <button
+            type="button"
             onClick={handleCloseModal}
-            className="text-white/60 hover:text-white transition-colors cursor-pointer"
+            className="text-white/60 hover:text-white transition-colors cursor-pointer text-xl"
           >
             ✕
           </button>
@@ -111,14 +131,14 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="مثال: بسته طلایی"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
               {...register("name", {
                 required: "نام پکیج ضروری است",
                 minLength: 2,
               })}
             />
             {errors.name && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.name.message}
               </p>
             )}
@@ -129,7 +149,7 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="مثال: gold-package"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
               {...register("slug", {
                 required: "اسلاگ ضروری است",
                 pattern: {
@@ -139,7 +159,7 @@ export default function PackageModal({
               })}
             />
             {errors.slug && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.slug.message}
               </p>
             )}
@@ -150,14 +170,14 @@ export default function PackageModal({
             <input
               type="text"
               placeholder="توضیح کوتاه و جذاب"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
               {...register("tagline", {
                 required: "تاگلاین ضروری است",
                 minLength: 2,
               })}
             />
             {errors.tagline && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.tagline.message}
               </p>
             )}
@@ -168,26 +188,26 @@ export default function PackageModal({
             <textarea
               rows={3}
               placeholder="توضیحات کامل درباره خدمات این پکیج..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 resize-none text-sm leading-relaxed"
               {...register("description", {
                 required: "توضیحات ضروری است",
                 minLength: 2,
               })}
             />
             {errors.description && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.description.message}
               </p>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-white mb-2 text-xs">آیکون پکیج</label>
               <input
                 type="text"
                 placeholder="مثال: Package"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("icon")}
               />
             </div>
@@ -196,14 +216,14 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="text-amber-400"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("colorClass")}
               />
             </div>
             <div>
               <label className="block text-white mb-2 text-xs">سطح (Tier)</label>
               <select
-                className="w-full bg-white/5 *:bg-gray-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 text-sm cursor-pointer"
+                className="w-full bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
                 {...register("tier")}
               >
                 <option value="basic">پایه (Basic)</option>
@@ -213,19 +233,19 @@ export default function PackageModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-white mb-2 text-xs">قیمت یک ماهه</label>
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("price.monthly", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("price.monthly", formatted);
-                  }
+                  },
                 })}
               />
               {errors.price?.monthly && (
@@ -239,13 +259,13 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("price.quarterly", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("price.quarterly", formatted);
-                  }
+                  },
                 })}
               />
               {errors.price?.quarterly && (
@@ -259,13 +279,13 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("price.biannual", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("price.biannual", formatted);
-                  }
+                  },
                 })}
               />
               {errors.price?.biannual && (
@@ -276,19 +296,19 @@ export default function PackageModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-white mb-2 text-xs">قیمت اصلی یک ماهه</label>
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("originalPrice.monthly", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("originalPrice.monthly", formatted);
-                  }
+                  },
                 })}
               />
               {errors.originalPrice?.monthly && (
@@ -302,13 +322,13 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("originalPrice.quarterly", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("originalPrice.quarterly", formatted);
-                  }
+                  },
                 })}
               />
               {errors.originalPrice?.quarterly && (
@@ -322,13 +342,13 @@ export default function PackageModal({
               <input
                 type="text"
                 placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("originalPrice.biannual", {
                   required: "ضروری است",
-                  onChange: (e: any) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const formatted = formatToPersianWithCommas(e.target.value);
                     setValue("originalPrice.biannual", formatted);
-                  }
+                  },
                 })}
               />
               {errors.originalPrice?.biannual && (
@@ -344,7 +364,7 @@ export default function PackageModal({
             <textarea
               rows={4}
               placeholder="برنامه تمرینی اختصاصی&#10;پشتیبانی ۲۴ ساعته&#10;برنامه غذایی هوشمند"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 resize-none text-sm leading-relaxed"
               {...register("featuresText")}
             />
           </div>
@@ -353,7 +373,7 @@ export default function PackageModal({
             <label className="flex items-center gap-2 text-white text-xs cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 cursor-pointer"
                 {...register("isPopular")}
               />
               بخش محبوب‌ترین بسته (Popular Badge)
@@ -361,25 +381,25 @@ export default function PackageModal({
             <label className="flex items-center gap-2 text-white text-xs cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold cursor-pointer"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 cursor-pointer"
                 {...register("isActive")}
               />
               پکیج فعال باشد (نمایش در سایت)
             </label>
           </div>
 
-          <div className="p-6 border-t border-white/10 flex gap-3 bg-neutral-950/20 -mx-6 -mb-6 sticky bottom-0 backdrop-blur-lg">
+          <div className="p-6 border-t border-white/10 flex gap-3 bg-neutral-900/90 -mx-6 -mb-6 sticky bottom-0 backdrop-blur-lg">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold disabled:opacity-50 text-white px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all font-semibold text-sm cursor-pointer"
+              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold disabled:opacity-50 px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-amber-500/20 transition-all text-sm cursor-pointer"
             >
               {isSubmitting ? "در حال ثبت..." : editingPackage ? "ذخیره تغییرات" : "ایجاد پکیج"}
             </button>
             <button
               type="button"
               onClick={handleCloseModal}
-              className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-lg transition-colors text-sm cursor-pointer"
+              className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-lg transition-colors text-sm cursor-pointer font-bold"
             >
               انصراف
             </button>

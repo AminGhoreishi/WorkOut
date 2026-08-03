@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import MealPlansManagement from "@/modules/admin/meal-plan/MealPlansManagement";
 
-export const metadata = {
-  title: "استار فیت | برنامه‌ریزی غذایی پکیج‌ها - مدیریت",
-  description: "تعریف و مدیریت برنامه‌های غذایی پکیج‌ها در پنل مدیریت استار فیت",
+export const metadata: Metadata = {
+  title: "مدیریت برنامه‌های غذایی | استار فیت",
+  description: "مدیریت، ایجاد و تخصیص برنامه‌های غذایی به پکیج‌های استار فیت",
 };
 
 export default function AdminMealPlansPage() {

@@ -1,13 +1,16 @@
-import { useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+"use client";
+
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { X, Utensils } from "lucide-react";
 import { showAlert } from "@/utils/alert";
 import type { MealPlanFormInputs, PlanMealItem, MealPlanFormProps } from "@/types/meal-plan";
 import MealPlanFormFields from "./MealPlanFormFields";
 
 export default function MealPlanForm({
-  packages,
-  foods,
+  packages = [],
+  foods = [],
   editingPlan,
   onCancel,
   onSubmitSuccess,
@@ -36,7 +39,7 @@ export default function MealPlanForm({
     if (editingPlan) {
       const mapMealItems = (items: PlanMealItem[]) => {
         return items
-          .filter((item) => item.foodId !== null)
+          .filter((item) => item && item.foodId !== null && item.foodId !== undefined)
           .map((item) => ({
             foodId: item.foodId!._id,
             name: item.foodId!.name,
@@ -46,10 +49,10 @@ export default function MealPlanForm({
       };
 
       reset({
-        title: editingPlan.title,
+        title: editingPlan.title || "",
         description: editingPlan.description || "",
         packageId: editingPlan.packageId?._id || "",
-        isActive: editingPlan.isActive,
+        isActive: editingPlan.isActive !== false,
         breakfast: mapMealItems(editingPlan.breakfast || []),
         lunch: mapMealItems(editingPlan.lunch || []),
         dinner: mapMealItems(editingPlan.dinner || []),
@@ -74,13 +77,13 @@ export default function MealPlanForm({
       const sanitizeMeal = (items: { foodId: string; quantity: number | string; unit: string }[]) =>
         items.map((item) => ({
           foodId: item.foodId,
-          quantity: Number(item.quantity),
+          quantity: Number(item.quantity) || 0,
           unit: item.unit,
         }));
 
       const payload = {
-        title: data.title,
-        description: data.description,
+        title: data.title.trim(),
+        description: data.description?.trim(),
         packageId: data.packageId,
         isActive: data.isActive,
         breakfast: sanitizeMeal(data.breakfast || []),
@@ -101,23 +104,35 @@ export default function MealPlanForm({
       });
 
       if (response.ok) {
-        showAlert("موفقیت", editingPlan ? "برنامه غذایی با موفقیت ویرایش شد." : "برنامه غذایی جدید با موفقیت ثبت شد.", "success");
+        showAlert({
+          title: "موفقیت",
+          text: editingPlan ? "برنامه غذایی با موفقیت ویرایش شد." : "برنامه غذایی جدید با موفقیت ثبت شد.",
+          icon: "success",
+        });
         onSubmitSuccess();
       } else {
-        const errorData = await response.json();
-        showAlert("خطا", errorData.error || "خطا در ثبت اطلاعات", "error");
+        const errorData = await response.json().catch(() => ({}));
+        showAlert({
+          title: "خطا",
+          text: errorData.error || errorData.message || "خطا در ثبت اطلاعات",
+          icon: "error",
+        });
       }
     } catch {
-      showAlert("خطا", "خطایی در برقراری ارتباط رخ داد.", "error");
+      showAlert({
+        title: "خطا",
+        text: "خطایی در برقراری ارتباط رخ داد.",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden font-danaMed" dir="rtl">
       <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
 
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+      <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+        <h2 className="text-xl font-bold text-white flex items-center gap-2 font-morabbaReg">
           <Utensils className="w-5 h-5 text-emerald-400" />
           {editingPlan ? "ویرایش برنامه غذایی" : "ثبت برنامه غذایی جدید"}
         </h2>

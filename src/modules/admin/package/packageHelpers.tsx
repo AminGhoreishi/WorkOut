@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Package as PackageIcon,
-  Award,
-  Crown,
-} from "lucide-react";
+import { Package as PackageIcon, Award, Crown } from "lucide-react";
 
 export const getPackageIcon = (tier?: string) => {
   switch (tier) {
@@ -31,19 +27,19 @@ export const getPackageBadge = (tier?: string) => {
     vip: "VIP 👑",
   };
   return (
-    <span className={`px-3 py-1 rounded-full border text-xs ${styles[tier]}`}>
-      {labels[tier]}
+    <span className={`px-3 py-1 rounded-full border text-xs font-semibold ${styles[tier] || "bg-gray-500/20 text-gray-400 border-gray-500/30"}`}>
+      {labels[tier] || tier}
     </span>
   );
 };
 
 export const getStatusBadge = (active: boolean) =>
   active ? (
-    <span className="px-3 py-1 rounded-full border text-xs bg-green-500/20 text-green-400 border-green-500/30">
+    <span className="px-3 py-1 rounded-full border text-xs font-semibold bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
       فعال
     </span>
   ) : (
-    <span className="px-3 py-1 rounded-full border text-xs bg-gray-500/20 text-gray-400 border-gray-500/30">
+    <span className="px-3 py-1 rounded-full border text-xs font-semibold bg-gray-500/20 text-gray-400 border-gray-500/30">
       غیرفعال
     </span>
   );

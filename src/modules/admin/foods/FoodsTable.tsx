@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import useSWR from "swr";
 import {
   Search,
@@ -23,12 +23,12 @@ const fetcher = async (url: string): Promise<FoodsResponse> => {
   const res = await fetch(url);
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to fetch data");
+    throw new Error(errorData.message || "خطا در دریافت لیست غذاها");
   }
   return res.json();
 };
 
-export default forwardRef<FoodsTableRef, FoodsTableProps>(
+const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
   function FoodsTable(_, ref) {
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
@@ -75,22 +75,35 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
         });
 
         if (response.ok) {
-          showAlert("موفقیت", "وضعیت غذا با موفقیت تغییر کرد.", "success");
+          showAlert({
+            title: "موفقیت",
+            text: "وضعیت غذا با موفقیت تغییر کرد.",
+            icon: "success",
+          });
           mutate();
         } else {
-          showAlert("خطا", "خطا در تغییر وضعیت غذا", "error");
+          showAlert({
+            title: "خطا",
+            text: "خطا در تغییر وضعیت غذا",
+            icon: "error",
+          });
         }
       } catch {
-        showAlert("خطا", "خطایی در برقراری ارتباط با سرور رخ داد.", "error");
+        showAlert({
+          title: "خطا",
+          text: "خطایی در برقراری ارتباط با سرور رخ داد.",
+          icon: "error",
+        });
       }
     };
 
     const handleDelete = async (id: string) => {
-      const confirmed = await showConfirm(
-        "آیا مطمئن هستید؟",
-        "این غذا به طور کامل از سیستم حذف خواهد شد!",
-        "بله، حذف شود",
-      );
+      const confirmed = await showConfirm({
+        title: "آیا مطمئن هستید؟",
+        text: "این غذا به طور کامل از سیستم حذف خواهد شد!",
+        confirmButtonText: "بله، حذف شود",
+        icon: "warning",
+      });
 
       if (confirmed) {
         try {
@@ -99,13 +112,25 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
           });
 
           if (response.ok) {
-            showAlert("موفقیت", "غذا با موفقیت حذف شد.", "success");
+            showAlert({
+              title: "موفقیت",
+              text: "غذا با موفقیت حذف شد.",
+              icon: "success",
+            });
             mutate();
           } else {
-            showAlert("خطا", "خطا در حذف غذا", "error");
+            showAlert({
+              title: "خطا",
+              text: "خطا در حذف غذا",
+              icon: "error",
+            });
           }
         } catch {
-          showAlert("خطا", "خطایی در برقراری ارتباط با سرور رخ داد.", "error");
+          showAlert({
+            title: "خطا",
+            text: "خطایی در برقراری ارتباط با سرور رخ داد.",
+            icon: "error",
+          });
         }
       }
     };
@@ -115,19 +140,19 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
     const totalPages = data?.totalPages || 1;
 
     return (
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden font-danaMed font-sans">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2 font-morabbaReg">
               <Activity className="w-5 h-5 text-emerald-400" />
               لیست غذاهای موجود
               {isValidating && (
                 <RefreshCw className="w-3.5 h-3.5 text-emerald-400 animate-spin mr-1" />
               )}
             </h2>
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="text-gray-400 text-xs mt-1 ss02 font-sans">
               تعداد کل غذاها: {totalItems} مورد
             </p>
           </div>
@@ -138,7 +163,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="جستجوی نام غذا..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pr-10 pl-4 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pr-10 pl-4 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder:text-white/40"
             />
             <Search className="w-4 h-4 text-gray-500 absolute top-1/2 right-3.5 -translate-y-1/2" />
           </div>
@@ -151,6 +176,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
               خطا در بارگذاری اطلاعات غذاها
             </p>
             <button
+              type="button"
               onClick={() => mutate()}
               className="mt-4 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 rounded-xl text-xs font-semibold transition-all cursor-pointer inline-flex items-center gap-2"
             >
@@ -164,7 +190,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
             در حال بارگذاری اطلاعات...
           </div>
         ) : foods.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 border border-dashed border-white/10 rounded-xl">
+          <div className="text-center py-12 text-gray-500 border border-dashed border-white/10 rounded-xl text-sm">
             <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-gray-600" />
             هیچ غذایی یافت نشد.
           </div>
@@ -184,7 +210,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
                     <th className="pb-3 pl-2 text-center">عملیات</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-xs md:text-sm text-gray-200">
+                <tbody className="divide-y divide-white/10 text-xs md:text-sm text-gray-200">
                   {foods.map((food) => (
                     <tr
                       key={food._id}
@@ -194,16 +220,16 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
                         {food.name}
                       </td>
                       <td className="py-3.5 text-gray-300">{food.unit}</td>
-                      <td className="py-3.5 text-center font-bold text-white">
+                      <td className="py-3.5 text-center font-bold text-white ss02">
                         {food.calories}
                       </td>
-                      <td className="py-3.5 text-center text-purple-400 font-semibold">
+                      <td className="py-3.5 text-center text-purple-400 font-semibold ss02">
                         {food.protein}g
                       </td>
-                      <td className="py-3.5 text-center text-amber-400 font-semibold">
+                      <td className="py-3.5 text-center text-amber-400 font-semibold ss02">
                         {food.carbs}g
                       </td>
-                      <td className="py-3.5 text-center text-yellow-400 font-semibold">
+                      <td className="py-3.5 text-center text-yellow-400 font-semibold ss02">
                         {food.fat}g
                       </td>
                       <td className="py-3.5 text-center">
@@ -220,6 +246,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
                       <td className="py-3.5 pl-2 text-center">
                         <div className="flex items-center justify-center gap-3">
                           <button
+                            type="button"
                             onClick={() =>
                               handleToggleActive(food._id, food.isActive)
                             }
@@ -237,6 +264,7 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
                             )}
                           </button>
                           <button
+                            type="button"
                             onClick={() => handleDelete(food._id)}
                             className="p-1.5 cursor-pointer rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all"
                             title="حذف"
@@ -264,3 +292,5 @@ export default forwardRef<FoodsTableRef, FoodsTableProps>(
     );
   },
 );
+
+export default FoodsTable;

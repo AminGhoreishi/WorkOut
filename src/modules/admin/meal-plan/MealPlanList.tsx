@@ -1,13 +1,14 @@
 "use client";
 
+import React from "react";
 import { Activity, Search, ShieldAlert } from "lucide-react";
 import type { MealPlanListProps } from "@/types/meal-plan";
 import MealPlanItem from "./MealPlanItem";
 
 export default function MealPlanList({
-  plans,
-  loading,
-  search,
+  plans = [],
+  loading = false,
+  search = "",
   setSearch,
   expandedPlanId,
   setExpandedPlanId,
@@ -16,21 +17,21 @@ export default function MealPlanList({
   onDelete,
 }: MealPlanListProps) {
   const filteredPlans = plans.filter((plan) =>
-    plan.title.toLowerCase().includes(search.toLowerCase()) ||
+    (plan.title || "").toLowerCase().includes(search.toLowerCase()) ||
     (plan.packageId?.name || "").toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-xl relative overflow-hidden font-danaMed" dir="rtl">
       <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2 font-morabbaReg">
             <Activity className="w-5 h-5 text-emerald-400" />
             لیست برنامه‌های غذایی ثبت شده
           </h2>
-          <p className="text-gray-400 text-xs mt-1">
+          <p className="text-gray-400 text-xs mt-1 ss02 font-sans">
             تعداد کل برنامه‌ها: {filteredPlans.length} مورد
           </p>
         </div>
@@ -53,8 +54,8 @@ export default function MealPlanList({
           در حال دریافت لیست برنامه‌های غذایی...
         </div>
       ) : filteredPlans.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 border border-dashed border-white/10 rounded-2xl">
-          <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-gray-600" />
+        <div className="text-center py-12 text-gray-400 border border-dashed border-white/10 rounded-2xl text-sm">
+          <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-gray-500" />
           هیچ برنامه غذایی یافت نشد.
         </div>
       ) : (

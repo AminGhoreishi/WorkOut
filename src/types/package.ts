@@ -1,4 +1,5 @@
-import mongoose, { Document } from "mongoose";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
 import type { FeatureItem } from "./components";
 
 export interface Package {
@@ -85,11 +86,13 @@ export interface PackageStatsProps {
 
 export interface PackageListProps {
   packages: Package[];
-  fetchPackages: () => Promise<void> | void;
+  loading?: boolean;
+  error?: string | null;
   setEditingPackage: (pkg: Package | null) => void;
   setShowCreateModal: (show: boolean) => void;
-  reset: (values: any) => void;
+  reset: (values: PackageFormData) => void;
   formatNumber: (num: number) => string;
+  onDeleteSuccess?: () => void;
 }
 
 export interface PackageModalProps {
@@ -97,9 +100,9 @@ export interface PackageModalProps {
   setShowCreateModal: (show: boolean) => void;
   editingPackage: Package | null;
   setEditingPackage: (pkg: Package | null) => void;
-  reset: (values: any) => void;
+  reset: (values: PackageFormData) => void;
   handleSubmit: any;
-  fetchPackages: () => void;
+  onSuccess: () => void;
   register: any;
   errors: any;
   isSubmitting: boolean;

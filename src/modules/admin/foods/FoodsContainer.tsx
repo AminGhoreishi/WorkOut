@@ -41,21 +41,33 @@ export default function FoodsContainer() {
       });
 
       if (response.ok) {
-        showAlert("موفقیت", "غذای جدید با موفقیت ثبت شد.", "success");
+        showAlert({
+          title: "موفقیت",
+          text: "غذای جدید با موفقیت ثبت شد.",
+          icon: "success",
+        });
         reset();
         mutate((key) => typeof key === "string" && key.startsWith("/api/food"));
         tableRef.current?.refresh();
       } else {
-        const errorData = await response.json();
-        showAlert("خطا", errorData.message || "خطا در ثبت غذا", "error");
+        const errorData = await response.json().catch(() => ({}));
+        showAlert({
+          title: "خطا",
+          text: errorData.message || errorData.error || "خطا در ثبت غذا",
+          icon: "error",
+        });
       }
     } catch {
-      showAlert("خطا", "خطایی در برقراری ارتباط با سرور رخ داد.", "error");
+      showAlert({
+        title: "خطا",
+        text: "خطایی در برقراری ارتباط با سرور رخ داد.",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white font-danaMed p-4 md:p-8" dir="rtl">
+    <div className="min-h-screen bg-black/30 text-white font-danaMed p-4 md:p-8" dir="rtl">
       <div className="container mx-auto pt-8 space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-6">
           <div>

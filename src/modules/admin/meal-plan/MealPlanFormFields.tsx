@@ -1,16 +1,18 @@
+"use client";
+
 import React, { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { Plus, Search, Trash2, Salad, Sparkles } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import { MealPlanFormFieldsProps } from "@/types/meal-plan";
+import type { MealPlanFormFieldsProps, MealPlanFormInputs } from "@/types/meal-plan";
 
 export default function MealPlanFormFields({
   register,
   errors,
   control,
   watch,
-  packages,
-  foods,
+  packages = [],
+  foods = [],
   isSubmitting,
   onCancel,
   onSubmit,
@@ -36,25 +38,29 @@ export default function MealPlanFormFields({
     name: "snack",
   });
 
-  const watchBreakfast = watch("breakfast") || [];
-  const watchLunch = watch("lunch") || [];
-  const watchDinner = watch("dinner") || [];
-  const watchSnack = watch("snack") || [];
+  const watchBreakfast: MealPlanFormInputs["breakfast"] = watch("breakfast") || [];
+  const watchLunch: MealPlanFormInputs["lunch"] = watch("lunch") || [];
+  const watchDinner: MealPlanFormInputs["dinner"] = watch("dinner") || [];
+  const watchSnack: MealPlanFormInputs["snack"] = watch("snack") || [];
 
   const handleAddFoodToTab = () => {
     if (!selectedFoodIdToAdd) return;
     const food = foods.find((f) => f._id === selectedFoodIdToAdd);
     if (!food) return;
 
-    const getActiveTabFields = () => {
+    const getActiveTabWatchItems = () => {
       if (activeMealTab === "breakfast") return watchBreakfast;
       if (activeMealTab === "lunch") return watchLunch;
       if (activeMealTab === "dinner") return watchDinner;
       return watchSnack;
     };
 
-    if (getActiveTabFields().some((item) => item.foodId === food._id)) {
-      showAlert("هشدار", "این غذا قبلاً به این وعده اضافه شده است.", "warning");
+    if (getActiveTabWatchItems().some((item) => item.foodId === food._id)) {
+      showAlert({
+        title: "هشدار",
+        text: "این غذا قبلاً به این وعده اضافه شده است.",
+        icon: "warning",
+      });
       return;
     }
 
@@ -86,7 +92,7 @@ export default function MealPlanFormFields({
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6 font-danaMed" dir="rtl">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex flex-col gap-1.5">
           <label className="text-xs text-gray-400">عنوان برنامه</label>
@@ -105,7 +111,7 @@ export default function MealPlanFormFields({
           <label className="text-xs text-gray-400">مربوط به پکیج</label>
           <select
             {...register("packageId", { required: "انتخاب پکیج الزامی است." })}
-            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
+            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all cursor-pointer"
           >
             <option value="">انتخاب پکیج...</option>
             {packages.map((pkg) => (
@@ -125,7 +131,7 @@ export default function MealPlanFormFields({
               type="checkbox"
               id="isActive"
               {...register("isActive")}
-              className="w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500/20 focus:ring-2 focus:ring-offset-0"
+              className="w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 cursor-pointer"
             />
             <label htmlFor="isActive" className="text-xs text-gray-300 cursor-pointer">
               برنامه غذایی فعال باشد (نمایش به کاربر دارای اشتراک)
@@ -139,14 +145,14 @@ export default function MealPlanFormFields({
         <textarea
           rows={2}
           {...register("description")}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500 resize-none"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500 resize-none leading-relaxed"
           placeholder="توصیه‌هایی مانند زمان مصرف آب، میزان نمک یا روغن و..."
         />
       </div>
 
-      <div className="border-t border-white/5 pt-6 space-y-6">
+      <div className="border-t border-white/10 pt-6 space-y-6">
         <div>
-          <h3 className="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2 font-morabbaReg">
             <Salad className="w-4.5 h-4.5 text-emerald-400" />
             تنظیم وعده‌های غذایی روزانه
           </h3>
@@ -173,7 +179,7 @@ export default function MealPlanFormFields({
                     setActiveMealTab(tab);
                     setSelectedFoodIdToAdd("");
                   }}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-t-xl transition-all border-b-2 ${
+                  className={`px-5 py-2.5 text-sm font-bold rounded-t-xl transition-all border-b-2 cursor-pointer ${
                     activeMealTab === tab
                       ? "border-emerald-500 text-emerald-400 bg-white/5"
                       : "border-transparent text-gray-400 hover:text-white"
@@ -185,7 +191,7 @@ export default function MealPlanFormFields({
             })}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-white/2 border border-white/5 rounded-2xl p-5">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-white/5 border border-white/10 rounded-2xl p-5">
             <div className="lg:col-span-1 space-y-4">
               <h4 className="text-xs font-bold text-gray-400">افزودن غذا به این وعده</h4>
 
@@ -204,7 +210,7 @@ export default function MealPlanFormFields({
                 <select
                   value={selectedFoodIdToAdd}
                   onChange={(e) => setSelectedFoodIdToAdd(e.target.value)}
-                  className="w-full bg-neutral-900 border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-all"
+                  className="w-full bg-neutral-900 border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-all cursor-pointer"
                 >
                   <option value="">انتخاب غذا...</option>
                   {filteredFoodsForSelect.map((food) => (
@@ -218,7 +224,7 @@ export default function MealPlanFormFields({
                   type="button"
                   onClick={handleAddFoodToTab}
                   disabled={!selectedFoodIdToAdd}
-                  className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white text-xs font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-neutral-950 text-xs font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   افزودن به این وعده
@@ -235,36 +241,43 @@ export default function MealPlanFormFields({
                 </div>
               ) : (
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                  {getActiveTabFields().map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between bg-white/5 border border-white/5 px-3 py-2 rounded-xl text-xs gap-4"
-                    >
-                      <span className="font-semibold text-white flex-1">{item.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-400">مقدار:</span>
-                        <input
-                          type="number"
-                          min="1"
-                          {...register(`${activeMealTab}.${index}.quantity` as const, { valueAsNumber: true })}
-                          className="w-16 bg-black/40 border border-white/10 rounded-lg px-2 py-1 text-center text-white font-sans focus:outline-none focus:border-emerald-500"
-                        />
-                        <span className="text-gray-400 min-w-8">{item.unit}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (activeMealTab === "breakfast") removeBreakfast(index);
-                          else if (activeMealTab === "lunch") removeLunch(index);
-                          else if (activeMealTab === "dinner") removeDinner(index);
-                          else removeSnack(index);
-                        }}
-                        className="p-1 hover:bg-white/5 rounded-lg text-gray-400 hover:text-red-400 transition-colors"
+                  {getActiveTabFields().map((item, index) => {
+                    const typedItem = item as { id: string; name?: string; unit?: string; foodId?: string };
+                    const matchedFood = foods.find((f) => f._id === typedItem.foodId);
+                    const displayName = typedItem.name || matchedFood?.name || "غذا";
+                    const displayUnit = typedItem.unit || matchedFood?.unit || "گرم";
+
+                    return (
+                      <div
+                        key={typedItem.id}
+                        className="flex items-center justify-between bg-white/5 border border-white/10 px-3 py-2 rounded-xl text-xs gap-4"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
+                        <span className="font-semibold text-white flex-1">{displayName}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400">مقدار:</span>
+                          <input
+                            type="number"
+                            min="1"
+                            {...register(`${activeMealTab}.${index}.quantity` as const, { valueAsNumber: true })}
+                            className="w-16 bg-neutral-950 border border-white/10 rounded-lg px-2 py-1 text-center text-white font-sans focus:outline-none focus:border-emerald-500"
+                          />
+                          <span className="text-gray-400 min-w-8">{displayUnit}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (activeMealTab === "breakfast") removeBreakfast(index);
+                            else if (activeMealTab === "lunch") removeLunch(index);
+                            else if (activeMealTab === "dinner") removeDinner(index);
+                            else removeSnack(index);
+                          }}
+                          className="p-1 hover:bg-white/5 rounded-lg text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -272,18 +285,18 @@ export default function MealPlanFormFields({
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 font-danaDemiBold pt-4 border-t border-white/5">
+      <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-xl border border-white/10 transition-all text-xs font-semibold"
+          className="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-xl border border-white/10 transition-all text-xs font-semibold cursor-pointer"
         >
           انصراف
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-white px-8 py-2.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold"
+          className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-neutral-950 font-bold px-8 py-2.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer text-xs"
         >
           <Sparkles className="w-4 h-4" />
           {isSubmitting ? "در حال ذخیره..." : "ذخیره و ثبت برنامه"}

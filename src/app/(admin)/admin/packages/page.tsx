@@ -1,5 +1,11 @@
-import PackageAdmin from "@/modules/admin/package/PackagesManagement";
+import type { Metadata } from "next";
+import PackagesManagement from "@/modules/admin/package/PackagesManagement";
 
-export default function page() {
-  return <PackageAdmin />;
+export const metadata: Metadata = {
+  title: "مدیریت پکیج‌ها | استار فیت",
+  description: "مدیریت، ایجاد و بهینه‌سازی پکیج‌های اشتراک سیستم استار فیت",
+};
+
+export default function AdminPackagesPage() {
+  return <PackagesManagement />;
 }
