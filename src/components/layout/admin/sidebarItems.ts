@@ -16,6 +16,7 @@ import {
   Salad,
   Utensils,
   Trophy,
+  Sparkles,
 } from "lucide-react";
 import React from "react";
 import { SidebarCounts, MenuItem, MenuSection } from "@/types/sidebar";
@@ -34,6 +35,13 @@ export function getAdminMenuItems(
           icon: LayoutDashboard,
           badge: null,
           href: "/admin",
+        },
+        {
+          id: "ai",
+          label: "هوش مصنوعی",
+          icon: Sparkles,
+          badge: "جدید",
+          href: "/admin/ai",
         },
         {
           id: "users",

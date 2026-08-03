@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, Sparkles } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import type { AdminHeaderProps } from "@/types/admin";
 
@@ -30,7 +30,12 @@ export default function AdminHeader({
               <p className="text-neutral-400 text-xs">خوش آمدید، {username}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="hidden sm:inline">هوش مصنوعی</span>
+            </button>
+
             <Link
               href="/admin/tickets"
               className="relative text-neutral-300 hover:text-amber-400 transition-colors p-1.5 flex items-center justify-center"
