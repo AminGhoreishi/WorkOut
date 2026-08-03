@@ -1,4 +1,5 @@
-import mongoose, { Document } from "mongoose";
+import type mongoose from "mongoose";
+import type { Document } from "mongoose";
 
 export interface Comment {
   _id: string;

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Pagination from "@/components/AdminPagination";
@@ -27,6 +28,17 @@ const fetcher = async (url: string): Promise<AdminCommentsResponse> => {
   return res.json();
 };
 
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return "—";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("fa-IR");
+  } catch {
+    return dateStr;
+  }
+};
+
 export default function CommentList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -53,7 +65,7 @@ export default function CommentList() {
     url += `&search=${encodeURIComponent(debouncedSearchQuery.trim())}`;
   }
 
-  const { data, error: swrError, isLoading, mutate } = useSWR(url, fetcher, {
+  const { data, error: swrError, isLoading, mutate } = useSWR<AdminCommentsResponse>(url, fetcher, {
     keepPreviousData: true,
     revalidateOnFocus: false,
     dedupingInterval: 5000,
@@ -118,7 +130,7 @@ export default function CommentList() {
               ? "دیدگاه با موفقیت تایید شد."
               : "تایید دیدگاه با موفقیت لغو شد.",
             icon: "success",
-            confirmButtonColor: "#7c3aed",
+            confirmButtonColor: "#f59e0b",
           });
 
           return data;
@@ -129,12 +141,13 @@ export default function CommentList() {
           revalidate: true,
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : "بروزرسانی با خطا مواجه شد.";
       showAlert({
         title: "خطا",
-        text: err.message || "بروزرسانی با خطا مواجه شد.",
+        text: errMessage,
         icon: "error",
-        confirmButtonColor: "#7c3aed",
+        confirmButtonColor: "#f59e0b",
       });
     }
   };
@@ -187,7 +200,7 @@ export default function CommentList() {
             title: "حذف شد",
             text: "دیدگاه با موفقیت حذف شد.",
             icon: "success",
-            confirmButtonColor: "#7c3aed",
+            confirmButtonColor: "#f59e0b",
           });
 
           return data;
@@ -198,28 +211,29 @@ export default function CommentList() {
           revalidate: true,
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : "حذف با خطا مواجه شد.";
       showAlert({
         title: "خطا",
-        text: err.message || "حذف با خطا مواجه شد.",
+        text: errMessage,
         icon: "error",
-        confirmButtonColor: "#7c3aed",
+        confirmButtonColor: "#f59e0b",
       });
     }
   };
 
   const getStatusBadge = (isApproved: boolean) => {
     if (isApproved) {
-      return "bg-green-500/20 text-green-400 border-green-500/50";
+      return "bg-emerald-500/20 text-emerald-400 border-emerald-500/50";
     }
-    return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
+    return "bg-amber-500/20 text-amber-400 border-amber-500/50";
   };
 
   return (
     <>
       <CommentStats stats={stats} formatNumber={formatNumber} />
 
-      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 mb-6">
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 mb-6 font-danaMed">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
@@ -228,14 +242,17 @@ export default function CommentList() {
               placeholder="جستجو بر اساس نام نویسنده یا متن دیدگاه..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-12 pl-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
           <div className="flex gap-3">
             <select
               value={filterApproved}
-              onChange={(e) => setFilterApproved(e.target.value)}
-              className="bg-white/5 *:bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400"
+              onChange={(e) => {
+                setFilterApproved(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="bg-neutral-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="true">تایید شده</option>
@@ -245,9 +262,9 @@ export default function CommentList() {
         </div>
       </div>
 
-      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden">
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden shadow-2xl font-danaMed">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-right border-collapse">
             <thead className="bg-white/5 border-b border-white/10">
               <tr>
                 <th className="p-4 text-right text-white/80 text-sm font-medium">
@@ -273,13 +290,16 @@ export default function CommentList() {
             <tbody className="divide-y divide-white/10">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center text-white/50">
-                    در حال بارگذاری دیدگاه‌ها...
+                  <td colSpan={6} className="p-12 text-center text-white/50 text-sm">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                      در حال بارگذاری دیدگاه‌ها...
+                    </div>
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center text-red-400">
+                  <td colSpan={6} className="p-12 text-center text-red-400 text-sm">
                     {error}
                   </td>
                 </tr>
@@ -301,26 +321,26 @@ export default function CommentList() {
                 comments.map((comment) => (
                   <tr
                     key={comment._id}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-white/5 transition-colors text-white"
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center text-white text-lg">
+                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-400 font-bold text-lg">
                           {comment.avatar ||
                             (comment.name ? comment.name.charAt(0) : "👤")}
                         </div>
                         <div>
-                          <div className="text-white font-medium">
+                          <div className="text-white font-medium text-sm">
                             {comment.name || "کاربر ناشناس"}
                           </div>
-                          <div className="text-white/60 text-xs">
+                          <div className="text-white/60 text-xs mt-0.5">
                             {comment.userId ? comment.userId.email : "مهمان"}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4 max-w-xs md:max-w-md">
-                      <div className="text-white text-sm whitespace-pre-line line-clamp-3 leading-relaxed">
+                      <div className="text-white text-xs md:text-sm whitespace-pre-line line-clamp-3 leading-relaxed">
                         {comment.text}
                       </div>
                     </td>
@@ -332,7 +352,7 @@ export default function CommentList() {
                           rel="noopener noreferrer"
                           className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors"
                         >
-                          <span className="line-clamp-1">
+                          <span className="line-clamp-1 text-xs">
                             {comment.blogId.title}
                           </span>
                           <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
@@ -343,7 +363,7 @@ export default function CommentList() {
                     </td>
                     <td className="p-4">
                       <span
-                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs border ${getStatusBadge(comment.isApproved)}`}
+                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-semibold border ${getStatusBadge(comment.isApproved)}`}
                       >
                         {comment.isApproved ? (
                           <>
@@ -358,19 +378,20 @@ export default function CommentList() {
                         )}
                       </span>
                     </td>
-                    <td className="p-4 text-white/70 text-sm ss02">
-                      {new Date(comment.createdAt).toLocaleDateString("fa-IR")}
+                    <td className="p-4 text-white/70 text-sm ss02 font-sans">
+                      {formatDate(comment.createdAt)}
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
                           onClick={() =>
                             handleToggleApproval(comment._id, comment.isApproved)
                           }
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
                             comment.isApproved
-                              ? "bg-white/5 hover:bg-yellow-500/20 text-yellow-400"
-                              : "bg-white/5 hover:bg-green-500/20 text-green-400"
+                              ? "bg-white/5 hover:bg-amber-500/20 text-amber-400"
+                              : "bg-white/5 hover:bg-emerald-500/20 text-emerald-400"
                           }`}
                           title={
                             comment.isApproved ? "لغو تایید" : "تایید کامنت"
@@ -383,15 +404,17 @@ export default function CommentList() {
                           )}
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleView(comment)}
-                          className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors text-white/70 hover:text-white"
+                          className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors text-white/70 hover:text-white cursor-pointer"
                           title="مشاهده دیدگاه"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(comment._id)}
-                          className="w-8 h-8 bg-white/5 hover:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors text-red-400"
+                          className="w-8 h-8 bg-white/5 hover:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors text-red-400 cursor-pointer"
                           title="حذف دیدگاه"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -405,9 +428,9 @@ export default function CommentList() {
           </table>
         </div>
 
-        <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-white/60 text-sm">
-            نمایش {(currentPage - 1) * 10 + 1} تا{" "}
+        <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-danaMed">
+          <div className="text-white/60 text-sm ss02 font-sans">
+            نمایش {Math.max(0, (currentPage - 1) * 10 + 1)} تا{" "}
             {Math.min(currentPage * 10, totalComments)} از{" "}
             {formatNumber(totalComments)} دیدگاه
           </div>

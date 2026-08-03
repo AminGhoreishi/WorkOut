@@ -308,8 +308,39 @@ export const modifiedFiles = [
     id: 62,
     filePath: "src/modules/admin/users/UsersTable.tsx",
     description: "Refactored UsersTable component with SWR data fetching, search/pagination caching, automatic revalidation, and zero code comments."
+  },
+  {
+    id: 63,
+    filePath: "src/types/comment.ts",
+    description: "Cleaned comment type definitions with zero code comments."
+  },
+  {
+    id: 64,
+    filePath: "src/app/(admin)/admin/comments/page.tsx",
+    description: "Refactored admin comments page server component with StarFit metadata and zero code comments."
+  },
+  {
+    id: 65,
+    filePath: "src/modules/admin/comments/AdminComments.tsx",
+    description: "Refactored AdminComments container component with clean layout and zero code comments."
+  },
+  {
+    id: 66,
+    filePath: "src/modules/admin/comments/CommentStats.tsx",
+    description: "Refactored CommentStats with safe number formatting and zero code comments."
+  },
+  {
+    id: 67,
+    filePath: "src/modules/admin/comments/ViewCommentModal.tsx",
+    description: "Refactored ViewCommentModal with Escape key listener, backdrop dismiss, author details, and zero code comments."
+  },
+  {
+    id: 68,
+    filePath: "src/modules/admin/comments/CommentList.tsx",
+    description: "Refactored CommentList component with optimistic SWR data mutation, safe error handling, debounced search, and zero code comments."
   }
 ];
+
 
 
 
