@@ -179,11 +179,7 @@ export default function MealPlanFormFields({
                     setActiveMealTab(tab);
                     setSelectedFoodIdToAdd("");
                   }}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-t-xl transition-all border-b-2 cursor-pointer ${
-                    activeMealTab === tab
-                      ? "border-emerald-500 text-emerald-400 bg-white/5"
-                      : "border-transparent text-gray-400 hover:text-white"
-                  }`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-t-xl transition-all border-b-2 cursor-pointer ${ activeMealTab === tab ? "border-emerald-500 text-emerald-400 bg-white/5" : "border-transparent text-gray-400 hover:text-white" }`}
                 >
                   {tabLabels[tab]} ({tabLength})
                 </button>
@@ -259,7 +255,7 @@ export default function MealPlanFormFields({
                             type="number"
                             min="1"
                             {...register(`${activeMealTab}.${index}.quantity` as const, { valueAsNumber: true })}
-                            className="w-16 bg-neutral-950 border border-white/10 rounded-lg px-2 py-1 text-center text-white font-sans focus:outline-none focus:border-emerald-500"
+                            className="w-16 bg-neutral-950 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-emerald-500"
                           />
                           <span className="text-gray-400 min-w-8">{displayUnit}</span>
                         </div>

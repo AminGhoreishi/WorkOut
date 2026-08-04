@@ -66,7 +66,7 @@ export default function ActiveSubscription({
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-400">پرداخت بعدی</span>
-              <span className="text-white font-sans">
+              <span className="text-white">
                 {subscription.nextPayment} تومان
               </span>
             </div>

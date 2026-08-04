@@ -281,7 +281,7 @@ export default function FitnessProfileManagement() {
                   <span className="text-sm text-neutral-300">شاخص BMI:</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold font-sans">
+                  <span className="text-lg font-bold">
                     {bmi > 0 ? bmi : "—"}
                   </span>
                   {bmi > 0 && (
@@ -299,7 +299,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     قد (CM)
                   </span>
-                  <span className="text-base font-bold font-sans mt-1 block">
+                  <span className="text-base font-bold mt-1 block">
                     {errors.heightCm ? "—" : watchedHeight}
                   </span>
                 </div>
@@ -307,7 +307,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     وزن (KG)
                   </span>
-                  <span className="text-base font-bold font-sans mt-1 block">
+                  <span className="text-base font-bold mt-1 block">
                     {errors.weightKg ? "—" : watchedWeight}
                   </span>
                 </div>
@@ -315,7 +315,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     سن (سال)
                   </span>
-                  <span className="text-base font-bold font-sans mt-1 block">
+                  <span className="text-base font-bold mt-1 block">
                     {errors.ageYears ? "—" : watchedAge}
                   </span>
                 </div>
@@ -357,11 +357,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("physical")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
-                activeTab === "physical"
-                  ? "text-amber-400 font-bold"
-                  : "text-neutral-400 hover:text-white"
-              }`}
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "physical" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               مشخصات بدنی
               {activeTab === "physical" && (
@@ -371,11 +367,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("training")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
-                activeTab === "training"
-                  ? "text-amber-400 font-bold"
-                  : "text-neutral-400 hover:text-white"
-              }`}
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "training" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               برنامه و سابقه تمرینی
               {activeTab === "training" && (
@@ -385,11 +377,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("photos")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${
-                activeTab === "photos"
-                  ? "text-amber-400 font-bold"
-                  : "text-neutral-400 hover:text-white"
-              }`}
+              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "photos" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               تصاویر بدنی و یادداشت‌ها
               {activeTab === "photos" && (

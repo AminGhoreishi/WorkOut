@@ -198,14 +198,7 @@ export default function WorkoutView({
                     onClick={() => {
                       setSelectedDayId(day._id);
                     }}
-                    className={`
-                      flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center cursor-pointer
-                      ${
-                        isActive
-                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-lg"
-                          : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-400 hover:text-white"
-                      }
-                    `}
+                    className={`flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center cursor-pointer ${ isActive ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-lg" : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-400 hover:text-white" }`}
                   >
                     <span className="text-sm font-bold">{day.dayName}</span>
                     <span className="text-sm sm:text-[10px] mt-1 opacity-70 truncate max-w-full">
@@ -237,7 +230,7 @@ export default function WorkoutView({
                       <div className="text-sm sm:text-[10px] text-neutral-400">
                         تعداد حرکات
                       </div>
-                      <div className="text-sm font-bold text-white ss02 font-sans">
+                      <div className="text-sm font-bold text-white ss02">
                         {totalExercises} حرکت
                       </div>
                     </div>

@@ -245,7 +245,7 @@ const TicketDetails = memo(function TicketDetails({
             >
               دسته‌بندی: {getCategoryLabel(selectedTicket.category)}
             </span>
-            <span className="text-[10px] text-white/40 ss02 font-sans">
+            <span className="text-[10px] text-white/40 ss02">
               ثبت: {formatDate(selectedTicket.createdAt)}
             </span>
           </div>
@@ -347,26 +347,18 @@ const TicketDetails = memo(function TicketDetails({
                 className={`flex gap-3 max-w-[85%] ${isSupport ? "" : "mr-auto flex-row-reverse"}`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border ${
-                    isSupport
-                      ? "bg-purple-500/20 border-purple-500/30 text-purple-400"
-                      : "bg-amber-500/10 border-amber-500/30 text-amber-400"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border ${ isSupport ? "bg-purple-500/20 border-purple-500/30 text-purple-400" : "bg-amber-500/10 border-amber-500/30 text-amber-400" }`}
                 >
                   {isSupport
                     ? "🛡️"
                     : selectedTicket.userId?.username?.charAt(0)?.toUpperCase() || "👤"}
                 </div>
                 <div
-                  className={`rounded-2xl p-4 text-white text-sm border ${
-                    isSupport
-                      ? "bg-purple-500/10 border-purple-500/20 rounded-tr-none"
-                      : "bg-white/5 border-white/10 rounded-tl-none"
-                  }`}
+                  className={`rounded-2xl p-4 text-white text-sm border ${ isSupport ? "bg-purple-500/10 border-purple-500/20 rounded-tr-none" : "bg-white/5 border-white/10 rounded-tl-none" }`}
                 >
                   <div className="flex justify-between items-center gap-6 text-white/40 text-[10px] mb-1.5">
                     <span>{msg.senderName}</span>
-                    <span className="ss02 font-sans">
+                    <span className="ss02">
                       {formatTime(msg.createdAt)}
                     </span>
                   </div>

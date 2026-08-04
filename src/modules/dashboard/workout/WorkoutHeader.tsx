@@ -33,7 +33,7 @@ export default function WorkoutHeader({
             </div>
             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
               <span className="text-neutral-400">تعداد روزهای تمرین:</span>
-              <span className="font-semibold text-amber-400 ss02 font-sans">
+              <span className="font-semibold text-amber-400 ss02">
                 {workoutDays.length} روز در هفته
               </span>
             </div>

@@ -30,7 +30,7 @@ export default function MealPlanList({
             <Activity className="w-5 h-5 text-emerald-400" />
             لیست برنامه‌های غذایی ثبت شده
           </h2>
-          <p className="text-gray-400 text-xs mt-1 ss02 font-sans">
+          <p className="text-gray-400 text-xs mt-1 ss02">
             تعداد کل برنامه‌ها: {filteredPlans.length} مورد
           </p>
         </div>

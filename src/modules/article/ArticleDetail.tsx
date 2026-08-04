@@ -88,9 +88,7 @@ export default function ArticleDetail({
             setViewCount(data.views);
           }
         }
-      } catch {
-        
-      }
+      } catch {}
     };
     recordView();
   }, [article?._id]);
@@ -116,15 +114,6 @@ export default function ArticleDetail({
       if (res.ok) {
         const data = await res.json();
         setBookmarked(data.wished);
-        showAlert({
-          title: data.wished ? "افزوده شد" : "حذف شد",
-          text: data.wished
-            ? "این مقاله به لیست علاقه‌مندی‌های شما اضافه شد."
-            : "این مقاله از لیست علاقه‌مندی‌های شما حذف شد.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
       }
     } catch {
       showAlert({
@@ -227,9 +216,7 @@ export default function ArticleDetail({
   }
 
   const authorName =
-    article.authorId?.fullName ||
-    article.authorId?.username ||
-    "استارفیت";
+    article.authorId?.fullName || article.authorId?.username || "استارفیت";
   const authorRole =
     article.authorId?.role === "admin"
       ? "مدیر سیستم"
@@ -239,7 +226,10 @@ export default function ArticleDetail({
   const authorAvatar = authorName.charAt(0);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white font-danaMed" dir="rtl">
+    <div
+      className="min-h-screen bg-neutral-950 text-white font-danaMed ss02"
+      dir="rtl"
+    >
       <div className="max-w-5xl mx-auto px-4 py-10">
         <div className="flex items-center gap-2 text-xs sm:text-sm text-neutral-400 mb-8">
           <Link href="/" className="hover:text-amber-400 transition-colors">
@@ -314,7 +304,8 @@ export default function ArticleDetail({
                   {getReadTime(article.content)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Eye size={13} className="text-amber-400" /> {viewCount} بازدید
+                  <Eye size={13} className="text-amber-400" /> {viewCount}{" "}
+                  بازدید
                 </span>
               </div>
             </div>
@@ -461,7 +452,7 @@ export default function ArticleDetail({
                 )}
               </div>
 
-              {hasMoreComments && (
+              {   hasMoreComments && (
                 <div className="flex justify-center mt-6">
                   <button
                     onClick={() => setCommentPage((prev) => prev + 1)}

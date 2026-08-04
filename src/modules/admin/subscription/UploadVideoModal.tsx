@@ -190,7 +190,7 @@ export default function UploadVideoModal({
                   placeholder="۶۰"
                   value={newVideoDuration}
                   onChange={(e) => setNewVideoDuration(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
                 />
               </div>
             </div>

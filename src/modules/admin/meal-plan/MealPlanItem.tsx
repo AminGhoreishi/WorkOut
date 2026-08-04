@@ -41,7 +41,7 @@ export default function MealPlanItem({
                 پکیج: {plan.packageId?.name || "بدون پکیج"}
               </span>
               <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span className="text-[10px] text-gray-400 ss02 font-sans">
+              <span className="text-[10px] text-gray-400 ss02">
                 {formatDate(plan.createdAt)}
               </span>
             </div>
@@ -52,11 +52,7 @@ export default function MealPlanItem({
           <button
             type="button"
             onClick={() => onToggleActive(plan)}
-            className={`p-2 rounded-xl border transition-all cursor-pointer ${
-              plan.isActive
-                ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
-                : "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/20"
-            }`}
+            className={`p-2 rounded-xl border transition-all cursor-pointer ${ plan.isActive ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20" : "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/20" }`}
             title={plan.isActive ? "غیرفعال کردن" : "فعال کردن"}
           >
             {plan.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -105,7 +101,7 @@ export default function MealPlanItem({
               <div key={index} className="bg-white/5 border border-white/10 p-4 rounded-xl space-y-2.5">
                 <h4 className="text-xs font-bold text-emerald-400 flex items-center justify-between border-b border-white/10 pb-2">
                   <span>{meal.name}</span>
-                  <span className="text-[10px] text-gray-400 ss02 font-sans">({meal.count} غذا)</span>
+                  <span className="text-[10px] text-gray-400 ss02">({meal.count} غذا)</span>
                 </h4>
                 {meal.count === 0 ? (
                   <p className="text-[10px] text-gray-500 py-2">غذایی ثبت نشده است.</p>
@@ -116,7 +112,7 @@ export default function MealPlanItem({
                       .map((item, foodIndex) => (
                         <li key={foodIndex} className="text-xs text-gray-300 flex justify-between gap-2">
                           <span className="truncate">{item.foodId?.name || "غذا"}</span>
-                          <span className="text-emerald-400 font-semibold ss02 font-sans text-[11px] shrink-0">
+                          <span className="text-emerald-400 font-semibold ss02 text-[11px] shrink-0">
                             {item.quantity} {item.unit || item.foodId?.unit || "گرم"}
                           </span>
                         </li>

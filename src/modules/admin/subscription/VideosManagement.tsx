@@ -237,7 +237,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
 
             {totalPages > 1 && (
               <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between rounded-xl">
-                <span className="text-white/60 text-xs ss02 font-sans">
+                <span className="text-white/60 text-xs ss02">
                   نمایش صفحه {formatNumber(currentPage)} از{" "}
                   {formatNumber(totalPages)}
                 </span>

@@ -14,7 +14,7 @@ const CommentStats = memo(function CommentStats({ stats, formatNumber }: Comment
           <MessageSquare className="w-6 h-6 text-blue-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02 font-sans">
+          <div className="text-2xl font-bold text-white ss02">
             {formatNumber(safeStats.totalCount || 0)}
           </div>
           <div className="text-white/60 text-sm">کل دیدگاه‌ها</div>
@@ -26,7 +26,7 @@ const CommentStats = memo(function CommentStats({ stats, formatNumber }: Comment
           <CheckCircle className="w-6 h-6 text-emerald-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02 font-sans">
+          <div className="text-2xl font-bold text-white ss02">
             {formatNumber(safeStats.approvedCount || 0)}
           </div>
           <div className="text-white/60 text-sm">تایید شده</div>
@@ -38,7 +38,7 @@ const CommentStats = memo(function CommentStats({ stats, formatNumber }: Comment
           <Clock className="w-6 h-6 text-amber-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02 font-sans">
+          <div className="text-2xl font-bold text-white ss02">
             {formatNumber(safeStats.pendingCount || 0)}
           </div>
           <div className="text-white/60 text-sm">در انتظار تایید</div>

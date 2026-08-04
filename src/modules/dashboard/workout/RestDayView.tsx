@@ -21,7 +21,7 @@ export default function RestDayView() {
           <span className="text-sm sm:text-[10px] text-neutral-400 block">
             مدت استراحت
           </span>
-          <span className="text-sm font-bold text-white mt-1 block font-sans ss02">
+          <span className="text-sm font-bold text-white mt-1 block ss02">
             ۲۴ ساعت
           </span>
         </div>

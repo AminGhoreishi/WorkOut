@@ -103,11 +103,7 @@ export default function UserTicketChat({
                 <div
                   key={t._id}
                   onClick={() => setSelectedTicket(t)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${
-                    isSelected
-                      ? "bg-amber-500/15 border-amber-500 text-white shadow-lg shadow-amber-500/10"
-                      : "bg-white/[0.03] border-white/10 text-white hover:bg-white/5"
-                  }`}
+                  className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${ isSelected ? "bg-amber-500/15 border-amber-500 text-white shadow-lg shadow-amber-500/10" : "bg-white/[0.03] border-white/10 text-white hover:bg-white/5" }`}
                 >
                   <div className="flex justify-between items-start">
                     <span className="font-bold text-sm line-clamp-1">
@@ -128,7 +124,7 @@ export default function UserTicketChat({
                     >
                       {getStatusLabel(t.status)}
                     </span>
-                    <span className="ss02 font-sans">
+                    <span className="ss02">
                       {formatDate(t.createdAt)}
                     </span>
                   </div>
@@ -169,7 +165,7 @@ export default function UserTicketChat({
                   >
                     {getCategoryLabel(selectedTicket.category)}
                   </span>
-                  <span className="text-[9px] text-neutral-400 ss02 font-sans">
+                  <span className="text-[9px] text-neutral-400 ss02">
                     ثبت: {formatDate(selectedTicket.createdAt)}
                   </span>
                 </div>
@@ -230,11 +226,7 @@ export default function UserTicketChat({
                       className={`flex gap-3 max-w-[85%] ${isSupport ? "justify-start" : "mr-auto flex-row-reverse"}`}
                     >
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 border ${
-                          isSupport
-                            ? "bg-amber-500/20 border-amber-500/30 text-amber-400"
-                            : "bg-amber-500/10 border-amber-500/20 text-amber-300"
-                        }`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 border ${ isSupport ? "bg-amber-500/20 border-amber-500/30 text-amber-400" : "bg-amber-500/10 border-amber-500/20 text-amber-300" }`}
                       >
                         {isSupport ? (
                           <Shield className="w-4 h-4 text-amber-400" />
@@ -243,15 +235,11 @@ export default function UserTicketChat({
                         )}
                       </div>
                       <div
-                        className={`rounded-2xl p-3 text-white text-xs border ${
-                          isSupport
-                            ? "bg-white/5 border-white/10 rounded-tr-none"
-                            : "bg-amber-500/10 border-amber-500/20 rounded-tr-none"
-                        }`}
+                        className={`rounded-2xl p-3 text-white text-xs border ${ isSupport ? "bg-white/5 border-white/10 rounded-tr-none" : "bg-amber-500/10 border-amber-500/20 rounded-tr-none" }`}
                       >
                         <div className="flex justify-between items-center gap-6 text-neutral-400 text-[9px] mb-1">
                           <span>{isSupport ? "پشتیبان فیت‌کوچ" : "من"}</span>
-                          <span className="ss02 font-sans">
+                          <span className="ss02">
                             {formatTime(msg.createdAt)}
                           </span>
                         </div>

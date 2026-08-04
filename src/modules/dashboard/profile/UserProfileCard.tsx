@@ -30,7 +30,7 @@ export default function UserProfileCard({ profile }: UserProfileCardProps) {
       <div className="w-full text-right space-y-3 text-xs text-neutral-400">
         <div className="flex justify-between items-center">
           <span>نام کاربری:</span>
-          <span className="text-white font-medium font-sans">
+          <span className="text-white font-medium">
             @{profile?.username}
           </span>
         </div>

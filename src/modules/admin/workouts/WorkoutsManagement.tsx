@@ -290,15 +290,11 @@ export default function WorkoutsManagement() {
                     <div
                       key={pkg._id}
                       onClick={() => handleSelectPackage(pkg)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-2 ${
-                        isSelected
-                          ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg"
-                          : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"
-                      }`}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-2 ${ isSelected ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg" : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10" }`}
                     >
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-sm">{pkg.name}</span>
-                        <span className="text-[10px] text-white/50 opacity-80 font-sans ss02">
+                        <span className="text-[10px] text-white/50 opacity-80 ss02">
                           {pkg.slug}
                         </span>
                       </div>

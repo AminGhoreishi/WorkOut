@@ -134,19 +134,19 @@ export default function PackageList({
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-white/60">یک ماهه:</span>
-                    <span className="text-white font-medium ss02 font-sans">
+                    <span className="text-white font-medium ss02">
                       {formatNumber(pkg.price?.monthly || 0)} تومان
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-white/60">سه ماهه:</span>
-                    <span className="text-white font-medium ss02 font-sans">
+                    <span className="text-white font-medium ss02">
                       {formatNumber(pkg.price?.quarterly || 0)} تومان
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-white/60">شش ماهه:</span>
-                    <span className="text-white font-medium ss02 font-sans">
+                    <span className="text-white font-medium ss02">
                       {formatNumber(pkg.price?.biannual || 0)} تومان
                     </span>
                   </div>
@@ -158,7 +158,7 @@ export default function PackageList({
                       <Users className="w-4 h-4 text-amber-400" />
                       کاربران فعال
                     </div>
-                    <div className="text-white font-medium ss02 font-sans">
+                    <div className="text-white font-medium ss02">
                       {formatNumber(pkg.studentCount || 0)}
                     </div>
                   </div>
@@ -167,7 +167,7 @@ export default function PackageList({
                       <DollarSign className="w-4 h-4 text-amber-400" />
                       درآمد ماهانه
                     </div>
-                    <div className="text-white font-medium text-sm ss02 font-sans">
+                    <div className="text-white font-medium text-sm ss02">
                       {formatNumber(
                         (pkg.price?.monthly || 0) * (pkg.studentCount || 0),
                       )}{" "}

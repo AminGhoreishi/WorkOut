@@ -378,7 +378,7 @@ export default function CommentList() {
                         )}
                       </span>
                     </td>
-                    <td className="p-4 text-white/70 text-sm ss02 font-sans">
+                    <td className="p-4 text-white/70 text-sm ss02">
                       {formatDate(comment.createdAt)}
                     </td>
                     <td className="p-4">
@@ -388,11 +388,7 @@ export default function CommentList() {
                           onClick={() =>
                             handleToggleApproval(comment._id, comment.isApproved)
                           }
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
-                            comment.isApproved
-                              ? "bg-white/5 hover:bg-amber-500/20 text-amber-400"
-                              : "bg-white/5 hover:bg-emerald-500/20 text-emerald-400"
-                          }`}
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${ comment.isApproved ? "bg-white/5 hover:bg-amber-500/20 text-amber-400" : "bg-white/5 hover:bg-emerald-500/20 text-emerald-400" }`}
                           title={
                             comment.isApproved ? "لغو تایید" : "تایید کامنت"
                           }
@@ -429,7 +425,7 @@ export default function CommentList() {
         </div>
 
         <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-danaMed">
-          <div className="text-white/60 text-sm ss02 font-sans">
+          <div className="text-white/60 text-sm ss02">
             نمایش {Math.max(0, (currentPage - 1) * 10 + 1)} تا{" "}
             {Math.min(currentPage * 10, totalComments)} از{" "}
             {formatNumber(totalComments)} دیدگاه

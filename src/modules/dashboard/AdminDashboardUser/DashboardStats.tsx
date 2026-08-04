@@ -110,7 +110,7 @@ export default function DashboardStats() {
               {isLoading ? (
                 <div className="w-12 sm:w-16 h-5 sm:h-7 bg-white/10 rounded animate-pulse" />
               ) : (
-                <span className="text-sm sm:text-2xl font-bold text-white font-sans">
+                <span className="text-sm sm:text-2xl font-bold text-white">
                   {stat.value}
                 </span>
               )}

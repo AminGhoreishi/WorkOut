@@ -61,7 +61,7 @@ export default function ViewCommentModal({
               </div>
             </div>
 
-            <div className="text-xs text-white/50 ss02 font-sans">
+            <div className="text-xs text-white/50 ss02">
               {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString("fa-IR") : "—"}
             </div>
           </div>

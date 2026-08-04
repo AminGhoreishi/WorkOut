@@ -120,7 +120,7 @@ export default function CreateSubscriptionModal({
                   <div className="text-white font-semibold">
                     {selectedUser.fullName || "کاربر بدون نام"}
                   </div>
-                  <div className="text-white/50 text-xs font-sans">
+                  <div className="text-white/50 text-xs">
                     @{selectedUser.username} |{" "}
                     {selectedUser.phone || selectedUser.email}
                   </div>
@@ -158,7 +158,7 @@ export default function CreateSubscriptionModal({
                         <div className="font-semibold text-sm">
                           {u.fullName || "بدون نام"}
                         </div>
-                        <div className="text-xs text-white/50 font-sans">
+                        <div className="text-xs text-white/50">
                           @{u.username} | {u.phone || u.email}
                         </div>
                       </button>

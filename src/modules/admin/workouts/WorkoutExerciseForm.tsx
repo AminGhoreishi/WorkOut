@@ -209,7 +209,7 @@ export default function WorkoutExerciseForm({
                 sets: Number(e.target.value),
               })
             }
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
         </div>
@@ -227,7 +227,7 @@ export default function WorkoutExerciseForm({
                 reps: e.target.value,
               })
             }
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
         </div>
@@ -245,7 +245,7 @@ export default function WorkoutExerciseForm({
                 restSec: Number(e.target.value),
               })
             }
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
         </div>
@@ -263,7 +263,7 @@ export default function WorkoutExerciseForm({
                 sortOrder: Number(e.target.value),
               })
             }
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
         </div>

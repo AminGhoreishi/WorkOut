@@ -31,11 +31,7 @@ export default function TrainingTab({
               key={item.val}
               type="button"
               onClick={() => setValue("goal", item.val as FitnessGoal)}
-              className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${
-                watchedGoal === item.val
-                  ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                  : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-              }`}
+              className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${ watchedGoal === item.val ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
             >
               <span className="font-medium text-sm">{item.label}</span>
             </button>
@@ -55,11 +51,7 @@ export default function TrainingTab({
                 key={num}
                 type="button"
                 onClick={() => setValue("sessionsPerWeek", num)}
-                className={`w-9 h-9 rounded-lg border flex items-center justify-center font-semibold font-sans transition-all duration-200 cursor-pointer ${
-                  watchedSessions === num
-                    ? "bg-amber-500 border-amber-500 text-neutral-950 font-bold scale-105"
-                    : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                }`}
+                className={`w-9 h-9 rounded-lg border flex items-center justify-center font-semibold transition-all duration-200 cursor-pointer ${ watchedSessions === num ? "bg-amber-500 border-amber-500 text-neutral-950 font-bold scale-105" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
               >
                 {num}
               </button>
@@ -108,11 +100,7 @@ export default function TrainingTab({
               onClick={() =>
                 setValue("equipment", item.val as EquipmentOption)
               }
-              className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${
-                watchedEquipment === item.val
-                  ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                  : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-              }`}
+              className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${ watchedEquipment === item.val ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
             >
               <span className="font-semibold text-sm">{item.label}</span>
             </button>

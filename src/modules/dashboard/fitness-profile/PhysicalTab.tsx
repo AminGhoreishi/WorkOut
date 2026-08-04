@@ -25,7 +25,7 @@ export default function PhysicalTab({
                 message: "سن باید عدد و حداکثر ۱۰۰ سال باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
           />
           {errors.ageYears && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -46,7 +46,7 @@ export default function PhysicalTab({
                 message: "قد باید عدد و زیر ۳۰۰ سانتی‌متر باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
           />
           {errors.heightCm && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -67,7 +67,7 @@ export default function PhysicalTab({
                 message: "وزن باید عدد و زیر ۳۰۰ کیلوگرم باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
           />
           {errors.weightKg && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -87,7 +87,7 @@ export default function PhysicalTab({
             <>
               شاخص توده بدنی شما بر اساس وزن {watchedWeight} کیلوگرم و قد{" "}
               {watchedHeight} سانتی‌متر برابر با{" "}
-              <strong className="text-white font-sans">{bmi}</strong> است که در
+              <strong className="text-white">{bmi}</strong> است که در
               محدوده{" "}
               <strong className={bmiCategory.color}>
                 {bmiCategory.label}

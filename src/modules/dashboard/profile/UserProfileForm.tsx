@@ -72,7 +72,7 @@ export default function UserProfileForm({
                   e.target.value = e.target.value.toLowerCase().trim();
                   onUsernameChange(e);
                 }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pr-9 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left font-sans"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pr-9 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
                 dir="ltr"
               />
             </div>
@@ -95,7 +95,7 @@ export default function UserProfileForm({
                 type="tel"
                 placeholder="مثال: 09123456789"
                 {...register("phone")}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
               />
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function UserProfileForm({
                     message: "آدرس ایمیل نامعتبر است",
                   },
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
               />
             </div>
             {errors.email && (
@@ -154,7 +154,7 @@ export default function UserProfileForm({
                     message: "رمز عبور باید حداقل ۶ کاراکتر باشد",
                   },
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-10 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-10 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
               />
               <button
                 type="button"
@@ -191,7 +191,7 @@ export default function UserProfileForm({
                     return true;
                   },
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-10 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors font-sans text-left"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pr-11 pl-10 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
               />
               <button
                 type="button"

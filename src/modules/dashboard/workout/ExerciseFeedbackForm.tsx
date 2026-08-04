@@ -63,7 +63,7 @@ export default function ExerciseFeedbackForm({
           <label className="block text-xs text-neutral-400 font-semibold">
             میزان سختی تمرین چطور بود؟
           </label>
-          <div className="flex gap-2 justify-start direction-ltr font-sans">
+          <div className="flex gap-2 justify-start direction-ltr">
             {[1, 2, 3, 4, 5].map((level) => {
               const isActive = difficulty === level;
               return (
@@ -71,11 +71,7 @@ export default function ExerciseFeedbackForm({
                   key={level}
                   type="button"
                   onClick={() => setDifficulty(level)}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-amber-500 border-amber-400 text-neutral-950 shadow-md"
-                      : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
-                  }`}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${ isActive ? "bg-amber-500 border-amber-400 text-neutral-950 shadow-md" : "bg-white/5 border-white/5 text-neutral-400 hover:text-white" }`}
                 >
                   {level}
                 </button>
@@ -88,7 +84,7 @@ export default function ExerciseFeedbackForm({
           <label className="block text-xs text-neutral-400 font-semibold">
             میزان انرژی شما چطور بود؟
           </label>
-          <div className="flex gap-2 justify-start direction-ltr font-sans">
+          <div className="flex gap-2 justify-start direction-ltr">
             {[1, 2, 3, 4, 5].map((level) => {
               const isActive = energyLevel === level;
               return (
@@ -96,11 +92,7 @@ export default function ExerciseFeedbackForm({
                   key={level}
                   type="button"
                   onClick={() => setEnergyLevel(level)}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-gradient-to-r from-amber-500 to-yellow-500 border-amber-400 text-neutral-950 shadow-md"
-                      : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
-                  }`}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${ isActive ? "bg-gradient-to-r from-amber-500 to-yellow-500 border-amber-400 text-neutral-950 shadow-md" : "bg-white/5 border-white/5 text-neutral-400 hover:text-white" }`}
                 >
                   {level}
                 </button>
@@ -117,11 +109,7 @@ export default function ExerciseFeedbackForm({
             <button
               type="button"
               onClick={() => setHasPain(true)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
-                hasPain
-                  ? "bg-amber-500/25 border-amber-500 text-amber-300"
-                  : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
-              }`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${ hasPain ? "bg-amber-500/25 border-amber-500 text-amber-300" : "bg-white/5 border-white/5 text-neutral-400 hover:text-white" }`}
             >
               <AlertCircle className="w-3.5 h-3.5" />
               <span>بله، درد دارم</span>
@@ -129,11 +117,7 @@ export default function ExerciseFeedbackForm({
             <button
               type="button"
               onClick={() => setHasPain(false)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
-                !hasPain
-                  ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
-                  : "bg-white/5 border-white/5 text-neutral-400 hover:text-white"
-              }`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${ !hasPain ? "bg-amber-500/10 border-amber-500/30 text-amber-400" : "bg-white/5 border-white/5 text-neutral-400 hover:text-white" }`}
             >
               <CheckCircle className="w-3.5 h-3.5" />
               <span>خیر، عالی هستم</span>

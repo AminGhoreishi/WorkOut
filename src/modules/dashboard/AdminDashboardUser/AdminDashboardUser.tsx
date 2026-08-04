@@ -68,11 +68,7 @@ export default function UserDashboard({
                   <button
                     key={i}
                     type="button"
-                    className={`text-xs px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                      i === 1
-                        ? "text-neutral-950 font-bold bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-sm"
-                        : "text-neutral-400 hover:text-white bg-white/5"
-                    }`}
+                    className={`text-xs px-3 py-1.5 rounded-lg transition-all cursor-pointer ${ i === 1 ? "text-neutral-950 font-bold bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 shadow-sm" : "text-neutral-400 hover:text-white bg-white/5" }`}
                   >
                     {p}
                   </button>
@@ -86,14 +82,10 @@ export default function UserDashboard({
                   className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
                 >
                   <div
-                    className={`w-full rounded-t-lg transition-all hover:opacity-80 ${
-                      i === 5
-                        ? "bg-gradient-to-t from-amber-600 to-amber-400 shadow-md shadow-amber-500/20"
-                        : "bg-amber-500/20 border-t border-amber-500/30"
-                    }`}
+                    className={`w-full rounded-t-lg transition-all hover:opacity-80 ${ i === 5 ? "bg-gradient-to-t from-amber-600 to-amber-400 shadow-md shadow-amber-500/20" : "bg-amber-500/20 border-t border-amber-500/30" }`}
                     style={{ height: `${h}%` }}
                   />
-                  <span className="text-neutral-400 text-xs font-sans">
+                  <span className="text-neutral-400 text-xs">
                     {["ش", "ی", "د", "س", "چ", "پ", "ج"][i]}
                   </span>
                 </div>

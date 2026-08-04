@@ -65,19 +65,19 @@ export default function WorkoutProgram({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="bg-white/[0.03] border border-amber-500/15 rounded-xl p-6">
               <div className="text-neutral-400 mb-2 text-xs">هفته جاری</div>
-              <div className="text-3xl font-bold text-white ss02 font-sans">۴ / ۱۲</div>
+              <div className="text-3xl font-bold text-white ss02">۴ / ۱۲</div>
             </div>
             <div className="bg-white/[0.03] border border-amber-500/15 rounded-xl p-6">
               <div className="text-neutral-400 mb-2 text-xs">تمرینات انجام شده</div>
-              <div className="text-3xl font-bold text-amber-400 ss02 font-sans">۱۸</div>
+              <div className="text-3xl font-bold text-amber-400 ss02">۱۸</div>
             </div>
             <div className="bg-white/[0.03] border border-amber-500/15 rounded-xl p-6">
               <div className="text-neutral-400 mb-2 text-xs">میانگین مدت تمرین</div>
-              <div className="text-3xl font-bold text-white ss02 font-sans">۶۵ دقیقه</div>
+              <div className="text-3xl font-bold text-white ss02">۶۵ دقیقه</div>
             </div>
             <div className="bg-white/[0.03] border border-amber-500/15 rounded-xl p-6">
               <div className="text-neutral-400 mb-2 text-xs">پیشرفت کلی</div>
-              <div className="text-3xl font-bold text-amber-400 ss02 font-sans">۷۵٪</div>
+              <div className="text-3xl font-bold text-amber-400 ss02">۷۵٪</div>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function WorkoutProgram({
                               <h4 className="text-white font-medium mb-1">
                                 {exercise.name}
                               </h4>
-                              <div className="flex flex-wrap gap-4 text-sm text-neutral-400 font-sans">
+                              <div className="flex flex-wrap gap-4 text-sm text-neutral-400">
                                 <span className="flex items-center gap-1">
                                   <Dumbbell className="w-4 h-4 text-amber-400" />
                                   {exercise.sets} ست

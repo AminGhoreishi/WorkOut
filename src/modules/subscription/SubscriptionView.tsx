@@ -164,7 +164,7 @@ export default function SubscriptionView({
                       <Clock className="w-4 h-4 text-amber-400" />
                       <span>میزان مصرف اشتراک</span>
                     </div>
-                    <span className="font-bold text-amber-400 ss02 font-sans">
+                    <span className="font-bold text-amber-400 ss02">
                       {daysRemaining} روز مانده از {totalDays} روز
                     </span>
                   </div>
@@ -179,14 +179,14 @@ export default function SubscriptionView({
                   <div className="grid grid-cols-2 gap-4 pt-2 text-xs md:text-sm text-neutral-400">
                     <div className="flex flex-col gap-1 bg-white/5 p-3 rounded-xl border border-white/5">
                       <span className="text-neutral-400">تاریخ شروع</span>
-                      <span className="text-white font-semibold flex items-center gap-1 ss02 font-sans">
+                      <span className="text-white font-semibold flex items-center gap-1 ss02">
                         <Calendar className="w-3.5 h-3.5 text-amber-400" />
                         {formatDate(subscription.startsAt)}
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 bg-white/5 p-3 rounded-xl border border-white/5">
                       <span className="text-neutral-400">تاریخ انقضا</span>
-                      <span className="text-white font-semibold flex items-center gap-1 ss02 font-sans">
+                      <span className="text-white font-semibold flex items-center gap-1 ss02">
                         <Calendar className="w-3.5 h-3.5 text-amber-400" />
                         {formatDate(subscription.endsAt)}
                       </span>
@@ -223,7 +223,7 @@ export default function SubscriptionView({
                           className="w-14 h-14 rounded-full object-cover border-2 border-amber-500/30"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border-2 border-amber-500/30 font-sans">
+                        <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border-2 border-amber-500/30">
                           {subscription.coachId.name?.charAt(0) || "M"}
                         </div>
                       )}
@@ -284,7 +284,7 @@ export default function SubscriptionView({
                     </div>
                     <div className="flex justify-between py-2 border-b border-white/5">
                       <span className="text-neutral-400">مبلغ پرداخت شده</span>
-                      <span className="text-white font-semibold ss02 font-sans">
+                      <span className="text-white font-semibold ss02">
                         {(subscription.orderId.amountPaid ?? 0).toLocaleString(
                           "fa-IR",
                         )}{" "}
@@ -293,7 +293,7 @@ export default function SubscriptionView({
                     </div>
                     <div className="flex justify-between py-2">
                       <span className="text-neutral-400">کد پیگیری پرداخت</span>
-                      <span className="text-amber-400 font-semibold select-all font-sans">
+                      <span className="text-amber-400 font-semibold select-all">
                         {subscription.orderId.paymentRef || "ثبت نشده"}
                       </span>
                     </div>

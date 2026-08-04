@@ -78,7 +78,7 @@ export default function WorkoutExercisesSection({
                 <div className="font-bold text-sm text-white mb-1">
                   {ex.name}
                 </div>
-                <div className="flex flex-wrap items-center gap-3 text-xs text-white/60 font-sans ss02">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-white/60 ss02">
                   <span>{ex.sets} ست</span>
                   <span>•</span>
                   <span>{ex.reps} تکرار</span>

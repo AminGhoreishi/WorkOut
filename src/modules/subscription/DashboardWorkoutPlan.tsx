@@ -82,7 +82,7 @@ export default function DashboardWorkoutPlan({ plan, days = [] }: WorkoutPlanPro
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded ss02 font-sans">
+                    <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded ss02">
                       {exercises.length} حرکت
                     </span>
                     {isExpanded ? (
@@ -108,7 +108,7 @@ export default function DashboardWorkoutPlan({ plan, days = [] }: WorkoutPlanPro
                           >
                             <div>
                               <h5 className="text-white font-bold text-xs md:text-sm">{ex.name}</h5>
-                              <div className="flex flex-wrap gap-x-3 gap-y-1 text-neutral-400 text-[10px] md:text-xs mt-1 ss02 font-sans">
+                              <div className="flex flex-wrap gap-x-3 gap-y-1 text-neutral-400 text-[10px] md:text-xs mt-1 ss02">
                                 <span>ست‌ها: <strong className="text-white">{ex.sets}</strong></span>
                                 <span>|</span>
                                 <span>تکرارها: <strong className="text-white">{ex.reps}</strong></span>

@@ -41,7 +41,7 @@ export default function FoodForm({
                   min: { value: 0, message: "کالری نمی‌تواند منفی باشد." },
                   valueAsNumber: true,
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all font-sans ss02"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
                 placeholder="0"
               />
               {errors.calories && (
@@ -73,7 +73,7 @@ export default function FoodForm({
                   min: { value: 0, message: "پروتئین نمی‌تواند منفی باشد." },
                   valueAsNumber: true,
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all font-sans ss02"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
                 placeholder="0"
               />
             </div>
@@ -87,7 +87,7 @@ export default function FoodForm({
                   min: { value: 0, message: "کربوهیدرات نمی‌تواند منفی باشد." },
                   valueAsNumber: true,
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all font-sans ss02"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
                 placeholder="0"
               />
             </div>
@@ -101,7 +101,7 @@ export default function FoodForm({
                   min: { value: 0, message: "چربی نمی‌تواند منفی باشد." },
                   valueAsNumber: true,
                 })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all font-sans ss02"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
                 placeholder="0"
               />
             </div>

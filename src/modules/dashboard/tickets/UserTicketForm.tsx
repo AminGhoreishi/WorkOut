@@ -137,7 +137,7 @@ export default function UserTicketForm({
                   <span className="text-amber-400 text-xs font-semibold">
                     فایل انتخاب شد:
                   </span>
-                  <span className="text-white text-xs ss02 font-sans">
+                  <span className="text-white text-xs ss02">
                     {selectedFile.name} (
                     {Math.round((selectedFile.size / 1024 / 1024) * 100) / 100}{" "}
                     MB)

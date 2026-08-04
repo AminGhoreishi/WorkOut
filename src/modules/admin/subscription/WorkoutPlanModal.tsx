@@ -687,11 +687,7 @@ export default function WorkoutPlanModal({
                           fetchExercises(day._id);
                           setShowExerciseForm(false);
                         }}
-                        className={`p-3 rounded-lg border text-right cursor-pointer transition-all flex items-center justify-between ${
-                          selectedDay?._id === day._id
-                            ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 shadow-lg shadow-amber-500/20"
-                            : "bg-white/5 border-white/10 text-white hover:bg-white/10"
-                        }`}
+                        className={`p-3 rounded-lg border text-right cursor-pointer transition-all flex items-center justify-between ${ selectedDay?._id === day._id ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400 shadow-lg shadow-amber-500/20" : "bg-white/5 border-white/10 text-white hover:bg-white/10" }`}
                       >
                         <div>
                           <div className="font-semibold text-xs">
@@ -854,7 +850,7 @@ export default function WorkoutPlanModal({
                             required: true,
                             min: 1,
                           })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
                           required
                         />
                       </div>
@@ -866,7 +862,7 @@ export default function WorkoutPlanModal({
                           type="text"
                           placeholder="12-10-8 یا ۱۲"
                           {...registerExercise("reps", { required: true })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
                           required
                         />
                       </div>
@@ -881,7 +877,7 @@ export default function WorkoutPlanModal({
                             required: true,
                             min: 0,
                           })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
                           required
                         />
                       </div>
@@ -895,7 +891,7 @@ export default function WorkoutPlanModal({
                           {...registerExercise("sortOrder", {
                             required: true,
                           })}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
                           required
                         />
                       </div>
@@ -937,7 +933,7 @@ export default function WorkoutPlanModal({
                           <div className="font-bold text-sm text-white mb-1">
                             {ex.name}
                           </div>
-                          <div className="flex flex-wrap items-center gap-3 text-xs text-white/60 font-sans ss02">
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-white/60 ss02">
                             <span>{ex.sets} ست</span>
                             <span>•</span>
                             <span>{ex.reps} تکرار</span>

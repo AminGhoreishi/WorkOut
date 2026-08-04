@@ -33,7 +33,7 @@ export default function WeeklyWorkouts({
                 </span>
               )}
               {w.sets > 0 && (
-                <span className="text-xs text-amber-400 font-semibold font-sans">
+                <span className="text-xs text-amber-400 font-semibold">
                   {w.sets} ست
                 </span>
               )}

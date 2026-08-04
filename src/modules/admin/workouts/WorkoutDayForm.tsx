@@ -130,7 +130,7 @@ export default function WorkoutDayForm({
           type="number"
           placeholder="ترتیب نمایش"
           {...register("sortOrder", { required: true })}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
           required
         />
       </div>

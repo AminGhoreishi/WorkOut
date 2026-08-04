@@ -273,16 +273,10 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                           key={item.val}
                           type="button"
                           onClick={() => setValue("goal", item.val)}
-                          className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${
-                            watchedGoal === item.val
-                              ? "bg-purple-500/20 border-purple-500 text-white shadow-lg shadow-purple-500/10"
-                              : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                          }`}
+                          className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${ watchedGoal === item.val ? "bg-purple-500/20 border-purple-500 text-white shadow-lg shadow-purple-500/10" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10" }`}
                         >
                           <div
-                            className={`p-2 rounded-lg ${
-                              watchedGoal === item.val ? "bg-purple-500/20 text-purple-400" : "bg-white/5 text-white/40"
-                            }`}
+                            className={`p-2 rounded-lg ${ watchedGoal === item.val ? "bg-purple-500/20 text-purple-400" : "bg-white/5 text-white/40" }`}
                           >
                             <Icon className="w-5 h-5" />
                           </div>
@@ -301,11 +295,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                         key={item.val}
                         type="button"
                         onClick={() => setValue("trainingExperience", item.val)}
-                        className={`p-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center ${
-                          watchedExperience === item.val
-                            ? "bg-purple-500/20 border-purple-500 text-white shadow-lg shadow-purple-500/10"
-                            : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                        }`}
+                        className={`p-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center ${ watchedExperience === item.val ? "bg-purple-500/20 border-purple-500 text-white shadow-lg shadow-purple-500/10" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10" }`}
                       >
                         <span className="font-semibold text-sm mb-1">{item.label}</span>
                         <span className="text-[10px] text-white/40">{item.desc}</span>
@@ -326,11 +316,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                         key={num}
                         type="button"
                         onClick={() => setValue("sessionsPerWeek", num)}
-                        className={`w-12 h-12 rounded-full border flex items-center justify-center font-bold font-sans transition-all duration-200 cursor-pointer ${
-                          watchedSessions === num
-                            ? "bg-purple-500 border-purple-500 text-white shadow-lg shadow-purple-500/20 scale-110"
-                            : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                        }`}
+                        className={`w-12 h-12 rounded-full border flex items-center justify-center font-bold transition-all duration-200 cursor-pointer ${ watchedSessions === num ? "bg-purple-500 border-purple-500 text-white shadow-lg shadow-purple-500/20 scale-110" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10" }`}
                       >
                         {num}
                       </button>
@@ -350,11 +336,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                         key={item.val}
                         type="button"
                         onClick={() => setValue("equipment", item.val)}
-                        className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${
-                          watchedEquipment === item.val
-                            ? "bg-purple-500/20 border-purple-500 text-white"
-                            : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                        }`}
+                        className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${ watchedEquipment === item.val ? "bg-purple-500/20 border-purple-500 text-white" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10" }`}
                       >
                         <div>
                           <span className="block font-semibold text-sm mb-1">{item.label}</span>
@@ -375,7 +357,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                     <input
                       type="number"
                       {...register("ageYears", { required: true, min: 10, max: 100, valueAsNumber: true })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left"
                     />
                     {errors.ageYears && <p className="text-red-400 text-xs mt-1">سن نامعتبر است (۱۰ تا ۱۰۰ سال)</p>}
                   </div>
@@ -385,7 +367,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                     <input
                       type="number"
                       {...register("heightCm", { required: true, min: 100, max: 250, valueAsNumber: true })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left"
                     />
                     {errors.heightCm && <p className="text-red-400 text-xs mt-1">قد نامعتبر است (۱۰۰ تا ۲۵۰ سانتی‌متر)</p>}
                   </div>
@@ -398,7 +380,7 @@ export default function OnboardingForm({ initialProfile }: OnboardingFormProps) 
                     <input
                       type="number"
                       {...register("weightKg", { required: true, min: 30, max: 250, valueAsNumber: true })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 text-left"
                     />
                     {errors.weightKg && <p className="text-red-400 text-xs mt-1">وزن نامعتبر است (۳۰ تا ۲۵۰ کیلوگرم)</p>}
                   </div>

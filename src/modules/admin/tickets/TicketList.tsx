@@ -161,11 +161,7 @@ const TicketList = memo(function TicketList({
                   <div
                     key={t._id}
                     onClick={() => setSelectedTicket(t)}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${
-                      isSelected
-                        ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg"
-                        : "bg-white/5 border-white/10 text-white hover:bg-white/10"
-                    }`}
+                    className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${ isSelected ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg" : "bg-white/5 border-white/10 text-white hover:bg-white/10" }`}
                   >
                     <div className="flex justify-between items-start">
                       <div className="font-bold text-sm line-clamp-1">
@@ -197,7 +193,7 @@ const TicketList = memo(function TicketList({
                         >
                           {getStatusLabel(t.status)}
                         </span>
-                        <span className="ss02 font-sans">
+                        <span className="ss02">
                           {formatDate(t.createdAt)}
                         </span>
                       </div>

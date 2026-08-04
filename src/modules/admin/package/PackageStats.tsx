@@ -39,7 +39,7 @@ const PackageStats = memo(function PackageStats({
           <div className="text-white/60 text-sm">کل پکیج‌ها</div>
           <PackageIcon className="w-5 h-5 text-blue-400" />
         </div>
-        <div className="text-3xl text-white mb-1 font-morabbaReg font-bold ss02 font-sans">
+        <div className="text-3xl text-white mb-1 font-morabbaReg font-bold ss02">
           {formatNumber(stats.totalCount)}
         </div>
         <div className="text-emerald-400 text-sm font-semibold">
@@ -52,7 +52,7 @@ const PackageStats = memo(function PackageStats({
           <div className="text-white/60 text-sm">کل کاربران</div>
           <Users className="w-5 h-5 text-purple-400" />
         </div>
-        <div className="text-3xl text-white mb-1 font-morabbaReg font-bold ss02 font-sans">
+        <div className="text-3xl text-white mb-1 font-morabbaReg font-bold ss02">
           {formatNumber(stats.totalUsers)}
         </div>
         <div className="text-purple-400 text-sm font-semibold">در تمام پکیج‌ها</div>
@@ -63,7 +63,7 @@ const PackageStats = memo(function PackageStats({
           <div className="text-white/60 text-sm">درآمد کل تخمینی</div>
           <DollarSign className="w-5 h-5 text-amber-400" />
         </div>
-        <div className="text-2xl text-white mb-1 font-morabbaReg font-bold ss02 font-sans">
+        <div className="text-2xl text-white mb-1 font-morabbaReg font-bold ss02">
           {formatNumber(stats.totalRevenue)} تومان
         </div>
         <div className="text-amber-400 text-sm flex items-center gap-1 font-semibold">

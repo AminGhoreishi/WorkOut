@@ -189,11 +189,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                 key={st}
                 type="button"
                 onClick={() => setStatusFilter(st)}
-                className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
-                  statusFilter === st
-                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400"
-                    : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
-                }`}
+                className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${ statusFilter === st ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400" : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10" }`}
               >
                 {st === "all"
                   ? "همه"
@@ -255,7 +251,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                             <div className="font-semibold text-white">
                               {sub.userId?.fullName || "کاربر ناشناس"}
                             </div>
-                            <div className="text-white/50 text-xs font-sans">
+                            <div className="text-white/50 text-xs">
                               @{sub.userId?.username || "username"} |{" "}
                               {sub.userId?.phone || sub.userId?.email || "-"}
                             </div>
@@ -267,10 +263,10 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                           {sub.packageId?.name || "پکیج حذف شده"}
                         </span>
                       </td>
-                      <td className="p-4 text-white/80 whitespace-nowrap ss02 font-sans">
+                      <td className="p-4 text-white/80 whitespace-nowrap ss02">
                         {formatDate(sub.startsAt)}
                       </td>
-                      <td className="p-4 text-white/80 whitespace-nowrap ss02 font-sans">
+                      <td className="p-4 text-white/80 whitespace-nowrap ss02">
                         {formatDate(sub.endsAt)}
                       </td>
                       <td className="p-4 whitespace-nowrap">{getStatusBadge(sub.status)}</td>
@@ -287,9 +283,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                           >
                             <span>عملیات</span>
                             <ChevronDown
-                              className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                                openDropdownId === sub._id ? "rotate-180" : ""
-                              }`}
+                              className={`w-3.5 h-3.5 transition-transform duration-200 ${ openDropdownId === sub._id ? "rotate-180" : "" }`}
                             />
                           </button>
 
@@ -383,7 +377,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
 
           {totalPages > 1 && (
             <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between">
-              <span className="text-white/60 text-xs ss02 font-sans">
+              <span className="text-white/60 text-xs ss02">
                 نمایش صفحه {formatNumber(currentPage)} از{" "}
                 {formatNumber(totalPages)}
               </span>

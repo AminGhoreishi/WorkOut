@@ -684,14 +684,65 @@ export const modifiedFiles = [
     filePath: "src/modules/article/ArticleNotFound.tsx",
     description: "Extracted modular ArticleNotFound fallback sub-component with zero code comments."
   }
+,
+  {
+    id: 138,
+    filePath: "src/modules/onboarding/OnboardingForm.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 139,
+    filePath: "src/modules/admin/subscription/CreateSubscriptionModal.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 140,
+    filePath: "src/modules/admin/subscription/SubscriptionsTable.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 141,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 142,
+    filePath: "src/modules/admin/subscription/VideosManagement.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 143,
+    filePath: "src/modules/admin/subscription/WorkoutPlanModal.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 144,
+    filePath: "src/modules/admin/subscription/UploadVideoModal.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 145,
+    filePath: "src/modules/admin/pr/CreatePRModal.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 146,
+    filePath: "src/modules/admin/workouts/WorkoutExercisesSection.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 147,
+    filePath: "src/modules/admin/workouts/WorkoutDayForm.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 148,
+    filePath: "src/modules/admin/workouts/WorkoutsManagement.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  },
+  {
+    id: 149,
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Removed font-sans class override from component with zero code comments."
+  }
 ];
-
-
-
-
-
-
-
-
-
-

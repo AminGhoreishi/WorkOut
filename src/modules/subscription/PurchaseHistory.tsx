@@ -65,10 +65,10 @@ export default function PurchaseHistory({ orders = [] }: PurchaseHistoryProps) {
                   <td className="py-3.5 text-neutral-300">
                     {getCycleLabel(order.billingCycle)}
                   </td>
-                  <td className="py-3.5 font-bold text-white ss02 font-sans">
+                  <td className="py-3.5 font-bold text-white ss02">
                     {(order.amountPaid ?? 0).toLocaleString("fa-IR")} تومان
                   </td>
-                  <td className="py-3.5 text-neutral-300 ss02 font-sans">
+                  <td className="py-3.5 text-neutral-300 ss02">
                     {formatDate(order.createdAt)}
                   </td>
                   <td className="py-3.5 text-amber-400 font-mono select-all">

@@ -130,7 +130,7 @@ export default function FavoritesManagement({
 
                   <div className="flex items-center gap-1.5 text-xs text-neutral-400 border-t border-white/5 pt-3 mt-2">
                     <Eye size={12} />
-                    <span className="font-sans">
+                    <span className="">
                       {new Intl.NumberFormat("fa-IR").format(a.views)} بازدید
                     </span>
                   </div>

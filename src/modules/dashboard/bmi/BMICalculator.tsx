@@ -215,11 +215,7 @@ export default function BMICalculator() {
                     <button
                       type="button"
                       onClick={() => handleInputChange("gender", "male")}
-                      className={`py-3 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
-                        formInputs.gender === "male"
-                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10"
-                          : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                      }`}
+                      className={`py-3 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${ formInputs.gender === "male" ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
                     >
                       <User className="w-5 h-5" />
                       آقا
@@ -227,11 +223,7 @@ export default function BMICalculator() {
                     <button
                       type="button"
                       onClick={() => handleInputChange("gender", "female")}
-                      className={`py-3 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
-                        formInputs.gender === "female"
-                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10"
-                          : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
-                      }`}
+                      className={`py-3 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${ formInputs.gender === "female" ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
                     >
                       <User className="w-5 h-5" />
                       خانم
@@ -253,7 +245,7 @@ export default function BMICalculator() {
                       handleInputChange("weight", e.target.value)
                     }
                     placeholder="مثال: ۷۰"
-                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left font-sans transition-all"
+                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left transition-all"
                   />
                 </div>
 
@@ -271,7 +263,7 @@ export default function BMICalculator() {
                       handleInputChange("height", e.target.value)
                     }
                     placeholder="مثال: ۱۷۵"
-                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left font-sans transition-all"
+                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left transition-all"
                   />
                 </div>
 
@@ -286,7 +278,7 @@ export default function BMICalculator() {
                     value={formInputs.age}
                     onChange={(e) => handleInputChange("age", e.target.value)}
                     placeholder="مثال: ۲۵"
-                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left font-sans transition-all"
+                    className="w-full bg-white/5 border border-white/10 focus:border-amber-500/50 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30 text-left transition-all"
                   />
                 </div>
               </div>
@@ -318,7 +310,7 @@ export default function BMICalculator() {
                   <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-white/10">
                     <div className="relative w-36 h-36 sm:w-40 sm:h-40 flex items-center justify-center rounded-full bg-amber-500/10 border-2 border-amber-500/40 shadow-inner">
                       <div className="text-center">
-                        <span className="block text-4xl sm:text-5xl font-extrabold text-amber-400 font-sans tracking-tight">
+                        <span className="block text-4xl sm:text-5xl font-extrabold text-amber-400 tracking-tight">
                           {result.bmiFormatted}
                         </span>
                         <span className="text-neutral-400 text-xs mt-1 block font-medium">
@@ -378,52 +370,36 @@ export default function BMICalculator() {
 
                     <div className="grid grid-cols-4 gap-2 text-center text-xs pt-2">
                       <div
-                        className={`p-2.5 rounded-xl border transition-all ${
-                          result.category === "underweight"
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400"
-                        }`}
+                        className={`p-2.5 rounded-xl border transition-all ${ result.category === "underweight" ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400" }`}
                       >
-                        <span className="block font-bold font-sans">
+                        <span className="block font-bold">
                           کمتر از ۱۸.۵
                         </span>
                         <span className="text-[11px]">کم‌وزنی</span>
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border transition-all ${
-                          result.category === "normal"
-                            ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400"
-                        }`}
+                        className={`p-2.5 rounded-xl border transition-all ${ result.category === "normal" ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400" }`}
                       >
-                        <span className="block font-bold font-sans">
+                        <span className="block font-bold">
                           ۱۸.۵ - ۲۴.۹
                         </span>
                         <span className="text-[11px]">نرمال</span>
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border transition-all ${
-                          result.category === "overweight"
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400"
-                        }`}
+                        className={`p-2.5 rounded-xl border transition-all ${ result.category === "overweight" ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400" }`}
                       >
-                        <span className="block font-bold font-sans">
+                        <span className="block font-bold">
                           ۲۵ - ۲۹.۹
                         </span>
                         <span className="text-[11px]">اضافه‌وزن</span>
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border transition-all ${
-                          result.category === "obese"
-                            ? "bg-rose-500/20 border-rose-500 text-rose-300 font-bold"
-                            : "bg-white/5 border-white/10 text-neutral-400"
-                        }`}
+                        className={`p-2.5 rounded-xl border transition-all ${ result.category === "obese" ? "bg-rose-500/20 border-rose-500 text-rose-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400" }`}
                       >
-                        <span className="block font-bold font-sans">
+                        <span className="block font-bold">
                           ۳۰ به بالا
                         </span>
                         <span className="text-[11px]">چاق</span>

@@ -159,7 +159,7 @@ export default function CreatePRModal({
               step="any"
               {...register("value", { required: true, valueAsNumber: true })}
               placeholder="مثال: ۱۰۰ یا ۲.۹۵"
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-left font-sans text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-left text-sm"
             />
             {errors.value && (
               <p className="text-red-400 text-xs mt-1">
@@ -173,7 +173,7 @@ export default function CreatePRModal({
             <input
               type="date"
               {...register("date", { required: true })}
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-left font-sans text-sm cursor-pointer"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-left text-sm cursor-pointer"
             />
           </div>
 

@@ -125,11 +125,7 @@ export default function SubscriptionsManagement() {
           <button
             type="button"
             onClick={() => setActiveTab("subscriptions")}
-            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
-              activeTab === "subscriptions"
-                ? "border-amber-400 text-white font-bold"
-                : "border-transparent text-white/55 hover:text-white"
-            }`}
+            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${ activeTab === "subscriptions" ? "border-amber-400 text-white font-bold" : "border-transparent text-white/55 hover:text-white" }`}
           >
             <Users className="w-4 h-4" />
             اشتراک‌ها و برنامه‌های تمرینی
@@ -137,11 +133,7 @@ export default function SubscriptionsManagement() {
           <button
             type="button"
             onClick={() => setActiveTab("videos")}
-            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
-              activeTab === "videos"
-                ? "border-amber-400 text-white font-bold"
-                : "border-transparent text-white/55 hover:text-white"
-            }`}
+            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${ activeTab === "videos" ? "border-amber-400 text-white font-bold" : "border-transparent text-white/55 hover:text-white" }`}
           >
             <Film className="w-4 h-4" />
             بانک ویدیوهای آموزشی ({videos.length})
@@ -156,7 +148,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">کل اشتراک‌ها</span>
                   <Users className="w-5 h-5 text-purple-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.total)}
                 </div>
               </div>
@@ -165,7 +157,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">فعال</span>
                   <Check className="w-5 h-5 text-emerald-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.active)}
                 </div>
               </div>
@@ -174,7 +166,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">آزمایشی (Trial)</span>
                   <Clock className="w-5 h-5 text-blue-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.trial)}
                 </div>
               </div>
@@ -183,7 +175,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">منقضی شده</span>
                   <X className="w-5 h-5 text-red-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.expired)}
                 </div>
               </div>

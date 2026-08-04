@@ -20,7 +20,7 @@ export default function UsersStats({
             <Users className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white ss02 font-sans">
+            <div className="text-2xl font-bold text-white ss02">
               {formatNumber(totalUsers)}
             </div>
             <div className="text-white/60 text-xs">کل کاربران</div>
@@ -34,7 +34,7 @@ export default function UsersStats({
             <UserCheck className="w-5 h-5 text-emerald-400" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white ss02 font-sans">
+            <div className="text-2xl font-bold text-white ss02">
               {formatNumber(activeUsers)}
             </div>
             <div className="text-white/60 text-xs">کاربران فعال</div>
@@ -48,7 +48,7 @@ export default function UsersStats({
             <Calendar className="w-5 h-5 text-amber-400" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white ss02 font-sans">
+            <div className="text-2xl font-bold text-white ss02">
               {formatNumber(expiredUsers)}
             </div>
             <div className="text-white/60 text-xs">کاربران منقضی</div>
@@ -62,7 +62,7 @@ export default function UsersStats({
             <Ban className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white ss02 font-sans">
+            <div className="text-2xl font-bold text-white ss02">
               {formatNumber(blockedUsers)}
             </div>
             <div className="text-white/60 text-xs">کاربران مسدود</div>

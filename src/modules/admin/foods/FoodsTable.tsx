@@ -140,7 +140,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
     const totalPages = data?.totalPages || 1;
 
     return (
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden font-danaMed font-sans">
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden font-danaMed">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -152,7 +152,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                 <RefreshCw className="w-3.5 h-3.5 text-emerald-400 animate-spin mr-1" />
               )}
             </h2>
-            <p className="text-gray-400 text-xs mt-1 ss02 font-sans">
+            <p className="text-gray-400 text-xs mt-1 ss02">
               تعداد کل غذاها: {totalItems} مورد
             </p>
           </div>
@@ -250,11 +250,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                             onClick={() =>
                               handleToggleActive(food._id, food.isActive)
                             }
-                            className={`p-1.5 cursor-pointer rounded-lg border transition-all ${
-                              food.isActive
-                                ? "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/20"
-                                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
-                            }`}
+                            className={`p-1.5 cursor-pointer rounded-lg border transition-all ${ food.isActive ? "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/20" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20" }`}
                             title={food.isActive ? "غیرفعال کردن" : "فعال کردن"}
                           >
                             {food.isActive ? (
