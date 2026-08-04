@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
@@ -119,7 +120,7 @@ function LoginFormContent() {
       hasError
         ? "border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/40"
         : "border-amber-500/20 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
-    } rounded-xl pl-12 pr-4 py-3 text-amber-100 placeholder:text-zinc-500 focus:outline-none transition-all`;
+    } rounded-xl pl-12 pr-4 py-3 text-xs sm:text-sm text-amber-100 placeholder:text-zinc-500 placeholder:text-xs sm:placeholder:text-sm focus:outline-none transition-all`;
 
   return (
     <div
@@ -132,22 +133,22 @@ function LoginFormContent() {
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-3 group">
-            <BiDumbbell className="w-12 h-12 text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
-            <span className="font-bold text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
+            <BiDumbbell className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
+            <span className="font-bold text-2xl sm:text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
               استارفیت
             </span>
           </Link>
-          <p className="text-amber-100/60 text-sm">
+          <p className="text-amber-100/60 text-xs sm:text-sm">
             به جامعه فیتنس ما بپیوندید
           </p>
         </div>
 
-        <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-8">
+        <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-6 sm:p-8">
           <div className="flex gap-2 mb-8 bg-zinc-900/90 p-1.5 rounded-xl border border-amber-500/10">
             <button
               type="button"
               onClick={() => handleTabChange(false)}
-              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer ${
                 !isRegister
                   ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
                   : "text-zinc-400 hover:text-amber-300"
@@ -158,7 +159,7 @@ function LoginFormContent() {
             <button
               type="button"
               onClick={() => handleTabChange(true)}
-              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all cursor-pointer ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer ${
                 isRegister
                   ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-zinc-950 shadow-md shadow-amber-500/20"
                   : "text-zinc-400 hover:text-amber-300"
@@ -169,7 +170,7 @@ function LoginFormContent() {
           </div>
 
           {serverError && (
-            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm text-center">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs sm:text-sm text-center">
               {serverError}
             </div>
           )}
@@ -180,7 +181,7 @@ function LoginFormContent() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
+                <label className="block text-amber-100/90 mb-2 text-xs sm:text-sm font-medium">
                   شماره تلفن
                 </label>
                 <div className="relative">
@@ -211,7 +212,7 @@ function LoginFormContent() {
               <button
                 type="submit"
                 disabled={loginForm.formState.isSubmitting}
-                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold text-xs sm:text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
               >
                 {loginForm.formState.isSubmitting
                   ? "در حال ارسال کد..."
@@ -226,7 +227,7 @@ function LoginFormContent() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
+                <label className="block text-amber-100/90 mb-2 text-xs sm:text-sm font-medium">
                   نام و نام خانوادگی
                 </label>
                 <div className="relative">
@@ -254,7 +255,7 @@ function LoginFormContent() {
               </div>
 
               <div>
-                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
+                <label className="block text-amber-100/90 mb-2 text-xs sm:text-sm font-medium">
                   شماره تلفن
                 </label>
                 <div className="relative">
@@ -285,7 +286,7 @@ function LoginFormContent() {
               </div>
 
               <div>
-                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
+                <label className="block text-amber-100/90 mb-2 text-xs sm:text-sm font-medium">
                   رمز عبور
                 </label>
                 <div className="relative">
@@ -325,7 +326,7 @@ function LoginFormContent() {
               </div>
 
               <div>
-                <label className="block text-amber-100/90 mb-2 text-sm font-medium">
+                <label className="block text-amber-100/90 mb-2 text-xs sm:text-sm font-medium">
                   تکرار رمز عبور
                 </label>
                 <div className="relative">
@@ -368,7 +369,7 @@ function LoginFormContent() {
               <button
                 type="submit"
                 disabled={registerForm.formState.isSubmitting}
-                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold text-xs sm:text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 cursor-pointer"
               >
                 {registerForm.formState.isSubmitting
                   ? "در حال ثبت نام..."
@@ -382,7 +383,7 @@ function LoginFormContent() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-amber-500/15"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
+              <div className="relative flex justify-center text-xs sm:text-sm">
                 <span className="px-4 bg-zinc-950 text-amber-200/50">
                   یا ورود با
                 </span>
@@ -392,7 +393,7 @@ function LoginFormContent() {
               <button
                 type="button"
                 onClick={() => signIn("google", { callbackUrl })}
-                className="w-full flex items-center justify-center gap-2 bg-zinc-900/80 hover:bg-zinc-800/80 border border-amber-500/20 hover:border-amber-500/40 text-amber-100 py-3 rounded-xl transition-all cursor-pointer shadow-md"
+                className="w-full flex items-center justify-center gap-2 bg-zinc-900/80 hover:bg-zinc-800/80 border border-amber-500/20 hover:border-amber-500/40 text-amber-100 text-xs sm:text-sm py-3 rounded-xl transition-all cursor-pointer shadow-md"
               >
                 <svg
                   className="w-5 h-5"
@@ -410,7 +411,7 @@ function LoginFormContent() {
           </div>
         </div>
 
-        <div className="text-center mt-6 text-zinc-400 text-sm">
+        <div className="text-center mt-6 text-zinc-400 text-xs sm:text-sm">
           <Link href="/" className="hover:text-amber-400 transition-colors">
             بازگشت به صفحه اصلی
           </Link>
@@ -424,7 +425,7 @@ export default function LoginForm() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed">
+        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed text-xs sm:text-sm">
           بارگذاری...
         </div>
       }

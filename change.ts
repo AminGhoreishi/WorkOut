@@ -628,6 +628,26 @@ export const modifiedFiles = [
     id: 126,
     filePath: "src/modules/admin/pr/PersonalRecords.tsx",
     description: "Refactored PersonalRecords and PR sub-components (PRChart, CreatePRModal, CreateMetricModal, PRHistoryTable, PRStateViews) to modern black and gold theme with zero code comments."
+  },
+  {
+    id: 127,
+    filePath: "src/modules/dashboard/AdminDashboardUser/DashboardStats.tsx",
+    description: "Connected DashboardStats to SWR /api/user/fitness-profile endpoint to dynamically render weight, height, weekly session goals, training experience, and equipment stats with zero code comments."
+  },
+  {
+    id: 128,
+    filePath: "src/utils/fitnessProfile.ts",
+    description: "Created fitnessProfile utility helper file containing exported goalLabels, experienceLabels, and equipmentLabels constants with zero code comments."
+  },
+  {
+    id: 129,
+    filePath: "src/modules/dashboard/AdminDashboardUser/DashboardStats.tsx",
+    description: "Adjusted stat values text size to text-sm on mobile screens below sm breakpoint (text-sm sm:text-2xl) with zero code comments."
+  },
+  {
+    id: 130,
+    filePath: "src/modules/auth/LoginForm.tsx",
+    description: "Adjusted font sizes to text-xs / text-sm on mobile screens below sm breakpoint (text-xs sm:text-sm, text-2xl sm:text-3xl) with zero code comments."
   }
 ];
 
