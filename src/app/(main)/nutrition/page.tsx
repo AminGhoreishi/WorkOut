@@ -26,9 +26,7 @@ export default async function NutritionPage() {
     endsAt: { $gt: new Date() },
   });
 
-  if (!subscription) {
-    return <NutritionLock />;
-  }
+
 
   return <NutritionTracker userId={session.user.id} />;
 }

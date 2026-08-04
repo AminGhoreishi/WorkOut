@@ -41,7 +41,11 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
     useState<keyof MealData>("breakfast");
   const [isEditingTarget, setIsEditingTarget] = useState(false);
 
-  const { data: logData, isLoading: isLoadingMeals, mutate } = useSWR<NutritionLog | null>(
+  const {
+    data: logData,
+    isLoading: isLoadingMeals,
+    mutate,
+  } = useSWR<NutritionLog | null>(
     `/api/nutrition?date=${selectedDate}`,
     fetcher,
     {
@@ -129,9 +133,10 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   }, [currentMeals]);
 
   const caloriesRemaining = Math.max(0, targetCalories - dailyTotals.calories);
-  const calPercent = targetCalories > 0
-    ? Math.min(100, Math.round((dailyTotals.calories / targetCalories) * 100))
-    : 0;
+  const calPercent =
+    targetCalories > 0
+      ? Math.min(100, Math.round((dailyTotals.calories / targetCalories) * 100))
+      : 0;
 
   const handleDeleteFood = useCallback(
     async (mealType: keyof MealData, itemId: string) => {
@@ -179,7 +184,17 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
         mutate();
       }
     },
-    [currentMeals, currentWater, targetCalories, targetMacros, targetWater, logData?._id, selectedDate, userId, mutate],
+    [
+      currentMeals,
+      currentWater,
+      targetCalories,
+      targetMacros,
+      targetWater,
+      logData?._id,
+      selectedDate,
+      userId,
+      mutate,
+    ],
   );
 
   const handleSaveFood = useCallback(
@@ -205,7 +220,18 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
       mutate(updatedLog, false);
       setIsModalOpen(false);
     },
-    [currentMeals, activeMealType, logData?._id, userId, selectedDate, currentWater, targetCalories, targetMacros, targetWater, mutate],
+    [
+      currentMeals,
+      activeMealType,
+      logData?._id,
+      userId,
+      selectedDate,
+      currentWater,
+      targetCalories,
+      targetMacros,
+      targetWater,
+      mutate,
+    ],
   );
 
   const handleWaterChange = useCallback(
@@ -225,8 +251,11 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   }, []);
 
   return (
-    <div className="font-danaMed pt-4 md:pt-8 bg-neutral-950 min-h-screen text-white" dir="rtl">
-      <div className="container mx-auto px-4">
+    <div
+      className="font-danaMed  pt-4 md:pt-8 bg-neutral-950 min-h-screen text-white"
+      dir="rtl"
+    >
+      <div className="container mx-auto ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">
@@ -321,7 +350,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                     }}
                   />
                   <div className="text-center z-10">
-                    <span className="block text-2xl sm:text-3xl font-extrabold text-amber-400 ss02 font-sans">
+                    <span className="block text-2xl sm:text-3xl font-extrabold text-amber-400 ss02">
                       {dailyTotals.calories}
                     </span>
                     <span className="text-neutral-400 text-[10px] sm:text-xs mt-0.5 block">
@@ -337,7 +366,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                     باقی‌مانده:
                   </span>
                   {targetsLoaded ? (
-                    <span className="text-white font-bold text-sm sm:text-lg ss02 font-sans">
+                    <span className="text-white font-bold text-sm sm:text-lg ss02">
                       {caloriesRemaining} kcal
                     </span>
                   ) : (
@@ -349,7 +378,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                     درصد تکمیل:
                   </span>
                   {targetsLoaded ? (
-                    <span className="text-amber-400 font-bold text-xs sm:text-base ss02 font-sans">
+                    <span className="text-amber-400 font-bold text-xs sm:text-base ss02">
                       {calPercent}%
                     </span>
                   ) : (
@@ -390,7 +419,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
                     <span className="text-amber-300">پروتئین (عضله‌ساز)</span>
-                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
+                    <span className="text-neutral-400 flex items-center gap-1 ss02">
                       {dailyTotals.protein} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.protein}g`
@@ -412,7 +441,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
                     <span className="text-amber-400">کربوهیدرات (انرژی)</span>
-                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
+                    <span className="text-neutral-400 flex items-center gap-1 ss02">
                       {dailyTotals.carbs} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.carbs}g`
@@ -434,7 +463,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
                 <div>
                   <div className="flex justify-between text-[10px] sm:text-xs mb-1">
                     <span className="text-yellow-400">چربی (هورمون‌ساز)</span>
-                    <span className="text-neutral-400 flex items-center gap-1 ss02 font-sans">
+                    <span className="text-neutral-400 flex items-center gap-1 ss02">
                       {dailyTotals.fat} /{" "}
                       {targetsLoaded ? (
                         `${targetMacros.fat}g`

@@ -53,9 +53,24 @@ export interface HomeArticleItem {
   publishDate: string;
 }
 
+export interface HomeWorkoutPlanItem {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  icon: string;
+  features: string[];
+}
+
+export interface WorkoutPlansProps {
+  plans?: HomeWorkoutPlanItem[];
+}
+
 export interface HomeTemplateProps {
   articles: HomeArticleItem[];
   stats: HomeStats;
+  plans?: HomeWorkoutPlanItem[];
 }
 
 export interface HeaderSessionUser {
