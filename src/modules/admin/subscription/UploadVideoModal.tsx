@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import type { UploadVideoModalProps } from "@/types/workout";
@@ -20,11 +21,11 @@ export default function UploadVideoModal({
   const handleUploadVideo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!videoFile || !thumbnailFile || !newVideoTitle) {
-      showAlert(
-        "هشدار",
-        "لطفا فایل ویدیو، کاور و عنوان را انتخاب کنید",
-        "warning",
-      );
+      showAlert({
+        title: "هشدار",
+        text: "لطفاً فایل ویدیو، کاور و عنوان را انتخاب کنید",
+        icon: "warning",
+      });
       return;
     }
     setUploadingVideo(true);
@@ -51,24 +52,35 @@ export default function UploadVideoModal({
       });
 
       if (res.ok) {
-        showAlert("موفقیت", "ویدیو با موفقیت آپلود شد", "success");
+        showAlert({
+          title: "موفقیت",
+          text: "ویدیو با موفقیت آپلود شد",
+          icon: "success",
+        });
         onUploadSuccess();
         onClose();
       } else {
-        const err = await res.json();
-        showAlert("خطا", `خطا در آپلود: ${err.message}`, "error");
+        const err = await res.json().catch(() => ({}));
+        showAlert({
+          title: "خطا",
+          text: err.message || "خطا در آپلود ویدیو",
+          icon: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
-      showAlert("خطا", "خطا در آپلود ویدیو", "error");
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در آپلود ویدیو",
+        icon: "error",
+      });
     } finally {
       setUploadingVideo(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
+      <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             آپلود ویدیوی ورزشی جدید به آروان
@@ -76,7 +88,7 @@ export default function UploadVideoModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-white/60 hover:text-white"
+            className="text-white/60 hover:text-white cursor-pointer"
             disabled={uploadingVideo}
           >
             ✕
@@ -90,8 +102,7 @@ export default function UploadVideoModal({
               در حال آپلود ویدیو به سرورهای ابری آروان...
             </div>
             <p className="text-white/50 text-xs">
-              لطفاً پنجره را نبندید. آپلود فایل‌های حجیم ممکن است چند
-              دقیقه طول بکشد.
+              لطفاً پنجره را نبندید. آپلود فایل‌های حجیم ممکن است چند دقیقه طول بکشد.
             </p>
           </div>
         ) : (
@@ -161,7 +172,7 @@ export default function UploadVideoModal({
                 <select
                   value={newVideoLevel}
                   onChange={(e) => setNewVideoLevel(e.target.value)}
-                  className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                  className="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
                 >
                   <option value="beginner">مبتدی (Beginner)</option>
                   <option value="intermediate">
@@ -179,7 +190,7 @@ export default function UploadVideoModal({
                   placeholder="۶۰"
                   value={newVideoDuration}
                   onChange={(e) => setNewVideoDuration(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 font-sans ss02"
                 />
               </div>
             </div>
@@ -200,14 +211,14 @@ export default function UploadVideoModal({
             <div className="flex gap-3 pt-4">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold py-2.5 rounded-lg hover:opacity-90 text-sm cursor-pointer"
+                className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold py-2.5 rounded-xl hover:opacity-90 text-sm cursor-pointer"
               >
                 شروع فرآیند آپلود
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-lg border border-white/10 text-sm cursor-pointer"
+                className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-xl border border-white/10 text-sm cursor-pointer"
               >
                 انصراف
               </button>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Plus, Users, Check, X, Clock, Film } from "lucide-react";
-
 import type {
   PackageInfo,
   SubscriptionItem,
@@ -11,7 +10,6 @@ import type {
   VideosManagementRef,
 } from "@/types/workout";
 import { showAlert } from "@/utils/alert";
-
 import UploadVideoModal from "./UploadVideoModal";
 import VideosManagement from "./VideosManagement";
 import CreateSubscriptionModal from "./CreateSubscriptionModal";
@@ -25,7 +23,7 @@ export default function SubscriptionsManagement() {
   const videosRef = useRef<VideosManagementRef>(null);
 
   const [activeTab, setActiveTab] = useState<"subscriptions" | "videos">(
-    "subscriptions",
+    "subscriptions"
   );
 
   const [stats, setStats] = useState({
@@ -54,14 +52,21 @@ export default function SubscriptionsManagement() {
     try {
       const res = await fetch("/api/admin/package");
       if (res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setPackages(data.packages || []);
       } else {
-        showAlert("خطا", "دریافت لیست پکیج‌ها با خطا مواجه شد", "error");
+        showAlert({
+          title: "خطا",
+          text: "دریافت لیست پکیج‌ها با خطا مواجه شد",
+          icon: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
-      showAlert("خطا", "خطا در برقراری ارتباط با سرور", "error");
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در برقراری ارتباط با سرور",
+        icon: "error",
+      });
     }
   };
 
@@ -75,39 +80,40 @@ export default function SubscriptionsManagement() {
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat("fa-IR").format(num);
+    return new Intl.NumberFormat("fa-IR").format(num || 0);
   };
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br bg-black/30 p-4 md:p-8"
+      className="min-h-screen bg-black/30 p-4 md:p-8 font-danaMed"
       dir="rtl"
     >
       <div className="container mx-auto pt-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-6">
           <div>
-            <h1 className="text-3xl text-white mb-2 font-morabeReg">
+            <h1 className="text-3xl text-white mb-2 font-morabbaReg">
               مدیریت اشتراک و ویدیوها
             </h1>
             <p className="text-white/60 text-xs sm:text-sm md:text-base">
-              تخصیص برنامه‌های ورزشی به کاربران و مدیریت بانک فیلم‌های آموزشی
-              بدنسازی
+              تخصیص برنامه‌های ورزشی به کاربران و مدیریت بانک فیلم‌های آموزشی بدنسازی
             </p>
           </div>
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-5 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all text-sm cursor-pointer"
+              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all text-sm cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               ثبت اشتراک دستی
             </button>
             <button
+              type="button"
               onClick={() => {
                 setActiveTab("videos");
                 setShowUploadVideoModal(true);
               }}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-5 py-3 rounded-lg flex items-center gap-2 transition-all font-medium text-sm"
+              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition-all font-medium text-sm cursor-pointer"
             >
               <Film className="w-4 h-4 text-amber-400" />
               آپلود ویدیوی جدید
@@ -117,10 +123,11 @@ export default function SubscriptionsManagement() {
 
         <div className="border-b border-white/10 mb-6 flex gap-4 overflow-x-auto">
           <button
+            type="button"
             onClick={() => setActiveTab("subscriptions")}
-            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 ${
+            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "subscriptions"
-                ? "border-amber-400 text-white"
+                ? "border-amber-400 text-white font-bold"
                 : "border-transparent text-white/55 hover:text-white"
             }`}
           >
@@ -128,10 +135,11 @@ export default function SubscriptionsManagement() {
             اشتراک‌ها و برنامه‌های تمرینی
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab("videos")}
-            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 ${
+            className={`pb-3 font-semibold text-sm transition-all border-b-2 px-2 flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "videos"
-                ? "border-amber-400 text-white"
+                ? "border-amber-400 text-white font-bold"
                 : "border-transparent text-white/55 hover:text-white"
             }`}
           >
@@ -148,16 +156,16 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">کل اشتراک‌ها</span>
                   <Users className="w-5 h-5 text-purple-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabeReg">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
                   {formatNumber(stats.total)}
                 </div>
               </div>
               <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-white/60 text-sm">فعال</span>
-                  <Check className="w-5 h-5 text-green-400" />
+                  <Check className="w-5 h-5 text-emerald-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabeReg">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
                   {formatNumber(stats.active)}
                 </div>
               </div>
@@ -166,7 +174,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">آزمایشی (Trial)</span>
                   <Clock className="w-5 h-5 text-blue-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabeReg">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
                   {formatNumber(stats.trial)}
                 </div>
               </div>
@@ -175,7 +183,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">منقضی شده</span>
                   <X className="w-5 h-5 text-red-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabeReg">
+                <div className="text-3xl text-white font-bold font-morabbaReg ss02 font-sans">
                   {formatNumber(stats.expired)}
                 </div>
               </div>

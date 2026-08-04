@@ -37,6 +37,13 @@ export interface WorkoutPlan {
   isActive: boolean;
 }
 
+export interface WorkoutWeekInfo {
+  _id: string;
+  packageId: string;
+  title: string;
+  createdAt?: string;
+}
+
 export interface WorkoutDay {
   _id: string;
   planId: string;
@@ -270,4 +277,47 @@ export interface UploadVideoModalProps {
 export interface WorkoutErrorStateProps {
   message?: string;
   onRetry: () => void;
+}
+
+export interface CreatePlanFormProps {
+  selectedPackage: PackageInfo;
+  onSuccess: (plan: WorkoutPlan) => void;
+}
+
+export interface WorkoutExerciseFormProps {
+  editingExercise: WorkoutExercise | null;
+  selectedDayId: string;
+  videos: VideoInfo[];
+  onSuccess: () => void;
+  onCancel: () => void;
+  defaultSortOrder: number;
+}
+
+export interface WorkoutExercisesSectionProps {
+  selectedDay: WorkoutDay;
+  exercises: WorkoutExercise[];
+  videos: VideoInfo[];
+  onFetchExercises: (dayId: string) => void;
+  onDeleteExercise: (id: string) => void;
+}
+
+export interface EditPlanInfoFormProps {
+  workoutPlan: WorkoutPlan;
+  onSuccess: (updatedPlan: WorkoutPlan) => void;
+  onCancel: () => void;
+}
+
+export interface WorkoutWeeksListProps {
+  workoutWeeks: WorkoutWeekInfo[];
+  selectedWeek: WorkoutWeekInfo | null;
+  onSelectWeek: (week: WorkoutWeekInfo) => void;
+  onDeleteWeek: (id: string) => void;
+}
+
+export interface WorkoutDaysListProps {
+  workoutDays: WorkoutDay[];
+  selectedDay: WorkoutDay | null;
+  onSelectDay: (day: WorkoutDay) => void;
+  onEditDay: (day: WorkoutDay) => void;
+  onDeleteDay: (id: string) => void;
 }

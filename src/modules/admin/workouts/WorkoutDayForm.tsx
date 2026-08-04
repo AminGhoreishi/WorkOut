@@ -1,7 +1,8 @@
 "use client";
+
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { WorkoutDayFormProps, WorkoutDayFormInputs, WorkoutDay } from "@/types/workout";
+import type { WorkoutDayFormProps, WorkoutDayFormInputs, WorkoutDay } from "@/types/workout";
 import { showAlert } from "@/utils/alert";
 
 export default function WorkoutDayForm({
@@ -31,7 +32,11 @@ export default function WorkoutDayForm({
 
   const onSubmit = async (data: WorkoutDayFormInputs) => {
     if (!data.dayName?.trim() || !data.muscleGroup?.trim()) {
-      showAlert("خطا", "پر کردن نام روز و گروه عضلانی الزامی است.", "error");
+      showAlert({
+        title: "خطا",
+        text: "پر کردن نام روز و گروه عضلانی الزامی است.",
+        icon: "error",
+      });
       return;
     }
     try {
@@ -54,6 +59,13 @@ export default function WorkoutDayForm({
             sortOrder: Number(data.sortOrder),
           };
           onSuccess(updatedDay);
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showAlert({
+            title: "خطا",
+            text: err.message || "خطا در ویرایش روز",
+            icon: "error",
+          });
         }
       } else {
         const res = await fetch("/api/admin/subscription/workout-days", {
@@ -68,17 +80,29 @@ export default function WorkoutDayForm({
         });
         if (res.ok) {
           onSuccess();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showAlert({
+            title: "خطا",
+            text: err.message || "خطا در ایجاد روز",
+            icon: "error",
+          });
         }
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در برقراری ارتباط با سرور",
+        icon: "error",
+      });
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 text-right animate-in fade-in slide-in-from-top-4 duration-200"
+      className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 text-right font-danaMed animate-in fade-in slide-in-from-top-4 duration-200"
+      dir="rtl"
     >
       <div className="text-white font-bold text-xs">
         {editingDay ? "ویرایش روز تمرین" : "ثبت روز جدید"}
@@ -106,21 +130,21 @@ export default function WorkoutDayForm({
           type="number"
           placeholder="ترتیب نمایش"
           {...register("sortOrder", { required: true })}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 font-sans ss02"
           required
         />
       </div>
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 bg-green-600 hover:bg-green-700 text-white py-1.5 rounded text-xs transition-colors cursor-pointer"
+          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-lg text-xs transition-colors cursor-pointer"
         >
           {editingDay ? "بروزرسانی" : "افزودن"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-white/10 hover:bg-white/15 text-white py-1.5 rounded text-xs transition-colors cursor-pointer"
+          className="flex-1 bg-white/10 hover:bg-white/15 text-white py-1.5 rounded-lg text-xs transition-colors cursor-pointer"
         >
           انصراف
         </button>

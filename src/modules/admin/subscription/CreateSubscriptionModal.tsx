@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import type {
@@ -26,14 +27,14 @@ export default function CreateSubscriptionModal({
       const fetchSearchUsers = async () => {
         try {
           const res = await fetch(
-            `/api/admin/search?query=${encodeURIComponent(userSearchTerm)}`,
+            `/api/admin/search?query=${encodeURIComponent(userSearchTerm)}`
           );
           if (res.ok) {
-            const data = await res.json();
+            const data = await res.json().catch(() => ({}));
             setSearchedUsers(data.userFind || []);
           }
-        } catch (e) {
-          console.error(e);
+        } catch {
+          setSearchedUsers([]);
         }
       };
       fetchSearchUsers();
@@ -45,7 +46,11 @@ export default function CreateSubscriptionModal({
   const handleCreateSubscription = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser || !selectedPackageId) {
-      showAlert("هشدار", "لطفا کاربر و پکیج را انتخاب کنید", "warning");
+      showAlert({
+        title: "هشدار",
+        text: "لطفاً کاربر و پکیج را انتخاب کنید",
+        icon: "warning",
+      });
       return;
     }
     try {
@@ -62,22 +67,33 @@ export default function CreateSubscriptionModal({
         }),
       });
       if (res.ok) {
-        showAlert("موفقیت", "اشتراک با موفقیت ثبت شد", "success");
+        showAlert({
+          title: "موفقیت",
+          text: "اشتراک با موفقیت ثبت شد",
+          icon: "success",
+        });
         onSuccess();
         onClose();
       } else {
-        const err = await res.json();
-        showAlert("خطا", `خطا: ${err.message}`, "error");
+        const err = await res.json().catch(() => ({}));
+        showAlert({
+          title: "خطا",
+          text: err.message || "خطا در ثبت اشتراک",
+          icon: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
-      showAlert("خطا", "خطا در ایجاد اشتراک", "error");
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در ایجاد اشتراک",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
+      <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             ثبت اشتراک جدید (دستی)
@@ -85,7 +101,7 @@ export default function CreateSubscriptionModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-white/60 hover:text-white"
+            className="text-white/60 hover:text-white cursor-pointer"
           >
             ✕
           </button>
@@ -99,12 +115,12 @@ export default function CreateSubscriptionModal({
               جستجو و انتخاب کاربر
             </label>
             {selectedUser ? (
-              <div className="bg-white/5 border border-green-500/30 rounded-lg p-3 flex justify-between items-center">
+              <div className="bg-white/5 border border-emerald-500/30 rounded-lg p-3 flex justify-between items-center">
                 <div>
                   <div className="text-white font-semibold">
                     {selectedUser.fullName || "کاربر بدون نام"}
                   </div>
-                  <div className="text-white/50 text-xs">
+                  <div className="text-white/50 text-xs font-sans">
                     @{selectedUser.username} |{" "}
                     {selectedUser.phone || selectedUser.email}
                   </div>
@@ -112,7 +128,7 @@ export default function CreateSubscriptionModal({
                 <button
                   type="button"
                   onClick={() => setSelectedUser(null)}
-                  className="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/30 transition-colors cursor-pointer"
+                  className="bg-red-500/20 text-red-400 p-1 px-3.5 rounded-lg hover:bg-red-500/30 transition-colors cursor-pointer text-xs font-bold"
                 >
                   تغییر
                 </button>
@@ -128,7 +144,7 @@ export default function CreateSubscriptionModal({
                   className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm"
                 />
                 {searchedUsers.length > 0 && (
-                  <div className="absolute top-full right-0 left-0 bg-gray-800 border border-white/10 rounded-lg mt-1 overflow-hidden z-10 max-h-48 overflow-y-auto shadow-xl">
+                  <div className="absolute top-full right-0 left-0 bg-neutral-900 border border-white/10 rounded-lg mt-1 overflow-hidden z-10 max-h-48 overflow-y-auto shadow-xl">
                     {searchedUsers.map((u) => (
                       <button
                         key={u._id}
@@ -142,7 +158,7 @@ export default function CreateSubscriptionModal({
                         <div className="font-semibold text-sm">
                           {u.fullName || "بدون نام"}
                         </div>
-                        <div className="text-xs text-white/50">
+                        <div className="text-xs text-white/50 font-sans">
                           @{u.username} | {u.phone || u.email}
                         </div>
                       </button>
@@ -160,7 +176,7 @@ export default function CreateSubscriptionModal({
             <select
               value={selectedPackageId}
               onChange={(e) => setSelectedPackageId(e.target.value)}
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
+              className="w-full bg-neutral-900 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
               required
             >
               <option value="">انتخاب پکیج...</option>
@@ -180,10 +196,10 @@ export default function CreateSubscriptionModal({
               value={createStatus}
               onChange={(e) =>
                 setCreateStatus(
-                  e.target.value as SubscriptionItem["status"],
+                  e.target.value as SubscriptionItem["status"]
                 )
               }
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
+              className="w-full bg-neutral-900 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
             >
               <option value="active">فعال</option>
               <option value="trial">تست (Trial)</option>
@@ -206,14 +222,14 @@ export default function CreateSubscriptionModal({
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold py-2.5 rounded-lg hover:opacity-90 text-sm cursor-pointer"
+              className="flex-1 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold py-2.5 rounded-xl hover:opacity-90 text-sm cursor-pointer"
             >
               ثبت اشتراک
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-lg border border-white/10 text-sm cursor-pointer"
+              className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-xl border border-white/10 text-sm cursor-pointer"
             >
               انصراف
             </button>

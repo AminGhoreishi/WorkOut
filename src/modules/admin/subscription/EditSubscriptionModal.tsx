@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type {
@@ -35,22 +36,33 @@ export default function EditSubscriptionModal({
         }),
       });
       if (res.ok) {
-        showAlert("موفقیت", "اشتراک با موفقیت بروزرسانی شد", "success");
+        showAlert({
+          title: "موفقیت",
+          text: "اشتراک با موفقیت بروزرسانی شد",
+          icon: "success",
+        });
         onSuccess();
         onClose();
       } else {
-        const err = await res.json();
-        showAlert("خطا", `خطا: ${err.message}`, "error");
+        const err = await res.json().catch(() => ({}));
+        showAlert({
+          title: "خطا",
+          text: err.message || "خطا در ویرایش اشتراک",
+          icon: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
-      showAlert("خطا", "خطا در ویرایش اشتراک", "error");
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در ویرایش اشتراک",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/10 rounded-2xl max-w-md w-full">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
+      <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-md w-full">
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             ویرایش اشتراک کاربر
@@ -58,7 +70,7 @@ export default function EditSubscriptionModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-white/60 hover:text-white"
+            className="text-white/60 hover:text-white cursor-pointer"
           >
             ✕
           </button>
@@ -79,7 +91,7 @@ export default function EditSubscriptionModal({
             </label>
             <select
               {...register("status", { required: true })}
-              className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
+              className="w-full bg-neutral-900 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500/30 cursor-pointer"
             >
               <option value="active">فعال</option>
               <option value="trial">تست (Trial)</option>
@@ -103,14 +115,14 @@ export default function EditSubscriptionModal({
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2.5 rounded-lg hover:opacity-90 font-medium text-sm cursor-pointer"
+              className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2.5 rounded-xl hover:opacity-90 font-medium text-sm cursor-pointer"
             >
               ذخیره تغییرات
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-lg border border-white/10 text-sm cursor-pointer"
+              className="flex-1 bg-white/5 hover:bg-white/10 text-white py-2.5 rounded-xl border border-white/10 text-sm cursor-pointer"
             >
               انصراف
             </button>

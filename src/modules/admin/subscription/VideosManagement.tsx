@@ -1,4 +1,5 @@
 "use client";
+
 import {
   useState,
   useEffect,
@@ -17,17 +18,17 @@ import Pagination from "@/components/AdminPagination";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default forwardRef<VideosManagementRef, VideosManagementProps>(
+const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
   function VideosManagement(
     { setShowUploadVideoModal, setWatchingVideo, onVideosUpdate },
-    ref,
+    ref
   ) {
     const [searchVideoTerm, setSearchVideoTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data, isLoading, mutate } = useSWR(
       `/api/admin/video?page=${currentPage}`,
-      fetcher,
+      fetcher
     );
 
     const videos: VideoInfo[] = data?.videos || [];
@@ -46,11 +47,11 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
           await mutate();
         },
       }),
-      [mutate],
+      [mutate]
     );
 
     const formatNumber = (num: number) => {
-      return new Intl.NumberFormat("fa-IR").format(num);
+      return new Intl.NumberFormat("fa-IR").format(num || 0);
     };
 
     const formatDuration = (sec?: number) => {
@@ -63,8 +64,8 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
     const getVideoLevelBadge = (level?: string) => {
       if (!level) return null;
       const styles: Record<string, string> = {
-        beginner: "bg-green-500/20 text-green-400 border-green-500/30",
-        intermediate: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+        beginner: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+        intermediate: "bg-amber-500/20 text-amber-400 border-amber-500/30",
         advanced: "bg-red-500/20 text-red-400 border-red-500/30",
       };
       const labels: Record<string, string> = {
@@ -82,34 +83,51 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
     };
 
     const handleDeleteVideo = async (id: string) => {
-      if (
-        !(await showConfirm("حذف ویدیو", "آیا از حذف این ویدیو اطمینان دارید؟"))
-      )
-        return;
+      const confirmed = await showConfirm({
+        title: "حذف ویدیو",
+        text: "آیا از حذف این ویدیو اطمینان دارید؟",
+        confirmButtonText: "بله، حذف شود",
+        icon: "warning",
+      });
+
+      if (!confirmed) return;
+
       try {
         const res = await fetch(`/api/admin/video?id=${id}`, {
           method: "DELETE",
         });
         if (res.ok) {
-          showAlert("موفقیت", "ویدیو با موفقیت حذف شد", "success");
+          showAlert({
+            title: "موفقیت",
+            text: "ویدیو با موفقیت حذف شد",
+            icon: "success",
+          });
           mutate();
         } else {
-          const err = await res.json();
-          showAlert("خطا", `خطا: ${err.message}`, "error");
+          const err = await res.json().catch(() => ({}));
+          showAlert({
+            title: "خطا",
+            text: err.message || "خطا در حذف ویدیو",
+            icon: "error",
+          });
         }
-      } catch (e) {
-        console.error(e);
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "خطا در برقراری ارتباط با سرور",
+          icon: "error",
+        });
       }
     };
 
     const filteredVideos = videos.filter(
       (vid) =>
         vid.title.toLowerCase().includes(searchVideoTerm.toLowerCase()) ||
-        vid.description?.toLowerCase().includes(searchVideoTerm.toLowerCase()),
+        vid.description?.toLowerCase().includes(searchVideoTerm.toLowerCase())
     );
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 font-danaMed" dir="rtl">
         <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full sm:w-80">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -122,8 +140,9 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
             />
           </div>
           <button
+            type="button"
             onClick={() => setShowUploadVideoModal(true)}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             آپلود ویدیوی ورزشی جدید
@@ -139,8 +158,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
           <div className="p-16 text-center border border-dashed border-white/10 rounded-2xl text-white/40 flex flex-col items-center justify-center">
             <Film className="w-12 h-12 text-white/10 mb-3" />
             <p className="text-sm">
-              هیچ ویدیوی تمرینی ثبت نشده است. همین حالا اولین ویدیو را آپلود
-              کنید!
+              هیچ ویدیوی تمرینی ثبت نشده است. همین حالا اولین ویدیو را آپلود کنید!
             </p>
           </div>
         ) : (
@@ -163,6 +181,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                     )}
 
                     <button
+                      type="button"
                       onClick={() => setWatchingVideo(vid)}
                       className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity animate-none"
                     >
@@ -171,7 +190,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                       </div>
                     </button>
 
-                    <span className="absolute bottom-2 left-2 bg-black/75 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">
+                    <span className="absolute bottom-2 left-2 bg-black/75 text-white text-[10px] px-1.5 py-0.5 rounded font-mono ss02">
                       {formatDuration(vid.durationSec)}
                     </span>
 
@@ -183,7 +202,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                   <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
                       <h4
-                        className="text-white font-bold text-sm line-clamp-1 mb-1"
+                        className="text-white font-bold text-sm line-clamp-1 mb-1 font-morabbaReg"
                         title={vid.title}
                       >
                         {vid.title}
@@ -195,6 +214,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
 
                     <div className="flex gap-2 justify-between border-t border-white/5 pt-3">
                       <button
+                        type="button"
                         onClick={() => setWatchingVideo(vid)}
                         className="flex-1 bg-white/5 hover:bg-white/10 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors border border-white/10 cursor-pointer"
                       >
@@ -202,6 +222,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
                         پخش فیلم
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleDeleteVideo(vid._id)}
                         className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 p-2 rounded-lg transition-colors cursor-pointer"
                         title="حذف ویدیو"
@@ -216,7 +237,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
 
             {totalPages > 1 && (
               <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between rounded-xl">
-                <span className="text-white/60 text-xs">
+                <span className="text-white/60 text-xs ss02 font-sans">
                   نمایش صفحه {formatNumber(currentPage)} از{" "}
                   {formatNumber(totalPages)}
                 </span>
@@ -231,5 +252,7 @@ export default forwardRef<VideosManagementRef, VideosManagementProps>(
         )}
       </div>
     );
-  },
+  }
 );
+
+export default VideosManagement;

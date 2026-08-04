@@ -1,4 +1,5 @@
 "use client";
+
 import {
   useState,
   useEffect,
@@ -25,7 +26,7 @@ import type {
 import { showAlert, showConfirm } from "@/utils/alert";
 import Pagination from "@/components/AdminPagination";
 
-export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
+const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
   function SubscriptionsTable({ onOpenPlanModal, onEdit, onStatsUpdate }, ref) {
     const [subscriptions, setSubscriptions] = useState<SubscriptionItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,14 +42,14 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
       try {
         const url = `/api/admin/subscription?page=${currentPage}&limit=8&status=${statusFilter}&search=${encodeURIComponent(debouncedSearch)}`;
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch subscriptions");
-        const data = await res.json();
+        if (!res.ok) throw new Error("خطا در بارگذاری لیست اشتراک‌ها");
+        const data = await res.json().catch(() => ({}));
         setSubscriptions(data.subscriptions || []);
         setTotalPages(data.totalPages || 1);
 
         const statsRes = await fetch("/api/admin/subscription?limit=10000");
         if (statsRes.ok) {
-          const statsData = await statsRes.json();
+          const statsData = await statsRes.json().catch(() => ({}));
           const allSubs: SubscriptionItem[] = statsData.subscriptions || [];
           onStatsUpdate({
             total: allSubs.length,
@@ -57,9 +58,12 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
             expired: allSubs.filter((s) => s.status === "expired").length,
           });
         }
-      } catch (e) {
-        console.error(e);
-        showAlert("خطا", "خطا در بارگذاری اشتراک‌ها", "error");
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "خطا در بارگذاری اشتراک‌ها",
+          icon: "error",
+        });
       } finally {
         setLoading(false);
       }
@@ -72,7 +76,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
           fetchSubscriptions();
         },
       }),
-      [fetchSubscriptions],
+      [fetchSubscriptions]
     );
 
     useEffect(() => {
@@ -88,7 +92,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
     }, [searchTerm]);
 
     const formatNumber = (num: number) => {
-      return new Intl.NumberFormat("fa-IR").format(num);
+      return new Intl.NumberFormat("fa-IR").format(num || 0);
     };
 
     const formatDate = (dateString?: string) => {
@@ -96,16 +100,16 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
       try {
         const date = new Date(dateString);
         return date.toLocaleDateString("fa-IR");
-      } catch (e) {
+      } catch {
         return dateString;
       }
     };
 
     const getStatusBadge = (status: SubscriptionItem["status"]) => {
       const styles = {
-        active: "bg-green-500/20 text-green-400 border-green-500/30",
+        active: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
         trial: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-        expired: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+        expired: "bg-amber-500/20 text-amber-400 border-amber-500/30",
         cancelled: "bg-red-500/20 text-red-400 border-red-500/30",
       };
 
@@ -126,32 +130,45 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
     };
 
     const handleDeleteSubscription = async (id: string) => {
-      if (
-        !(await showConfirm(
-          "حذف اشتراک",
-          "آیا از حذف این اشتراک اطمینان دارید؟",
-        ))
-      )
-        return;
+      const confirmed = await showConfirm({
+        title: "حذف اشتراک",
+        text: "آیا از حذف این اشتراک اطمینان دارید؟",
+        confirmButtonText: "بله، حذف شود",
+        icon: "warning",
+      });
+
+      if (!confirmed) return;
+
       try {
         const res = await fetch(`/api/admin/subscription?id=${id}`, {
           method: "DELETE",
         });
         if (res.ok) {
-          showAlert("موفقیت", "اشتراک با موفقیت حذف شد", "success");
+          showAlert({
+            title: "موفقیت",
+            text: "اشتراک با موفقیت حذف شد",
+            icon: "success",
+          });
           fetchSubscriptions();
         } else {
-          const err = await res.json();
-          showAlert("خطا", `خطا: ${err.message}`, "error");
+          const err = await res.json().catch(() => ({}));
+          showAlert({
+            title: "خطا",
+            text: err.message || "خطا در حذف اشتراک",
+            icon: "error",
+          });
         }
-      } catch (e) {
-        console.error(e);
-        showAlert("خطا", "خطا در حذف اشتراک", "error");
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "خطا در برقراری ارتباط با سرور",
+          icon: "error",
+        });
       }
     };
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 font-danaMed" dir="rtl">
         <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
@@ -170,6 +187,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
             {["all", "active", "trial", "expired", "cancelled"].map((st) => (
               <button
                 key={st}
+                type="button"
                 onClick={() => setStatusFilter(st)}
                 className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                   statusFilter === st
@@ -237,7 +255,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                             <div className="font-semibold text-white">
                               {sub.userId?.fullName || "کاربر ناشناس"}
                             </div>
-                            <div className="text-white/50 text-xs">
+                            <div className="text-white/50 text-xs font-sans">
                               @{sub.userId?.username || "username"} |{" "}
                               {sub.userId?.phone || sub.userId?.email || "-"}
                             </div>
@@ -249,19 +267,20 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                           {sub.packageId?.name || "پکیج حذف شده"}
                         </span>
                       </td>
-                      <td className="p-4 text-white/80 whitespace-nowrap">
+                      <td className="p-4 text-white/80 whitespace-nowrap ss02 font-sans">
                         {formatDate(sub.startsAt)}
                       </td>
-                      <td className="p-4 text-white/80 whitespace-nowrap">
+                      <td className="p-4 text-white/80 whitespace-nowrap ss02 font-sans">
                         {formatDate(sub.endsAt)}
                       </td>
                       <td className="p-4 whitespace-nowrap">{getStatusBadge(sub.status)}</td>
                       <td className="p-4 text-center whitespace-nowrap">
                         <div className="relative inline-block text-right">
                           <button
+                            type="button"
                             onClick={() =>
                               setOpenDropdownId(
-                                openDropdownId === sub._id ? null : sub._id,
+                                openDropdownId === sub._id ? null : sub._id
                               )
                             }
                             className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer"
@@ -282,12 +301,17 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                               />
                               <div className="absolute left-0 top-full mt-1.5 w-48 bg-neutral-900/95 border border-white/15 rounded-xl shadow-2xl z-30 overflow-hidden py-1.5 backdrop-blur-xl">
                                 <button
+                                  type="button"
                                   onClick={() => {
                                     setOpenDropdownId(null);
                                     if (sub.packageId) {
                                       onOpenPlanModal(sub.packageId);
                                     } else {
-                                      showAlert("خطا", "پکیج یافت نشد!", "error");
+                                      showAlert({
+                                        title: "خطا",
+                                        text: "پکیج یافت نشد!",
+                                        icon: "error",
+                                      });
                                     }
                                   }}
                                   className="w-full text-right px-3.5 py-2 text-xs text-purple-300 hover:bg-purple-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
@@ -298,7 +322,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
 
                                 <Link
                                   href={`/admin/meal-plans?search=${encodeURIComponent(
-                                    sub.packageId?.name || "",
+                                    sub.packageId?.name || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
                                   className="w-full text-right px-3.5 py-2 text-xs text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
@@ -311,7 +335,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                                   href={`/admin/pr?userId=${encodeURIComponent(
                                     (typeof sub.userId === "object"
                                       ? sub.userId?._id
-                                      : sub.userId) || "",
+                                      : sub.userId) || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
                                   className="w-full text-right px-3.5 py-2 text-xs text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
@@ -323,6 +347,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                                 <div className="my-1 border-t border-white/10" />
 
                                 <button
+                                  type="button"
                                   onClick={() => {
                                     setOpenDropdownId(null);
                                     onEdit(sub);
@@ -334,6 +359,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
                                 </button>
 
                                 <button
+                                  type="button"
                                   onClick={() => {
                                     setOpenDropdownId(null);
                                     handleDeleteSubscription(sub._id);
@@ -357,7 +383,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
 
           {totalPages > 1 && (
             <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between">
-              <span className="text-white/60 text-xs">
+              <span className="text-white/60 text-xs ss02 font-sans">
                 نمایش صفحه {formatNumber(currentPage)} از{" "}
                 {formatNumber(totalPages)}
               </span>
@@ -371,5 +397,7 @@ export default forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
         </div>
       </div>
     );
-  },
+  }
 );
+
+export default SubscriptionsTable;
