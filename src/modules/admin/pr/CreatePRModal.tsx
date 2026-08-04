@@ -136,7 +136,7 @@ export default function CreatePRModal({
             </label>
             <select
               onChange={(e) => handleMetricSelect(e.target.value)}
-              className="w-full bg-neutral-950 border border-purple-500/30 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm cursor-pointer"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               {metrics.length === 0 ? (
                 <option value="">در حال بارگذاری یا هیچ متسی ثبت نشده است...</option>
@@ -159,7 +159,7 @@ export default function CreatePRModal({
               step="any"
               {...register("value", { required: true, valueAsNumber: true })}
               placeholder="مثال: ۱۰۰ یا ۲.۹۵"
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 text-left font-sans text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-left font-sans text-sm"
             />
             {errors.value && (
               <p className="text-red-400 text-xs mt-1">
@@ -173,7 +173,7 @@ export default function CreatePRModal({
             <input
               type="date"
               {...register("date", { required: true })}
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-left font-sans text-sm cursor-pointer"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-left font-sans text-sm cursor-pointer"
             />
           </div>
 
@@ -185,7 +185,7 @@ export default function CreatePRModal({
               {...register("notes")}
               rows={3}
               placeholder="یادداشت مربی (اختیاری)..."
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
 
@@ -200,7 +200,7 @@ export default function CreatePRModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-semibold rounded-xl text-sm shadow-lg shadow-purple-500/10 transition-all duration-200 cursor-pointer flex items-center gap-2"
+              className="px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-xl text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 cursor-pointer flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               ثبت رکورد

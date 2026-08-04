@@ -32,7 +32,7 @@ export default function PRHistoryTable({
                 key={rec._id}
                 className="border-b border-white/5 hover:bg-white/5 text-white text-xs transition-colors"
               >
-                <td className="p-3 font-medium text-purple-300">
+                <td className="p-3 font-medium text-amber-400">
                   {rec.testName}
                 </td>
                 <td className="p-3 text-white/70">{rec.category || "-"}</td>

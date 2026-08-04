@@ -135,10 +135,10 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
         fill: true,
         label: `مقدار رکورد (${currentUnit})`,
         data: chartValues,
-        borderColor: "rgb(168, 85, 247)",
-        backgroundColor: "rgba(168, 85, 247, 0.15)",
+        borderColor: "rgb(251, 191, 36)",
+        backgroundColor: "rgba(245, 158, 11, 0.15)",
         tension: 0.35,
-        pointBackgroundColor: "rgb(236, 72, 153)",
+        pointBackgroundColor: "rgb(234, 179, 8)",
         pointBorderColor: "#fff",
         pointBorderWidth: 2,
         pointHoverRadius: 8,
@@ -164,8 +164,8 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h2 className="text-xl text-white font-semibold flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-purple-400" />
+            <h2 className="text-xl text-white font-semibold flex items-center gap-2 font-morabbaReg">
+              <TrendingUp className="w-5 h-5 text-amber-400" />
               روند پیشرفت {userInfo?.fullName || userInfo?.username || "کاربر"}
             </h2>
             {userInfo && (
@@ -180,7 +180,7 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
               <select
                 value={selectedTest}
                 onChange={(e) => setSelectedTest(e.target.value)}
-                className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-purple-500/50 cursor-pointer"
+                className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">همه حرکت‌ها و تست‌ها</option>
                 {availableTests.map((t) => (

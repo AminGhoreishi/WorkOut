@@ -618,6 +618,16 @@ export const modifiedFiles = [
     id: 124,
     filePath: "src/modules/dashboard/workout/WorkoutExercisesSkeleton.tsx",
     description: "Refactored WorkoutExercisesSkeleton.tsx with zero code comments."
+  },
+  {
+    id: 125,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Fixed avatar URL overflow bug by rendering standard img tag for image URLs with zero code comments."
+  },
+  {
+    id: 126,
+    filePath: "src/modules/admin/pr/PersonalRecords.tsx",
+    description: "Refactored PersonalRecords and PR sub-components (PRChart, CreatePRModal, CreateMetricModal, PRHistoryTable, PRStateViews) to modern black and gold theme with zero code comments."
   }
 ];
 

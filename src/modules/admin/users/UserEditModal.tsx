@@ -112,8 +112,20 @@ export default function UserEditModal({
 
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-4 pb-4 border-b border-white/10">
-            <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center text-4xl font-bold text-amber-400">
-              {user.avatar || user.username?.[0]?.toUpperCase() || "👤"}
+            <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center text-4xl font-bold text-amber-400 overflow-hidden shrink-0">
+              {user.avatar &&
+              (user.avatar.startsWith("http://") ||
+                user.avatar.startsWith("https://") ||
+                user.avatar.startsWith("/") ||
+                user.avatar.startsWith("data:image")) ? (
+                <img
+                  src={user.avatar}
+                  alt={user.username || "کاربر"}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                user.avatar || user.username?.[0]?.toUpperCase() || "👤"
+              )}
             </div>
             <div>
               <div className="text-white text-lg font-bold">

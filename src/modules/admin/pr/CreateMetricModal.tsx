@@ -66,7 +66,7 @@ export default function CreateMetricModal({
       <div className="relative w-full max-w-lg bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <PlusCircle className="w-5 h-5 text-purple-400" />
+            <PlusCircle className="w-5 h-5 text-amber-400" />
             <h2 className="text-xl text-white font-bold font-morabbaReg">
               تعریف متس / متغیر ارزیابی جدید (Metric)
             </h2>
@@ -91,7 +91,7 @@ export default function CreateMetricModal({
               type="text"
               {...register("name", { required: true })}
               placeholder="مثال: 1RM اسکوات یا زمان دوی ۴۰ متر"
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm"
             />
             {errors.name && (
               <p className="text-red-400 text-xs mt-1">
@@ -105,7 +105,7 @@ export default function CreateMetricModal({
               <label className="block text-white/80 text-sm mb-2">دسته‌بندی</label>
               <select
                 {...register("category", { required: true })}
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm cursor-pointer"
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
               >
                 <option value="strength">قدرت</option>
                 <option value="speed">سرعت</option>
@@ -123,7 +123,7 @@ export default function CreateMetricModal({
               </label>
               <select
                 {...register("unit", { required: true })}
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500/50 text-sm cursor-pointer"
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
               >
                 <option value="kg">کیلوگرم (kg)</option>
                 <option value="sec">ثانیه (sec)</option>
@@ -144,7 +144,7 @@ export default function CreateMetricModal({
               {...register("description")}
               rows={3}
               placeholder="توضیحات تکمیلی متس (اختیاری)..."
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm"
             />
           </div>
 
@@ -159,7 +159,7 @@ export default function CreateMetricModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-semibold rounded-xl text-sm shadow-lg shadow-purple-500/10 transition-all duration-200 cursor-pointer flex items-center gap-2"
+              className="px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-xl text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 cursor-pointer flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               ثبت متس جدید

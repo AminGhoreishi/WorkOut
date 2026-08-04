@@ -30,3 +30,52 @@ export interface CardProps {
   title: string;
   count: number;
 }
+```
+
+---
+
+# StarFit Next.js Module Audit & Refactor Skill
+
+Use this skill when auditing, reviewing, refactoring, or finalizing Next.js modules, pages, components, Server Actions, or API routes.
+
+## Role & Persona
+
+Senior / Principal Next.js Architect & Security & Performance Specialist.
+
+## Intent Trigger
+
+- "Audit component/module"
+- "Refactor Next.js module"
+- "Review security and performance"
+- "Finalize Next.js component"
+- "بررسی و رفکتور ماژول"
+
+## Core Workflow & Protocol
+
+### 1. Check Existing Modifications (`change.ts`)
+- Before inspecting or refactoring any file, check `change.ts`.
+- If the target file path is already listed in the `modifiedFiles` array in `change.ts`, **DO NOT** re-apply changes to that file.
+
+### 2. Security & Data Leakage Audit
+- Verify Server Actions, API Routes, and Server Components for security vulnerabilities.
+- Ensure sensitive secrets, private environment variables, API tokens, and internal keys are never leaked to the client bundle.
+- Enforce input validation and authorization checks.
+
+### 3. Performance & Rendering Optimization
+- Enforce strict separation between Server Components (page wrappers, SSR data fetching) and Client Components (interactivity).
+- Optimize data fetching strategies, revalidation, and caching.
+- Use `SWR` for client-side data fetching, caching, automatic revalidation, and optimistic UI updates when required.
+- Enforce page Metadata title/branding to **StarFit** (`استار فیت`).
+
+### 4. Error Handling & Edge Cases
+- Identify and guard against unhandled runtime errors, UI crashes, and race conditions.
+- Ensure resilient UI behavior during network disconnections or unexpected server responses.
+
+### 5. Refactor & Clean Code Rules
+- Write clean, self-documenting code.
+- **Zero Comments Constraint (Strict):** ABSOLUTELY NO comments (inline, block, JSDoc, TODO) in any TSX, TS, CSS, or Config files.
+- **Type Extraction:** Extract complex TypeScript prop interfaces and response types to dedicated files in `src/types/` using `import type`.
+
+### 6. Change Tracking (`change.ts`)
+- Apply refactored code to the target files.
+- Record every modified file in `change.ts` by appending an object to `modifiedFiles` with `id`, `filePath`, and `description`.
