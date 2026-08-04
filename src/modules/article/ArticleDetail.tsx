@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import useSWR from "swr";
 import {
   Clock,
   Calendar,
@@ -12,13 +13,30 @@ import {
   MessageSquare,
   ThumbsUp,
   ArrowRight,
-  Inbox,
   BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { showAlert } from "@/utils/alert";
-import type { ArticleDetailProps } from "@/types/blog";
+import type {
+  ArticleDetailProps,
+  ArticleCommentItem,
+  ArticleCommentsApiResponse,
+} from "@/types/blog";
+import { getReadTime, isImageUrl } from "@/utils/article";
+import RelatedArticles from "./RelatedArticles";
+import ArticleTags from "./ArticleTags";
+import ArticleAuthorCard from "./ArticleAuthorCard";
+import ArticleCtaCard from "./ArticleCtaCard";
+import ArticleNotFound from "./ArticleNotFound";
+
+const fetcher = async (url: string): Promise<ArticleCommentsApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error("خطا در دریافت اطلاعات");
+  }
+  return res.json();
+};
 
 export default function ArticleDetail({
   article,
@@ -29,58 +47,31 @@ export default function ArticleDetail({
 }: ArticleDetailProps) {
   const [liked, setLiked] = useState<boolean>(isLiked);
   const [bookmarked, setBookmarked] = useState<boolean>(isWished);
-  const [likeCount, setLikeCount] = useState<number>(article?.likedUsers?.length || 0);
+  const [likeCount, setLikeCount] = useState<number>(
+    article?.likedUsers?.length || 0,
+  );
   const [newComment, setNewComment] = useState<string>("");
-  const [commentList, setCommentList] = useState<
-    Array<{
-      name: string;
-      text: string;
-      avatar?: string;
-      time?: string;
-      createdAt?: string;
-      likes?: number;
-    }>
-  >([]);
   const [commentPage, setCommentPage] = useState<number>(1);
-  const [totalComments, setTotalComments] = useState<number>(0);
-  const [hasMoreComments, setHasMoreComments] = useState<boolean>(false);
-  const [isLoadingComments, setIsLoadingComments] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(article?.views || 0);
 
-  useEffect(() => {
-    if (!article?._id) return;
-    const fetchComments = async () => {
-      setIsLoadingComments(true);
-      try {
-        const res = await fetch(
-          `/api/blog/comment?blogId=${article._id}&page=${commentPage}`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success) {
-            const newComments = data.comments || [];
-            if (commentPage === 1) {
-              setCommentList(newComments);
-              setTotalComments(data.totalCount || 0);
-              setHasMoreComments(newComments.length < (data.totalCount || 0));
-            } else {
-              setCommentList((prev) => {
-                const updated = [...prev, ...newComments];
-                setTotalComments(data.totalCount || 0);
-                setHasMoreComments(updated.length < (data.totalCount || 0));
-                return updated;
-              });
-            }
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoadingComments(false);
-      }
-    };
-    fetchComments();
-  }, [article?._id, commentPage]);
+  const {
+    data: commentsData,
+    isLoading: isLoadingComments,
+    mutate: mutateComments,
+  } = useSWR<ArticleCommentsApiResponse>(
+    article?._id
+      ? `/api/blog/comment?blogId=${article._id}&page=${commentPage}`
+      : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 5000,
+    },
+  );
+
+  const commentList: ArticleCommentItem[] = commentsData?.comments || [];
+  const totalComments: number = commentsData?.totalCount || 0;
+  const hasMoreComments: boolean = commentList.length < totalComments;
 
   useEffect(() => {
     if (!article?._id) return;
@@ -97,8 +88,8 @@ export default function ArticleDetail({
             setViewCount(data.views);
           }
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
+        
       }
     };
     recordView();
@@ -135,8 +126,13 @@ export default function ArticleDetail({
           showConfirmButton: false,
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "انجام عملیات با خطا مواجه شد.",
+        icon: "error",
+        confirmButtonColor: "#eab308",
+      });
     }
   };
 
@@ -163,8 +159,13 @@ export default function ArticleDetail({
         setLiked(data.liked);
         setLikeCount(data.likes);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "پسندیدن مقاله با خطا مواجه شد.",
+        icon: "error",
+        confirmButtonColor: "#eab308",
+      });
     }
   };
 
@@ -192,6 +193,7 @@ export default function ArticleDetail({
 
       if (res.ok) {
         setNewComment("");
+        mutateComments();
         showAlert({
           title: "ثبت شد",
           text: "نظر شما با موفقیت ثبت شد و پس از تایید مدیریت نمایش داده خواهد شد.",
@@ -201,8 +203,7 @@ export default function ArticleDetail({
       } else {
         throw new Error("ثبت نظر ناموفق بود");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       showAlert({
         title: "خطا",
         text: "ثبت نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
@@ -221,34 +222,8 @@ export default function ArticleDetail({
     });
   };
 
-  const getReadTime = (content?: string) => {
-    if (!content) return "۱ دقیقه";
-    const words = content
-      ? content
-          .replace(/<[^>]+>/g, "")
-          .split(/\s+/)
-          .filter(Boolean).length
-      : 0;
-    const minutes = Math.max(1, Math.ceil(words / 200));
-    return new Intl.NumberFormat("fa-IR").format(minutes) + " دقیقه";
-  };
-
   if (!article) {
-    return (
-      <div
-        className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center text-white font-danaMed"
-        dir="rtl"
-      >
-        <Inbox className="w-16 h-16 text-amber-500/30 mb-4" />
-        <p className="text-neutral-400 mb-4">مقاله‌ای یافت نشد.</p>
-        <Link
-          href="/articles"
-          className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-6 py-2 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)]"
-        >
-          بازگشت به لیست مقالات
-        </Link>
-      </div>
-    );
+    return <ArticleNotFound />;
   }
 
   const authorName =
@@ -266,7 +241,7 @@ export default function ArticleDetail({
   return (
     <div className="min-h-screen bg-neutral-950 text-white font-danaMed" dir="rtl">
       <div className="max-w-5xl mx-auto px-4 py-10">
-        <div className="flex items-center gap-2 text-sm text-neutral-400 mb-8">
+        <div className="flex items-center gap-2 text-xs sm:text-sm text-neutral-400 mb-8">
           <Link href="/" className="hover:text-amber-400 transition-colors">
             خانه
           </Link>
@@ -313,17 +288,19 @@ export default function ArticleDetail({
                 ))}
             </div>
 
-            <h1 className="text-3xl font-bold text-white mb-5 leading-relaxed font-morabbaReg">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-5 leading-relaxed font-morabbaReg">
               {article.title}
             </h1>
 
             <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-6 border-b border-amber-500/10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-950 font-bold bg-gradient-to-r from-amber-500 to-yellow-500 shadow-md">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-950 font-bold bg-gradient-to-r from-amber-500 to-yellow-500 shadow-md overflow-hidden shrink-0">
                   {authorAvatar}
                 </div>
                 <div>
-                  <p className="text-white text-sm font-bold">{authorName}</p>
+                  <p className="text-white text-xs sm:text-sm font-bold">
+                    {authorName}
+                  </p>
                   <p className="text-neutral-400 text-xs">{authorRole}</p>
                 </div>
               </div>
@@ -333,7 +310,8 @@ export default function ArticleDetail({
                   {formatDate(article.publishDate || article.createdAt)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Clock size={13} className="text-amber-400" /> {getReadTime(article.content)}
+                  <Clock size={13} className="text-amber-400" />{" "}
+                  {getReadTime(article.content)}
                 </span>
                 <span className="flex items-center gap-1">
                   <Eye size={13} className="text-amber-400" /> {viewCount} بازدید
@@ -341,7 +319,7 @@ export default function ArticleDetail({
               </div>
             </div>
 
-            <article className="mb-10 text-neutral-300 leading-8 text-base space-y-4">
+            <article className="mb-10 text-neutral-300 leading-8 text-sm sm:text-base space-y-4">
               <div
                 className="ck-content-view"
                 dangerouslySetInnerHTML={{ __html: article.content }}
@@ -352,7 +330,7 @@ export default function ArticleDetail({
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleLike}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
                     liked
                       ? "text-rose-400 bg-rose-500/15 border border-rose-500/30"
                       : "text-neutral-400 bg-neutral-800/50 hover:text-white border border-amber-500/10"
@@ -361,7 +339,7 @@ export default function ArticleDetail({
                   <Heart size={16} fill={liked ? "currentColor" : "none"} />
                   {likeCount}
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-neutral-400 bg-neutral-800/50 border border-amber-500/10">
+                <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm text-neutral-400 bg-neutral-800/50 border border-amber-500/10">
                   <MessageSquare size={16} className="text-amber-400" />
                   {totalComments}
                 </button>
@@ -383,14 +361,14 @@ export default function ArticleDetail({
                 </button>
                 <button
                   onClick={() => {
-                    if (navigator.share) {
+                    if (typeof window !== "undefined" && navigator.share) {
                       navigator
                         .share({
                           title: article.title,
                           url: window.location.href,
                         })
-                        .catch(console.error);
-                    } else {
+                        .catch(() => {});
+                    } else if (typeof window !== "undefined") {
                       navigator.clipboard.writeText(window.location.href);
                       showAlert({
                         title: "کپی شد",
@@ -401,7 +379,7 @@ export default function ArticleDetail({
                       });
                     }
                   }}
-                  className="p-2 rounded-xl text-neutral-400 hover:text-white bg-neutral-800/50 border border-amber-500/10 transition-colors"
+                  className="p-2 rounded-xl text-neutral-400 hover:text-white bg-neutral-800/50 border border-amber-500/10 transition-colors cursor-pointer"
                 >
                   <Share2 size={16} />
                 </button>
@@ -409,7 +387,7 @@ export default function ArticleDetail({
             </div>
 
             <div>
-              <h3 className="text-xl font-bold text-white mb-6 font-morabbaReg">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-6 font-morabbaReg">
                 نظرات ({totalComments})
               </h3>
 
@@ -419,12 +397,12 @@ export default function ArticleDetail({
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="نظر خود را بنویسید..."
                   rows={3}
-                  className="w-full bg-neutral-950 border border-amber-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-amber-500/60 resize-none text-sm"
+                  className="w-full bg-neutral-950 border border-amber-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-amber-500/60 resize-none text-xs sm:text-sm"
                 />
                 <div className="flex justify-end mt-3">
                   <button
                     onClick={handleSendComment}
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold text-neutral-950 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] cursor-pointer"
+                    className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-neutral-950 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] cursor-pointer"
                   >
                     ارسال نظر
                   </button>
@@ -434,8 +412,10 @@ export default function ArticleDetail({
               <div className="space-y-4">
                 {isLoadingComments && commentList.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-8">
-                    <span className="w-8 h-8 border-2 border-amber-500/30 border-t-amber-400 rounded-full animate-spin mb-2"></span>
-                    <p className="text-neutral-400 text-sm">در حال بارگذاری نظرات...</p>
+                    <span className="w-8 h-8 border-2 border-amber-500/30 border-t-amber-400 rounded-full animate-spin mb-2" />
+                    <p className="text-neutral-400 text-xs sm:text-sm">
+                      در حال بارگذاری نظرات...
+                    </p>
                   </div>
                 ) : commentList.length > 0 ? (
                   commentList.map((c, i) => (
@@ -444,19 +424,27 @@ export default function ArticleDetail({
                       className="rounded-2xl p-5 bg-neutral-900/60 border border-amber-500/10"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-950 font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex-shrink-0">
-                          {c.avatar || c.name.charAt(0)}
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-950 font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 overflow-hidden">
+                          {isImageUrl(c.avatar) ? (
+                            <img
+                              src={c.avatar}
+                              alt={c.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            c.avatar || c.name.charAt(0)
+                          )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-white text-sm font-bold">
+                            <span className="text-white text-xs sm:text-sm font-bold">
                               {c.name}
                             </span>
                             <span className="text-neutral-500 text-xs">
                               {c.time || formatDate(c.createdAt)}
                             </span>
                           </div>
-                          <p className="text-neutral-300 text-sm leading-6">
+                          <p className="text-neutral-300 text-xs sm:text-sm leading-6">
                             {c.text}
                           </p>
                           <button className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-400 mt-3 transition-colors cursor-pointer">
@@ -467,7 +455,7 @@ export default function ArticleDetail({
                     </div>
                   ))
                 ) : (
-                  <p className="text-neutral-500 text-center py-8 text-sm">
+                  <p className="text-neutral-500 text-center py-8 text-xs sm:text-sm">
                     هیچ نظری برای این مقاله ثبت نشده است.
                   </p>
                 )}
@@ -478,11 +466,11 @@ export default function ArticleDetail({
                   <button
                     onClick={() => setCommentPage((prev) => prev + 1)}
                     disabled={isLoadingComments}
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold text-amber-400 bg-neutral-900 border border-amber-500/20 hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-amber-400 bg-neutral-900 border border-amber-500/20 hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
                   >
                     {isLoadingComments ? (
                       <>
-                        <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin"></span>
+                        <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
                         در حال بارگذاری...
                       </>
                     ) : (
@@ -495,101 +483,27 @@ export default function ArticleDetail({
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-2xl p-5 bg-neutral-900/60 border border-amber-500/20">
-              <h4 className="font-bold text-white mb-4 text-sm font-morabbaReg">
-                درباره نویسنده
-              </h4>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center text-neutral-950 text-2xl font-bold mb-3 bg-gradient-to-r from-amber-500 to-yellow-500 shadow-md">
-                  {authorAvatar}
-                </div>
-                <p className="font-bold text-white text-base">{authorName}</p>
-                <p className="text-amber-400 text-xs mt-1">{authorRole}</p>
-                <p className="text-neutral-400 text-xs mt-3 leading-5">
-                  نویسنده و تحلیل‌گر تخصصی سامانه استارفیت، ارائه دهنده برترین مقالات ورزشی و تغذیه‌ای
-                </p>
-              </div>
-            </div>
+            <ArticleAuthorCard
+              authorAvatar={authorAvatar}
+              authorName={authorName}
+              authorRole={authorRole}
+            />
 
-            <div className="rounded-2xl p-5 relative overflow-hidden bg-neutral-900/80 border border-amber-500/30 shadow-lg">
-              <div className="absolute -top-4 -left-4 w-20 h-20 rounded-full bg-amber-500/10 blur-xl pointer-events-none" />
-              <h4 className="font-bold text-white mb-2 text-sm font-morabbaReg">
-                برنامه شخصی بگیر!
-              </h4>
-              <p className="text-neutral-400 text-xs leading-5 mb-4">
-                با مشاوره و برنامه اختصاصی امیرحسین میرافتابی، سریع‌تر به اهداف ورزشی خود برسید
-              </p>
-              <Link
-                href="/packages"
-                className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-neutral-950 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)]"
-              >
-                مشاهده پکیج‌ها
-                <ArrowRight size={14} />
-              </Link>
-            </div>
+            <ArticleCtaCard />
 
-            {relatedArticles.length > 0 && (
-              <div className="rounded-2xl p-5 bg-neutral-900/60 border border-amber-500/20">
-                <h4 className="font-bold text-white mb-4 text-sm font-morabbaReg">
-                  مقالات مرتبط
-                </h4>
-                <div className="space-y-3">
-                  {relatedArticles.map((r) => (
-                    <Link
-                      key={r._id}
-                      href={`/article/${r.slug}`}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-800/50 border border-transparent hover:border-amber-500/10 transition-all group"
-                    >
-                      <div className="relative w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0 bg-neutral-950 border border-amber-500/20 overflow-hidden">
-                        {r.image ? (
-                          <Image
-                            src={r.image}
-                            alt={r.title}
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <BookOpen className="w-5 h-5 text-amber-500/40" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-xs font-bold leading-5 group-hover:text-amber-400 transition-colors line-clamp-2">
-                          {r.title}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1 text-neutral-500 text-xs">
-                          <Clock size={10} className="text-amber-400" /> {getReadTime(r.content)}
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
+            <RelatedArticles
+              relatedArticles={relatedArticles}
+              getReadTime={getReadTime}
+            />
 
-            {article.tags && article.tags.length > 0 && (
-              <div className="rounded-2xl p-5 bg-neutral-900/60 border border-amber-500/20">
-                <h4 className="font-bold text-white mb-4 text-sm font-morabbaReg">
-                  برچسب‌ها
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {article.tags.map((tag: string, i: number) => (
-                    <span
-                      key={i}
-                      className="text-xs px-3 py-1 rounded-full text-neutral-300 hover:text-amber-400 bg-neutral-950 border border-amber-500/20 transition-colors cursor-pointer"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+            <ArticleTags tags={article.tags} />
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-amber-500/10">
           <Link
             href="/articles"
-            className="flex items-center gap-2 text-neutral-400 hover:text-amber-400 transition-colors text-sm"
+            className="flex items-center gap-2 text-neutral-400 hover:text-amber-400 transition-colors text-xs sm:text-sm"
           >
             <ArrowRight size={16} />
             بازگشت به مقالات

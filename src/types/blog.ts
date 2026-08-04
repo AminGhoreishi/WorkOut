@@ -163,3 +163,35 @@ export interface PublicArticlesProps {
   initialTotal?: number;
   initialTotalPages?: number;
 }
+
+export interface ArticleCommentItem {
+  _id?: string;
+  name: string;
+  text: string;
+  avatar?: string;
+  time?: string;
+  createdAt?: string;
+  likes?: number;
+}
+
+export interface ArticleCommentsApiResponse {
+  success?: boolean;
+  comments?: ArticleCommentItem[];
+  totalCount?: number;
+  message?: string;
+}
+
+export interface RelatedArticlesProps {
+  relatedArticles: ArticleDetailData[];
+  getReadTime: (content?: string) => string;
+}
+
+export interface ArticleTagsProps {
+  tags?: string[];
+}
+
+export interface ArticleAuthorCardProps {
+  authorAvatar: string;
+  authorName: string;
+  authorRole: string;
+}

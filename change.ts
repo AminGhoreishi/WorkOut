@@ -648,6 +648,41 @@ export const modifiedFiles = [
     id: 130,
     filePath: "src/modules/auth/LoginForm.tsx",
     description: "Adjusted font sizes to text-xs / text-sm on mobile screens below sm breakpoint (text-xs sm:text-sm, text-2xl sm:text-3xl) with zero code comments."
+  },
+  {
+    id: 131,
+    filePath: "src/modules/article/RelatedArticles.tsx",
+    description: "Extracted modular RelatedArticles sub-component with external type interfaces and zero code comments."
+  },
+  {
+    id: 132,
+    filePath: "src/modules/article/ArticleTags.tsx",
+    description: "Extracted modular ArticleTags sub-component with external type interfaces and zero code comments."
+  },
+  {
+    id: 133,
+    filePath: "src/modules/article/ArticleDetail.tsx",
+    description: "Refactored ArticleDetail component with SWR data fetching for comments, extracted sub-components (RelatedArticles, ArticleTags, ArticleAuthorCard, ArticleCtaCard), safe avatar image rendering, responsive typography, and zero code comments."
+  },
+  {
+    id: 134,
+    filePath: "src/modules/article/ArticleAuthorCard.tsx",
+    description: "Extracted modular ArticleAuthorCard sub-component with external type interfaces and zero code comments."
+  },
+  {
+    id: 135,
+    filePath: "src/modules/article/ArticleCtaCard.tsx",
+    description: "Extracted modular ArticleCtaCard sub-component with zero code comments."
+  },
+  {
+    id: 136,
+    filePath: "src/utils/article.ts",
+    description: "Created article utility helper file containing exported getReadTime and isImageUrl functions with zero code comments."
+  },
+  {
+    id: 137,
+    filePath: "src/modules/article/ArticleNotFound.tsx",
+    description: "Extracted modular ArticleNotFound fallback sub-component with zero code comments."
   }
 ];
 
