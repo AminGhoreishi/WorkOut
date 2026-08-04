@@ -3,14 +3,7 @@
 import { useState, useEffect } from "react";
 import useSWR from "swr";
 import {
-  Clock,
-  Calendar,
   ChevronLeft,
-  Heart,
-  Share2,
-  Bookmark,
-  Eye,
-  MessageSquare,
   ThumbsUp,
   ArrowRight,
   BookOpen,
@@ -29,6 +22,8 @@ import ArticleTags from "./ArticleTags";
 import ArticleAuthorCard from "./ArticleAuthorCard";
 import ArticleCtaCard from "./ArticleCtaCard";
 import ArticleNotFound from "./ArticleNotFound";
+import ArticleMainContent from "./ArticleMainContent";
+import ArticleActionsBar from "./ArticleActionsBar";
 
 const fetcher = async (url: string): Promise<ArticleCommentsApiResponse> => {
   const res = await fetch(url);
@@ -45,13 +40,11 @@ export default function ArticleDetail({
   isWished = false,
   isLiked = false,
 }: ArticleDetailProps) {
-  const [liked, setLiked] = useState<boolean>(isLiked);
-  const [bookmarked, setBookmarked] = useState<boolean>(isWished);
-  const [likeCount, setLikeCount] = useState<number>(
-    article?.likedUsers?.length || 0,
-  );
   const [newComment, setNewComment] = useState<string>("");
   const [commentPage, setCommentPage] = useState<number>(1);
+  const [allComments, setAllComments] = useState<ArticleCommentItem[]>([]);
+  const [isCommentsThrottled, setIsCommentsThrottled] =
+    useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(article?.views || 0);
 
   const {
@@ -69,9 +62,33 @@ export default function ArticleDetail({
     },
   );
 
-  const commentList: ArticleCommentItem[] = commentsData?.comments || [];
+  useEffect(() => {
+    const incomingComments = commentsData?.comments;
+    if (!incomingComments) return;
+    if (commentPage === 1) {
+      setAllComments(incomingComments);
+    } else {
+      setAllComments((prev) => {
+        const existingIds = new Set(prev.map((c) => c._id));
+        const newItems = incomingComments.filter(
+          (c) => !existingIds.has(c._id),
+        );
+        return [...prev, ...newItems];
+      });
+    }
+  }, [commentsData, commentPage]);
+
   const totalComments: number = commentsData?.totalCount || 0;
-  const hasMoreComments: boolean = commentList.length < totalComments;
+  const hasMoreComments: boolean = allComments.length < totalComments;
+
+  const handleLoadMoreComments = () => {
+    if (isLoadingComments || isCommentsThrottled || !hasMoreComments) return;
+    setIsCommentsThrottled(true);
+    setCommentPage((prev) => prev + 1);
+    setTimeout(() => {
+      setIsCommentsThrottled(false);
+    }, 600);
+  };
 
   useEffect(() => {
     if (!article?._id) return;
@@ -92,71 +109,6 @@ export default function ArticleDetail({
     };
     recordView();
   }, [article?._id]);
-
-  const handleBookmark = async () => {
-    if (!userId) {
-      showAlert({
-        title: "ورود به حساب کاربری",
-        text: "برای افزودن به لیست علاقه‌مندی‌ها، ابتدا وارد حساب کاربری خود شوید.",
-        icon: "warning",
-        confirmButtonColor: "#eab308",
-      });
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/blog/wish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blogId: article._id }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setBookmarked(data.wished);
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "انجام عملیات با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonColor: "#eab308",
-      });
-    }
-  };
-
-  const handleLike = async () => {
-    if (!userId) {
-      showAlert({
-        title: "ورود به حساب کاربری",
-        text: "برای پسندیدن مقالات، ابتدا وارد حساب کاربری خود شوید.",
-        icon: "warning",
-        confirmButtonColor: "#eab308",
-      });
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/blog/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blogId: article._id }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setLiked(data.liked);
-        setLikeCount(data.likes);
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "پسندیدن مقاله با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonColor: "#eab308",
-      });
-    }
-  };
 
   const handleSendComment = async () => {
     if (!newComment.trim()) return;
@@ -282,100 +234,26 @@ export default function ArticleDetail({
               {article.title}
             </h1>
 
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-6 border-b border-amber-500/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-950 font-bold bg-gradient-to-r from-amber-500 to-yellow-500 shadow-md overflow-hidden shrink-0">
-                  {authorAvatar}
-                </div>
-                <div>
-                  <p className="text-white text-xs sm:text-sm font-bold">
-                    {authorName}
-                  </p>
-                  <p className="text-neutral-400 text-xs">{authorRole}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-neutral-400">
-                <span className="flex items-center gap-1">
-                  <Calendar size={13} className="text-amber-400" />{" "}
-                  {formatDate(article.publishDate || article.createdAt)}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock size={13} className="text-amber-400" />{" "}
-                  {getReadTime(article.content)}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Eye size={13} className="text-amber-400" /> {viewCount}{" "}
-                  بازدید
-                </span>
-              </div>
-            </div>
+            <ArticleMainContent
+              authorAvatar={authorAvatar}
+              authorName={authorName}
+              authorRole={authorRole}
+              publishDate={article.publishDate || article.createdAt}
+              content={article.content}
+              viewCount={viewCount}
+              formatDate={formatDate}
+              getReadTime={getReadTime}
+            />
 
-            <article className="mb-10 text-neutral-300 leading-8 text-sm sm:text-base space-y-4">
-              <div
-                className="ck-content-view"
-                dangerouslySetInnerHTML={{ __html: article.content }}
-              />
-            </article>
-
-            <div className="flex items-center justify-between p-4 rounded-2xl mb-10 bg-neutral-900/60 border border-amber-500/20">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleLike}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
-                    liked
-                      ? "text-rose-400 bg-rose-500/15 border border-rose-500/30"
-                      : "text-neutral-400 bg-neutral-800/50 hover:text-white border border-amber-500/10"
-                  }`}
-                >
-                  <Heart size={16} fill={liked ? "currentColor" : "none"} />
-                  {likeCount}
-                </button>
-                <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm text-neutral-400 bg-neutral-800/50 border border-amber-500/10">
-                  <MessageSquare size={16} className="text-amber-400" />
-                  {totalComments}
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleBookmark}
-                  className={`p-2 rounded-xl transition-all cursor-pointer ${
-                    bookmarked
-                      ? "text-amber-400 bg-amber-500/20 border border-amber-500/30"
-                      : "text-neutral-400 bg-neutral-800/50 hover:text-white border border-amber-500/10"
-                  }`}
-                >
-                  <Bookmark
-                    size={16}
-                    fill={bookmarked ? "currentColor" : "none"}
-                  />
-                </button>
-                <button
-                  onClick={() => {
-                    if (typeof window !== "undefined" && navigator.share) {
-                      navigator
-                        .share({
-                          title: article.title,
-                          url: window.location.href,
-                        })
-                        .catch(() => {});
-                    } else if (typeof window !== "undefined") {
-                      navigator.clipboard.writeText(window.location.href);
-                      showAlert({
-                        title: "کپی شد",
-                        text: "لینک مقاله در حافظه موقت کپی شد.",
-                        icon: "success",
-                        timer: 1500,
-                        showConfirmButton: false,
-                      });
-                    }
-                  }}
-                  className="p-2 rounded-xl text-neutral-400 hover:text-white bg-neutral-800/50 border border-amber-500/10 transition-colors cursor-pointer"
-                >
-                  <Share2 size={16} />
-                </button>
-              </div>
-            </div>
+            <ArticleActionsBar
+              articleId={article._id}
+              articleTitle={article.title}
+              userId={userId}
+              initialLikeCount={article?.likedUsers?.length || 0}
+              totalComments={totalComments}
+              isLiked={isLiked}
+              isWished={isWished}
+            />
 
             <div>
               <h3 className="text-lg sm:text-xl font-bold text-white mb-6 font-morabbaReg">
@@ -401,15 +279,15 @@ export default function ArticleDetail({
               </div>
 
               <div className="space-y-4">
-                {isLoadingComments && commentList.length === 0 ? (
+                {isLoadingComments && allComments.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-8">
                     <span className="w-8 h-8 border-2 border-amber-500/30 border-t-amber-400 rounded-full animate-spin mb-2" />
                     <p className="text-neutral-400 text-xs sm:text-sm">
                       در حال بارگذاری نظرات...
                     </p>
                   </div>
-                ) : commentList.length > 0 ? (
-                  commentList.map((c, i) => (
+                ) : allComments.length > 0 ? (
+                  allComments.map((c, i) => (
                     <div
                       key={i}
                       className="rounded-2xl p-5 bg-neutral-900/60 border border-amber-500/10"
@@ -452,14 +330,14 @@ export default function ArticleDetail({
                 )}
               </div>
 
-              {   hasMoreComments && (
+              {hasMoreComments && (
                 <div className="flex justify-center mt-6">
                   <button
-                    onClick={() => setCommentPage((prev) => prev + 1)}
-                    disabled={isLoadingComments}
+                    onClick={handleLoadMoreComments}
+                    disabled={isLoadingComments || isCommentsThrottled}
                     className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-amber-400 bg-neutral-900 border border-amber-500/20 hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
                   >
-                    {isLoadingComments ? (
+                    {isLoadingComments || isCommentsThrottled ? (
                       <>
                         <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
                         در حال بارگذاری...

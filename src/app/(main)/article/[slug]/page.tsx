@@ -9,36 +9,45 @@ import type { Metadata } from "next";
 import type { ArticlePageProps } from "@/types/blog";
 import "@/model/Comment";
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   let decodedSlug = slug;
   try {
     decodedSlug = decodeURIComponent(slug);
   } catch {
-    return { title: "مقاله یافت نشد | فیت‌کوچ" };
+    return { title: "مقاله یافت نشد | استارفیت" };
   }
 
-  await dbConnect();
-  const blog = await Blog.findOne({ slug: decodedSlug, status: "published" })
-    .select("title excerpt image seoTitle seoDescription")
-    .lean();
+  try {
+    await dbConnect();
+    const blog = await Blog.findOne({ slug: decodedSlug, status: "published" })
+      .select("title excerpt image seoTitle seoDescription")
+      .lean();
 
-  if (!blog) {
-    return { title: "مقاله یافت نشد | فیت‌کوچ" };
-  }
+    if (!blog) {
+      return { title: "مقاله یافت نشد | استارفیت" };
+    }
 
-  const title = blog.seoTitle || blog.title;
-  const description = blog.seoDescription || blog.excerpt || "مطالعه مقاله ورزشی و سلامتی در فیت‌کوچ";
+    const title = blog.seoTitle || blog.title;
+    const description =
+      blog.seoDescription ||
+      blog.excerpt ||
+      "مطالعه جدیدترین مقالات تخصصی ورزشی، تغذیه و سلامت در استارفیت";
 
-  return {
-    title: `${title} | فیت‌کوچ`,
-    description,
-    openGraph: {
-      title,
+    return {
+      title: `${title} | استارفیت`,
       description,
-      images: blog.image ? [{ url: blog.image }] : [],
-    },
-  };
+      openGraph: {
+        title: `${title} | استارفیت`,
+        description,
+        images: blog.image ? [{ url: blog.image }] : [],
+      },
+    };
+  } catch {
+    return { title: "مقاله ورزشی | استارفیت" };
+  }
 }
 
 export default async function page({ params }: ArticlePageProps) {
@@ -52,40 +61,38 @@ export default async function page({ params }: ArticlePageProps) {
   }
 
   await dbConnect();
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id || null;
 
-  const blog = await Blog.findOne({ slug: decodedSlug, status: "published" })
-    .populate("authorId", "username fullName role")
-    .lean();
+  const [session, blog] = await Promise.all([
+    getServerSession(authOptions),
+    Blog.findOne({ slug: decodedSlug, status: "published" })
+      .populate("authorId", "username fullName role")
+      .lean(),
+  ]);
 
   if (!blog) {
     notFound();
   }
 
-  const relatedBlogs = await Blog.find({
-    category: blog.category,
-    status: "published",
-    _id: { $ne: blog._id },
-  })
-    .select("title slug image category content createdAt")
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .lean();
+  const userId = session?.user?.id || null;
 
-  let isWished = false;
-  let isLiked = false;
-  if (userId) {
-    const existingWish = await Wish.findOne({ userId, blogId: blog._id }).lean();
-    if (existingWish) {
-      isWished = true;
-    }
-    if (Array.isArray(blog.likedUsers)) {
-      isLiked = blog.likedUsers.some(
-        (id: unknown) => String(id) === String(userId)
-      );
-    }
-  }
+  const [relatedBlogs, existingWish] = await Promise.all([
+    Blog.find({
+      category: blog.category,
+      status: "published",
+      _id: { $ne: blog._id },
+    })
+      .select("title slug image category content createdAt")
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean(),
+    userId ? Wish.findOne({ userId, blogId: blog._id }).lean() : null,
+  ]);
+
+  const isWished = Boolean(existingWish);
+  const isLiked =
+    Boolean(userId) &&
+    Array.isArray(blog.likedUsers) &&
+    blog.likedUsers.some((id: unknown) => String(id) === String(userId));
 
   const serializedArticle = JSON.parse(JSON.stringify(blog));
   const serializedRelated = JSON.parse(JSON.stringify(relatedBlogs));

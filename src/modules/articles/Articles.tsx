@@ -21,6 +21,8 @@ export default function Articles() {
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [category, setCategory] = useState<string>("همه");
   const [page, setPage] = useState<number>(1);
+  const [allArticles, setAllArticles] = useState<PublicArticleItem[]>([]);
+  const [isThrottled, setIsThrottled] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,9 +55,33 @@ export default function Articles() {
     revalidateOnFocus: false,
   });
 
-  const articles: PublicArticleItem[] = data?.blogs || [];
+  useEffect(() => {
+    const incomingBlogs = data?.blogs;
+    if (!incomingBlogs) return;
+    if (page === 1) {
+      setAllArticles(incomingBlogs);
+    } else {
+      setAllArticles((prev) => {
+        const existingIds = new Set(prev.map((item) => item._id));
+        const newItems = incomingBlogs.filter(
+          (item: PublicArticleItem) => !existingIds.has(item._id),
+        );
+        return [...prev, ...newItems];
+      });
+    }
+  }, [data, page]);
+
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
+
+  const handleLoadMore = () => {
+    if (isLoading || isThrottled || page >= totalPages) return;
+    setIsThrottled(true);
+    setPage((prev) => prev + 1);
+    setTimeout(() => {
+      setIsThrottled(false);
+    }, 600);
+  };
 
   const formatDate = (dateString?: string | null) => {
     if (!dateString) return "";
@@ -81,7 +107,10 @@ export default function Articles() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white font-danaMed" dir="rtl">
+    <div
+      className="min-h-screen bg-neutral-950 text-white font-danaMed"
+      dir="rtl"
+    >
       <section className="py-16 relative overflow-hidden">
         <div className="absolute top-1/4 right-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -89,7 +118,8 @@ export default function Articles() {
             مقالات تخصصی ورزشی و تغذیه
           </h1>
           <p className="text-lg text-neutral-300 text-center max-w-2xl mx-auto mb-10 leading-relaxed">
-            جدیدترین مقالات آموزشی بدنسازی، برنامه غذایی و سلامتی تحت نظر امیرحسین میرافتابی
+            جدیدترین مقالات آموزشی بدنسازی، برنامه غذایی و سلامتی تحت نظر
+            امیرحسین میرافتابی
           </p>
 
           <div className="max-w-2xl mx-auto mb-8">
@@ -131,9 +161,9 @@ export default function Articles() {
             </div>
           )}
 
-          {articles.length > 0 ? (
+          {allArticles.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.map((article) => {
+              {allArticles.map((article) => {
                 const authorName =
                   article.authorId?.fullName ||
                   article.authorId?.username ||
@@ -176,7 +206,9 @@ export default function Articles() {
 
                         <p className="text-neutral-400 text-sm mb-6 line-clamp-3 flex-1 leading-relaxed">
                           {article.excerpt ||
-                            article.content?.replace(/<[^>]+>/g, "").slice(0, 140) + "..."}
+                            article.content
+                              ?.replace(/<[^>]+>/g, "")
+                              .slice(0, 140) + "..."}
                         </p>
 
                         <div className="flex items-center justify-between pt-4 border-t border-amber-500/10 mt-auto text-xs text-neutral-400">
@@ -185,7 +217,9 @@ export default function Articles() {
                             <span>{authorName}</span>
                           </div>
                           <span>
-                            {formatDate(article.publishDate || article.createdAt)}
+                            {formatDate(
+                              article.publishDate || article.createdAt,
+                            )}
                           </span>
                         </div>
                       </div>
@@ -208,19 +242,30 @@ export default function Articles() {
             )
           )}
 
-          {isLoading && (
+          {isLoading && allArticles.length === 0 && (
             <div className="flex justify-center items-center py-12">
               <Loader2 className="w-10 h-10 text-amber-400 animate-spin" />
             </div>
           )}
 
-          {!isLoading && page < totalPages && (
+          {allArticles.length < total && (
             <div className="text-center mt-12">
               <button
-                onClick={() => setPage((prev) => prev + 1)}
-                className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold px-8 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] cursor-pointer"
+                onClick={handleLoadMore}
+                disabled={isLoading || isThrottled}
+                className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold px-8 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-2"
               >
-                مشاهده مقالات بیشتر ({total - articles.length} مقاله باقی‌مانده)
+                {isLoading || isThrottled ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-neutral-950" />
+                    <span>در حال بارگذاری...</span>
+                  </>
+                ) : (
+                  <span>
+                    مشاهده مقالات بیشتر (
+                    {Math.max(0, total - allArticles.length)} مقاله باقی‌مانده)
+                  </span>
+                )}
               </button>
             </div>
           )}
@@ -229,3 +274,4 @@ export default function Articles() {
     </div>
   );
 }
+

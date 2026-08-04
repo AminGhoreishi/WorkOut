@@ -195,3 +195,26 @@ export interface ArticleAuthorCardProps {
   authorName: string;
   authorRole: string;
 }
+
+export interface ArticleMainContentProps {
+  authorAvatar: string;
+  authorName: string;
+  authorRole: string;
+  publishDate?: string | Date;
+  content: string;
+  viewCount: number;
+  formatDate: (dateString?: string | Date) => string;
+  getReadTime: (content?: string) => string;
+}
+
+export interface ArticleActionsBarProps {
+  articleId: string;
+  articleTitle: string;
+  userId?: string | null;
+  initialLikeCount?: number;
+  totalComments: number;
+  isLiked?: boolean;
+  isWished?: boolean;
+}
+
+
