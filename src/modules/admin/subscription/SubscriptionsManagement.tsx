@@ -91,10 +91,10 @@ export default function SubscriptionsManagement() {
       <div className="container mx-auto pt-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-6">
           <div>
-            <h1 className="text-3xl text-white mb-2 font-morabbaReg">
+            <h1 className="text-3xl font-bold text-white mb-2 font-morabbaReg">
               مدیریت اشتراک و ویدیوها
             </h1>
-            <p className="text-white/60 text-xs sm:text-sm md:text-base">
+            <p className="text-white/60 text-sm md:text-base">
               تخصیص برنامه‌های ورزشی به کاربران و مدیریت بانک فیلم‌های آموزشی بدنسازی
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">کل اشتراک‌ها</span>
                   <Users className="w-5 h-5 text-purple-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
+                <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.total)}
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">فعال</span>
                   <Check className="w-5 h-5 text-emerald-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
+                <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.active)}
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">آزمایشی (Trial)</span>
                   <Clock className="w-5 h-5 text-blue-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
+                <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.trial)}
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function SubscriptionsManagement() {
                   <span className="text-white/60 text-sm">منقضی شده</span>
                   <X className="w-5 h-5 text-red-400" />
                 </div>
-                <div className="text-3xl text-white font-bold font-morabbaReg ss02">
+                <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
                   {formatNumber(stats.expired)}
                 </div>
               </div>

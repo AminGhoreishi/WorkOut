@@ -479,10 +479,10 @@ export default function WorkoutPlanModal({
       <div className="bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
         <div className="p-6 border-b border-white/10 flex items-center justify-between bg-black/30">
           <div>
-            <span className="text-xs text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+            <span className="text-sm sm:text-xs text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
               پکیج: {selectedPackageForPlan.name}
             </span>
-            <h2 className="text-2xl text-white font-bold mt-2 font-morabbaReg">
+            <h2 className="text-sm sm:text-2xl text-white font-bold mt-2 font-morabbaReg">
               مدیریت برنامه تمرینی
             </h2>
           </div>

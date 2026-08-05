@@ -64,7 +64,7 @@ export default function EditSubscriptionModal({
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
       <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-md w-full">
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
-          <h2 className="text-xl text-white font-bold font-morabbaReg">
+          <h2 className="text-sm sm:text-xl text-white font-bold font-morabbaReg">
             ویرایش اشتراک کاربر
           </h2>
           <button
@@ -80,7 +80,7 @@ export default function EditSubscriptionModal({
             <div className="text-white font-medium">
               {selectedSubscription.userId?.fullName || "کاربر ناشناس"}
             </div>
-            <div className="text-white/50 text-xs">
+            <div className="text-white/50 text-sm sm:text-xs">
               پکیج: {selectedSubscription.packageId?.name || "پکیج حذف شده"}
             </div>
           </div>

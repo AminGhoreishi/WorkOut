@@ -63,8 +63,8 @@ export interface PurchaseHistoryProps {
 
 export interface SubscriptionViewProps {
   subscription: SubscriptionDetails | null;
-  workoutPlan: any;
-  workoutDays: any[];
+  workoutPlan?: any;
+  workoutDays?: any[];
   orders: OrderItem[];
 }
 

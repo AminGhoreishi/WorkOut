@@ -120,7 +120,7 @@ export default function ExercisesList({
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm sm:text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
+                    <span className="text-[10px] sm:text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
                       {muscleGroup}
                     </span>
                     <span className="text-sm sm:text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
@@ -133,7 +133,7 @@ export default function ExercisesList({
                     {exercise.name}
                   </h4>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm sm:text-xs text-neutral-400 pt-2 font-semibold font-mono">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm max-sm:text-xs text-neutral-400 pt-2 font-semibold font-mono">
                     <div className="flex items-center gap-1">
                       <Dumbbell className="w-3.5 h-3.5 text-amber-400" />
                       <span>{exercise.sets} ست</span>

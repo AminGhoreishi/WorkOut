@@ -95,7 +95,7 @@ export default function CreateSubscriptionModal({
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
       <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
-          <h2 className="text-xl text-white font-bold font-morabbaReg">
+          <h2 className="text-sm sm:text-xl text-white font-bold font-morabbaReg">
             ثبت اشتراک جدید (دستی)
           </h2>
           <button
@@ -120,7 +120,7 @@ export default function CreateSubscriptionModal({
                   <div className="text-white font-semibold">
                     {selectedUser.fullName || "کاربر بدون نام"}
                   </div>
-                  <div className="text-white/50 text-xs">
+                  <div className="text-white/50 text-sm sm:text-xs">
                     @{selectedUser.username} |{" "}
                     {selectedUser.phone || selectedUser.email}
                   </div>
@@ -128,7 +128,7 @@ export default function CreateSubscriptionModal({
                 <button
                   type="button"
                   onClick={() => setSelectedUser(null)}
-                  className="bg-red-500/20 text-red-400 p-1 px-3.5 rounded-lg hover:bg-red-500/30 transition-colors cursor-pointer text-xs font-bold"
+                  className="bg-red-500/20 text-red-400 p-1 px-3.5 rounded-lg hover:bg-red-500/30 transition-colors cursor-pointer text-sm sm:text-xs font-bold"
                 >
                   تغییر
                 </button>

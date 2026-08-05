@@ -768,5 +768,80 @@ export const modifiedFiles = [
     id: 153,
     filePath: "src/app/(main)/article/[slug]/page.tsx",
     description: "Refactored article page server component with StarFit metadata branding, parallel Promise.all queries, safe DB error handling, and zero code comments."
+  },
+  {
+    id: 154,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Set main heading 'مدیریت اشتراک و ویدیوها' to bold (font-bold text-3xl font-morabbaReg) preserving its original size, and adjusted stat cards text size to text-sm on mobile screens with zero code comments."
+  },
+  {
+    id: 155,
+    filePath: "src/modules/admin/subscription/SubscriptionsTable.tsx",
+    description: "Adjusted subscriptions table status filter buttons, user details, action dropdown items, and pagination label text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 156,
+    filePath: "src/modules/admin/subscription/VideosManagement.tsx",
+    description: "Adjusted videos management search input, upload button, card description, play button, and pagination label text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 157,
+    filePath: "src/modules/admin/subscription/CreateSubscriptionModal.tsx",
+    description: "Adjusted modal title, user details, and change button text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-xl, text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 158,
+    filePath: "src/modules/admin/subscription/EditSubscriptionModal.tsx",
+    description: "Adjusted modal title and package details text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-xl, text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 159,
+    filePath: "src/modules/admin/subscription/UploadVideoModal.tsx",
+    description: "Adjusted modal title and input file labels text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-xl, text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 160,
+    filePath: "src/modules/admin/subscription/WorkoutPlanModal.tsx",
+    description: "Adjusted modal header title and package badge text sizes to text-sm on mobile screens below sm breakpoint (text-sm sm:text-2xl, text-sm sm:text-xs) with zero code comments."
+  },
+  {
+    id: 161,
+    filePath: "src/modules/dashboard/tickets/UserTicketChat.tsx",
+    description: "Refactored ticket chat module to position 'Back to Requests' button right above the chat view container with zero code comments."
+  },
+  {
+    id: 162,
+    filePath: "src/modules/dashboard/workout/ExercisesList.tsx",
+    description: "Adjusted muscle group badge font size to text-[10px] on mobile screens (text-[10px] sm:text-xs) with zero code comments."
+  },
+  {
+    id: 163,
+    filePath: "src/modules/subscription/SubscriptionView.tsx",
+    description: "Removed active workout program card and coach information card from SubscriptionView with zero code comments."
+  },
+  {
+    id: 164,
+    filePath: "src/app/(dashboard)/dashboard/subscription/page.tsx",
+    description: "Refactored subscription page server component: removed unused WorkoutPlan/WorkoutDay/WorkoutExercise database queries, updated metadata branding to StarFit, and ensured zero code comments."
+  },
+  {
+    id: 165,
+    filePath: "src/modules/subscription/subscriptionHelpers.tsx",
+    description: "Extracted formatDate, getCycleLabel, and getStatusBadge helper functions into dedicated modular helper file with zero code comments."
+  },
+  {
+    id: 166,
+    filePath: "src/modules/subscription/SubscriptionView.tsx",
+    description: "Imported formatDate, getCycleLabel, and getStatusBadge from subscriptionHelpers module with zero code comments."
+  },
+  {
+    id: 167,
+    filePath: "src/types/subscription.ts",
+    description: "Updated SubscriptionViewProps interface making workoutPlan and workoutDays optional properties with zero code comments."
+  },
+  {
+    id: 168,
+    filePath: "src/modules/subscription/PurchaseHistory.tsx",
+    description: "Refactored PurchaseHistory table with px-4 horizontal padding and min-w-[700px] spacing between columns for responsive mobile view with zero code comments."
   }
 ];

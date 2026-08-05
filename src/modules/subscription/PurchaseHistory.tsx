@@ -1,34 +1,6 @@
 import { FileText, AlertCircle } from "lucide-react";
 import type { PurchaseHistoryProps } from "@/types/subscription";
-
-const formatDate = (dateVal?: Date | string) => {
-  if (!dateVal) return "";
-  try {
-    const d = new Date(dateVal);
-    if (isNaN(d.getTime())) return String(dateVal);
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(d);
-  } catch {
-    return String(dateVal);
-  }
-};
-
-const getCycleLabel = (cycle?: string) => {
-  if (!cycle) return "نامشخص";
-  switch (cycle) {
-    case "monthly":
-      return "ماهانه (۳۰ روزه)";
-    case "quarterly":
-      return "سه ماهه (۹۰ روزه)";
-    case "biannual":
-      return "شش ماهه (۱۸۰ روزه)";
-    default:
-      return cycle;
-  }
-};
+import { formatDate, getCycleLabel } from "./subscriptionHelpers";
 
 export default function PurchaseHistory({ orders = [] }: PurchaseHistoryProps) {
   const safeOrders = Array.isArray(orders) ? orders : [];
@@ -41,40 +13,40 @@ export default function PurchaseHistory({ orders = [] }: PurchaseHistoryProps) {
       </h3>
 
       {safeOrders.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="w-full text-right border-collapse">
+        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[700px] text-right border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-neutral-400 text-xs md:text-sm">
-                <th className="pb-3 pr-2">پکیج</th>
-                <th className="pb-3">دوره</th>
-                <th className="pb-3">مبلغ پرداختی</th>
-                <th className="pb-3">تاریخ خرید</th>
-                <th className="pb-3">کد پیگیری</th>
-                <th className="pb-3 pl-2">وضعیت</th>
+              <tr className="border-b border-white/10 text-neutral-400 text-xs md:text-sm whitespace-nowrap">
+                <th className="pb-3 px-4 font-medium">پکیج</th>
+                <th className="pb-3 px-4 font-medium">دوره</th>
+                <th className="pb-3 px-4 font-medium">مبلغ پرداختی</th>
+                <th className="pb-3 px-4 font-medium">تاریخ خرید</th>
+                <th className="pb-3 px-4 font-medium">کد پیگیری</th>
+                <th className="pb-3 px-4 font-medium">وضعیت</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-xs md:text-sm text-neutral-200">
               {safeOrders.map((order) => (
                 <tr
                   key={order._id}
-                  className="hover:bg-white/5 transition-colors"
+                  className="hover:bg-white/5 transition-colors whitespace-nowrap"
                 >
-                  <td className="py-3.5 pr-2 font-semibold text-white font-morabbaReg">
+                  <td className="py-4 px-4 font-semibold text-white font-morabbaReg">
                     {order.packageId?.name || "پکیج اختصاصی"}
                   </td>
-                  <td className="py-3.5 text-neutral-300">
+                  <td className="py-4 px-4 text-neutral-300">
                     {getCycleLabel(order.billingCycle)}
                   </td>
-                  <td className="py-3.5 font-bold text-white ss02">
+                  <td className="py-4 px-4 font-bold text-white ss02">
                     {(order.amountPaid ?? 0).toLocaleString("fa-IR")} تومان
                   </td>
-                  <td className="py-3.5 text-neutral-300 ss02">
+                  <td className="py-4 px-4 text-neutral-300 ss02">
                     {formatDate(order.createdAt)}
                   </td>
-                  <td className="py-3.5 text-amber-400 font-mono select-all">
+                  <td className="py-4 px-4 text-amber-400 font-mono select-all">
                     {order.paymentRef || "—"}
                   </td>
-                  <td className="py-3.5 pl-2">
+                  <td className="py-4 px-4">
                     {order.status === "paid" ? (
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
                         موفق

@@ -136,13 +136,13 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
               placeholder="جستجو در فیلم‌های آموزشی..."
               value={searchVideoTerm}
               onChange={(e) => setSearchVideoTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-xs transition-colors"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm sm:text-xs transition-colors"
             />
           </div>
           <button
             type="button"
             onClick={() => setShowUploadVideoModal(true)}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-xl text-sm sm:text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             آپلود ویدیوی ورزشی جدید
@@ -207,7 +207,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
                       >
                         {vid.title}
                       </h4>
-                      <p className="text-white/50 text-xs line-clamp-2 leading-relaxed mb-4 min-h-[32px]">
+                      <p className="text-white/50 text-sm sm:text-xs line-clamp-2 leading-relaxed mb-4 min-h-[32px]">
                         {vid.description || "بدون توضیحات"}
                       </p>
                     </div>
@@ -216,7 +216,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
                       <button
                         type="button"
                         onClick={() => setWatchingVideo(vid)}
-                        className="flex-1 bg-white/5 hover:bg-white/10 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors border border-white/10 cursor-pointer"
+                        className="flex-1 bg-white/5 hover:bg-white/10 text-white py-1.5 rounded-lg text-sm sm:text-xs font-semibold flex items-center justify-center gap-1 transition-colors border border-white/10 cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         پخش فیلم
@@ -237,7 +237,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
 
             {totalPages > 1 && (
               <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between rounded-xl">
-                <span className="text-white/60 text-xs ss02">
+                <span className="text-white/60 text-sm sm:text-xs ss02">
                   نمایش صفحه {formatNumber(currentPage)} از{" "}
                   {formatNumber(totalPages)}
                 </span>

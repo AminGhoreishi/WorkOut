@@ -1,86 +1,16 @@
-import Link from "next/link";
-import {
-  Calendar,
-  Clock,
-  Award,
-  User,
-  Activity,
-  Zap,
-  ArrowUpLeft,
-  CreditCard,
-} from "lucide-react";
-import DashboardWorkoutPlan from "./DashboardWorkoutPlan";
+import { Calendar, Clock, Award, Zap, CreditCard } from "lucide-react";
 import NoSubscriptionView from "./NoSubscriptionView";
 import PurchaseHistory from "./PurchaseHistory";
 import ActiveAccesses from "./ActiveAccesses";
 import type { SubscriptionViewProps } from "@/types/subscription";
-
-const formatDate = (dateVal?: Date | string) => {
-  if (!dateVal) return "";
-  try {
-    const d = new Date(dateVal);
-    if (isNaN(d.getTime())) return String(dateVal);
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(d);
-  } catch {
-    return String(dateVal);
-  }
-};
-
-const getCycleLabel = (cycle?: string) => {
-  if (!cycle) return "نامشخص";
-  switch (cycle) {
-    case "monthly":
-      return "ماهانه (۳۰ روزه)";
-    case "quarterly":
-      return "سه ماهه (۹۰ روزه)";
-    case "biannual":
-      return "شش ماهه (۱۸۰ روزه)";
-    default:
-      return cycle;
-  }
-};
-
-const getStatusBadge = (status?: string) => {
-  switch (status) {
-    case "active":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-          فعال
-        </span>
-      );
-    case "trial":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-          دوره آزمایشی
-        </span>
-      );
-    case "expired":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-800 text-neutral-400 border border-neutral-700">
-          منقضی شده
-        </span>
-      );
-    case "cancelled":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-800 text-neutral-400 border border-neutral-700">
-          لغو شده
-        </span>
-      );
-    default:
-      return null;
-  }
-};
+import {
+  formatDate,
+  getCycleLabel,
+  getStatusBadge,
+} from "./subscriptionHelpers";
 
 export default function SubscriptionView({
   subscription,
-  workoutPlan,
-  workoutDays = [],
   orders = [],
 }: SubscriptionViewProps) {
   let daysRemaining = 0;
@@ -103,7 +33,10 @@ export default function SubscriptionView({
       totalDays = Math.max(1, Math.ceil(totalTime / (1000 * 60 * 60 * 24)));
       progressPercent = Math.min(
         100,
-        Math.max(0, Math.round(((totalDays - daysRemaining) / totalDays) * 100)),
+        Math.max(
+          0,
+          Math.round(((totalDays - daysRemaining) / totalDays) * 100),
+        ),
       );
     }
   }
@@ -120,16 +53,6 @@ export default function SubscriptionView({
               جزئیات عضویت فعال، دسترسی‌های ورزشی و سوابق مالی شما
             </p>
           </div>
-          {subscription && (
-            <Link
-              href="/packages"
-              id="sub-upgrade-btn"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 text-sm font-bold rounded-xl transition-all duration-300 shadow-md cursor-pointer"
-            >
-              <Zap className="w-4 h-4 text-neutral-950" />
-              <span>ارتقا یا تمدید اشتراک</span>
-            </Link>
-          )}
         </div>
 
         {subscription ? (
@@ -195,80 +118,10 @@ export default function SubscriptionView({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl">
-                <h3 className="text-lg font-bold font-morabbaReg text-white mb-6 flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-amber-400 animate-pulse" />
-                  <span>برنامه تمرینی فعال شما</span>
-                </h3>
-                <DashboardWorkoutPlan plan={workoutPlan} days={workoutDays} />
-              </div>
-
               <ActiveAccesses />
             </div>
 
             <div className="space-y-6">
-              <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl relative overflow-hidden">
-                <h3 className="text-base font-bold text-neutral-300 mb-4 flex items-center gap-2 font-morabbaReg">
-                  <User className="w-4 h-4 text-amber-400" />
-                  <span>مربی اختصاصی شما</span>
-                </h3>
-
-                {subscription.coachId ? (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      {subscription.coachId.avatarUrl ? (
-                        <img
-                          src={subscription.coachId.avatarUrl}
-                          alt={subscription.coachId.name}
-                          className="w-14 h-14 rounded-full object-cover border-2 border-amber-500/30"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border-2 border-amber-500/30">
-                          {subscription.coachId.name?.charAt(0) || "M"}
-                        </div>
-                      )}
-                      <div>
-                        <h4 className="font-bold text-white text-lg">
-                          {subscription.coachId.name}
-                        </h4>
-                        <p className="text-xs text-amber-400 mt-0.5 font-semibold">
-                          {subscription.coachId.specialties
-                            ?.slice(0, 2)
-                            .join("، ") || "مربی ورزشی"}
-                        </p>
-                      </div>
-                    </div>
-                    {subscription.coachId.bio && (
-                      <p className="text-xs text-neutral-400 leading-relaxed bg-white/5 p-3 rounded-lg border border-white/5">
-                        {subscription.coachId.bio}
-                      </p>
-                    )}
-                    <Link
-                      href="/dashboard/tickets"
-                      className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white rounded-xl transition-all cursor-pointer"
-                    >
-                      <span>گفتگو با مربی</span>
-                      <ArrowUpLeft className="w-4 h-4 text-amber-400" />
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="text-center py-6 space-y-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto text-amber-400 animate-pulse">
-                      <Activity className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">
-                        در حال تخصیص مربی...
-                      </p>
-                      <p className="text-xs text-neutral-400 mt-1 max-w-[200px] mx-auto leading-relaxed">
-                        سیستم به زودی بهترین مربی را بر اساس فیزیک و هدف شما
-                        مشخص خواهد کرد.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
               {subscription.orderId && (
                 <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-6 shadow-xl">
                   <h3 className="text-base font-bold text-neutral-300 mb-4 flex items-center gap-2 font-morabbaReg">

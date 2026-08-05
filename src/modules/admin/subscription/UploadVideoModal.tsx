@@ -82,7 +82,7 @@ export default function UploadVideoModal({
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed" dir="rtl">
       <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
-          <h2 className="text-xl text-white font-bold font-morabbaReg">
+          <h2 className="text-sm sm:text-xl text-white font-bold font-morabbaReg">
             آپلود ویدیوی ورزشی جدید به آروان
           </h2>
           <button
@@ -109,7 +109,7 @@ export default function UploadVideoModal({
           <form onSubmit={handleUploadVideo} className="p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-white/80 text-xs mb-2 font-medium">
+                <label className="block text-white/80 text-sm sm:text-xs mb-2 font-medium">
                   فایل ویدیو (MP4)*
                 </label>
                 <input
@@ -118,12 +118,12 @@ export default function UploadVideoModal({
                   onChange={(e) =>
                     setVideoFile(e.target.files?.[0] || null)
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-amber-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
                   required
                 />
               </div>
               <div>
-                <label className="block text-white/80 text-xs mb-2 font-medium">
+                <label className="block text-white/80 text-sm sm:text-xs mb-2 font-medium">
                   فایل کاور (Thumbnail JPG/PNG)*
                 </label>
                 <input
@@ -132,7 +132,7 @@ export default function UploadVideoModal({
                   onChange={(e) =>
                     setThumbnailFile(e.target.files?.[0] || null)
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-xs focus:outline-none focus:border-amber-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
                   required
                 />
               </div>

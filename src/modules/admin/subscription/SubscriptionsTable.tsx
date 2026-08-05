@@ -122,7 +122,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
 
       return (
         <span
-          className={`px-2.5 py-1 rounded-full border text-xs font-medium ${styles[status]}`}
+          className={`px-2.5 py-1 rounded-full border text-sm sm:text-xs font-medium ${styles[status]}`}
         >
           {labels[status]}
         </span>
@@ -189,7 +189,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                 key={st}
                 type="button"
                 onClick={() => setStatusFilter(st)}
-                className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${ statusFilter === st ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400" : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10" }`}
+                className={`px-4 py-1.5 rounded-lg border text-sm sm:text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${ statusFilter === st ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400" : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10" }`}
               >
                 {st === "all"
                   ? "همه"
@@ -251,7 +251,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                             <div className="font-semibold text-white">
                               {sub.userId?.fullName || "کاربر ناشناس"}
                             </div>
-                            <div className="text-white/50 text-xs">
+                            <div className="text-white/50 text-sm sm:text-xs">
                               @{sub.userId?.username || "username"} |{" "}
                               {sub.userId?.phone || sub.userId?.email || "-"}
                             </div>
@@ -279,7 +279,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                 openDropdownId === sub._id ? null : sub._id
                               )
                             }
-                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer"
+                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-sm sm:text-xs transition-colors cursor-pointer"
                           >
                             <span>عملیات</span>
                             <ChevronDown
@@ -308,7 +308,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                       });
                                     }
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-xs text-purple-300 hover:bg-purple-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-purple-300 hover:bg-purple-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Dumbbell className="w-4 h-4 text-purple-400" />
                                   <span>برنامه تمرینی</span>
@@ -319,7 +319,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     sub.packageId?.name || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
-                                  className="w-full text-right px-3.5 py-2 text-xs text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Utensils className="w-4 h-4 text-emerald-400" />
                                   <span>برنامه غذایی</span>
@@ -332,7 +332,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                       : sub.userId) || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
-                                  className="w-full text-right px-3.5 py-2 text-xs text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trophy className="w-4 h-4 text-amber-400" />
                                   <span>رکوردهای شخصی (PR)</span>
@@ -346,7 +346,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     setOpenDropdownId(null);
                                     onEdit(sub);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-xs text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Edit className="w-4 h-4 text-blue-400" />
                                   <span>ویرایش</span>
@@ -358,7 +358,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     setOpenDropdownId(null);
                                     handleDeleteSubscription(sub._id);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-xs text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trash2 className="w-4 h-4 text-rose-400" />
                                   <span>حذف اشتراک</span>
@@ -377,7 +377,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
 
           {totalPages > 1 && (
             <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between">
-              <span className="text-white/60 text-xs ss02">
+              <span className="text-white/60 text-sm sm:text-xs ss02">
                 نمایش صفحه {formatNumber(currentPage)} از{" "}
                 {formatNumber(totalPages)}
               </span>
