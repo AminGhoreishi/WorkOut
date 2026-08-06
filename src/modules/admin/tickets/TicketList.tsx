@@ -14,7 +14,7 @@ import {
   getCategoryBadge,
   getCategoryLabel,
 } from "./ticketHelpers";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 
 interface TicketsApiResponse {
   tickets: ITicket[];
@@ -201,11 +201,17 @@ const TicketList = memo(function TicketList({
                   </div>
                 );
               })}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                setCurrentPage={setCurrentPage}
-              />
+              {totalPages > 1 && (
+                <div className="pt-2">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={data?.total || tickets.length * totalPages}
+                    pageSize={8}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

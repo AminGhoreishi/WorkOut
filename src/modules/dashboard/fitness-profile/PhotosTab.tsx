@@ -65,7 +65,7 @@ export default function PhotosTab({
           rows={4}
           {...register("notes")}
           placeholder="بیماری خاص، آسیب‌دیدگی‌ها، حساسیت‌های غذایی یا نکته مهمی اگر هست اینجا بنویسید..."
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 text-sm focus:outline-none focus:border-amber-500/50 resize-none"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-neutral-500 text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 resize-none"
         />
       </div>
     </div>

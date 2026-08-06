@@ -14,7 +14,7 @@ import type {
   VideosManagementRef,
 } from "@/types/workout";
 import { showAlert, showConfirm } from "@/utils/alert";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -236,15 +236,13 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
             </div>
 
             {totalPages > 1 && (
-              <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between rounded-xl">
-                <span className="text-white/60 text-sm sm:text-xs ss02">
-                  نمایش صفحه {formatNumber(currentPage)} از{" "}
-                  {formatNumber(totalPages)}
-                </span>
+              <div className="p-4">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
-                  setCurrentPage={setCurrentPage}
+                  totalItems={data?.total || filteredVideos.length * totalPages}
+                  pageSize={8}
+                  onPageChange={setCurrentPage}
                 />
               </div>
             )}

@@ -24,7 +24,7 @@ import type {
   SubscriptionsTableProps,
 } from "@/types/workout";
 import { showAlert, showConfirm } from "@/utils/alert";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 
 const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
   function SubscriptionsTable({ onOpenPlanModal, onEdit, onStatsUpdate }, ref) {
@@ -376,15 +376,13 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
           </div>
 
           {totalPages > 1 && (
-            <div className="p-4 border-t border-white/10 bg-white/5 flex items-center justify-between">
-              <span className="text-white/60 text-sm sm:text-xs ss02">
-                نمایش صفحه {formatNumber(currentPage)} از{" "}
-                {formatNumber(totalPages)}
-              </span>
+            <div className="p-4">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                setCurrentPage={setCurrentPage}
+                totalItems={subscriptions.length * totalPages}
+                pageSize={8}
+                onPageChange={setCurrentPage}
               />
             </div>
           )}

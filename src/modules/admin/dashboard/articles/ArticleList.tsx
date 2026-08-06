@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 import { showAlert, showConfirm } from "@/utils/alert";
 import { formatNumber } from "@/utils/numbers";
 import {
@@ -415,16 +415,13 @@ export default function ArticleList({ onStatsChange }: ArticleListProps) {
         )}
 
         {!isTableLoading && articles.length > 0 && (
-          <div className="p-4 border-t border-amber-500/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-neutral-400 text-sm">
-              نمایش {(currentPage - 1) * 10 + 1} تا{" "}
-              {Math.min(currentPage * 10, total)} از {formatNumber(total)}{" "}
-              مقاله
-            </div>
+          <div className="p-4">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
+              totalItems={total}
+              pageSize={10}
+              onPageChange={setCurrentPage}
             />
           </div>
         )}

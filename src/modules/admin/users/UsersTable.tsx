@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 import {
   Users,
   Search,
@@ -415,16 +415,13 @@ export default function UsersTable() {
           </table>
         </div>
 
-        <div className="p-4 border-t border-white/10 flex items-center justify-between">
-          <div className="text-white/60 text-sm ss02">
-            نمایش {Math.max(0, (currentPage - 1) * 10 + 1)} تا{" "}
-            {Math.min(currentPage * 10, totalUsers)} از{" "}
-            {formatNumber(totalUsers)} کاربر
-          </div>
+        <div className="p-4">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
+            totalItems={totalUsers}
+            pageSize={10}
+            onPageChange={setCurrentPage}
           />
         </div>
       </div>

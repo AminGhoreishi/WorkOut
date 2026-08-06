@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import useSWR from "swr";
-import Pagination from "@/components/AdminPagination";
+import Pagination from "@/components/common/Pagination";
 import {
   Search,
   CheckCircle,
@@ -424,19 +424,14 @@ export default function CommentList() {
           </table>
         </div>
 
-        <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-danaMed">
-          <div className="text-white/60 text-sm ss02">
-            نمایش {Math.max(0, (currentPage - 1) * 10 + 1)} تا{" "}
-            {Math.min(currentPage * 10, totalComments)} از{" "}
-            {formatNumber(totalComments)} دیدگاه
-          </div>
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
-          )}
+        <div className="p-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalComments}
+            pageSize={10}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
 

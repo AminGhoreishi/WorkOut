@@ -33,7 +33,7 @@ export default function TrainingTab({
               onClick={() => setValue("goal", item.val as FitnessGoal)}
               className={`flex items-center gap-3 p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer ${ watchedGoal === item.val ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
             >
-              <span className="font-medium text-sm">{item.label}</span>
+              <span className="font-medium text-xs sm:text-sm">{item.label}</span>
             </button>
           ))}
         </div>
@@ -72,7 +72,7 @@ export default function TrainingTab({
                 e.target.value as TrainingExperienceOption,
               )
             }
-            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer"
+            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer"
           >
             {EXPERIENCE_OPTIONS.map((item) => (
               <option
@@ -102,7 +102,7 @@ export default function TrainingTab({
               }
               className={`w-full p-4 rounded-xl border text-right transition-all duration-200 cursor-pointer flex items-center justify-between ${ watchedEquipment === item.val ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
             >
-              <span className="font-semibold text-sm">{item.label}</span>
+              <span className="font-semibold text-xs sm:text-sm">{item.label}</span>
             </button>
           ))}
         </div>

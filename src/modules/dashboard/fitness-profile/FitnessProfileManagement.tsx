@@ -265,7 +265,7 @@ export default function FitnessProfileManagement() {
             <div className="w-20 h-20 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg mb-4 text-neutral-950">
               <Activity className="w-10 h-10" />
             </div>
-            <h2 className="text-xl font-bold font-morabbaReg text-white">
+            <h2 className="text-xs sm:text-xl font-bold font-morabbaReg text-white">
               پروفایل ورزشی شما
             </h2>
             <p className="text-neutral-400 text-xs mt-1 text-center">
@@ -278,10 +278,10 @@ export default function FitnessProfileManagement() {
               <div className="bg-white/5 border border-amber-500/10 rounded-xl p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <Scale className="w-5 h-5 text-amber-400" />
-                  <span className="text-sm text-neutral-300">شاخص BMI:</span>
+                  <span className="text-xs sm:text-sm text-neutral-300">شاخص BMI:</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold">
+                  <span className="text-xs sm:text-lg font-bold">
                     {bmi > 0 ? bmi : "—"}
                   </span>
                   {bmi > 0 && (
@@ -299,7 +299,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     قد (CM)
                   </span>
-                  <span className="text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block">
                     {errors.heightCm ? "—" : watchedHeight}
                   </span>
                 </div>
@@ -307,7 +307,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     وزن (KG)
                   </span>
-                  <span className="text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block">
                     {errors.weightKg ? "—" : watchedWeight}
                   </span>
                 </div>
@@ -315,7 +315,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     سن (سال)
                   </span>
-                  <span className="text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block">
                     {errors.ageYears ? "—" : watchedAge}
                   </span>
                 </div>
@@ -348,7 +348,7 @@ export default function FitnessProfileManagement() {
         <div className="lg:col-span-2 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 md:p-8 shadow-xl">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-400" />
-            <h3 className="text-xl font-bold font-morabbaReg text-white">
+            <h3 className="text-xs sm:text-xl font-bold font-morabbaReg text-white">
               ویرایش مشخصات ورزشی
             </h3>
           </div>
@@ -357,7 +357,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("physical")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "physical" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
+              className={`pb-3 px-4 text-xs sm:text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "physical" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               مشخصات بدنی
               {activeTab === "physical" && (
@@ -367,7 +367,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("training")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "training" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
+              className={`pb-3 px-4 text-xs sm:text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "training" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               برنامه و سابقه تمرینی
               {activeTab === "training" && (
@@ -377,7 +377,7 @@ export default function FitnessProfileManagement() {
             <button
               type="button"
               onClick={() => setActiveTab("photos")}
-              className={`pb-3 px-4 text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "photos" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
+              className={`pb-3 px-4 text-xs sm:text-sm font-semibold transition-colors relative cursor-pointer flex-shrink-0 ${ activeTab === "photos" ? "text-amber-400 font-bold" : "text-neutral-400 hover:text-white" }`}
             >
               تصاویر بدنی و یادداشت‌ها
               {activeTab === "photos" && (
@@ -424,7 +424,7 @@ export default function FitnessProfileManagement() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {saving ? (
                   <>
