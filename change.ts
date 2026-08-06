@@ -843,5 +843,70 @@ export const modifiedFiles = [
     id: 168,
     filePath: "src/modules/subscription/PurchaseHistory.tsx",
     description: "Refactored PurchaseHistory table with px-4 horizontal padding and min-w-[700px] spacing between columns for responsive mobile view with zero code comments."
+  },
+  {
+    id: 169,
+    filePath: "src/modules/dashboard/fitness-profile/FitnessProfileManagement.tsx",
+    description: "Adjusted headings, labels, metrics, tabs, and submit button font sizes to text-xs on mobile screens below sm breakpoint (text-xs sm:text-xl, text-xs sm:text-sm) with zero code comments."
+  },
+  {
+    id: 170,
+    filePath: "src/modules/dashboard/fitness-profile/PhysicalTab.tsx",
+    description: "Adjusted physical metrics input text sizes to text-xs on mobile screens below sm breakpoint (text-xs sm:text-sm) with zero code comments."
+  },
+  {
+    id: 171,
+    filePath: "src/modules/dashboard/fitness-profile/TrainingTab.tsx",
+    description: "Adjusted training goals, experience select, and equipment options font sizes to text-xs on mobile screens below sm breakpoint (text-xs sm:text-sm) with zero code comments."
+  },
+  {
+    id: 172,
+    filePath: "src/modules/dashboard/fitness-profile/PhotosTab.tsx",
+    description: "Adjusted coach notes textarea font size to text-xs on mobile screens below sm breakpoint (text-xs sm:text-sm) with zero code comments."
+  },
+  {
+    id: 173,
+    filePath: "src/components/AdminPagination.tsx",
+    description: "Deleted legacy AdminPagination component file."
+  },
+  {
+    id: 174,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 175,
+    filePath: "src/modules/admin/comments/CommentList.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 176,
+    filePath: "src/modules/admin/dashboard/articles/ArticleList.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 177,
+    filePath: "src/modules/admin/subscription/SubscriptionsTable.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 178,
+    filePath: "src/modules/admin/subscription/VideosManagement.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 179,
+    filePath: "src/modules/admin/tickets/TicketList.tsx",
+    description: "Replaced AdminPagination import with src/components/common/Pagination component without code comments."
+  },
+  {
+    id: 180,
+    filePath: "src/app/api/admin/user/route.ts",
+    description: "Updated admin user API endpoint GET handler to support status filter parameter, search regex matching, and dynamic totalUsers page count without code comments."
+  },
+  {
+    id: 181,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Refactored UsersTable to pass filterStatus parameter directly to server API endpoint and display server-filtered users without code comments."
   }
 ];

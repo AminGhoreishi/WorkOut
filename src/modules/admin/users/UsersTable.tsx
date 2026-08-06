@@ -40,9 +40,13 @@ export default function UsersTable() {
   const [editingUser, setEditingUser] = useState<IAdminUser | null>(null);
 
   const cleanSearch = searchQuery.trim();
-  const apiUrl = cleanSearch
-    ? `/api/admin/search?query=${encodeURIComponent(cleanSearch)}`
-    : `/api/admin/user?page=${currentPage}`;
+  let apiUrl = `/api/admin/user?page=${currentPage}`;
+  if (filterStatus !== "all") {
+    apiUrl += `&status=${filterStatus}`;
+  }
+  if (cleanSearch) {
+    apiUrl += `&search=${encodeURIComponent(cleanSearch)}`;
+  }
 
   const {
     data,
@@ -140,14 +144,6 @@ export default function UsersTable() {
   const formatNumber = (num: number) =>
     new Intl.NumberFormat("fa-IR").format(num || 0);
 
-  const filteredUsers = users.filter((u) => {
-    if (filterStatus === "all") return true;
-    if (filterStatus === "active") return u.status === "فعال" || u.status === "active";
-    if (filterStatus === "expired") return u.status === "منقضی" || u.status === "expired";
-    if (filterStatus === "blocked") return u.status === "مسدود" || u.status === "blocked";
-    return true;
-  });
-
   return (
     <>
       <UsersStats
@@ -175,7 +171,10 @@ export default function UsersTable() {
           <div className="flex gap-3">
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setCurrentPage(1);
+              }}
               className="bg-neutral-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               <option value="all">همه وضعیت‌ها</option>
@@ -197,12 +196,12 @@ export default function UsersTable() {
                     type="checkbox"
                     className="w-4 h-4 rounded border-white/20 cursor-pointer"
                     checked={
-                      filteredUsers.length > 0 &&
-                      selectedUsers.length === filteredUsers.length
+                      users.length > 0 &&
+                      selectedUsers.length === users.length
                     }
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedUsers(filteredUsers.map((u) => u._id));
+                        setSelectedUsers(users.map((u) => u._id));
                       } else {
                         setSelectedUsers([]);
                       }
@@ -270,7 +269,7 @@ export default function UsersTable() {
                     </div>
                   </td>
                 </tr>
-              ) : filteredUsers.length === 0 ? (
+              ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="p-12 text-center">
                     <div className="flex flex-col items-center gap-3 text-white/50">
@@ -285,7 +284,7 @@ export default function UsersTable() {
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((user) => (
+                users.map((user) => (
                   <tr
                     key={user._id}
                     className="hover:bg-white/5 transition-colors text-white"

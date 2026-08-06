@@ -21,12 +21,29 @@ export async function GET(req: NextRequest) {
 
     const page = Number(req.nextUrl.searchParams.get("page") || "1");
     const limit = Number(req.nextUrl.searchParams.get("limit") || "10");
+    const statusParam = req.nextUrl.searchParams.get("status");
+    const searchParam = req.nextUrl.searchParams.get("search") || req.nextUrl.searchParams.get("query");
     const skip = (page - 1) * limit;
+
+    const filterQuery: Record<string, unknown> = {};
+
+    if (statusParam && statusParam !== "all") {
+      filterQuery.status = statusParam;
+    }
+
+    if (searchParam && searchParam.trim()) {
+      const regex = { $regex: searchParam.trim(), $options: "i" };
+      filterQuery.$or = [
+        { username: regex },
+        { email: regex },
+        { phone: regex },
+      ];
+    }
 
     const [users, totalUsers, activeUsers, expiredUsers, blockedUsers] =
       await Promise.all([
-        User.find({}).select("-password").sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-        User.countDocuments({}),
+        User.find(filterQuery).select("-password").sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+        User.countDocuments(filterQuery),
         User.countDocuments({ status: "active" }),
         User.countDocuments({ status: "expired" }),
         User.countDocuments({ status: "blocked" }),
