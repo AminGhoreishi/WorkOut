@@ -17,9 +17,11 @@ import {
   XCircle,
   RefreshCw,
 } from "lucide-react";
-import type { IAdminUser, AdminUsersApiResponse, UserTableListProps } from "@/types/user";
+import type { IAdminUser, AdminUsersApiResponse } from "@/types/user";
 import { showAlert, showConfirm } from "@/utils/alert";
 import { getStatusBadge, getRoleBadge, getRoleLabel } from "@/utils/user";
+import { formatNumber } from "@/utils/numbers";
+import UserEditModal from "./UserEditModal";
 
 const fetcher = async (url: string): Promise<AdminUsersApiResponse> => {
   const res = await fetch(url);
@@ -30,10 +32,11 @@ const fetcher = async (url: string): Promise<AdminUsersApiResponse> => {
   return res.json();
 };
 
-export default function UserTableList({ onEditUser }: UserTableListProps) {
+export default function UserTableList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingUser, setEditingUser] = useState<IAdminUser | null>(null);
 
   const cleanSearch = searchQuery.trim();
   let apiUrl = `/api/admin/user?page=${currentPage}`;
@@ -68,9 +71,6 @@ export default function UserTableList({ onEditUser }: UserTableListProps) {
       status: persianStatus,
     };
   });
-
-  const formatNumber = (num: number) =>
-    new Intl.NumberFormat("fa-IR").format(num || 0);
 
   const handleToggleBlock = async (user: IAdminUser) => {
     const isBlocked = user.status === "مسدود" || user.status === "blocked";
@@ -366,7 +366,7 @@ export default function UserTableList({ onEditUser }: UserTableListProps) {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => onEditUser(user)}
+                          onClick={() => setEditingUser(user)}
                           className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
                           title="ویرایش"
                         >
@@ -413,6 +413,17 @@ export default function UserTableList({ onEditUser }: UserTableListProps) {
           />
         </div>
       </div>
+
+      {editingUser && (
+        <UserEditModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSaveSuccess={() => {
+            setEditingUser(null);
+            mutate();
+          }}
+        />
+      )}
     </>
   );
 }

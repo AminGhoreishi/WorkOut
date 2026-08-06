@@ -41,7 +41,7 @@ export interface UserEditModalProps {
 }
 
 export interface UserTableListProps {
-  onEditUser: (user: IAdminUser) => void;
+  onEditUser?: (user: IAdminUser) => void;
 }
 
 export interface AdminUsersApiResponse {

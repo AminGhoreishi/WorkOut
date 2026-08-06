@@ -2,16 +2,14 @@
 
 import { Users, UserCheck, Calendar, Ban } from "lucide-react";
 import type { UsersStatsProps } from "@/types/user";
+import { formatNumber } from "@/utils/numbers";
 
 export default function UsersStats({
   totalUsers = 0,
   activeUsers = 0,
   expiredUsers = 0,
   blockedUsers = 0,
-}: UsersStatsProps) {
-  const formatNumber = (num: number) =>
-    new Intl.NumberFormat("fa-IR").format(num || 0);
-
+}: Partial<UsersStatsProps>) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 font-danaMed">
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4">

@@ -1,6 +1,11 @@
 import UsersTable from "./UsersTable";
+import type { UsersStatsProps } from "@/types/user";
 
-export default function AdminUsers() {
+export default function AdminUsers({
+  initialStats,
+}: {
+  initialStats?: UsersStatsProps;
+}) {
   return (
     <div className="overflow-hidden font-danaMed" dir="rtl">
       <div className="container mx-auto pt-8">
@@ -13,7 +18,7 @@ export default function AdminUsers() {
           </p>
         </div>
 
-        <UsersTable />
+        <UsersTable initialStats={initialStats} />
       </div>
     </div>
   );
