@@ -29,7 +29,7 @@ const NutritionLogSchema = new Schema<INutritionLog>(
     targetFat: { type: Number, default: 65, min: 0 },
     targetWater: { type: Number, default: 2500, min: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 NutritionLogSchema.index({ userId: 1, date: 1 }, { unique: true });

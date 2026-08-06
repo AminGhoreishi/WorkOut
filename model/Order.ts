@@ -20,7 +20,7 @@ const OrderSchema = new Schema<IOrder>(
     },
     paymentRef: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Order ||

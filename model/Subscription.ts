@@ -23,6 +23,7 @@ const SubscriptionSchema = new Schema<ISubscriptionDocument>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    versionKey: false,
   },
 );
 

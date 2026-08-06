@@ -12,7 +12,7 @@ const WishSchema = new Schema<IWish>(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     blogId: { type: Schema.Types.ObjectId, ref: "Blog", required: true },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 WishSchema.index({ userId: 1, blogId: 1 }, { unique: true });

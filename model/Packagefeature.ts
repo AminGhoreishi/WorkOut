@@ -14,7 +14,7 @@ const PackageFeatureSchema = new Schema<IPackageFeature>({
   description: { type: String, default: "" },
   included: { type: Boolean, default: true },
   sortOrder: { type: Number, default: 0 },
-});
+}, { versionKey: false });
 
 export default mongoose.models.PackageFeature ||
   mongoose.model<IPackageFeature>("PackageFeature", PackageFeatureSchema);

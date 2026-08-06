@@ -11,6 +11,7 @@ const WorkoutmonthSchema = new Schema<IWorkoutmonth>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    versionKey: false,
   }
 );
 

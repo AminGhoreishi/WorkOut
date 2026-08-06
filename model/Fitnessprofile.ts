@@ -37,7 +37,7 @@ const FitnessProfileSchema = new Schema<IFitnessProfile>(
     bodyPhotos: [{ type: String }],
     notes: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.FitnessProfile ||

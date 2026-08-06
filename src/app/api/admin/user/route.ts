@@ -88,9 +88,6 @@ export async function GET(req: NextRequest) {
         package: activeSub?.packageId?.name || "—",
         status: persianStatus,
         totalPayments,
-        lastLogin: u.lastLogin
-          ? new Date(u.lastLogin).toLocaleDateString("fa-IR")
-          : "—",
       };
     });
 

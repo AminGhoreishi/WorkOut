@@ -17,6 +17,8 @@ const OtpSchema = new Schema<IOtp>({
     default: Date.now,
     expires: 120,
   },
-});
+},
+{ versionKey: false },
+);
 
 export default mongoose.models.Otp || mongoose.model<IOtp>("Otp", OtpSchema);

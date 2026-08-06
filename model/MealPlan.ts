@@ -21,7 +21,7 @@ const MealPlanSchema = new Schema<IMealPlan>(
     snack: { type: [MealPlanItemSchema], default: [] },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.models.MealPlan ||

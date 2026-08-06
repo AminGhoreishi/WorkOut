@@ -26,7 +26,7 @@ const PackageSchema = new Schema<IPackage>(
     isActive: { type: Boolean, default: true },
     hasMealPlan: { type: Boolean, default: false },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Package ||

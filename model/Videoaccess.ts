@@ -8,7 +8,7 @@ export interface IVideoAccess extends Document {
 const VideoAccessSchema = new Schema<IVideoAccess>({
   packageId: { type: Schema.Types.ObjectId, ref: "Package", required: true },
   videoId: { type: Schema.Types.ObjectId, ref: "Video", required: true },
-});
+}, { versionKey: false });
 
 export default mongoose.models.VideoAccess ||
   mongoose.model<IVideoAccess>("VideoAccess", VideoAccessSchema);

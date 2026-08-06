@@ -29,7 +29,7 @@ const PrSchema = new Schema<IPrDocument>(
     date: { type: Date, default: Date.now, required: true },
     notes: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Pr ||

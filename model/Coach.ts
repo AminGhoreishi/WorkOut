@@ -12,7 +12,7 @@ const CoachSchema = new Schema<ICoach>(
     sessionCount: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Coach ||

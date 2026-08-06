@@ -11,7 +11,6 @@ export interface IUser extends Document {
   phone?: string;
   status: "active" | "expired" | "blocked";
   wishlist?: mongoose.Types.ObjectId[];
-  lastLogin?: Date;
   createdAt: Date;
 }
 
@@ -24,7 +23,6 @@ export interface IAdminUser {
   status: string;
   package?: string;
   avatar?: string;
-  lastLogin?: string;
   totalPayments?: number;
   createdAt: string;
 }

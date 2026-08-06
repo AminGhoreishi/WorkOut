@@ -230,13 +230,7 @@ export default function UserEditModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
-            <div className="bg-white/5 rounded-lg p-4">
-              <div className="text-white/60 text-xs mb-1">آخرین ورود</div>
-              <div className="text-white font-medium text-sm ss02">
-                {user.lastLogin || "—"}
-              </div>
-            </div>
+          <div className="pt-4 border-t border-white/10">
             <div className="bg-white/5 rounded-lg p-4">
               <div className="text-white/60 text-xs mb-1">
                 کل پرداخت‌ها

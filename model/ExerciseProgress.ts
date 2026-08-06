@@ -11,7 +11,7 @@ const ExerciseProgressSchema = new Schema<IExerciseProgressDocument>(
     },
     completed: { type: Boolean, default: false },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.ExerciseProgress ||

@@ -22,7 +22,7 @@ const ReviewSchema = new Schema<IReview>(
     isVerified: { type: Boolean, default: false },
     isVisible: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Review ||

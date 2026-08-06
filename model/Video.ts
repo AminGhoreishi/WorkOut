@@ -16,7 +16,7 @@ const VideoSchema = new Schema<IVideo>(
     tags: [{ type: String }],
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Video ||

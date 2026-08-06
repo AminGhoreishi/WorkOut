@@ -908,5 +908,30 @@ export const modifiedFiles = [
     id: 181,
     filePath: "src/modules/admin/users/UsersTable.tsx",
     description: "Refactored UsersTable to pass filterStatus parameter directly to server API endpoint and display server-filtered users without code comments."
+  },
+  {
+    id: 182,
+    filePath: "model/*.ts",
+    description: "Disabled __v Mongoose versionKey across all 28 database model schemas by specifying versionKey: false without code comments."
+  },
+  {
+    id: 183,
+    filePath: "src/types/user.ts",
+    description: "Removed lastLogin property from IUser and IAdminUser TypeScript interfaces without code comments."
+  },
+  {
+    id: 184,
+    filePath: "src/app/api/admin/user/route.ts",
+    description: "Removed lastLogin field transformation from admin user GET API endpoint response payload without code comments."
+  },
+  {
+    id: 185,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Removed lastLogin table header column and cell from UsersTable component without code comments."
+  },
+  {
+    id: 186,
+    filePath: "src/modules/admin/users/UserEditModal.tsx",
+    description: "Removed lastLogin info card from UserEditModal component without code comments."
   }
 ];

@@ -32,7 +32,7 @@ const SessionSchema = new Schema<ISession>(
     meetLink: { type: String, default: "" },
     notes: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.Session ||

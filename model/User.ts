@@ -16,9 +16,8 @@ const UserSchema = new Schema<IUser>(
       default: "active",
     },
     wishlist: { type: [Schema.Types.ObjectId], ref: "Blog", default: [] },
-    lastLogin: { type: Date, default: null },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 UserSchema.virtual("nutrition", {

@@ -16,7 +16,7 @@ const FoodSchema = new Schema<IFood>(
       enum: ["breakfast", "lunch", "dinner", "snack", "all"],
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.models.Food || mongoose.model<IFood>("Food", FoodSchema);

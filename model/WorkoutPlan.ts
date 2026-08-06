@@ -8,7 +8,7 @@ const WorkoutPlanSchema = new Schema<IWorkoutPlan>(
     description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.WorkoutPlan ||

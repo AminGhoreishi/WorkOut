@@ -11,7 +11,7 @@ const CommentSchema = new Schema<IComment>(
     likes: { type: Number, default: 0 },
     isApproved: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.models.Comment || mongoose.model<IComment>("Comment", CommentSchema);

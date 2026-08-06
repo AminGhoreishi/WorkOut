@@ -10,7 +10,7 @@ const WorkoutSessionFeedbackSchema = new Schema<IWorkoutSessionFeedbackDocument>
     hasPain: { type: Boolean, required: true },
     comment: { type: String, default: "" },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.models.WorkoutSessionFeedback ||

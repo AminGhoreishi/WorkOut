@@ -12,7 +12,7 @@ const WorkoutExerciseSchema = new Schema<IWorkoutExercise>(
     restSec: { type: Number, default: 60 },
     sortOrder: { type: Number, default: 0 },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.WorkoutExercise ||

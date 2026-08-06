@@ -227,9 +227,6 @@ export default function UsersTable() {
                   تاریخ عضویت
                 </th>
                 <th className="p-4 text-right text-white/80 text-sm font-medium">
-                  آخرین ورود
-                </th>
-                <th className="p-4 text-right text-white/80 text-sm font-medium">
                   کل پرداخت
                 </th>
                 <th className="p-4 text-right text-white/80 text-sm font-medium">
@@ -241,7 +238,7 @@ export default function UsersTable() {
               {isLoading ? (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={9}
                     className="p-12 text-center text-white/50 text-sm"
                   >
                     <div className="flex flex-col items-center gap-3">
@@ -253,7 +250,7 @@ export default function UsersTable() {
               ) : swrError ? (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={9}
                     className="p-12 text-center text-red-400 text-sm"
                   >
                     <div className="flex flex-col items-center gap-3">
@@ -271,7 +268,7 @@ export default function UsersTable() {
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="p-12 text-center">
+                  <td colSpan={9} className="p-12 text-center">
                     <div className="flex flex-col items-center gap-3 text-white/50">
                       <Users className="w-12 h-12 opacity-30" />
                       <p className="text-lg">کاربری پیدا نشد</p>
@@ -369,9 +366,6 @@ export default function UsersTable() {
                     </td>
                     <td className="p-4 text-white/70 text-sm ss02">
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString("fa-IR") : "—"}
-                    </td>
-                    <td className="p-4 text-white/70 text-sm ss02">
-                      {user.lastLogin || "—"}
                     </td>
                     <td className="p-4">
                       <span className="text-white font-medium font-morabbaReg">

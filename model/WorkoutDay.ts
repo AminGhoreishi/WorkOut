@@ -8,7 +8,7 @@ const WorkoutDaySchema = new Schema<IWorkoutDay>(
     muscleGroup: { type: String, required: true },
     sortOrder: { type: Number, default: 0 },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 export default mongoose.models.WorkoutDay ||

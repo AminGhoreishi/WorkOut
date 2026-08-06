@@ -7,7 +7,7 @@ const MessageSchema = new Schema<IMessage>(
     senderName: { type: String, required: true },
     text: { type: String, required: true },
   },
-  { timestamps: { createdAt: true, updatedAt: false } }
+  { timestamps: { createdAt: true, updatedAt: false }, versionKey: false }
 );
 
 const TicketSchema = new Schema<ITicket>(
@@ -30,7 +30,7 @@ const TicketSchema = new Schema<ITicket>(
     videoUrl: { type: String },
     messages: [MessageSchema],
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.models.Ticket || mongoose.model<ITicket>("Ticket", TicketSchema);

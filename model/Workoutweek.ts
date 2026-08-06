@@ -10,6 +10,7 @@ const WorkoutweekSchema = new Schema<IWorkoutweek>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    versionKey: false,
   }
 );
 
