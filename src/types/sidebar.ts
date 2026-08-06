@@ -6,6 +6,7 @@ export interface SidebarCounts {
   articles: number;
   comments: number;
   wishlist: number;
+  videos: number;
 }
 
 export interface MenuItem {

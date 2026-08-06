@@ -17,6 +17,7 @@ export default function AdminSidebar({ isAdmin = false }) {
     articles: 0,
     comments: 0,
     wishlist: 0,
+    videos: 0,
   });
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function AdminSidebar({ isAdmin = false }) {
             subscriptions: data.subscriptionsCount || 0,
             articles: data.articlesCount || 0,
             comments: data.commentsCount ?? data.pendingCommentsCount ?? 0,
+            videos: data.videosCount || 0,
           }));
         }
       } catch (err) {

@@ -3,6 +3,7 @@ import User from "@/model/User";
 import Subscription from "@/model/Subscription";
 import Blog from "@/model/Blog";
 import Comment from "@/model/Comment";
+import Video from "@/model/Video";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ export async function GET() {
     const articlesCount = await Blog.countDocuments({});
     const pendingCommentsCount = await Comment.countDocuments({ isApproved: false });
     const commentsCount = await Comment.countDocuments({});
+    const videosCount = await Video.countDocuments({});
 
     return NextResponse.json({
       usersCount,
@@ -22,6 +24,7 @@ export async function GET() {
       articlesCount,
       pendingCommentsCount,
       commentsCount,
+      videosCount,
     });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });

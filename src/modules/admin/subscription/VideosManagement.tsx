@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import useSWR from "swr";
 import { Search, Plus, Loader2, Film, Play, Eye, Trash2 } from "lucide-react";
 import type {
@@ -21,14 +16,14 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
   function VideosManagement(
     { setShowUploadVideoModal, setWatchingVideo, onVideosUpdate },
-    ref
+    ref,
   ) {
     const [searchVideoTerm, setSearchVideoTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data, isLoading, mutate } = useSWR(
       `/api/admin/video?page=${currentPage}`,
-      fetcher
+      fetcher,
     );
 
     const videos: VideoInfo[] = data?.videos || [];
@@ -47,12 +42,8 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
           await mutate();
         },
       }),
-      [mutate]
+      [mutate],
     );
-
-    const formatNumber = (num: number) => {
-      return new Intl.NumberFormat("fa-IR").format(num || 0);
-    };
 
     const formatDuration = (sec?: number) => {
       if (!sec) return "۰:۰۰";
@@ -123,7 +114,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
     const filteredVideos = videos.filter(
       (vid) =>
         vid.title.toLowerCase().includes(searchVideoTerm.toLowerCase()) ||
-        vid.description?.toLowerCase().includes(searchVideoTerm.toLowerCase())
+        vid.description?.toLowerCase().includes(searchVideoTerm.toLowerCase()),
     );
 
     return (
@@ -158,7 +149,8 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
           <div className="p-16 text-center border border-dashed border-white/10 rounded-2xl text-white/40 flex flex-col items-center justify-center">
             <Film className="w-12 h-12 text-white/10 mb-3" />
             <p className="text-sm">
-              هیچ ویدیوی تمرینی ثبت نشده است. همین حالا اولین ویدیو را آپلود کنید!
+              هیچ ویدیوی تمرینی ثبت نشده است. همین حالا اولین ویدیو را آپلود
+              کنید!
             </p>
           </div>
         ) : (
@@ -250,7 +242,7 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 export default VideosManagement;

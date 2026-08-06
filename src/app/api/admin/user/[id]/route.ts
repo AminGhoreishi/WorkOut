@@ -126,3 +126,45 @@ export async function PATCH(
     return NextResponse.json({ error: errMessage }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await dbConnect();
+
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id || session.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "شما مجاز به دسترسی به این بخش نیستید." },
+        { status: 403 }
+      );
+    }
+
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
+
+    if (id === session.user.id) {
+      return NextResponse.json(
+        { message: "شما نمی‌توانید حساب کاربری خود را حذف کنید." },
+        { status: 400 }
+      );
+    }
+
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return NextResponse.json({ message: "کاربر پیدا نشد" }, { status: 404 });
+    }
+
+    await Ban.deleteMany({ userId: id });
+
+    return NextResponse.json({
+      success: true,
+      message: "کاربر با موفقیت حذف شد",
+    });
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : "خطا در حذف کاربر";
+    return NextResponse.json({ message: errMessage }, { status: 500 });
+  }
+}

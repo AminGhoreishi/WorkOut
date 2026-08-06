@@ -17,6 +17,7 @@ import {
   Utensils,
   Trophy,
   Sparkles,
+  Film,
 } from "lucide-react";
 import { SidebarCounts, MenuItem, MenuSection } from "@/types/sidebar";
 
@@ -68,6 +69,13 @@ export function getAdminMenuItems(
     {
       title: "محتوا",
       items: [
+        {
+          id: "videos",
+          label: "مدیریت ویدیوها",
+          icon: Film,
+          badge: counts.videos > 0 ? formatNumber(counts.videos) : "۰",
+          href: "/admin/videos",
+        },
         {
           id: "articles",
           label: "مقالات",

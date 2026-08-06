@@ -40,6 +40,10 @@ export interface UserEditModalProps {
   onSaveSuccess: () => void;
 }
 
+export interface UserTableListProps {
+  onEditUser: (user: IAdminUser) => void;
+}
+
 export interface AdminUsersApiResponse {
   users?: IAdminUser[];
   userFind?: IAdminUser[];

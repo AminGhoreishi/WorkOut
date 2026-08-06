@@ -983,5 +983,80 @@ export const modifiedFiles = [
     id: 196,
     filePath: "lib/auth.ts",
     description: "Enforced ban check in NextAuth authorize credentials provider and Google OAuth signIn callback without comments."
+  },
+  {
+    id: 197,
+    filePath: "src/app/api/admin/sidebar-stats/route.ts",
+    description: "Included total videos count (videosCount) in admin sidebar stats API response payload without code comments."
+  },
+  {
+    id: 198,
+    filePath: "src/types/sidebar.ts",
+    description: "Added videos count property to SidebarCounts interface without code comments."
+  },
+  {
+    id: 199,
+    filePath: "src/components/layout/admin/AdminSidebar.tsx",
+    description: "Updated AdminSidebar to fetch and track total videos count without code comments."
+  },
+  {
+    id: 200,
+    filePath: "src/components/layout/admin/sidebarItems.ts",
+    description: "Added dedicated 'مدیریت ویدیوها' menu item under content section with dynamic video count badge in admin sidebar without code comments."
+  },
+  {
+    id: 201,
+    filePath: "src/modules/admin/videos/VideosPageModule.tsx",
+    description: "Created standalone VideosPageModule component for video library management without code comments."
+  },
+  {
+    id: 202,
+    filePath: "src/app/(admin)/admin/videos/page.tsx",
+    description: "Created standalone admin video management route page at /admin/videos without code comments."
+  },
+  {
+    id: 203,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Removed embedded video library tab and upload video button from SubscriptionsManagement component without code comments."
+  },
+  {
+    id: 204,
+    filePath: "src/app/api/admin/user/[id]/route.ts",
+    description: "Added DELETE handler method to remove user records and associated ban entries without code comments."
+  },
+  {
+    id: 205,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Removed user selection checkboxes and bulk action bar, and added individual user delete action button with confirmation alert without code comments."
+  },
+  {
+    id: 206,
+    filePath: "src/types/user.ts",
+    description: "Defined UserTableListProps interface for extracted user table list component without code comments."
+  },
+  {
+    id: 207,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Extracted dedicated UserTableList sub-component for rendering table headers, rows, action buttons, state views, and pagination without code comments."
+  },
+  {
+    id: 208,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Refactored UsersTable container component to import and render UserTableList sub-component without code comments."
+  },
+  {
+    id: 209,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Encapsulated handleToggleBlock and handleDeleteUser action handler functions directly inside UserTableList sub-component without code comments."
+  },
+  {
+    id: 210,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Moved search input field and status filter dropdown UI controls into UserTableList sub-component without code comments."
+  },
+  {
+    id: 211,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Encapsulated searchQuery, filterStatus, currentPage state management and SWR data fetching directly inside UserTableList sub-component without code comments."
   }
 ];
