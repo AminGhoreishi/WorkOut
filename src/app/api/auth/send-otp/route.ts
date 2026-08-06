@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import Otp from "@/model/Otp";
+import Ban from "@/model/Ban";
 import { toEnglishDigits } from "@/utils/numbers";
 
 export async function POST(req: NextRequest) {
@@ -35,6 +36,19 @@ export async function POST(req: NextRequest) {
         { phone: `0${cleanPhone}` },
       ],
     });
+
+    if (existingUser) {
+      const isBanned =
+        existingUser.status === "blocked" ||
+        (await Ban.findOne({ userId: existingUser._id, status: "active" }));
+
+      if (isBanned) {
+        return NextResponse.json(
+          { message: "حساب کاربری شما مسدود شده است و امکان دریافت کد وجود ندارد" },
+          { status: 403 }
+        );
+      }
+    }
 
     if (type === "login" && !existingUser) {
       return NextResponse.json(

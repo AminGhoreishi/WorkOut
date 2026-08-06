@@ -9,6 +9,7 @@ import WorkoutExercise from "@/model/WorkoutExercise";
 import Video from "@/model/Video";
 import Workoutweek from "@/model/Workoutweek";
 import Workoutmonth from "@/model/Workoutmonth";
+import Ban from "@/model/Ban";
 
 export default function registerModels() {
   return [
@@ -23,5 +24,6 @@ export default function registerModels() {
     Video,
     Workoutweek,
     Workoutmonth,
+    Ban,
   ];
 }

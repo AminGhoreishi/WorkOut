@@ -3,7 +3,7 @@ import Blog from "@/model/Blog";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadFileToS3 } from "@/lib/arvan";
+import { uploadFileToS3, deleteFileFromS3 } from "@/lib/arvan";
 import { validateBlog, validateBlogUpdate } from "@/validator/blog";
 
 async function generateUniqueSlug(title: string): Promise<string> {
@@ -304,12 +304,17 @@ export async function PUT(req: NextRequest) {
           { status: 400 }
         );
       }
+      if (blog.image) {
+        await deleteFileFromS3(blog.image);
+      }
       blog.image = await uploadFileToS3(imageInput, "blogs");
     } else if (
       imageInput === "null" ||
-      imageInput === "deleted" ||
-      !imageInput
+      imageInput === "deleted"
     ) {
+      if (blog.image) {
+        await deleteFileFromS3(blog.image);
+      }
       blog.image = "";
     }
 
@@ -358,7 +363,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const blog = await Blog.findByIdAndDelete(id);
+    const blog = await Blog.findById(id);
 
     if (!blog) {
       return NextResponse.json(
@@ -366,6 +371,12 @@ export async function DELETE(req: NextRequest) {
         { status: 404 }
       );
     }
+
+    if (blog.image) {
+      await deleteFileFromS3(blog.image);
+    }
+
+    await Blog.findByIdAndDelete(id);
 
     return NextResponse.json({
       success: true,
@@ -378,3 +389,4 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+

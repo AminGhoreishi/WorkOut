@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import Otp from "@/model/Otp";
+import Ban from "@/model/Ban";
 import { toEnglishDigits } from "@/utils/numbers";
 
 export async function POST(req: NextRequest) {
@@ -44,6 +45,17 @@ export async function POST(req: NextRequest) {
       });
 
       if (existingUser) {
+        const isBanned =
+          existingUser.status === "blocked" ||
+          (await Ban.findOne({ userId: existingUser._id, status: "active" }));
+
+        if (isBanned) {
+          return NextResponse.json(
+            { message: "حساب کاربری شما مسدود شده است و امکان ثبت‌نام وجود ندارد" },
+            { status: 403 },
+          );
+        }
+
         return NextResponse.json(
           { message: "این شماره تلفن قبلاً ثبت شده است" },
           { status: 409 },

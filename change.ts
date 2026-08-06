@@ -933,5 +933,55 @@ export const modifiedFiles = [
     id: 186,
     filePath: "src/modules/admin/users/UserEditModal.tsx",
     description: "Removed lastLogin info card from UserEditModal component without code comments."
+  },
+  {
+    id: 187,
+    filePath: "lib/arvan.ts",
+    description: "Exported deleteFileFromS3 helper function for Arvan Cloud S3 object removal without code comments."
+  },
+  {
+    id: 188,
+    filePath: "src/app/api/admin/blog/route.ts",
+    description: "Integrated Arvan Cloud S3 storage for article image upload, update replacement, image removal, and article deletion cleanup without code comments."
+  },
+  {
+    id: 189,
+    filePath: "src/types/ban.ts",
+    description: "Created IBan TypeScript interface for ban records without comments."
+  },
+  {
+    id: 190,
+    filePath: "model/Ban.ts",
+    description: "Created Mongoose Ban model schema for recording user block/ban history with versionKey false without comments."
+  },
+  {
+    id: 191,
+    filePath: "lib/registerModels.ts",
+    description: "Registered Ban model in Mongoose model registry without comments."
+  },
+  {
+    id: 192,
+    filePath: "src/app/api/admin/user/[id]/route.ts",
+    description: "Updated admin user PATCH endpoint to create an active Ban record when user status is changed to blocked without comments."
+  },
+  {
+    id: 193,
+    filePath: "src/app/api/auth/register/route.ts",
+    description: "Added ban status validation using Ban model to prevent blocked users from registering without comments."
+  },
+  {
+    id: 194,
+    filePath: "src/app/api/auth/send-otp/route.ts",
+    description: "Prevented OTP dispatch for blocked/banned accounts without comments."
+  },
+  {
+    id: 195,
+    filePath: "src/app/api/auth/verify-otp/route.ts",
+    description: "Added ban status check during OTP registration verification without comments."
+  },
+  {
+    id: 196,
+    filePath: "lib/auth.ts",
+    description: "Enforced ban check in NextAuth authorize credentials provider and Google OAuth signIn callback without comments."
   }
 ];

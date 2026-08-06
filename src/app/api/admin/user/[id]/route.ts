@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import Subscription from "@/model/Subscription";
+import Ban from "@/model/Ban";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -87,7 +88,21 @@ export async function PATCH(
     }
     if (data.status !== undefined) {
       if (["active", "expired", "blocked"].includes(data.status)) {
+        const oldStatus = user.status;
         user.status = data.status;
+        if (data.status === "blocked" && oldStatus !== "blocked") {
+          await Ban.create({
+            userId: user._id,
+            adminId: session.user.id,
+            reason: data.reason || "مسدود شده توسط مدیر",
+            status: "active",
+          });
+        } else if (data.status === "active" && oldStatus === "blocked") {
+          await Ban.updateMany(
+            { userId: user._id, status: "active" },
+            { status: "revoked" }
+          );
+        }
       } else {
         return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
       }

@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export const arvanClient = new S3Client({
   region: "ir-thr-at1",
@@ -26,3 +26,26 @@ export async function uploadFileToS3(file: File, folder: string): Promise<string
 
   return `${process.env.S3_PUBLIC_URL}/${fileKey}`;
 }
+
+export async function deleteFileFromS3(fileUrl: string): Promise<boolean> {
+  if (!fileUrl) return false;
+  const publicUrl = process.env.S3_PUBLIC_URL || "";
+  if (publicUrl && fileUrl.includes(publicUrl)) {
+    const fileKey = fileUrl.split(`${publicUrl}/`)[1];
+    if (fileKey) {
+      try {
+        await arvanClient.send(
+          new DeleteObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME!,
+            Key: fileKey,
+          }),
+        );
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+  }
+  return false;
+}
+

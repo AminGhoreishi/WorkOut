@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 import User from "@/model/User";
+import Ban from "@/model/Ban";
 import dbConnect from "@/lib/dbConnect";
 import { toEnglishDigits } from "@/utils/numbers";
 
@@ -41,6 +42,10 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) return null;
+          if (user.status === "blocked") return null;
+
+          const isBanned = await Ban.findOne({ userId: user._id, status: "active" });
+          if (isBanned) return null;
 
           const isOtp = String(credentials?.isOtpLogin) === "true";
           const pwd = credentials?.password;
@@ -72,6 +77,12 @@ export const authOptions: NextAuthOptions = {
 
         const emailClean = user.email.toLowerCase();
         const existing = await User.findOne({ email: emailClean });
+
+        if (existing) {
+          if (existing.status === "blocked") return false;
+          const isBanned = await Ban.findOne({ userId: existing._id, status: "active" });
+          if (isBanned) return false;
+        }
 
         if (!existing) {
           const fallbackUsername = user.name || emailClean.split("@")[0] || "user";
@@ -124,6 +135,14 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (dbUser) {
+        if (dbUser.status === "blocked") {
+          return {};
+        }
+        const isBanned = await Ban.findOne({ userId: dbUser._id, status: "active" });
+        if (isBanned) {
+          return {};
+        }
+
         token.id = dbUser._id.toString();
         token.username = dbUser.username || dbUser.fullName || "";
         token.role = dbUser.role || "user";
@@ -136,6 +155,9 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }: any) {
+      if (!token || !token.id) {
+        return null;
+      }
       if (token) {
         session.user.id = token.id;
         session.user.username = token.username;
