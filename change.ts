@@ -684,7 +684,7 @@ export const modifiedFiles = [
     filePath: "src/modules/article/ArticleNotFound.tsx",
     description: "Extracted modular ArticleNotFound fallback sub-component with zero code comments."
   }
-,
+  ,
   {
     id: 138,
     filePath: "src/modules/onboarding/OnboardingForm.tsx",
@@ -745,25 +745,25 @@ export const modifiedFiles = [
     filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
     description: "Removed font-sans class override from component with zero code comments."
   }
-,
+  ,
   {
     id: 150,
     filePath: "src/modules/articles/Articles.tsx",
     description: "Refactored load more pagination to throttled cumulative append fetching with zero code comments."
   }
-,
+  ,
   {
     id: 151,
     filePath: "src/modules/article/ArticleMainContent.tsx",
     description: "Extracted modular ArticleMainContent sub-component for article metadata header and body content with zero code comments."
   }
-,
+  ,
   {
     id: 152,
     filePath: "src/modules/article/ArticleActionsBar.tsx",
     description: "Extracted modular ArticleActionsBar sub-component for article like, bookmark, and share actions with zero code comments."
   }
-,
+  ,
   {
     id: 153,
     filePath: "src/app/(main)/article/[slug]/page.tsx",
@@ -1198,5 +1198,115 @@ export const modifiedFiles = [
     id: 239,
     filePath: "lib/auth.ts",
     description: "Wrapped NextAuth jwt callback database operations in try-catch to prevent JWT_SESSION_ERROR crashes when MongoDB is temporarily unreachable without code comments."
+  },
+  {
+    id: 240,
+    filePath: "src/types/admin.ts",
+    description: "Updated AdminDashboardAdminProps interface and created MonthlyIncomeCardProps, StatusMapItem, and RoleMapItem type interfaces without code comments."
+  },
+  {
+    id: 241,
+    filePath: "src/modules/admin/dashboard/adminDashboardHelpers.ts",
+    description: "Extracted gradients, statusMap, and roleMap constants into a dedicated helper module without code comments."
+  },
+  {
+    id: 242,
+    filePath: "src/modules/admin/dashboard/MonthlyIncomeCard.tsx",
+    description: "Created standalone MonthlyIncomeCard component to display formatted monthly revenue from user package purchases without code comments."
+  },
+  {
+    id: 243,
+    filePath: "src/app/(admin)/admin/page.tsx",
+    description: "Updated admin page server component to calculate real monthly income by aggregating paid package orders from MongoDB without code comments."
+  },
+  {
+    id: 244,
+    filePath: "src/modules/admin/dashboard/AdminDashboardAdmin.tsx",
+    description: "Refactored AdminDashboardAdmin component to import external helper constants and render MonthlyIncomeCard component without code comments."
+  },
+  {
+    id: 245,
+    filePath: "src/modules/admin/dashboard/AdminQuickActions.tsx",
+    description: "Created standalone AdminQuickActions component with Next.js Link elements for dashboard action shortcuts without code comments."
+  },
+  {
+    id: 246,
+    filePath: "src/modules/admin/dashboard/AdminDashboardAdmin.tsx",
+    description: "Replaced inline quick action buttons with imported AdminQuickActions component without code comments."
+  },
+  {
+    id: 247,
+    filePath: "src/modules/admin/dashboard/AdminDashboardAdmin.tsx",
+    description: "Removed static badge labels and subtitle texts (+12% compared to last month, +4 articles this month, 3 new badge, needs response) from dashboard stat cards without code comments."
+  },
+  {
+    id: 248,
+    filePath: "src/modules/admin/dashboard/MonthlyIncomeCard.tsx",
+    description: "Removed static subtitle texts from MonthlyIncomeCard without code comments."
+  },
+  {
+    id: 249,
+    filePath: "src/types/admin.ts",
+    description: "Added AdminStatsOverviewProps type interface without code comments."
+  },
+  {
+    id: 250,
+    filePath: "src/modules/admin/dashboard/AdminStatsOverview.tsx",
+    description: "Created standalone AdminStatsOverview component for upper admin dashboard stat cards container without code comments."
+  },
+  {
+    id: 251,
+    filePath: "src/modules/admin/dashboard/AdminDashboardAdmin.tsx",
+    description: "Replaced top stat cards grid section with imported AdminStatsOverview component without code comments."
+  },
+  {
+    id: 252,
+    filePath: "src/types/admin.ts",
+    description: "Added RecentUserItem and RecentUsersProps interfaces without code comments."
+  },
+  {
+    id: 253,
+    filePath: "src/modules/admin/dashboard/RecentUsers.tsx",
+    description: "Created standalone RecentUsers client component with instant search filter without code comments."
+  },
+  {
+    id: 254,
+    filePath: "src/modules/admin/dashboard/AdminDashboardAdmin.tsx",
+    description: "Replaced inline recent users list section with imported RecentUsers component without code comments."
+  },
+  {
+    id: 255,
+    filePath: "src/app/api/admin/user/route.ts",
+    description: "Added role parameter filtering support to admin user API GET handler without code comments."
+  },
+  {
+    id: 256,
+    filePath: "src/types/user.ts",
+    description: "Updated UserTableListProps, UsersTableProps, and AdminUsersProps interfaces with roleFilter property without code comments."
+  },
+  {
+    id: 257,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Updated UserTableList function signature to accept roleFilter prop and append role parameter to SWR fetch API endpoint without code comments."
+  },
+  {
+    id: 258,
+    filePath: "src/modules/admin/users/UsersTable.tsx",
+    description: "Updated UsersTable component to pass roleFilter prop to UserTableList and userLabel to UsersStats without code comments."
+  },
+  {
+    id: 259,
+    filePath: "src/modules/admin/users/UsersStats.tsx",
+    description: "Added userLabel prop support to UsersStats component for dynamic stat labels without code comments."
+  },
+  {
+    id: 260,
+    filePath: "src/modules/admin/users/AdminUsers.tsx",
+    description: "Updated AdminUsers component with customizable title, description, and roleFilter props without code comments."
+  },
+  {
+    id: 261,
+    filePath: "src/app/(admin)/admin/admins/page.tsx",
+    description: "Created admin admins page route at /admin/admins strictly displaying only users with admin role without code comments."
   }
 ];

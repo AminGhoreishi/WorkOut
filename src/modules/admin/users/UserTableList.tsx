@@ -285,10 +285,10 @@ export default function UserTableList() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center text-xl font-bold text-amber-400 overflow-hidden shrink-0">
                           {user.avatar &&
-                          (user.avatar.startsWith("http://") ||
-                            user.avatar.startsWith("https://") ||
-                            user.avatar.startsWith("/") ||
-                            user.avatar.startsWith("data:image")) ? (
+                            (user.avatar.startsWith("http://") ||
+                              user.avatar.startsWith("https://") ||
+                              user.avatar.startsWith("/") ||
+                              user.avatar.startsWith("data:image")) ? (
                             <img
                               src={user.avatar}
                               alt={user.username || "کاربر"}
