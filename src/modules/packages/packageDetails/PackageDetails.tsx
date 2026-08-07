@@ -141,7 +141,6 @@ export default function PackageDetails({
 
                 <PriceCard
                   price={packageData.price}
-                  originalPrice={packageData.originalPrice}
                 />
 
                 <div className="relative z-10 pt-2">

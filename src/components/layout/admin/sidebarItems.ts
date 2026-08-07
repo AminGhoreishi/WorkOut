@@ -18,6 +18,7 @@ import {
   Trophy,
   Sparkles,
   Film,
+  TrendingUp,
 } from "lucide-react";
 import { SidebarCounts, MenuItem, MenuSection } from "@/types/sidebar";
 
@@ -196,6 +197,13 @@ export function getUserMenuItems(
           icon: Dumbbell,
           badge: null,
           href: "/dashboard/workout",
+        },
+        {
+          id: "progress",
+          label: "نمودار پیشرفت",
+          icon: TrendingUp,
+          badge: null,
+          href: "/dashboard/progress",
         },
         {
           id: "profile",

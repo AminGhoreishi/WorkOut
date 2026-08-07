@@ -1103,5 +1103,45 @@ export const modifiedFiles = [
     id: 220,
     filePath: "src/modules/admin/users/UsersStats.tsx, src/modules/admin/users/UserTableList.tsx",
     description: "Replaced redundant local formatNumber declarations with imported modular helper from @/utils/numbers without code comments."
+  },
+  {
+    id: 221,
+    filePath: "model/Package.ts",
+    description: "Removed originalPrice and quarterly/biannual fields from PackageSchema."
+  },
+  {
+    id: 222,
+    filePath: "src/types/package.ts",
+    description: "Updated Package interface and PackageFormData type to remove originalPrice and quarterly/biannual price properties."
+  },
+  {
+    id: 223,
+    filePath: "src/types/components.ts",
+    description: "Updated PricePriceObj and PriceCardProps interfaces to remove originalPrice and quarterly/biannual properties."
+  },
+  {
+    id: 224,
+    filePath: "src/modules/packages/packageDetails/PriceCard.tsx",
+    description: "Refactored PriceCard component to display single monthly price without originalPrice and discount calculations."
+  },
+  {
+    id: 225,
+    filePath: "src/modules/packages/packageDetails/PackageDetails.tsx",
+    description: "Updated PackageDetails component to pass only single price object to PriceCard."
+  },
+  {
+    id: 226,
+    filePath: "src/modules/admin/package/PackageList.tsx",
+    description: "Refactored PackageList component to display single monthly price and remove originalPrice and quarterly/biannual pricing options."
+  },
+  {
+    id: 227,
+    filePath: "src/modules/admin/package/PackageModal.tsx",
+    description: "Refactored PackageModal component form fields and submit handlers to remove originalPrice and quarterly/biannual price inputs."
+  },
+  {
+    id: 228,
+    filePath: "src/modules/order/OrderPage.tsx",
+    description: "Updated OrderPage component to restrict available billing cycles to monthly single price option."
   }
 ];

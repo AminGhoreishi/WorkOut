@@ -14,13 +14,10 @@ export interface PackageFeaturesProps {
 
 export interface PricePriceObj {
   monthly: number;
-  quarterly: number;
-  biannual: number;
 }
 
 export interface PriceCardProps {
   price: PricePriceObj;
-  originalPrice: PricePriceObj;
 }
 
 export interface PackageStatsProps {

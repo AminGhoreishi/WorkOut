@@ -171,13 +171,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
     }
   };
 
-  const availableCycles: BillingCycle[] = ["monthly", "quarterly", "biannual"];
-  const cyclesToDisplay = availableCycles.filter((cycle) => {
-    if (packageData.slug === "footballers") {
-      return cycle === "monthly";
-    }
-    return true;
-  });
+  const availableCycles: BillingCycle[] = ["monthly"];
+  const cyclesToDisplay = availableCycles;
 
   return (
     <div

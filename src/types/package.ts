@@ -10,13 +10,6 @@ export interface Package {
   description: string;
   price: {
     monthly: number;
-    quarterly: number;
-    biannual: number;
-  };
-  originalPrice: {
-    monthly: number;
-    quarterly: number;
-    biannual: number;
   };
   icon: string;
   colorClass: string;
@@ -59,13 +52,6 @@ export type PackageFormData = {
   isActive: boolean;
   price: {
     monthly: string;
-    quarterly: string;
-    biannual: string;
-  };
-  originalPrice: {
-    monthly: string;
-    quarterly: string;
-    biannual: string;
   };
   featuresText: string;
 };

@@ -75,15 +75,6 @@ export default function PackageList({
       isActive: pkg.isActive !== false,
       price: {
         monthly: formatToPersianWithCommas(pkg.price?.monthly || ""),
-        quarterly: formatToPersianWithCommas(pkg.price?.quarterly || ""),
-        biannual: formatToPersianWithCommas(pkg.price?.biannual || ""),
-      },
-      originalPrice: {
-        monthly: formatToPersianWithCommas(pkg.originalPrice?.monthly || ""),
-        quarterly: formatToPersianWithCommas(
-          pkg.originalPrice?.quarterly || "",
-        ),
-        biannual: formatToPersianWithCommas(pkg.originalPrice?.biannual || ""),
       },
       featuresText,
     });
@@ -133,21 +124,9 @@ export default function PackageList({
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-white/60">یک ماهه:</span>
+                    <span className="text-white/60">قیمت (یک ماهه):</span>
                     <span className="text-white font-medium ss02">
                       {formatNumber(pkg.price?.monthly || 0)} تومان
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-white/60">سه ماهه:</span>
-                    <span className="text-white font-medium ss02">
-                      {formatNumber(pkg.price?.quarterly || 0)} تومان
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-white/60">شش ماهه:</span>
-                    <span className="text-white font-medium ss02">
-                      {formatNumber(pkg.price?.biannual || 0)} تومان
                     </span>
                   </div>
                 </div>

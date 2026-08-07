@@ -44,8 +44,7 @@ export default function PackageModal({
       tier: "basic",
       isPopular: false,
       isActive: true,
-      price: { monthly: "", quarterly: "", biannual: "" },
-      originalPrice: { monthly: "", quarterly: "", biannual: "" },
+      price: { monthly: "" },
       featuresText: "",
     });
   };
@@ -61,13 +60,6 @@ export default function PackageModal({
         features,
         price: {
           monthly: parsePersianPrice(formData.price.monthly),
-          quarterly: parsePersianPrice(formData.price.quarterly),
-          biannual: parsePersianPrice(formData.price.biannual),
-        },
-        originalPrice: {
-          monthly: parsePersianPrice(formData.originalPrice.monthly),
-          quarterly: parsePersianPrice(formData.originalPrice.quarterly),
-          biannual: parsePersianPrice(formData.originalPrice.biannual),
         },
       };
 
@@ -233,130 +225,25 @@ export default function PackageModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت یک ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("price.monthly", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("price.monthly", formatted);
-                  },
-                })}
-              />
-              {errors.price?.monthly && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.price.monthly.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت سه ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("price.quarterly", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("price.quarterly", formatted);
-                  },
-                })}
-              />
-              {errors.price?.quarterly && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.price.quarterly.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت شش ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("price.biannual", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("price.biannual", formatted);
-                  },
-                })}
-              />
-              {errors.price?.biannual && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.price.biannual.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت اصلی یک ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("originalPrice.monthly", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("originalPrice.monthly", formatted);
-                  },
-                })}
-              />
-              {errors.originalPrice?.monthly && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.originalPrice.monthly.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت اصلی سه ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("originalPrice.quarterly", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("originalPrice.quarterly", formatted);
-                  },
-                })}
-              />
-              {errors.originalPrice?.quarterly && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.originalPrice.quarterly.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-white mb-2 text-xs">قیمت اصلی شش ماهه</label>
-              <input
-                type="text"
-                placeholder="۰"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("originalPrice.biannual", {
-                  required: "ضروری است",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    const formatted = formatToPersianWithCommas(e.target.value);
-                    setValue("originalPrice.biannual", formatted);
-                  },
-                })}
-              />
-              {errors.originalPrice?.biannual && (
-                <p className="text-red-400 text-xs mt-1">
-                  {errors.originalPrice.biannual.message}
-                </p>
-              )}
-            </div>
+          <div>
+            <label className="block text-white mb-2 text-xs">قیمت یک ماهه (تومان)</label>
+            <input
+              type="text"
+              placeholder="۰"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
+              {...register("price.monthly", {
+                required: "ضروری است",
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const formatted = formatToPersianWithCommas(e.target.value);
+                  setValue("price.monthly", formatted);
+                },
+              })}
+            />
+            {errors.price?.monthly && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.price.monthly.message}
+              </p>
+            )}
           </div>
 
           <div>

@@ -9,13 +9,6 @@ const PackageSchema = new Schema<IPackage>(
     description: { type: String, default: "" },
     price: {
       monthly: { type: Number, required: true },
-      quarterly: { type: Number, required: true },
-      biannual: { type: Number, required: true },
-    },
-    originalPrice: {
-      monthly: { type: Number, required: true },
-      quarterly: { type: Number, required: true },
-      biannual: { type: Number, required: true },
     },
     icon: { type: String, default: "" },
     colorClass: { type: String, default: "" },
