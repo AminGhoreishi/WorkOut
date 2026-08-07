@@ -1188,5 +1188,15 @@ export const modifiedFiles = [
     id: 237,
     filePath: "src/modules/dashboard/progress/ProgressStateViews.tsx",
     description: "Extracted modular ProgressStateViews sub-component containing ProgressLoadingState and ProgressErrorState components without code comments."
+  },
+  {
+    id: 238,
+    filePath: "lib/dbConnect.ts",
+    description: "Refactored dbConnect caching to clear rejected connection promises on failure and persist global connection cache without code comments."
+  },
+  {
+    id: 239,
+    filePath: "lib/auth.ts",
+    description: "Wrapped NextAuth jwt callback database operations in try-catch to prevent JWT_SESSION_ERROR crashes when MongoDB is temporarily unreachable without code comments."
   }
 ];

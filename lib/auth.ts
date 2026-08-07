@@ -115,40 +115,44 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }: any) {
-      await dbConnect();
-      let dbUser = null;
+      try {
+        await dbConnect();
+        let dbUser = null;
 
-      const email = user?.email || token?.email;
-      if (email) {
-        dbUser = await User.findOne({ email: String(email).toLowerCase() });
-      }
-
-      if (!dbUser) {
-        const potentialId = user?.id || token?.id || token?.sub;
-        if (typeof potentialId === "string" && /^[0-9a-fA-F]{24}$/.test(potentialId)) {
-          dbUser = await User.findById(potentialId);
-        }
-      }
-
-      if (!dbUser && user?.phone) {
-        dbUser = await User.findOne({ phone: user.phone });
-      }
-
-      if (dbUser) {
-        if (dbUser.status === "blocked") {
-          return {};
-        }
-        const isBanned = await Ban.findOne({ userId: dbUser._id, status: "active" });
-        if (isBanned) {
-          return {};
+        const email = user?.email || token?.email;
+        if (email) {
+          dbUser = await User.findOne({ email: String(email).toLowerCase() });
         }
 
-        token.id = dbUser._id.toString();
-        token.username = dbUser.username || dbUser.fullName || "";
-        token.role = dbUser.role || "user";
-        token.avatar = dbUser.avatar || "";
-        token.email = dbUser.email || "";
-        token.phone = dbUser.phone || "";
+        if (!dbUser) {
+          const potentialId = user?.id || token?.id || token?.sub;
+          if (typeof potentialId === "string" && /^[0-9a-fA-F]{24}$/.test(potentialId)) {
+            dbUser = await User.findById(potentialId);
+          }
+        }
+
+        if (!dbUser && user?.phone) {
+          dbUser = await User.findOne({ phone: user.phone });
+        }
+
+        if (dbUser) {
+          if (dbUser.status === "blocked") {
+            return {};
+          }
+          const isBanned = await Ban.findOne({ userId: dbUser._id, status: "active" });
+          if (isBanned) {
+            return {};
+          }
+
+          token.id = dbUser._id.toString();
+          token.username = dbUser.username || dbUser.fullName || "";
+          token.role = dbUser.role || "user";
+          token.avatar = dbUser.avatar || "";
+          token.email = dbUser.email || "";
+          token.phone = dbUser.phone || "";
+        }
+      } catch {
+        return token;
       }
 
       return token;
