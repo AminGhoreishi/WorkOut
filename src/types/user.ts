@@ -17,6 +17,7 @@ export interface IUser extends Document {
 export interface IAdminUser {
   _id: string;
   username: string;
+  fullName?: string;
   email?: string;
   phone?: string;
   role: "user" | "admin" | "coach";

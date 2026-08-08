@@ -37,3 +37,29 @@ export interface UserFitnessProfile {
 export interface UserProgressHistoryProps {
   sortedRecords: UserPRRecord[];
 }
+
+export interface NewPRRecordInput {
+  testName: string;
+  category: string;
+  value: string;
+  unit: string;
+  date: string;
+  notes: string;
+}
+
+export interface AddProgressRecordModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+  availableTests: string[];
+}
+
+export interface NoPackageProgressAccessProps {
+  customMessage?: string;
+}
+
+export interface ProgressStatsOverviewProps {
+  totalRecordsCount: number;
+  weightKg?: number | null;
+  completedWorkoutsCount: number;
+}

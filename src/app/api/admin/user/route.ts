@@ -22,10 +22,15 @@ export async function GET(req: NextRequest) {
     const page = Number(req.nextUrl.searchParams.get("page") || "1");
     const limit = Number(req.nextUrl.searchParams.get("limit") || "10");
     const statusParam = req.nextUrl.searchParams.get("status");
+    const roleParam = req.nextUrl.searchParams.get("role");
     const searchParam = req.nextUrl.searchParams.get("search") || req.nextUrl.searchParams.get("query");
     const skip = (page - 1) * limit;
 
     const filterQuery: Record<string, unknown> = {};
+
+    if (roleParam && roleParam !== "all") {
+      filterQuery.role = roleParam;
+    }
 
     if (statusParam && statusParam !== "all") {
       filterQuery.status = statusParam;
@@ -33,20 +38,37 @@ export async function GET(req: NextRequest) {
 
     if (searchParam && searchParam.trim()) {
       const regex = { $regex: searchParam.trim(), $options: "i" };
-      filterQuery.$or = [
-        { username: regex },
-        { email: regex },
-        { phone: regex },
-      ];
+      const currentRole = filterQuery.role;
+      if (currentRole) {
+        delete filterQuery.role;
+        filterQuery.$and = [
+          { role: currentRole },
+          {
+            $or: [
+              { username: regex },
+              { email: regex },
+              { phone: regex },
+            ],
+          },
+        ];
+      } else {
+        filterQuery.$or = [
+          { username: regex },
+          { email: regex },
+          { phone: regex },
+        ];
+      }
     }
+
+    const countFilter = roleParam && roleParam !== "all" ? { role: roleParam } : {};
 
     const [users, totalUsers, activeUsers, expiredUsers, blockedUsers] =
       await Promise.all([
         User.find(filterQuery).select("-password").sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
         User.countDocuments(filterQuery),
-        User.countDocuments({ status: "active" }),
-        User.countDocuments({ status: "expired" }),
-        User.countDocuments({ status: "blocked" }),
+        User.countDocuments({ ...countFilter, status: "active" }),
+        User.countDocuments({ ...countFilter, status: "expired" }),
+        User.countDocuments({ ...countFilter, status: "blocked" }),
       ]);
 
     const totalPage = Math.ceil(totalUsers / limit);

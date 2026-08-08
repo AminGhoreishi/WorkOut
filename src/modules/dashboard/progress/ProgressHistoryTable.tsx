@@ -6,12 +6,12 @@ export default function ProgressHistoryTable({
 }: UserProgressHistoryProps) {
   return (
     <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl font-danaMed">
-      <h3 className="text-lg text-white font-semibold mb-4 font-morabbaReg flex items-center gap-2">
+      <h3 className="text-xs sm:text-lg text-white font-semibold mb-4 font-morabbaReg flex items-center gap-2">
         <Activity className="w-5 h-5 text-amber-400" />
         تاریخچه رکوردهای ثبت‌شده
       </h3>
       <div className="overflow-x-auto">
-        <table className="w-full text-right text-sm text-white/80">
+        <table className="w-full text-right text-xs sm:text-sm text-white/80">
           <thead>
             <tr className="border-b border-white/10 text-white/50 text-xs">
               <th className="pb-3 px-4 font-medium">تاریخ ثبت</th>
