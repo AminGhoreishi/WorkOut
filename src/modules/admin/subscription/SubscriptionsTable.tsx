@@ -46,18 +46,6 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
         const data = await res.json().catch(() => ({}));
         setSubscriptions(data.subscriptions || []);
         setTotalPages(data.totalPages || 1);
-
-        const statsRes = await fetch("/api/admin/subscription?limit=10000");
-        if (statsRes.ok) {
-          const statsData = await statsRes.json().catch(() => ({}));
-          const allSubs: SubscriptionItem[] = statsData.subscriptions || [];
-          onStatsUpdate({
-            total: allSubs.length,
-            active: allSubs.filter((s) => s.status === "active").length,
-            trial: allSubs.filter((s) => s.status === "trial").length,
-            expired: allSubs.filter((s) => s.status === "expired").length,
-          });
-        }
       } catch {
         showAlert({
           title: "خطا",
@@ -67,7 +55,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
       } finally {
         setLoading(false);
       }
-    }, [currentPage, debouncedSearch, statusFilter, onStatsUpdate]);
+    }, [currentPage, debouncedSearch, statusFilter]);
 
     useImperativeHandle(
       ref,

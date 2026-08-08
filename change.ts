@@ -1453,5 +1453,75 @@ export const modifiedFiles = [
     id: 290,
     filePath: "src/modules/admin/dashboard/articles/createArticle/CreateArticle.tsx",
     description: "Refactored handleImageUpload to import and use validateArticleImage utility function without code comments."
+  },
+  {
+    id: 291,
+    filePath: "src/types/subscription.ts",
+    description: "Added SubscriptionStats and SubscriptionStatsProps interfaces without code comments."
+  },
+  {
+    id: 292,
+    filePath: "src/modules/admin/subscription/SubscriptionStats.tsx",
+    description: "Created SubscriptionStats sub-component for subscription dashboard cards grid without code comments."
+  },
+  {
+    id: 293,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Extracted inline subscription stats cards grid into modular SubscriptionStats sub-component without code comments."
+  },
+  {
+    id: 294,
+    filePath: "src/types/workout.ts",
+    description: "Updated CreateSubscriptionModalProps to make packages prop optional without code comments."
+  },
+  {
+    id: 295,
+    filePath: "src/modules/admin/subscription/CreateSubscriptionModal.tsx",
+    description: "Added internal packages state and fetchPackages effect upon modal opening without code comments."
+  },
+  {
+    id: 296,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Removed top-level packages fetching state and delegated package loading to CreateSubscriptionModal without code comments."
+  },
+  {
+    id: 297,
+    filePath: "src/types/subscription.ts",
+    description: "Added SubscriptionsManagementProps interface without code comments."
+  },
+  {
+    id: 298,
+    filePath: "src/app/(admin)/admin/subscriptions/page.tsx",
+    description: "Refactored AdminSubscriptionsPage server component to fetch subscription stats directly from DB and pass props without code comments."
+  },
+  {
+    id: 299,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Removed local stats state and received stats from server props without code comments."
+  },
+  {
+    id: 300,
+    filePath: "src/modules/admin/subscription/SubscriptionsTable.tsx",
+    description: "Removed redundant client-side stats fetch request and updated callback props without code comments."
+  },
+  {
+    id: 301,
+    filePath: "src/modules/admin/subscription/SubscriptionsManagement.tsx",
+    description: "Removed manual subscription registration button and CreateSubscriptionModal rendering from admin subscriptions page without code comments."
+  },
+  {
+    id: 302,
+    filePath: "src/types/workout.ts",
+    description: "Updated UserInfo interface and CreateSubscriptionModalProps to accept initialUser without code comments."
+  },
+  {
+    id: 303,
+    filePath: "src/modules/admin/subscription/CreateSubscriptionModal.tsx",
+    description: "Added support for initialUser prop to pre-select user upon modal initialization without code comments."
+  },
+  {
+    id: 304,
+    filePath: "src/modules/admin/users/UserTableList.tsx",
+    description: "Replaced inline action buttons with action dropdown menu including add subscription option that opens CreateSubscriptionModal without code comments."
   }
 ];

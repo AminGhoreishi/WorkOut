@@ -75,3 +75,18 @@ export interface ActiveAccessesProps {
 export interface NoSubscriptionViewProps {
   className?: string;
 }
+
+export interface SubscriptionStats {
+  total: number;
+  active: number;
+  trial: number;
+  expired: number;
+}
+
+export interface SubscriptionStatsProps {
+  stats: SubscriptionStats;
+}
+
+export interface SubscriptionsManagementProps {
+  stats: SubscriptionStats;
+}

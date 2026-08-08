@@ -13,14 +13,47 @@ import { showAlert } from "@/utils/alert";
 export default function CreateSubscriptionModal({
   onClose,
   onSuccess,
-  packages,
+  packages: initialPackages,
+  initialUser,
 }: CreateSubscriptionModalProps) {
-  const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
+  const [packages, setPackages] = useState<PackageInfo[]>(
+    initialPackages || []
+  );
+  const [selectedUser, setSelectedUser] = useState<UserInfo | null>(
+    initialUser || null
+  );
   const [userSearchTerm, setUserSearchTerm] = useState("");
   const [searchedUsers, setSearchedUsers] = useState<UserInfo[]>([]);
   const [selectedPackageId, setSelectedPackageId] = useState("");
-  const [createStatus, setCreateStatus] = useState<SubscriptionItem["status"]>("active");
+  const [createStatus, setCreateStatus] =
+    useState<SubscriptionItem["status"]>("active");
   const [createEndsAt, setCreateEndsAt] = useState("");
+
+  useEffect(() => {
+    if (initialPackages && initialPackages.length > 0) return;
+    const fetchPackages = async () => {
+      try {
+        const res = await fetch("/api/admin/package");
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setPackages(data.packages || []);
+        } else {
+          showAlert({
+            title: "خطا",
+            text: "دریافت لیست پکیج‌ها با خطا مواجه شد",
+            icon: "error",
+          });
+        }
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "خطا در برقراری ارتباط با سرور",
+          icon: "error",
+        });
+      }
+    };
+    fetchPackages();
+  }, [initialPackages]);
 
   useEffect(() => {
     if (userSearchTerm.length > 1) {

@@ -4,9 +4,9 @@ import type { Document } from "mongoose";
 export interface UserInfo {
   _id: string;
   username: string;
-  fullName: string;
-  email: string;
-  phone: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface PackageInfo {
@@ -210,7 +210,7 @@ export interface SubscriptionsTableRef {
 export interface SubscriptionsTableProps {
   onOpenPlanModal: (pkg: PackageInfo) => void;
   onEdit: (sub: SubscriptionItem) => void;
-  onStatsUpdate: (stats: { total: number; active: number; trial: number; expired: number }) => void;
+  onStatsUpdate?: (stats: { total: number; active: number; trial: number; expired: number }) => void;
 }
 
 export interface ExercisesListProps {
@@ -266,7 +266,8 @@ export interface VideosManagementProps {
 export interface CreateSubscriptionModalProps {
   onClose: () => void;
   onSuccess: () => void;
-  packages: PackageInfo[];
+  packages?: PackageInfo[];
+  initialUser?: UserInfo | null;
 }
 
 export interface UploadVideoModalProps {

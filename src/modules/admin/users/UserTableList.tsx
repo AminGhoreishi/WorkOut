@@ -16,12 +16,15 @@ import {
   CheckCircle,
   XCircle,
   RefreshCw,
+  MoreVertical,
+  PlusCircle,
 } from "lucide-react";
 import type { IAdminUser, AdminUsersApiResponse } from "@/types/user";
 import { showAlert, showConfirm } from "@/utils/alert";
 import { getStatusBadge, getRoleBadge, getRoleLabel } from "@/utils/user";
 import { formatNumber } from "@/utils/numbers";
 import UserEditModal from "./UserEditModal";
+import CreateSubscriptionModal from "../subscription/CreateSubscriptionModal";
 
 const fetcher = async (url: string): Promise<AdminUsersApiResponse> => {
   const res = await fetch(url);
@@ -37,6 +40,8 @@ export default function UserTableList() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [editingUser, setEditingUser] = useState<IAdminUser | null>(null);
+  const [subscriptionUser, setSubscriptionUser] = useState<IAdminUser | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const cleanSearch = searchQuery.trim();
   let apiUrl = `/api/admin/user?page=${currentPage}`;
@@ -363,37 +368,89 @@ export default function UserTableList() {
                       <span className="text-white/60 text-xs mr-1">تومان</span>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
+                      <div className="relative">
                         <button
                           type="button"
-                          onClick={() => setEditingUser(user)}
-                          className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                          title="ویرایش"
-                        >
-                          <Edit className="w-4 h-4 text-white/70" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleBlock(user)}
-                          className="w-8 h-8 bg-white/5 hover:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                          title={
-                            user.status === "مسدود" || user.status === "blocked"
-                              ? "رفع مسدودیت"
-                              : "مسدود کردن"
+                          onClick={() =>
+                            setOpenDropdownId(
+                              openDropdownId === user._id ? null : user._id
+                            )
                           }
+                          className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-white/70"
+                          title="عملیات"
                         >
-                          <Ban
-                            className={`w-4 h-4 ${user.status === "مسدود" || user.status === "blocked" ? "text-emerald-400" : "text-red-400"}`}
-                          />
+                          <MoreVertical className="w-4 h-4" />
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteUser(user)}
-                          className="w-8 h-8 bg-white/5 hover:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                          title="حذف کاربر"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-400" />
-                        </button>
+
+                        {openDropdownId === user._id && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-20"
+                              onClick={() => setOpenDropdownId(null)}
+                            />
+                            <div className="absolute left-0 top-full mt-1 w-44 bg-neutral-900 border border-white/10 rounded-xl shadow-2xl py-1 z-30 text-xs font-danaMed">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenDropdownId(null);
+                                  setEditingUser(user);
+                                }}
+                                className="w-full text-right px-3.5 py-2 hover:bg-white/5 text-white/90 flex items-center gap-2 cursor-pointer transition-colors"
+                              >
+                                <Edit className="w-4 h-4 text-amber-400" />
+                                <span>ویرایش</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenDropdownId(null);
+                                  setSubscriptionUser(user);
+                                }}
+                                className="w-full text-right px-3.5 py-2 hover:bg-white/5 text-white/90 flex items-center gap-2 cursor-pointer transition-colors"
+                              >
+                                <PlusCircle className="w-4 h-4 text-amber-400" />
+                                <span>افزودن اشتراک</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenDropdownId(null);
+                                  handleToggleBlock(user);
+                                }}
+                                className="w-full text-right px-3.5 py-2 hover:bg-white/5 text-white/90 flex items-center gap-2 cursor-pointer transition-colors"
+                              >
+                                <Ban
+                                  className={`w-4 h-4 ${
+                                    user.status === "مسدود" ||
+                                    user.status === "blocked"
+                                      ? "text-emerald-400"
+                                      : "text-red-400"
+                                  }`}
+                                />
+                                <span>
+                                  {user.status === "مسدود" ||
+                                  user.status === "blocked"
+                                    ? "رفع مسدودیت"
+                                    : "مسدود کردن"}
+                                </span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenDropdownId(null);
+                                  handleDeleteUser(user);
+                                }}
+                                className="w-full text-right px-3.5 py-2 hover:bg-white/5 text-red-400 flex items-center gap-2 cursor-pointer transition-colors border-t border-white/5"
+                              >
+                                <Trash2 className="w-4 h-4 text-red-400" />
+                                <span>حذف کاربر</span>
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -420,6 +477,17 @@ export default function UserTableList() {
           onClose={() => setEditingUser(null)}
           onSaveSuccess={() => {
             setEditingUser(null);
+            mutate();
+          }}
+        />
+      )}
+
+      {subscriptionUser && (
+        <CreateSubscriptionModal
+          initialUser={subscriptionUser}
+          onClose={() => setSubscriptionUser(null)}
+          onSuccess={() => {
+            setSubscriptionUser(null);
             mutate();
           }}
         />
