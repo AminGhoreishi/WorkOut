@@ -83,3 +83,23 @@
     font-size: 0.75rem !important;
   }
 }
+
+.swal2-popup {
+  background-color: #09090b !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.swal2-title {
+  color: #fbbf24 !important;
+}
+
+.swal2-html-container {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.swal2-timer-progress-bar {
+  background: #f59e0b !important;
+}

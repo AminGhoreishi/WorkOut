@@ -32,7 +32,7 @@ export function showAlert(
   optionsOrTitle: AlertOptions | string,
   text = "",
   icon: SweetAlertIcon = "info",
-  confirmButtonColor = "#7c3aed",
+  confirmButtonColor = "#f59e0b",
   confirmButtonText = "باشه"
 ) {
   if (typeof optionsOrTitle === "string") {
@@ -42,10 +42,12 @@ export function showAlert(
       icon,
       confirmButtonText,
       confirmButtonColor,
-      background: "#111827",
+      background: "#09090b",
       color: "#ffffff",
       customClass: {
-        popup: "border border-white/10 rounded-2xl",
+        popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
+        title: "font-morabbaReg text-amber-400 font-bold",
+        confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
       },
     });
   }
@@ -55,7 +57,7 @@ export function showAlert(
     text: optText = "",
     icon: optIcon = "info",
     confirmButtonText: optConfirmButtonText = "باشه",
-    confirmButtonColor: optConfirmButtonColor = "#7c3aed",
+    confirmButtonColor: optConfirmButtonColor = "#f59e0b",
     timer,
     showConfirmButton = true,
   } = optionsOrTitle;
@@ -68,10 +70,12 @@ export function showAlert(
     confirmButtonColor: optConfirmButtonColor,
     timer,
     showConfirmButton,
-    background: "#111827",
+    background: "#09090b",
     color: "#ffffff",
     customClass: {
-      popup: "border border-white/10 rounded-2xl",
+      popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
+      title: "font-morabbaReg text-amber-400 font-bold",
+      confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
     },
   });
 }
@@ -83,8 +87,8 @@ export async function showConfirm(
   text = "",
   confirmButtonText = "بله",
   icon: SweetAlertIcon = "warning",
-  confirmButtonColor = "#ef4444",
-  cancelButtonColor = "#374151",
+  confirmButtonColor = "#f59e0b",
+  cancelButtonColor = "#262626",
   cancelButtonText = "انصراف"
 ) {
   if (typeof optionsOrTitle === "string") {
@@ -97,10 +101,13 @@ export async function showConfirm(
       cancelButtonText,
       confirmButtonColor,
       cancelButtonColor,
-      background: "#111827",
+      background: "#09090b",
       color: "#ffffff",
       customClass: {
-        popup: "border border-white/10 rounded-2xl",
+        popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
+        title: "font-morabbaReg text-amber-400 font-bold",
+        confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
+        cancelButton: "bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-5 py-2.5 rounded-xl text-xs border border-white/10",
       },
     });
     return result.isConfirmed;
@@ -112,8 +119,8 @@ export async function showConfirm(
     icon: optIcon = "warning",
     confirmButtonText: optConfirmButtonText = "بله",
     cancelButtonText: optCancelButtonText = "انصراف",
-    confirmButtonColor: optConfirmButtonColor = "#ef4444",
-    cancelButtonColor: optCancelButtonColor = "#374151",
+    confirmButtonColor: optConfirmButtonColor = "#f59e0b",
+    cancelButtonColor: optCancelButtonColor = "#262626",
   } = optionsOrTitle;
 
   const result = await Swal.fire({
@@ -125,10 +132,13 @@ export async function showConfirm(
     cancelButtonText: optCancelButtonText,
     confirmButtonColor: optConfirmButtonColor,
     cancelButtonColor: optCancelButtonColor,
-    background: "#111827",
+    background: "#09090b",
     color: "#ffffff",
     customClass: {
-      popup: "border border-white/10 rounded-2xl",
+      popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
+      title: "font-morabbaReg text-amber-400 font-bold",
+      confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
+      cancelButton: "bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-5 py-2.5 rounded-xl text-xs border border-white/10",
     },
   });
   return result.isConfirmed;
@@ -146,10 +156,11 @@ export const showToast = ({
     showConfirmButton: false,
     toast: true,
     position: "top-end",
-    background: "#111827",
+    background: "#09090b",
     color: "#ffffff",
     customClass: {
-      popup: "border border-white/10 rounded-xl",
+      popup: "border border-amber-500/30 rounded-xl shadow-xl font-danaMed",
+      title: "text-amber-400 font-semibold",
     },
   });
 };

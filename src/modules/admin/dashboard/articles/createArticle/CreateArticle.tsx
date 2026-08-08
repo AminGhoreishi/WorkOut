@@ -8,6 +8,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { showAlert } from "@/utils/alert";
 import { useRouter } from "next/navigation";
+import { validateArticleImage } from "@/utils/article";
 import type {
   CreateArticleFormInputs,
   CreateArticleProps,
@@ -21,8 +22,6 @@ const CKEditorWrapper = dynamic(() => import("./CKEditorWrapper"), {
 });
 
 const CATEGORIES = ["بدنسازی", "تغذیه", "کاهش وزن", "سلامت", "مکمل", "تکنیک"];
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
 const profileFetcher = async (url: string): Promise<UserProfileResponse> => {
   const res = await fetch(url);
@@ -99,23 +98,7 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      showAlert({
-        title: "فرمت نامعتبر",
-        text: "لطفاً تصویر شاخص را با فرمت JPG، PNG یا WEBP انتخاب کنید.",
-        icon: "error",
-      });
-      return;
-    }
-
-    if (file.size > MAX_IMAGE_SIZE_BYTES) {
-      showAlert({
-        title: "حجم بالای تصویر",
-        text: "حداکثر حجم مجاز برای تصویر شاخص ۲ مگابایت است.",
-        icon: "error",
-      });
-      return;
-    }
+    if (!validateArticleImage(file)) return;
 
     if (featuredImagePreview && featuredImagePreview.startsWith("blob:")) {
       URL.revokeObjectURL(featuredImagePreview);
@@ -198,67 +181,75 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
     .filter((w) => w.length > 0).length;
 
   return (
-    <div className="min-h-screen bg-neutral-950 p-4 md:p-8" dir="rtl">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-neutral-950 p-3 sm:p-6 md:p-8 font-danaMed text-xs sm:text-base" dir="rtl">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/admin/articles"
-              className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
+              className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg shrink-0"
             >
-              <ArrowRight className="w-6 h-6" />
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </Link>
             <div>
-              <h1 className="text-3xl text-white mb-1 font-morabbaReg">ایجاد مقاله جدید</h1>
-              <p className="text-white/60">مقاله خود را بنویسید و منتشر کنید</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-white font-morabbaReg">
+                ایجاد مقاله جدید
+              </h1>
+              <p className="text-xs sm:text-sm text-white/60 mt-0.5">
+                مقاله خود را بنویسید و منتشر کنید
+              </p>
             </div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <button
               type="button"
               onClick={handleSubmit((data) => onSubmit(data, "draft"))}
               disabled={saving}
-              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 sm:flex-initial justify-center bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-colors flex items-center gap-2 text-xs sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {saving ? (
-                <Loader2 className="w-5 h-5 animate-spin text-white" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-white" />
               ) : (
-                <Save className="w-5 h-5" />
+                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
-              ذخیره پیش‌نویس
+              <span>ذخیره پیش‌نویس</span>
             </button>
             <button
               type="button"
               onClick={handleSubmit((data) => onSubmit(data, "published"))}
               disabled={saving}
-              className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 sm:flex-initial justify-center bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center gap-2 hover:shadow-lg hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {saving ? (
-                <Loader2 className="w-5 h-5 animate-spin text-white" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-neutral-950" />
               ) : (
-                <Eye className="w-5 h-5" />
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-950" />
               )}
-              انتشار مقاله
+              <span>انتشار مقاله</span>
             </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <label className="block text-white mb-3">عنوان مقاله</label>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <label className="block text-xs sm:text-sm text-white mb-2 sm:mb-3 font-semibold">
+                عنوان مقاله
+              </label>
               <input
                 {...register("title", { required: "عنوان مقاله الزامی است" })}
                 placeholder="عنوان جذاب مقاله خود را وارد کنید..."
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-xl placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 font-morabbaReg"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-base sm:text-xl placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 font-morabbaReg"
               />
               {errors.title && (
-                <p className="text-red-400 text-sm mt-2">{errors.title.message}</p>
+                <p className="text-red-400 text-xs sm:text-sm mt-2">{errors.title.message}</p>
               )}
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <label className="block text-white mb-3">تصویر شاخص</label>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <label className="block text-xs sm:text-sm text-white mb-2 sm:mb-3 font-semibold">
+                تصویر شاخص
+              </label>
               {featuredImagePreview ? (
                 <div className="relative">
                   <Image
@@ -266,7 +257,7 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                     alt="Featured"
                     width={800}
                     height={256}
-                    className="w-full h-64 object-cover rounded-lg"
+                    className="w-full h-48 sm:h-64 object-cover rounded-lg"
                     unoptimized
                   />
                   <button
@@ -274,14 +265,18 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                     onClick={handleRemoveImage}
                     className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors cursor-pointer"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               ) : (
-                <label className="border-2 border-dashed border-white/20 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-amber-500/30 transition-colors">
-                  <ImageIcon className="w-12 h-12 text-white/40 mb-3" />
-                  <p className="text-white/60 mb-2">کلیک کنید یا تصویر را بکشید</p>
-                  <p className="text-white/40 text-sm">JPG, PNG یا WEBP (حداکثر ۲MB)</p>
+                <label className="border-2 border-dashed border-white/20 rounded-lg p-6 sm:p-12 flex flex-col items-center justify-center cursor-pointer hover:border-amber-500/30 transition-colors text-center">
+                  <ImageIcon className="w-8 h-8 sm:w-12 sm:h-12 text-white/40 mb-2 sm:mb-3" />
+                  <p className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">
+                    کلیک کنید یا تصویر را بکشید
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-white/40">
+                    JPG, PNG یا WEBP (حداکثر ۲MB)
+                  </p>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -292,21 +287,25 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
               )}
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <label className="block text-white mb-3">خلاصه مقاله</label>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <label className="block text-xs sm:text-sm text-white mb-2 sm:mb-3 font-semibold">
+                خلاصه مقاله
+              </label>
               <textarea
                 {...register("excerpt")}
                 placeholder="خلاصه‌ای کوتاه از محتوای مقاله..."
                 rows={3}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
               />
-              <div className="text-white/40 text-sm mt-2">
+              <div className="text-white/40 text-xs mt-2">
                 {watchedExcerpt.length} / ۲۵۰ کاراکتر
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <label className="block text-white mb-3">محتوای مقاله</label>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <label className="block text-xs sm:text-sm text-white mb-2 sm:mb-3 font-semibold">
+                محتوای مقاله
+              </label>
               <div className="ckeditor-wrapper">
                 <Controller
                   name="content"
@@ -321,34 +320,40 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                 />
               </div>
               {errors.content && (
-                <p className="text-red-400 text-sm mt-2">{errors.content.message}</p>
+                <p className="text-red-400 text-xs sm:text-sm mt-2">{errors.content.message}</p>
               )}
-              <div className="text-white/40 text-sm mt-2">{wordCount} کلمه</div>
+              <div className="text-white/40 text-xs mt-2">{wordCount} کلمه</div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white text-lg mb-4 font-morabbaReg">تنظیمات سئو</h3>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <h3 className="text-white text-base sm:text-lg mb-4 font-morabbaReg">
+                تنظیمات سئو
+              </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-white/80 mb-2">عنوان سئو</label>
+                  <label className="block text-xs sm:text-sm text-white/80 mb-1.5 sm:mb-2 font-medium">
+                    عنوان سئو
+                  </label>
                   <input
                     {...register("seoTitle")}
                     placeholder="عنوان برای موتورهای جستجو..."
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
                   />
-                  <div className="text-white/40 text-sm mt-1">
+                  <div className="text-white/40 text-xs mt-1">
                     {watchedSeoTitle.length} / ۶۰ کاراکتر
                   </div>
                 </div>
                 <div>
-                  <label className="block text-white/80 mb-2">توضیحات سئو</label>
+                  <label className="block text-xs sm:text-sm text-white/80 mb-1.5 sm:mb-2 font-medium">
+                    توضیحات سئو
+                  </label>
                   <textarea
                     {...register("seoDescription")}
                     placeholder="توضیحات برای موتورهای جستجو..."
                     rows={3}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 resize-none"
                   />
-                  <div className="text-white/40 text-sm mt-1">
+                  <div className="text-white/40 text-xs mt-1">
                     {watchedSeoDescription.length} / ۱۶۰ کاراکتر
                   </div>
                 </div>
@@ -357,18 +362,22 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">تنظیمات انتشار</h3>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <h3 className="text-white text-base sm:text-lg mb-4 font-morabbaReg">
+                تنظیمات انتشار
+              </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-white/80 mb-2">وضعیت</label>
+                  <label className="block text-xs sm:text-sm text-white/80 mb-1.5 sm:mb-2 font-medium">
+                    وضعیت
+                  </label>
                   <Controller
                     name="status"
                     control={control}
                     render={({ field }) => (
                       <select
                         {...field}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
                       >
                         <option value="draft" className="bg-gray-800">
                           پیش‌نویس
@@ -386,26 +395,30 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
 
                 {watchedStatus === "scheduled" && (
                   <div>
-                    <label className="block text-white/80 mb-2">تاریخ انتشار</label>
+                    <label className="block text-xs sm:text-sm text-white/80 mb-1.5 sm:mb-2 font-medium">
+                      تاریخ انتشار
+                    </label>
                     <input
                       {...register("publishDate")}
                       type="datetime-local"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/30"
                     />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">دسته‌بندی</h3>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <h3 className="text-white text-base sm:text-lg mb-4 font-morabbaReg">
+                دسته‌بندی
+              </h3>
               <Controller
                 name="category"
                 control={control}
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/30 appearance-none cursor-pointer"
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat} className="bg-gray-800">
@@ -417,8 +430,10 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
               />
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">برچسب‌ها</h3>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <h3 className="text-white text-base sm:text-lg mb-4 font-morabbaReg">
+                برچسب‌ها
+              </h3>
               <div className="flex gap-2 mb-3">
                 <input
                   type="text"
@@ -431,12 +446,12 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                     }
                   }}
                   placeholder="برچسب جدید..."
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-lg px-3.5 py-2 text-white text-xs sm:text-sm placeholder:text-white/40 focus:outline-none focus:border-amber-500/30"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                  className="bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 text-xs sm:text-sm px-3.5 py-2 rounded-lg transition-colors cursor-pointer shrink-0"
                 >
                   افزودن
                 </button>
@@ -445,7 +460,7 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                    className="bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-1 rounded-full text-xs sm:text-sm flex items-center gap-1.5"
                   >
                     {tag}
                     <button
@@ -453,20 +468,22 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                       onClick={() => handleRemoveTag(tag)}
                       className="hover:text-blue-300 transition-colors cursor-pointer"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
                   </span>
                 ))}
               </div>
               {tags.length === 0 && (
-                <p className="text-white/40 text-sm">برچسبی اضافه نشده است</p>
+                <p className="text-white/40 text-xs sm:text-sm">برچسبی اضافه نشده است</p>
               )}
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-              <h3 className="text-white mb-4 font-morabbaReg">اطلاعات نویسنده</h3>
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+              <h3 className="text-white text-base sm:text-lg mb-4 font-morabbaReg">
+                اطلاعات نویسنده
+              </h3>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold flex items-center justify-center text-white text-xl font-bold">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold flex items-center justify-center text-base sm:text-xl">
                   {author
                     ? author.fullName
                       ? author.fullName.charAt(0)
@@ -474,10 +491,10 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
                     : "..."}
                 </div>
                 <div>
-                  <div className="text-white">
+                  <div className="text-white text-xs sm:text-sm font-semibold">
                     {author ? author.fullName || author.username : "در حال بارگذاری..."}
                   </div>
-                  <div className="text-white/60 text-sm">
+                  <div className="text-white/60 text-xs mt-0.5">
                     {author
                       ? author.role === "admin"
                         ? "مدیر سایت"

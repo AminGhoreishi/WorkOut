@@ -47,7 +47,7 @@ export default function PackagesManagement() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br bg-black/30 p-4 md:p-8 font-danaMed"
+      className="min-h-screen bg-gradient-to-br bg-black/30  md:p-8 font-danaMed"
       dir="rtl"
     >
       <div className="container mx-auto pt-8">

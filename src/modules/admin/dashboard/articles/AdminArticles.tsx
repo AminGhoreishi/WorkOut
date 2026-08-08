@@ -1,23 +1,16 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import type { AdminBlogStats } from "@/types/blog";
+import type { AdminArticlesProps } from "@/types/blog";
 import ArticleStats from "./ArticleStats";
 import ArticleList from "./ArticleList";
 
-export default function AdminArticles() {
-  const [stats, setStats] = useState<AdminBlogStats>({
-    totalViews: 0,
-    publishedCount: 0,
-    draftCount: 0,
-  });
-  const [totalCount, setTotalCount] = useState<number>(0);
-
+export default function AdminArticles({
+  stats,
+  totalCount,
+}: AdminArticlesProps) {
   return (
     <div
-      className="min-h-screen bg-neutral-950 p-4 md:p-8 font-danaMed text-white"
+      className="min-h-screen bg-neutral-950 md:p-8 font-danaMed text-white"
       dir="rtl"
     >
       <div className="container mx-auto pt-8">
@@ -41,12 +34,7 @@ export default function AdminArticles() {
 
         <ArticleStats stats={stats} totalCount={totalCount} />
 
-        <ArticleList
-          onStatsChange={(newStats, newTotal) => {
-            setStats(newStats);
-            setTotalCount(newTotal);
-          }}
-        />
+        <ArticleList />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bell, Menu, Sparkles } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import type { AdminHeaderProps } from "@/types/admin";
@@ -11,6 +12,8 @@ export default function AdminHeader({
   newTicketsCount = 0,
 }: AdminHeaderProps) {
   const { onToggle } = useSidebar();
+  const pathname = usePathname();
+  const isAdminPanel = pathname?.startsWith("/admin");
 
   return (
     <nav className="bg-neutral-950/80 backdrop-blur-lg border-b border-amber-500/20 sticky top-0 z-40 font-danaMed">
@@ -31,10 +34,12 @@ export default function AdminHeader({
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span className="hidden sm:inline">هوش مصنوعی</span>
-            </button>
+            {isAdminPanel && (
+              <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span className="hidden sm:inline">هوش مصنوعی</span>
+              </button>
+            )}
 
             <Link
               href="/admin/tickets"

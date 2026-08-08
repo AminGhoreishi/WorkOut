@@ -76,6 +76,11 @@ export interface ArticleListProps {
   onStatsChange?: (stats: AdminBlogStats, totalCount: number) => void;
 }
 
+export interface AdminArticlesProps {
+  stats: AdminBlogStats;
+  totalCount: number;
+}
+
 export interface ArticleDetailAuthor {
   _id: string;
   username: string;
