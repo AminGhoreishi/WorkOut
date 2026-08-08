@@ -35,24 +35,22 @@ export default function AdminHeader({
           </div>
           <div className="flex items-center gap-3">
             {isAdminPanel && (
-              <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span className="hidden sm:inline">هوش مصنوعی</span>
-              </button>
+              <>
+                <Link
+                  href="/admin/tickets"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer"
+                  title="تیکت‌های جدید"
+                >
+                  <Bell className="w-4 h-4 text-amber-400" />
+                  <span className="hidden sm:inline">تیکت‌های جدید</span>
+                  {newTicketsCount > 0 && (
+                    <span className="min-w-[18px] h-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full text-[10px] flex items-center justify-center px-1 shadow-md animate-pulse">
+                      {newTicketsCount.toLocaleString("fa-IR")}
+                    </span>
+                  )}
+                </Link>
+              </>
             )}
-
-            <Link
-              href="/admin/tickets"
-              className="relative text-neutral-300 hover:text-amber-400 transition-colors p-1.5 flex items-center justify-center"
-              title="تیکت‌های جدید"
-            >
-              <Bell className="w-6 h-6" />
-              {newTicketsCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full text-xs flex items-center justify-center px-1 shadow-md animate-pulse">
-                  {newTicketsCount.toLocaleString("fa-IR")}
-                </span>
-              )}
-            </Link>
 
             <div className="hidden lg:flex items-center gap-3 pr-4 border-r border-amber-500/20">
               <div className="text-left">
