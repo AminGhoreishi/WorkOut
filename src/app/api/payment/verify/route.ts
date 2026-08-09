@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Order from "@/model/Order";
 import Subscription from "@/model/Subscription";
-import { VerifyPaymentPayload } from "@/types/order";
+import type { VerifyPaymentPayload } from "@/types/order";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -41,8 +41,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "این سفارش قبلاً پرداخت شده است" }, { status: 400 });
     }
 
+    if (paymentRef) {
+      order.paymentRef = paymentRef;
+      order.status = "pending";
+      await order.save();
+
+      return NextResponse.json(
+        {
+          message: "شناسه واریزی با موفقیت ثبت شد و در انتظار تایید پشتیبانی می‌باشد",
+          orderId: String(order._id),
+          status: "pending",
+        },
+        { status: 200 }
+      );
+    }
+
     order.status = "paid";
-    order.paymentRef = paymentRef || "direct-verify";
+    order.paymentRef = "direct-verify";
     await order.save();
 
     const durationMap: Record<string, number> = {

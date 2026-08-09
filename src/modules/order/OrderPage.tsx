@@ -147,24 +147,13 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
       }
 
       const orderId = result.orderId;
-
-      const verifyRes = await fetch("/api/payment/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, paymentRef: "test-ref-123" }),
-      });
-
-      const verifyResult: VerifyPaymentResponse = await verifyRes
-        .json()
-        .catch(() => ({}));
-
-      if (!verifyRes.ok) {
-        setErrorMessage(verifyResult.message || "خطا در تایید پرداخت");
+      if (!orderId) {
+        setErrorMessage("شناسه سفارش دریافت نشد");
         setIsSubmitting(false);
         return;
       }
 
-      router.push(`/payment/success?orderId=${orderId}`);
+      router.push(`/checkout?orderId=${orderId}`);
     } catch (error) {
       setErrorMessage("خطای غیرمنتظره در ثبت سفارش. لطفاً دوباره تلاش کنید");
       setIsSubmitting(false);
@@ -437,7 +426,7 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span>در حال انتقال به درگاه...</span>
+                    <span>در حال انتقال به صفحه پرداخت...</span>
                   </>
                 ) : (
                   <>
