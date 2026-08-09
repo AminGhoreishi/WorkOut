@@ -92,14 +92,13 @@ export default function CheckoutPage({ order }: CheckoutPageClientProps) {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-neutral-950 text-amber-50 py-8 sm:py-12 px-3 sm:px-4 relative overflow-hidden"
-      style={{ fontFamily: "Dana, sans-serif" }}
+      className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-neutral-950 text-amber-50 py-8 sm:py-12 px-3 sm:px-4 relative overflow-hidden font-danamed"
       dir="rtl"
     >
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-3xl mx-auto relative z-10 space-y-6 sm:space-y-8">
+      <div className="container mx-auto relative z-10 space-y-6 sm:space-y-8">
         <div className="flex justify-between items-center pb-4 border-b border-amber-500/20">
           <Link
             href="/packages"
@@ -115,10 +114,7 @@ export default function CheckoutPage({ order }: CheckoutPageClientProps) {
         </div>
 
         <div className="text-center space-y-2">
-          <h1
-            className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-100 via-amber-300 to-yellow-500 bg-clip-text text-transparent"
-            style={{ fontFamily: "Marbeh, sans-serif" }}
-          >
+          <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-100 via-amber-300 to-yellow-500 bg-clip-text text-transparent font-morabbaReg">
             {isPendingVerification
               ? "در انتظار تایید پرداخت"
               : "صفحه پرداخت کارت به کارت"}

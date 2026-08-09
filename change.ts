@@ -1633,8 +1633,24 @@ export const modifiedFiles = [
     id: 326,
     filePath: "src/modules/checkout/CheckoutPendingVerification.tsx",
     description: "Updated user dashboard redirect link href to /dashboard/subscription in CheckoutPendingVerification sub-component with zero code comments."
+  },
+  {
+    id: 327,
+    filePath: "src/modules/checkout/CheckoutPage.tsx",
+    description: "Replaced inline fontFamily styles with Tailwind utility classes font-danamed and font-morabbaReg without code comments."
+  },
+  {
+    id: 328,
+    filePath: "src/modules/checkout/CheckoutPaymentForm.tsx",
+    description: "Replaced inline fontFamily style with Tailwind font-morabbaReg utility class without code comments."
+  },
+  {
+    id: 329,
+    filePath: "src/modules/checkout/CheckoutPendingVerification.tsx",
+    description: "Replaced inline fontFamily style with Tailwind font-morabbaReg utility class without code comments."
   }
 ];
+
 
 
 

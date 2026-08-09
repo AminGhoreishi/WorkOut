@@ -17,10 +17,7 @@ export default function CheckoutPaymentForm({
         onSubmit={onSubmit}
         className="bg-zinc-900/80 backdrop-blur-xl border border-amber-500/30 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-5"
       >
-        <h2
-          className="text-base sm:text-lg font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent pb-3 border-b border-amber-500/20"
-          style={{ fontFamily: "Marbeh, sans-serif" }}
-        >
+        <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent pb-3 border-b border-amber-500/20 font-morabbaReg">
           خلاصه صورت‌حساب و ثبت واریزی
         </h2>
 
@@ -50,10 +47,7 @@ export default function CheckoutPaymentForm({
             <span className="font-bold text-amber-100 text-xs sm:text-sm">
               مبلغ قابل واریز:
             </span>
-            <span
-              className="text-xl sm:text-2xl font-extrabold text-amber-400"
-              style={{ fontFamily: "Marbeh, sans-serif" }}
-            >
+            <span className="text-xl sm:text-2xl font-extrabold text-amber-400 font-morabbaReg">
               {formatNumber(order.amountPaid)} تومان
             </span>
           </div>

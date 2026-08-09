@@ -20,10 +20,7 @@ export default function CheckoutPendingVerification({
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
           در انتظار تایید پرداخت
         </span>
-        <h2
-          className="text-xl sm:text-2xl font-bold text-amber-100 pt-2"
-          style={{ fontFamily: "Marbeh, sans-serif" }}
-        >
+        <h2 className="text-xl sm:text-2xl font-bold text-amber-100 pt-2 font-morabbaReg">
           شناسه واریزی شما ثبت گردید
         </h2>
         <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
