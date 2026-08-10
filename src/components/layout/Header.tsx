@@ -9,7 +9,11 @@ import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
 import type { HeaderProps } from "@/types/components";
 
-export default function Header({ session }: HeaderProps) {
+export default function Header({
+  session,
+  authSlot,
+  mobileAuthSlot,
+}: HeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
@@ -75,7 +79,9 @@ export default function Header({ session }: HeaderProps) {
             </div>
 
             <div className="hidden md:flex items-center">
-              {session ? (
+              {authSlot ? (
+                authSlot
+              ) : session ? (
                 <UserDropdown
                   username={session.user?.username || ""}
                   avatar={session.user?.avatar || ""}
@@ -107,6 +113,7 @@ export default function Header({ session }: HeaderProps) {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         session={session}
+        mobileAuthSlot={mobileAuthSlot}
         getLinkClass={getLinkClass}
       />
     </nav>

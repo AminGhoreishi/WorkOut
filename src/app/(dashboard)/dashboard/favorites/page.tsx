@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import dbConnect from "@/lib/dbConnect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -12,7 +13,7 @@ export const metadata = {
     "مدیریت و مشاهده مقالات علمی و ورزشی نشانه‌گذاری شده در استارفیت",
 };
 
-export default async function Page() {
+async function FavoritesContent() {
   try {
     await dbConnect();
   } catch {
@@ -46,4 +47,12 @@ export default async function Page() {
     );
 
   return <FavoritesManagement initialWishlist={wishlistProps} />;
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <FavoritesContent />
+    </Suspense>
+  );
 }

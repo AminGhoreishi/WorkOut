@@ -4,8 +4,10 @@ import Ticket from "@/model/Ticket";
 import User from "@/model/User";
 import Order from "@/model/Order";
 import AdminDashboardAdmin from "@/modules/admin/dashboard/AdminDashboardAdmin";
+import { connection } from "next/server";
 
 export default async function page() {
+  await connection();
   await dbConnect();
 
   const startOfMonth = new Date();

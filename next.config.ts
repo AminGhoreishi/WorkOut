@@ -10,6 +10,7 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   output: "standalone",
   reactCompiler: true,
+  cacheComponents: true,
   turbopack: {},
   images: {
     remotePatterns: [

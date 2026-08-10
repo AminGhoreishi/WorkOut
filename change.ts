@@ -1648,6 +1648,111 @@ export const modifiedFiles = [
     id: 329,
     filePath: "src/modules/checkout/CheckoutPendingVerification.tsx",
     description: "Replaced inline fontFamily style with Tailwind font-morabbaReg utility class without code comments."
+  },
+  {
+    id: 330,
+    filePath: "next.config.ts",
+    description: "Enabled top-level cacheComponents: true in Next.js 16 configuration for global Partial Prerendering architecture without code comments."
+  },
+  {
+    id: 331,
+    filePath: "src/app/api/admin/comment/route.ts",
+    description: "Removed deprecated force-dynamic export to align with Next.js 16 cacheComponents dynamic execution without code comments."
+  },
+  {
+    id: 332,
+    filePath: "src/app/api/admin/sidebar-stats/route.ts",
+    description: "Removed deprecated force-dynamic export to align with Next.js 16 cacheComponents dynamic execution without code comments."
+  },
+  {
+    id: 333,
+    filePath: "src/app/api/ai-tools/stats/route.ts",
+    description: "Removed deprecated force-dynamic export to align with Next.js 16 cacheComponents dynamic execution without code comments."
+  },
+  {
+    id: 334,
+    filePath: "src/app/ai-tools/stats/route.ts",
+    description: "Removed dynamic re-export from ai-tools stats route without code comments."
+  },
+  {
+    id: 335,
+    filePath: "src/app/(admin)/admin/admins/page.tsx",
+    description: "Awaited connection() in AdminAdminsPage to signal request-time dynamic execution without code comments."
+  },
+  {
+    id: 336,
+    filePath: "src/app/(admin)/admin/page.tsx",
+    description: "Awaited connection() in admin page to signal request-time dynamic execution without code comments."
+  },
+  {
+    id: 337,
+    filePath: "src/app/(main)/layout.tsx",
+    description: "Wrapped children in React Suspense boundary to support Partial Prerendering without code comments."
+  },
+  {
+    id: 338,
+    filePath: "src/app/(admin)/admin/layout.tsx",
+    description: "Wrapped children in React Suspense boundary to support Partial Prerendering without code comments."
+  },
+  {
+    id: 339,
+    filePath: "src/app/(dashboard)/dashboard/layout.tsx",
+    description: "Wrapped children in React Suspense boundary to support Partial Prerendering without code comments."
+  },
+  {
+    id: 340,
+    filePath: "lib/homeData.ts",
+    description: "Awaited connection() inside getHomeStats function to signal request-time dynamic execution in Next.js 16 before accessing current date without code comments."
+  },
+  {
+    id: 341,
+    filePath: "src/app/(main)/page.tsx",
+    description: "Awaited connection() in Home main page server component to signal request-time dynamic execution without code comments."
+  },
+  {
+    id: 342,
+    filePath: "src/types/components.ts",
+    description: "Added optional authSlot and mobileAuthSlot prop interfaces to HeaderProps and MobileMenuProps without code comments."
+  },
+  {
+    id: 343,
+    filePath: "src/components/layout/HeaderAuthSkeleton.tsx",
+    description: "Created HeaderAuthSkeleton fallback component for desktop header auth suspense loading state without code comments."
+  },
+  {
+    id: 344,
+    filePath: "src/components/layout/HeaderAuth.tsx",
+    description: "Created HeaderAuth async Server Component to stream session user dropdown or login link without code comments."
+  },
+  {
+    id: 345,
+    filePath: "src/components/layout/MobileAuthSkeleton.tsx",
+    description: "Created MobileAuthSkeleton fallback component for mobile menu auth suspense loading state without code comments."
+  },
+  {
+    id: 346,
+    filePath: "src/components/layout/MobileAuthClient.tsx",
+    description: "Created MobileAuthClient component to render mobile menu session user items or login link without code comments."
+  },
+  {
+    id: 347,
+    filePath: "src/components/layout/MobileAuth.tsx",
+    description: "Created MobileAuth async Server Component to stream mobile session user details without code comments."
+  },
+  {
+    id: 348,
+    filePath: "src/components/layout/Header.tsx",
+    description: "Refactored Header to render navbar instantly and accept authSlot and mobileAuthSlot props without code comments."
+  },
+  {
+    id: 349,
+    filePath: "src/components/layout/HeaderWrapper.tsx",
+    description: "Refactored HeaderWrapper to render Header synchronously with isolated Suspense boundaries for auth slots without code comments."
+  },
+  {
+    id: 350,
+    filePath: "src/app/(main)/layout.tsx",
+    description: "Removed top-level Suspense wrapper around HeaderWrapper to render navbar instantly without code comments."
   }
 ];
 

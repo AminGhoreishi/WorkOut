@@ -84,12 +84,15 @@ export interface HeaderSession {
 
 export interface HeaderProps {
   session?: HeaderSession | null;
+  authSlot?: React.ReactNode;
+  mobileAuthSlot?: React.ReactNode;
 }
 
 export interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   session?: HeaderSession | null;
+  mobileAuthSlot?: React.ReactNode;
   getLinkClass: (href: string) => string;
 }
 

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { connection } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import AdminAdminsContainer from "@/modules/admin/admins/AdminAdminsContainer";
@@ -8,7 +10,8 @@ export const metadata: Metadata = {
   description: "پنل مدیریت مدیران و حساب‌های کاربری ارشد سیستم استار فیت",
 };
 
-export default async function AdminAdminsPage() {
+async function AdminsContent() {
+  await connection();
   await dbConnect();
 
   const admins = await User.find({ role: "admin" }, "-password")
@@ -24,8 +27,16 @@ export default async function AdminAdminsPage() {
     avatar: u.avatar || "",
     role: (u.role || "admin") as "user" | "admin" | "coach",
     status: u.status || "active",
-    createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : new Date().toISOString(),
+    createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : "",
   }));
 
   return <AdminAdminsContainer initialAdmins={formattedAdmins} />;
+}
+
+export default function AdminAdminsPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminsContent />
+    </Suspense>
+  );
 }

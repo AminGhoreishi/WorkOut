@@ -14,8 +14,6 @@ import type {
   AiToolsStatsErrorResponse,
 } from "@/types/ai-tools";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(): Promise<
   NextResponse<AiToolsStatsResponse | AiToolsStatsErrorResponse>
 > {

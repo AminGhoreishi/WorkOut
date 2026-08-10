@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SidebarProvider } from "@/components/layout/admin/SidebarContext";
 import AdminSidebar from "@/components/layout/admin/AdminSidebar";
 import MainWrapper from "@/components/layout/admin/MainWrapper";
@@ -13,8 +14,10 @@ export default function AdminLayout({
       <div className="flex h-screen bg-neutral-950 text-white overflow-hidden" dir="rtl">
         <AdminSidebar isAdmin={true} />
         <MainWrapper>
-          <AdminHeaderContainer />
-          {children}
+          <Suspense fallback={null}>
+            <AdminHeaderContainer />
+          </Suspense>
+          <Suspense fallback={null}>{children}</Suspense>
         </MainWrapper>
       </div>
     </SidebarProvider>

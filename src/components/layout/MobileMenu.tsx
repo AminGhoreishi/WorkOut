@@ -12,6 +12,7 @@ export default function MobileMenu({
   isOpen,
   onClose,
   session,
+  mobileAuthSlot,
   getLinkClass,
 }: MobileMenuProps) {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -113,7 +114,9 @@ export default function MobileMenu({
           </div>
 
           <div className="pt-6 border-t border-amber-500/20 space-y-3">
-            {session ? (
+            {mobileAuthSlot ? (
+              mobileAuthSlot
+            ) : session ? (
               <>
                 <div className="flex items-center gap-3 pb-3 border-b border-amber-500/10">
                   {avatar ? (

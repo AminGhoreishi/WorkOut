@@ -6,8 +6,6 @@ import Comment from "@/model/Comment";
 import Video from "@/model/Video";
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     await dbConnect();

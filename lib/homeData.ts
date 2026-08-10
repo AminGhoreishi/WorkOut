@@ -3,6 +3,7 @@ import BlogModel from "@/model/Blog";
 import UserModel from "@/model/User";
 import PackageModel from "@/model/Package";
 import PackageFeatureModel from "@/model/Packagefeature";
+import { connection } from "next/server";
 import type {
   HomeArticleItem,
   HomeWorkoutPlanItem,
@@ -92,6 +93,7 @@ export async function getHomePlans(): Promise<HomeWorkoutPlanItem[]> {
 }
 
 export async function getHomeStats(): Promise<HomeStats> {
+  await connection();
   await dbConnect();
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
