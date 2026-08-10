@@ -154,7 +154,7 @@ export default function Articles() {
       </section>
 
       <section className="pb-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
           {error && (
             <div className="max-w-lg mx-auto p-4 mb-8 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-center text-sm">
               خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.

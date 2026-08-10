@@ -147,6 +147,9 @@ export default function CreateArticle({ initialAuthor }: CreateArticleProps) {
 
       const resData = await res.json();
 
+      console.log(resData);
+      
+
       if (res.ok) {
         await showAlert({
           title: "موفقیت‌آمیز",

@@ -3,7 +3,7 @@ import FitnessProfile from "@/model/Fitnessprofile";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadBase64ToParsPack } from "@/lib/parspack";
+import { uploadBase64ToS3 } from "@/lib/arvan";
 
 const VALID_GOALS = [
   "weight_loss",
@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
         if (photo.startsWith("http://") || photo.startsWith("https://")) {
           uploadedPhotos.push(photo);
         } else if (photo.startsWith("data:")) {
-          const s3Url = await uploadBase64ToParsPack(photo, "fitness-profiles");
+          const s3Url = await uploadBase64ToS3(photo, "fitness-profiles");
           uploadedPhotos.push(s3Url);
         }
       }

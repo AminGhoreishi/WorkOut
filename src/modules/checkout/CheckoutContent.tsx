@@ -35,7 +35,7 @@ export default async function CheckoutContent({ searchParams }: CheckoutPageProp
   }
 
   if (order.status === "paid") {
-    redirect(`/payment/success?orderId=${orderId}`);
+    redirect("/dashboard/subscription");
   }
 
   const orderPackage = order.packageId as unknown as { name?: string; tagline?: string } | null;

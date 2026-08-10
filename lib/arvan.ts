@@ -11,7 +11,7 @@ export const arvanClient = new S3Client({
 
 export async function uploadFileToS3(file: File, folder: string): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
-  const ext = file.name.split(".").pop() || "mp4";
+  const ext = file.name.split(".").pop() || "jpg";
   const cleanFolder = folder.endsWith("/") ? folder : `${folder}/`;
   const fileKey = `${cleanFolder}${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
 
@@ -24,6 +24,35 @@ export async function uploadFileToS3(file: File, folder: string): Promise<string
       Key: fileKey,
       Body: buffer,
       ContentType: file.type,
+    }),
+  );
+
+  return `${publicUrl}/${fileKey}`;
+}
+
+export async function uploadBase64ToS3(base64Data: string, folder: string): Promise<string> {
+  const matches = base64Data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+  if (!matches) {
+    throw new Error("فرمت تصویر نامعتبر است");
+  }
+
+  const contentType = matches[1];
+  const base64Content = matches[2];
+  const buffer = Buffer.from(base64Content, "base64");
+
+  const ext = contentType.split("/")[1] || "jpg";
+  const cleanFolder = folder.endsWith("/") ? folder : `${folder}/`;
+  const fileKey = `${cleanFolder}${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+  const bucket = process.env.ARVAN_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+  const publicUrl = process.env.ARVAN_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL!;
+
+  await arvanClient.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: contentType,
     }),
   );
 

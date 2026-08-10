@@ -4,7 +4,7 @@ import User from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { uploadFileToParsPack } from "@/lib/parspack";
+import { uploadFileToS3 } from "@/lib/arvan";
 
 export async function GET(req: NextRequest) {
   try {
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
 
     let videoUrl = "";
     if (file && file instanceof File && file.size > 0) {
-      videoUrl = await uploadFileToParsPack(file, "tickets");
+      videoUrl = await uploadFileToS3(file, "tickets");
     }
 
     const ticket = await Ticket.create({

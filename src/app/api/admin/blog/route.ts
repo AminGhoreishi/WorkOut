@@ -3,7 +3,7 @@ import Blog from "@/model/Blog";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadFileToParsPack, deleteFileFromParsPack } from "@/lib/parspack";
+import { uploadFileToS3, deleteFileFromS3 } from "@/lib/arvan";
 import { validateBlog, validateBlogUpdate } from "@/validator/blog";
 
 async function generateUniqueSlug(title: string): Promise<string> {
@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      imageUrl = await uploadFileToParsPack(imageFile, "blogs");
+      imageUrl = await uploadFileToS3(imageFile, "blogs");
     }
 
     const blog = await Blog.create({
@@ -212,8 +212,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, blog }, { status: 201 });
   } catch (error: any) {
+    console.error("POST /api/admin/blog error:", error.message);
     return NextResponse.json(
-      { message: "خطایی در ثبت مقاله رخ داد" },
+      { message: error.message },
       { status: 500 }
     );
   }
@@ -305,15 +306,15 @@ export async function PUT(req: NextRequest) {
         );
       }
       if (blog.image) {
-        await deleteFileFromParsPack(blog.image);
+        await deleteFileFromS3(blog.image);
       }
-      blog.image = await uploadFileToParsPack(imageInput, "blogs");
+      blog.image = await uploadFileToS3(imageInput, "blogs");
     } else if (
       imageInput === "null" ||
       imageInput === "deleted"
     ) {
       if (blog.image) {
-        await deleteFileFromParsPack(blog.image);
+        await deleteFileFromS3(blog.image);
       }
       blog.image = "";
     }
@@ -373,7 +374,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     if (blog.image) {
-      await deleteFileFromParsPack(blog.image);
+      await deleteFileFromS3(blog.image);
     }
 
     await Blog.findByIdAndDelete(id);

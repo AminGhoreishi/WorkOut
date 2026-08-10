@@ -2103,6 +2103,106 @@ export const modifiedFiles = [
     id: 420,
     filePath: "src/modules/onboarding/OnboardingSkeleton.tsx",
     description: "Extracted OnboardingSkeleton into a dedicated modular component file without code comments."
+  },
+  {
+    id: 421,
+    filePath: "src/modules/checkout/CheckoutContent.tsx",
+    description: "Extracted CheckoutContent server data fetching component into dedicated module file without code comments."
+  },
+  {
+    id: 422,
+    filePath: "src/app/(main)/checkout/page.tsx",
+    description: "Refactored checkout page server component to delegate content rendering to CheckoutContent module without code comments."
+  },
+  {
+    id: 423,
+    filePath: "src/modules/subscription/SubscriptionContent.tsx",
+    description: "Extracted SubscriptionPageContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 424,
+    filePath: "src/app/(main)/subscription/page.tsx",
+    description: "Refactored subscription page server component to delegate rendering to SubscriptionContent module and added StarFit metadata without code comments."
+  },
+  {
+    id: 425,
+    filePath: "src/modules/payment/PaymentSuccessContent.tsx",
+    description: "Extracted PaymentSuccessContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 426,
+    filePath: "src/app/(main)/payment/success/page.tsx",
+    description: "Refactored payment success page server component to delegate rendering to PaymentSuccessContent module without code comments."
+  },
+  {
+    id: 427,
+    filePath: "src/modules/packages/PackagesContent.tsx",
+    description: "Extracted PackagesContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 428,
+    filePath: "src/app/(main)/packages/page.tsx",
+    description: "Refactored packages page server component to delegate rendering to PackagesContent module and added StarFit metadata without code comments."
+  },
+  {
+    id: 429,
+    filePath: "src/modules/packages/packageDetails/PackageSlugContent.tsx",
+    description: "Extracted PackageSlugPageContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 430,
+    filePath: "src/app/(main)/package/[slug]/page.tsx",
+    description: "Refactored package details page server component to delegate rendering to PackageSlugContent module without code comments."
+  },
+  {
+    id: 431,
+    filePath: "src/modules/article/ArticleSlugContent.tsx",
+    description: "Extracted ArticlePageContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 432,
+    filePath: "src/app/(main)/article/[slug]/page.tsx",
+    description: "Refactored article details page server component to delegate rendering to ArticleSlugContent module without code comments."
+  },
+  {
+    id: 433,
+    filePath: "src/modules/dashboard/nutrition/NutritionContent.tsx",
+    description: "Extracted NutritionPageContent server component into dedicated module file without code comments."
+  },
+  {
+    id: 434,
+    filePath: "src/app/(main)/nutrition/page.tsx",
+    description: "Refactored nutrition page server component to delegate rendering to NutritionContent module without code comments."
+  },
+  {
+    id: 435,
+    filePath: "src/app/(main)/payment/success/page.tsx",
+    description: "Deleted payment success page, PaymentSuccessContent module, and payment success types per user request."
+  },
+  {
+    id: 436,
+    filePath: "src/modules/article/ArticleSkeleton.tsx",
+    description: "Created ArticleSkeleton component file for article loading state matching ArticleDetail layout without code comments."
+  },
+  {
+    id: 437,
+    filePath: "src/app/(main)/article/[slug]/page.tsx",
+    description: "Replaced Suspense fallback={null} with ArticleSkeleton loading fallback without code comments."
+  },
+  {
+    id: 438,
+    filePath: "lib/parspack.ts",
+    description: "Added automatic failover to Arvan S3 object storage upon ParsPack credentials or network errors without code comments."
+  },
+  {
+    id: 439,
+    filePath: "lib/arvan.ts",
+    description: "Added uploadBase64ToS3 helper function and unified Arvan Cloud S3 storage integration for all media files without code comments."
+  },
+  {
+    id: 440,
+    filePath: "src/app/api/admin/blog/route.ts",
+    description: "Replaced ParsPack storage functions with Arvan S3 uploadFileToS3 and deleteFileFromS3 for blog image management without code comments."
   }
 ];
 
