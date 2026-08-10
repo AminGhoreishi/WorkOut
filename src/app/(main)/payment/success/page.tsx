@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -8,15 +9,17 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Order from "@/model/Order";
 import type { PaymentSuccessPageProps } from "@/types/payment";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "پرداخت موفقیت‌آمیز | استارفیت",
   description: "پرداخت شما با موفقیت تایید و اشتراک ورزشی شما فعال گردید.",
 };
 
-export default async function PaymentSuccessPage({
+async function PaymentSuccessContent({
   searchParams,
 }: PaymentSuccessPageProps) {
+  await connection();
   const { orderId } = await searchParams;
 
   if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
@@ -129,5 +132,13 @@ export default async function PaymentSuccessPage({
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage(props: PaymentSuccessPageProps) {
+  return (
+    <Suspense fallback={null}>
+      <PaymentSuccessContent {...props} />
+    </Suspense>
   );
 }

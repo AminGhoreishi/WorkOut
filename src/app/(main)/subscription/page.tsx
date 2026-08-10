@@ -1,10 +1,13 @@
+import { Suspense } from "react";
 import { authOptions } from "@/lib/auth";
 import WorkoutProgram from "@/modules/subscription/WorkoutProgram";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
-export default async function page() {
+async function SubscriptionPageContent() {
+  await connection();
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
@@ -16,7 +19,13 @@ export default async function page() {
 
   const result = await res.json();
 
-  console.log(result);
-
   return <WorkoutProgram plan={result.plan} days={result.days} />;
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={null}>
+      <SubscriptionPageContent />
+    </Suspense>
+  );
 }

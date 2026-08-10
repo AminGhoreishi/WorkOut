@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, Suspense, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
 const SidebarContext = createContext({
@@ -8,9 +8,22 @@ const SidebarContext = createContext({
   closeSidebar: () => {},
 });
 
+function PathnameListener({
+  onPathChange,
+}: {
+  onPathChange: () => void;
+}) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    onPathChange();
+  }, [pathname, onPathChange]);
+
+  return null;
+}
+
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,11 +42,11 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
+  const handlePathChange = useCallback(() => {
     if (typeof window !== "undefined" && window.innerWidth < 1024) {
       setIsOpen(false);
     }
-  }, [pathname]);
+  }, []);
 
   return (
     <SidebarContext.Provider
@@ -43,6 +56,9 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
         closeSidebar: () => setIsOpen(false),
       }}
     >
+      <Suspense fallback={null}>
+        <PathnameListener onPathChange={handlePathChange} />
+      </Suspense>
       {children}
     </SidebarContext.Provider>
   );

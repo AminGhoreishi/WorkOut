@@ -9,10 +9,10 @@ export default function MainLayout({
 }) {
   return (
     <>
-      <HeaderWrapper />
-      <main>
-        <Suspense fallback={null}>{children}</Suspense>
-      </main>
+      <Suspense fallback={null}>
+        <HeaderWrapper />
+      </Suspense>
+      <main>{children}</main>
       <Footer />
     </>
   );

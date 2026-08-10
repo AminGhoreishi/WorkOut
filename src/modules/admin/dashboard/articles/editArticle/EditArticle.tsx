@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { showAlert } from "@/utils/alert";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const CKEditorWrapper = dynamic(
   () => import("../createArticle/CKEditorWrapper"),
@@ -33,9 +33,13 @@ type FormValues = {
   seoDescription: string;
 };
 
-export default function EditArticle() {
+interface EditArticleProps {
+  articleId?: string;
+}
+
+export default function EditArticle({ articleId }: EditArticleProps) {
   const router = useRouter();
-  const { id } = useParams() as { id: string };
+  const id = articleId || "";
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");

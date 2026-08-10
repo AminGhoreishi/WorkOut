@@ -4,6 +4,7 @@ import registerModels from "@/lib/registerModels";
 import Subscription from "@/model/Subscription";
 import SubscriptionsManagement from "@/modules/admin/subscription/SubscriptionsManagement";
 import type { SubscriptionStats } from "@/types/subscription";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "مدیریت اشتراک‌ها و سرفصل‌ها | استار فیت",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminSubscriptionsPage() {
+  await connection();
   registerModels();
   await dbConnect();
 

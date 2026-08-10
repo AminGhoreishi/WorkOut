@@ -4,6 +4,7 @@ import registerModels from "@/lib/registerModels";
 import Blog from "@/model/Blog";
 import AdminArticles from "@/modules/admin/dashboard/articles/AdminArticles";
 import type { AdminBlogStats } from "@/types/blog";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "مدیریت مقالات | استار فیت",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminArticlesPage() {
+  await connection();
   registerModels();
   await dbConnect();
 

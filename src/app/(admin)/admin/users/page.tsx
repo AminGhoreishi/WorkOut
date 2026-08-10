@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/model/User";
 import AdminUsers from "@/modules/admin/users/AdminUsers";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "مدیریت کاربران | استار فیت",
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminUsersPage() {
+  await connection();
   await dbConnect();
 
   const [totalUsers, activeUsers, expiredUsers, blockedUsers] =

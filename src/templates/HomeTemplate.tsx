@@ -1,21 +1,20 @@
 import HeroSection from "@/modules/home/HeroSection";
 import FAQ from "@/modules/home/FAQ";
 import WhyChooseUs from "@/modules/home/WhyChooseUs";
-import WorkoutPlans from "@/modules/home/WorkoutPlans";
 import Testimonials from "@/modules/home/Testimonials";
-import LiveStats from "@/modules/home/LiveStats";
+import WorkoutPlans from "@/modules/home/WorkoutPlans";
 import LatestArticles from "@/modules/home/LatestArticles";
-import type { HomeTemplateProps } from "@/types/components";
+import LiveStats from "@/modules/home/LiveStats";
 
-export default function HomeTemplate({ articles, stats, plans }: HomeTemplateProps) {
+export default function HomeTemplate() {
   return (
     <>
       <HeroSection />
       <WhyChooseUs />
-      <WorkoutPlans plans={plans} />
+      <WorkoutPlans />
       <Testimonials />
-      <LatestArticles articles={articles} />
-      <LiveStats stats={stats} />
+      <LatestArticles />
+      <LiveStats />
       <FAQ />
     </>
   );

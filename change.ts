@@ -1753,6 +1753,246 @@ export const modifiedFiles = [
     id: 350,
     filePath: "src/app/(main)/layout.tsx",
     description: "Removed top-level Suspense wrapper around HeaderWrapper to render navbar instantly without code comments."
+  },
+  {
+    id: 351,
+    filePath: "src/app/(main)/layout.tsx",
+    description: "Removed top-level Suspense fallback null wrapper around children in MainLayout without code comments."
+  },
+  {
+    id: 352,
+    filePath: "lib/homeData.ts",
+    description: "Awaited connection() in getHomeArticles and getHomePlans functions for Next.js 16 request-time dynamic streaming without code comments."
+  },
+  {
+    id: 353,
+    filePath: "src/modules/home/WorkoutPlansSkeleton.tsx",
+    description: "Created WorkoutPlansSkeleton fallback component for workout plans section loading state without code comments."
+  },
+  {
+    id: 354,
+    filePath: "src/modules/home/LatestArticlesSkeleton.tsx",
+    description: "Created LatestArticlesSkeleton fallback component for articles section loading state without code comments."
+  },
+  {
+    id: 355,
+    filePath: "src/modules/home/LiveStatsSkeleton.tsx",
+    description: "Created LiveStatsSkeleton fallback component for live stats section loading state without code comments."
+  },
+  {
+    id: 356,
+    filePath: "src/modules/home/WorkoutPlansSection.tsx",
+    description: "Created WorkoutPlansSection async Server Component to stream home plans without code comments."
+  },
+  {
+    id: 357,
+    filePath: "src/modules/home/LatestArticlesSection.tsx",
+    description: "Created LatestArticlesSection async Server Component to stream home articles without code comments."
+  },
+  {
+    id: 358,
+    filePath: "src/modules/home/LiveStatsSection.tsx",
+    description: "Created LiveStatsSection async Server Component to stream home stats without code comments."
+  },
+  {
+    id: 359,
+    filePath: "src/templates/HomeTemplate.tsx",
+    description: "Refactored HomeTemplate with isolated Suspense boundaries and section skeletons for WorkoutPlans, LatestArticles, and LiveStats without code comments."
+  },
+  {
+    id: 360,
+    filePath: "src/app/(main)/page.tsx",
+    description: "Refactored Home page component to render HomeTemplate synchronously for parallel streaming without code comments."
+  },
+  {
+    id: 361,
+    filePath: "src/modules/home/WorkoutPlansList.tsx",
+    description: "Created WorkoutPlansList component for rendering workout plan cards grid without code comments."
+  },
+  {
+    id: 362,
+    filePath: "src/modules/home/WorkoutPlansCardsSection.tsx",
+    description: "Created WorkoutPlansCardsSection async Server Component to fetch plans and render WorkoutPlansList without code comments."
+  },
+  {
+    id: 363,
+    filePath: "src/modules/home/WorkoutPlansCardsSkeleton.tsx",
+    description: "Created WorkoutPlansCardsSkeleton component for rendering card grid loading skeletons without code comments."
+  },
+  {
+    id: 364,
+    filePath: "src/modules/home/WorkoutPlans.tsx",
+    description: "Refactored WorkoutPlans to render section title statically and wrap card grid in Suspense without code comments."
+  },
+  {
+    id: 365,
+    filePath: "src/modules/home/LatestArticlesList.tsx",
+    description: "Created LatestArticlesList component for rendering article cards grid without code comments."
+  },
+  {
+    id: 366,
+    filePath: "src/modules/home/LatestArticlesCardsSection.tsx",
+    description: "Created LatestArticlesCardsSection async Server Component to fetch articles and render LatestArticlesList without code comments."
+  },
+  {
+    id: 367,
+    filePath: "src/modules/home/LatestArticlesCardsSkeleton.tsx",
+    description: "Created LatestArticlesCardsSkeleton component for rendering article card grid loading skeletons without code comments."
+  },
+  {
+    id: 368,
+    filePath: "src/modules/home/LatestArticles.tsx",
+    description: "Refactored LatestArticles to render section title statically and wrap article card grid in Suspense without code comments."
+  },
+  {
+    id: 369,
+    filePath: "src/modules/home/LiveStatsCard.tsx",
+    description: "Created LiveStatsCard component for rendering the live stat box without code comments."
+  },
+  {
+    id: 370,
+    filePath: "src/modules/home/LiveStatsCardSection.tsx",
+    description: "Created LiveStatsCardSection async Server Component to fetch stats and render LiveStatsCard without code comments."
+  },
+  {
+    id: 371,
+    filePath: "src/modules/home/LiveStatsCardSkeleton.tsx",
+    description: "Created LiveStatsCardSkeleton component for rendering live stat card loading skeleton without code comments."
+  },
+  {
+    id: 372,
+    filePath: "src/modules/home/LiveStats.tsx",
+    description: "Refactored LiveStats to render container header statically and wrap stat card in Suspense without code comments."
+  },
+  {
+    id: 373,
+    filePath: "src/app/(admin)/admin/articles/editArticles/[id]/page.tsx",
+    description: "Accepted and awaited params Promise, awaited connection(), and passed resolved articleId prop to EditArticle inside Suspense boundary without code comments."
+  },
+  {
+    id: 374,
+    filePath: "src/modules/admin/dashboard/articles/editArticle/EditArticle.tsx",
+    description: "Removed useParams hook and accepted articleId prop to eliminate uncached data access during prerendering in Next.js 16 Webpack build without code comments."
+  },
+  {
+    id: 375,
+    filePath: "src/app/(admin)/admin/articles/page.tsx",
+    description: "Added connection() call before querying Blog model to fix Next.js 16 prerender time/uncached data error without code comments."
+  },
+  {
+    id: 376,
+    filePath: "src/app/(admin)/admin/subscriptions/page.tsx",
+    description: "Added connection() call before querying Subscription model to fix Next.js 16 prerender time/uncached data error without code comments."
+  },
+  {
+    id: 377,
+    filePath: "src/app/(admin)/admin/users/page.tsx",
+    description: "Added connection() call before querying User model to fix Next.js 16 prerender time/uncached data error without code comments."
+  },
+  {
+    id: 378,
+    filePath: "src/app/(main)/packages/page.tsx",
+    description: "Added connection() call before querying Package models to fix Next.js 16 prerender time/uncached data error without code comments."
+  },
+  {
+    id: 379,
+    filePath: "src/app/(main)/article/[slug]/page.tsx",
+    description: "Added connection() call before resolving params/queries to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 380,
+    filePath: "src/app/(main)/order/[slug]/page.tsx",
+    description: "Added connection() call before resolving params/session to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 381,
+    filePath: "src/app/(main)/package/[slug]/page.tsx",
+    description: "Added connection() call before resolving params/queries to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 382,
+    filePath: "src/app/(main)/checkout/page.tsx",
+    description: "Added connection() call before resolving searchParams to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 383,
+    filePath: "src/app/(main)/nutrition/page.tsx",
+    description: "Added connection() call before session/dbConnect to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 384,
+    filePath: "src/app/(main)/onboarding/page.tsx",
+    description: "Added connection() call before session check to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 385,
+    filePath: "src/app/(main)/payment/success/page.tsx",
+    description: "Added connection() call before searchParams/session resolution to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 386,
+    filePath: "src/app/(main)/subscription/page.tsx",
+    description: "Added connection() call before session/cookies fetch to fix Next.js 16 prerender error without code comments."
+  },
+  {
+    id: 387,
+    filePath: "src/app/(admin)/admin/articles/editArticles/[id]/page.tsx",
+    description: "Refactored page to wrap async EditArticleContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 388,
+    filePath: "src/app/(main)/packages/page.tsx",
+    description: "Refactored page to wrap async PackagesContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 389,
+    filePath: "src/app/(main)/article/[slug]/page.tsx",
+    description: "Refactored page to wrap async ArticlePageContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 390,
+    filePath: "src/app/(main)/order/[slug]/page.tsx",
+    description: "Refactored page to wrap async OrderSlugPageContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 391,
+    filePath: "src/app/(main)/package/[slug]/page.tsx",
+    description: "Refactored page to wrap async PackageSlugPageContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 392,
+    filePath: "src/app/(main)/checkout/page.tsx",
+    description: "Refactored page to wrap async CheckoutContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 393,
+    filePath: "src/app/(main)/nutrition/page.tsx",
+    description: "Refactored page to wrap async NutritionPageContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 394,
+    filePath: "src/app/(main)/onboarding/page.tsx",
+    description: "Refactored page to wrap async OnboardingPageContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 395,
+    filePath: "src/app/(main)/payment/success/page.tsx",
+    description: "Refactored page to wrap async PaymentSuccessContent in Suspense boundary for Next.js 16 PPR compliance without code comments."
+  },
+  {
+    id: 396,
+    filePath: "src/app/(main)/layout.tsx",
+    description: "Wrapped HeaderWrapper in Suspense fallback=null boundary to isolate navbar session state during PPR layout prerendering without code comments."
+  },
+  {
+    id: 397,
+    filePath: "src/app/(admin)/admin/layout.tsx",
+    description: "Wrapped AdminSidebar in Suspense fallback=null boundary to isolate usePathname state during PPR admin layout prerendering without code comments."
+  },
+  {
+    id: 398,
+    filePath: "src/components/layout/admin/SidebarContext.tsx",
+    description: "Isolated usePathname in PathnameListener component wrapped in Suspense to prevent layout prerender errors during PPR build without code comments."
   }
 ];
 

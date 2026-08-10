@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -7,13 +8,15 @@ import dbConnect from "@/lib/dbConnect";
 import Order from "@/model/Order";
 import CheckoutPage from "@/modules/checkout/CheckoutPage";
 import type { CheckoutOrderInfo, CheckoutPageProps } from "@/types/checkout";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "استار فیت | پرداخت و کارت به کارت",
   description: "انتقال وجه کارت به کارت و نهایی‌سازی سفارش در سیستم استار فیت",
 };
 
-export default async function Page({ searchParams }: CheckoutPageProps) {
+async function CheckoutContent({ searchParams }: CheckoutPageProps) {
+  await connection();
   const { orderId } = await searchParams;
 
   if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
@@ -59,4 +62,12 @@ export default async function Page({ searchParams }: CheckoutPageProps) {
   };
 
   return <CheckoutPage order={checkoutOrder} />;
+}
+
+export default function Page(props: CheckoutPageProps) {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutContent {...props} />
+    </Suspense>
+  );
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import OnboardingForm from "@/modules/onboarding/OnboardingForm";
 import dbConnect from "@/lib/dbConnect";
@@ -5,6 +6,7 @@ import FitnessProfile from "@/model/Fitnessprofile";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import type { FitnessProfileData } from "@/types/fitness-profile";
+import { connection } from "next/server";
 
 export const metadata = {
   title: "استار فیت | تکمیل مشخصات ورزشی",
@@ -12,7 +14,8 @@ export const metadata = {
     "برای شخصی‌سازی برنامه‌های ورزشی و تغذیه، لطفاً مشخصات فیزیکی و ورزشی خود را در این بخش تکمیل کنید.",
 };
 
-export default async function OnboardingPage() {
+async function OnboardingPageContent() {
+  await connection();
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -45,4 +48,12 @@ export default async function OnboardingPage() {
   }
 
   return <OnboardingForm initialProfile={initialProfile} />;
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={null}>
+      <OnboardingPageContent />
+    </Suspense>
+  );
 }

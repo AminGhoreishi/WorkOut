@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import dbConnect from "@/lib/dbConnect";
 import Blog from "@/model/Blog";
 import Wish from "@/model/Wish";
@@ -8,6 +9,7 @@ import { authOptions } from "@/lib/auth";
 import type { Metadata } from "next";
 import type { ArticlePageProps } from "@/types/blog";
 import "@/model/Comment";
+import { connection } from "next/server";
 
 export async function generateMetadata({
   params,
@@ -50,7 +52,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function page({ params }: ArticlePageProps) {
+async function ArticlePageContent({ params }: ArticlePageProps) {
+  await connection();
   const { slug } = await params;
 
   let decodedSlug = slug;
@@ -106,5 +109,13 @@ export default async function page({ params }: ArticlePageProps) {
       isWished={isWished}
       isLiked={isLiked}
     />
+  );
+}
+
+export default function page(props: ArticlePageProps) {
+  return (
+    <Suspense fallback={null}>
+      <ArticlePageContent {...props} />
+    </Suspense>
   );
 }

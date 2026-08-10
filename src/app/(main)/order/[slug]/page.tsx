@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -6,6 +7,7 @@ import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import OrderPage from "@/modules/order/OrderPage";
 import type { OrderPackageInfo, OrderSlugPageProps } from "@/types/order";
+import { connection } from "next/server";
 
 export async function generateMetadata({
   params,
@@ -36,7 +38,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function OrderSlugPage({ params }: OrderSlugPageProps) {
+async function OrderSlugPageContent({ params }: OrderSlugPageProps) {
+  await connection();
   const { slug } = await params;
 
   const session = await getServerSession(authOptions);
@@ -73,5 +76,13 @@ export default async function OrderSlugPage({ params }: OrderSlugPageProps) {
       userId={session.user.id}
       email={session.user.email}
     />
+  );
+}
+
+export default function OrderSlugPage(props: OrderSlugPageProps) {
+  return (
+    <Suspense fallback={null}>
+      <OrderSlugPageContent {...props} />
+    </Suspense>
   );
 }

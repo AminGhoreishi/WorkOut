@@ -11,6 +11,7 @@ import type {
 } from "@/types/components";
 
 export async function getHomeArticles(): Promise<HomeArticleItem[]> {
+  await connection();
   await dbConnect();
   const latestBlogs = await BlogModel.find({ status: "published" })
     .select("title slug excerpt image category content authorId createdAt")
@@ -49,6 +50,7 @@ export async function getHomeArticles(): Promise<HomeArticleItem[]> {
 }
 
 export async function getHomePlans(): Promise<HomeWorkoutPlanItem[]> {
+  await connection();
   await dbConnect();
   const dbPackages = await PackageModel.find({ isActive: true })
     .select("_id name tagline description icon price")

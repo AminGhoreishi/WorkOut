@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import dbConnect from "@/lib/dbConnect";
@@ -5,6 +6,7 @@ import Package from "@/model/Package";
 import Packagefeature from "@/model/Packagefeature";
 import PackageDetails from "@/modules/packages/packageDetails/PackageDetails";
 import type { PackageSlugPageProps } from "@/types/package";
+import { connection } from "next/server";
 
 export async function generateMetadata({
   params,
@@ -36,7 +38,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function PackageSlugPage({ params }: PackageSlugPageProps) {
+async function PackageSlugPageContent({ params }: PackageSlugPageProps) {
+  await connection();
   const { slug } = await params;
 
   await dbConnect();
@@ -59,5 +62,13 @@ export default async function PackageSlugPage({ params }: PackageSlugPageProps) 
       package={safePackage}
       features={safeFeatures}
     />
+  );
+}
+
+export default function PackageSlugPage(props: PackageSlugPageProps) {
+  return (
+    <Suspense fallback={null}>
+      <PackageSlugPageContent {...props} />
+    </Suspense>
   );
 }

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import HomeTemplate from "../../templates/HomeTemplate";
-import { getHomeArticles, getHomePlans, getHomeStats } from "@/lib/homeData";
-import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "استار فیت | سامانه تخصصی تناسب اندام و بدنسازی",
@@ -49,13 +47,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
-  await connection();
-  const [articles, plans, stats] = await Promise.all([
-    getHomeArticles(),
-    getHomePlans(),
-    getHomeStats(),
-  ]);
-
-  return <HomeTemplate articles={articles} stats={stats} plans={plans} />;
+export default function Home() {
+  return <HomeTemplate />;
 }

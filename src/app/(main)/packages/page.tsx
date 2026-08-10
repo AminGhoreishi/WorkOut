@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import Packagefeature from "@/model/Packagefeature";
 import SubscriptionPackages from "@/modules/packages/SubscriptionPackages";
+import { connection } from "next/server";
 
-export default async function page() {
+async function PackagesContent() {
+  await connection();
   await dbConnect();
   const packages = await Package.find({ isActive: true }).lean();
   const features = await Packagefeature.find().lean();
@@ -26,4 +29,12 @@ export default async function page() {
   }));
 
   return <SubscriptionPackages packages={packagesWithFeatures} />;
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={null}>
+      <PackagesContent />
+    </Suspense>
+  );
 }
