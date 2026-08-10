@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import useSWR from "swr";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,7 @@ import type {
   VerifyPaymentResponse,
 } from "@/types/order";
 import type { UserProfileResponse } from "@/types/user-profile";
+import OrderSummarySkeleton from "./OrderSummarySkeleton";
 
 const fetcher = async (url: string): Promise<UserProfileResponse> => {
   const res = await fetch(url);
@@ -221,11 +222,10 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                 <button
                   type="button"
                   onClick={() => setValue("selectedPackage", packageData._id)}
-                  className={`p-3.5 sm:p-4 rounded-xl border-2 transition-all text-right cursor-pointer flex justify-between items-center gap-3 ${
-                    selectedPackage === packageData._id
+                  className={`p-3.5 sm:p-4 rounded-xl border-2 transition-all text-right cursor-pointer flex justify-between items-center gap-3 ${selectedPackage === packageData._id
                       ? "border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/10"
                       : "border-amber-500/15 bg-zinc-900/40 hover:border-amber-500/30"
-                  }`}
+                    }`}
                 >
                   <div className="min-w-0">
                     <div className="text-amber-100 font-bold text-xs sm:text-base mb-1 truncate">
@@ -260,11 +260,10 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                     key={cycle}
                     type="button"
                     onClick={() => setValue("billingCycle", cycle)}
-                    className={`w-full p-3.5 sm:p-4 rounded-xl border-2 transition-all flex justify-between items-center gap-3 cursor-pointer ${
-                      billingCycle === cycle
+                    className={`w-full p-3.5 sm:p-4 rounded-xl border-2 transition-all flex justify-between items-center gap-3 cursor-pointer ${billingCycle === cycle
                         ? "border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/10"
                         : "border-amber-500/15 bg-zinc-900/40 hover:border-amber-500/30"
-                    }`}
+                      }`}
                   >
                     <div className="text-right min-w-0">
                       <div className="text-amber-100 font-semibold text-xs sm:text-sm">
@@ -375,76 +374,73 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                 خلاصه صورت‌حساب
               </h2>
 
-              <div className="space-y-3 text-xs sm:text-sm text-zinc-300">
-                <div className="flex justify-between">
-                  <span className="text-zinc-400">قیمت پایه:</span>
-                  <span className="font-semibold">{formatNumber(getPrice())} تومان</span>
+              <Suspense fallback={<OrderSummarySkeleton />}>
+                <div className="space-y-3 text-xs sm:text-sm text-zinc-300">
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">قیمت پایه:</span>
+                    <span className="font-semibold">{formatNumber(getPrice())} تومان</span>
+                  </div>
+
+                  {discountApplied && (
+                    <div className="flex justify-between text-amber-400 font-semibold bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                      <span>تخفیف ویژه (۱۵٪):</span>
+                      <span>-{formatNumber(getDiscount())} تومان</span>
+                    </div>
+                  )}
                 </div>
 
-                {discountApplied && (
-                  <div className="flex justify-between text-amber-400 font-semibold bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
-                    <span>تخفیف ویژه (۱۵٪):</span>
-                    <span>-{formatNumber(getDiscount())} تومان</span>
-                  </div>
-                )}
-              </div>
+                <div className="my-4 sm:my-6 pt-4 border-t border-amber-500/20 flex justify-between items-center text-amber-100">
+                  <span className="text-xs sm:text-sm font-bold">مبلغ قابل پرداخت:</span>
+                  <span
+                    className="text-lg sm:text-2xl font-extrabold text-amber-400"
+                    style={{ fontFamily: "Marbeh, sans-serif" }}
+                  >
+                    {formatNumber(getFinalPrice())} تومان
+                  </span>
+                </div>
 
-              <div className="my-4 sm:my-6 pt-4 border-t border-amber-500/20 flex justify-between items-center text-amber-100">
-                <span className="text-xs sm:text-sm font-bold">مبلغ قابل پرداخت:</span>
-                <span
-                  className="text-lg sm:text-2xl font-extrabold text-amber-400"
-                  style={{ fontFamily: "Marbeh, sans-serif" }}
+                <div className="mb-4">
+                  <input
+                    {...register("discountCode")}
+                    placeholder="کد تخفیف (مثال: FIT2024)"
+                    className="w-full bg-black/50 border border-amber-500/20 rounded-xl px-3 py-2.5 text-amber-50 placeholder:text-zinc-600 focus:outline-none focus:border-amber-400 text-xs transition-colors"
+                  />
+                </div>
+
+                <label className="flex items-start gap-2.5 sm:gap-3 mb-6 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    {...register("agreedToTerms")}
+                    className="w-4 h-4 rounded border-amber-500/30 bg-black text-amber-500 focus:ring-amber-400 accent-amber-500 mt-0.5 shrink-0"
+                  />
+                  <span className="text-zinc-400 text-[11px] sm:text-xs leading-relaxed group-hover:text-zinc-300 transition-colors">
+                    شرایط و قوانین استفاده از خدمات استار فیت را مطالعه کرده و می‌پذیرم.
+                  </span>
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={!agreedToTerms || isSubmitting}
+                  className="w-full bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-bold py-3 sm:py-3.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm"
                 >
-                  {formatNumber(getFinalPrice())} تومان
-                </span>
-              </div>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <span>در حال انتقال به صفحه پرداخت...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>پرداخت و فعال‌سازی فوری</span>
+                    </>
+                  )}
+                </button>
+              </Suspense>
 
-              <div className="mb-4">
-                <input
-                  {...register("discountCode")}
-                  placeholder="کد تخفیف (مثال: FIT2024)"
-                  className="w-full bg-black/50 border border-amber-500/20 rounded-xl px-3 py-2.5 text-amber-50 placeholder:text-zinc-600 focus:outline-none focus:border-amber-400 text-xs transition-colors"
-                />
-              </div>
-
-              <label className="flex items-start gap-2.5 sm:gap-3 mb-6 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  {...register("agreedToTerms")}
-                  className="w-4 h-4 rounded border-amber-500/30 bg-black text-amber-500 focus:ring-amber-400 accent-amber-500 mt-0.5 shrink-0"
-                />
-                <span className="text-zinc-400 text-[11px] sm:text-xs leading-relaxed group-hover:text-zinc-300 transition-colors">
-                  شرایط و قوانین استفاده از خدمات استار فیت را مطالعه کرده و می‌پذیرم.
-                </span>
-              </label>
-
-              <button
-                type="submit"
-                disabled={!agreedToTerms || isSubmitting}
-                className="w-full bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-bold py-3 sm:py-3.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span>در حال انتقال به صفحه پرداخت...</span>
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>پرداخت و فعال‌سازی فوری</span>
-                  </>
-                )}
-              </button>
-
-              <div className="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-amber-500/10">
+              <div className="grid grid-cols-2 gap-2 mt-6 pt-4 border-t border-amber-500/10">
                 <div className="bg-black/40 rounded-xl p-2 sm:p-2.5 text-center border border-amber-500/10">
                   <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 mx-auto mb-1" />
                   <div className="text-zinc-400 text-[9px] sm:text-[10px]">پرداخت امن</div>
-                </div>
-
-                <div className="bg-black/40 rounded-xl p-2 sm:p-2.5 text-center border border-amber-500/10">
-                  <Gift className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 mx-auto mb-1" />
-                  <div className="text-zinc-400 text-[9px] sm:text-[10px]">۷ روز آزمایشی</div>
                 </div>
 
                 <div className="bg-black/40 rounded-xl p-2 sm:p-2.5 text-center border border-amber-500/10">

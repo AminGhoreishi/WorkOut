@@ -1,13 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
-import OrderPage from "@/modules/order/OrderPage";
-import type { OrderPackageInfo, OrderSlugPageProps } from "@/types/order";
-import { connection } from "next/server";
+import OrderSlugPageContent, { OrderPageSkeleton } from "@/modules/order/OrderSlugContent";
+import type { OrderSlugPageProps } from "@/types/order";
 
 export async function generateMetadata({
   params,
@@ -31,57 +27,16 @@ export async function generateMetadata({
         pkg.tagline ||
         `تکمیل سفارش و فعال‌سازی آنلاین اشتراک ${pkg.name} در سیستم استار فیت`,
     };
-  } catch (error) {
+  } catch {
     return {
       title: "استار فیت | تکمیل سفارش",
     };
   }
 }
 
-async function OrderSlugPageContent({ params }: OrderSlugPageProps) {
-  await connection();
-  const { slug } = await params;
-
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.id) {
-    redirect(`/login?callbackUrl=/order/${slug}`);
-  }
-
-  await dbConnect();
-
-  const slugPackage = await Package.findOne({ slug, isActive: true }).lean();
-
-  if (!slugPackage) {
-    notFound();
-  }
-
-  const safePackageData: OrderPackageInfo = {
-    _id: String(slugPackage._id),
-    name: slugPackage.name,
-    slug: slugPackage.slug,
-    tagline: slugPackage.tagline || "",
-    description: slugPackage.description || "",
-    price: {
-      monthly: slugPackage.price?.monthly || 0,
-      quarterly: slugPackage.price?.quarterly || 0,
-      biannual: slugPackage.price?.biannual || 0,
-    },
-    isActive: Boolean(slugPackage.isActive),
-  };
-
-  return (
-    <OrderPage
-      packageData={safePackageData}
-      userId={session.user.id}
-      email={session.user.email}
-    />
-  );
-}
-
 export default function OrderSlugPage(props: OrderSlugPageProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<OrderPageSkeleton />}>
       <OrderSlugPageContent {...props} />
     </Suspense>
   );

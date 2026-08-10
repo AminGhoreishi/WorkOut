@@ -2063,6 +2063,46 @@ export const modifiedFiles = [
     id: 412,
     filePath: "src/app/(main)/packages/page.tsx",
     description: "Scoped Suspense boundary strictly to PackagesGrid content with PackagesSkeleton fallback without comments."
+  },
+  {
+    id: 413,
+    filePath: "src/app/(auth)/login/page.tsx",
+    description: "Added page metadata title 'ورود یا ثبت‌نام | استارفیت' without code comments."
+  },
+  {
+    id: 414,
+    filePath: "src/app/(auth)/otp/page.tsx",
+    description: "Added page metadata title 'تایید کد ورود | استارفیت' without code comments."
+  },
+  {
+    id: 415,
+    filePath: "src/modules/order/OrderPage.tsx",
+    description: "Wrapped order summary breakdown, discount input, terms, and submission action inside Suspense with OrderSummarySkeleton fallback without comments."
+  },
+  {
+    id: 416,
+    filePath: "src/modules/order/OrderSummarySkeleton.tsx",
+    description: "Extracted OrderSummarySkeleton into a dedicated modular component without code comments."
+  },
+  {
+    id: 417,
+    filePath: "src/app/(main)/order/[slug]/page.tsx",
+    description: "Replaced Suspense fallback={null} with OrderPageSkeleton loading fallback without code comments."
+  },
+  {
+    id: 418,
+    filePath: "src/modules/order/OrderSlugContent.tsx",
+    description: "Extracted OrderSlugPageContent server component and OrderPageSkeleton fallback into OrderSlugContent.tsx without code comments."
+  },
+  {
+    id: 419,
+    filePath: "src/modules/onboarding/OnboardingContent.tsx",
+    description: "Extracted OnboardingPageContent server component and OnboardingSkeleton fallback into OnboardingContent.tsx without code comments."
+  },
+  {
+    id: 420,
+    filePath: "src/modules/onboarding/OnboardingSkeleton.tsx",
+    description: "Extracted OnboardingSkeleton into a dedicated modular component file without code comments."
   }
 ];
 
