@@ -90,3 +90,12 @@ export interface SubscriptionStatsProps {
 export interface SubscriptionsManagementProps {
   stats: SubscriptionStats;
 }
+
+export interface MealPlanModalProps {
+  selectedPackageForPlan: {
+    _id: string;
+    name: string;
+    tagline?: string;
+  };
+  onClose: () => void;
+}

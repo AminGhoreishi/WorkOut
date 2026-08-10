@@ -1,13 +1,28 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import OrderSlugPageContent, { OrderPageSkeleton } from "@/modules/order/OrderSlugContent";
 import type { OrderSlugPageProps } from "@/types/order";
 
+export async function generateStaticParams() {
+  try {
+    await dbConnect();
+    const pkgs = await Package.find({ isActive: true }).select("slug").lean();
+    if (pkgs.length > 0) {
+      return pkgs.map((pkg) => ({
+        slug: pkg.slug,
+      }));
+    }
+  } catch {}
+  return [{ slug: "default-package" }];
+}
+
 export async function generateMetadata({
   params,
 }: OrderSlugPageProps): Promise<Metadata> {
+  await connection();
   const { slug } = await params;
   try {
     await dbConnect();

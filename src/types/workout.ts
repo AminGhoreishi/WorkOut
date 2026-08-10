@@ -209,6 +209,7 @@ export interface SubscriptionsTableRef {
 
 export interface SubscriptionsTableProps {
   onOpenPlanModal: (pkg: PackageInfo) => void;
+  onOpenMealPlanModal?: (pkg: PackageInfo) => void;
   onEdit: (sub: SubscriptionItem) => void;
   onStatsUpdate?: (stats: { total: number; active: number; trial: number; expired: number }) => void;
 }

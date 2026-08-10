@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import MealPlansManagement from "@/modules/admin/meal-plan/MealPlansManagement";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminMealPlansPage() {
-  return <MealPlansManagement />;
+  return (
+    <Suspense fallback={null}>
+      <MealPlansManagement />
+    </Suspense>
+  );
 }

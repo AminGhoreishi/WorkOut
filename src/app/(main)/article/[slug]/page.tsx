@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import Blog from "@/model/Blog";
@@ -6,9 +7,23 @@ import ArticlePageContent from "@/modules/article/ArticleSlugContent";
 import ArticleSkeleton from "@/modules/article/ArticleSkeleton";
 import type { ArticlePageProps } from "@/types/blog";
 
+export async function generateStaticParams() {
+  try {
+    await dbConnect();
+    const blogs = await Blog.find({ status: "published" }).select("slug").lean();
+    if (blogs.length > 0) {
+      return blogs.map((blog) => ({
+        slug: blog.slug,
+      }));
+    }
+  } catch {}
+  return [{ slug: "default-article" }];
+}
+
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
+  await connection();
   const { slug } = await params;
   let decodedSlug = slug;
   try {

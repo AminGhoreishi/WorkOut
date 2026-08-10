@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+
 import Footer from "@/components/layout/Footer";
 import HeaderWrapper from "@/components/layout/HeaderWrapper";
 

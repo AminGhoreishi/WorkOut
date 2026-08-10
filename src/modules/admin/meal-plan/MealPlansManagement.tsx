@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { Plus, Utensils } from "lucide-react";
 import { showAlert, showConfirm } from "@/utils/alert";
@@ -18,6 +19,9 @@ const fetcher = async (url: string) => {
 };
 
 export default function MealPlansManagement() {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get("user") || searchParams.get("userId") || searchParams.get("search") || "";
+
   const {
     data: plansData,
     isLoading: loadingPlans,
@@ -31,7 +35,16 @@ export default function MealPlansManagement() {
   const packages: PackageItem[] = packagesData?.packages || [];
   const foods: FoodItem[] = Array.isArray(foodsData) ? foodsData : (foodsData as any)?.foods || [];
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    const currentSearch =
+      searchParams.get("user") ||
+      searchParams.get("userId") ||
+      searchParams.get("search") ||
+      "";
+    setSearch(currentSearch);
+  }, [searchParams]);
   const [showForm, setShowForm] = useState(false);
   const [editingPlan, setEditingPlan] = useState<MealPlanData | null>(null);
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);

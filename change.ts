@@ -2203,6 +2203,26 @@ export const modifiedFiles = [
     id: 440,
     filePath: "src/app/api/admin/blog/route.ts",
     description: "Replaced ParsPack storage functions with Arvan S3 uploadFileToS3 and deleteFileFromS3 for blog image management without code comments."
+  },
+  {
+    id: 441,
+    filePath: "src/modules/admin/subscription/SubscriptionsTable.tsx",
+    description: "Updated meal plan link button in action dropdown to pass user ID query parameter to admin meal-plans page with zero code comments."
+  },
+  {
+    id: 442,
+    filePath: "src/modules/admin/meal-plan/MealPlansManagement.tsx",
+    description: "Added searchParams URL query reader for initial search term and wrapped in Suspense boundary without code comments."
+  },
+  {
+    id: 443,
+    filePath: "src/modules/admin/meal-plan/MealPlanList.tsx",
+    description: "Replaced general search input with target User ID badge display and reset button with zero code comments."
+  },
+  {
+    id: 444,
+    filePath: "src/modules/admin/meal-plan/MealPlansManagement.tsx",
+    description: "Added useEffect hook listening to searchParams changes to dynamically update search state when navigating between routes without code comments."
   }
 ];
 

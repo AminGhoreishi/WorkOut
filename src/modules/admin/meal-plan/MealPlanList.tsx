@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, Search, ShieldAlert } from "lucide-react";
+import { Activity, ShieldAlert, User, X } from "lucide-react";
 import type { MealPlanListProps } from "@/types/meal-plan";
 import MealPlanItem from "./MealPlanItem";
 
@@ -15,10 +15,13 @@ export default function MealPlanList({
   onToggleActive,
   onDelete,
 }: MealPlanListProps) {
-  const filteredPlans = plans.filter((plan) =>
-    (plan.title || "").toLowerCase().includes(search.toLowerCase()) ||
-    (plan.packageId?.name || "").toLowerCase().includes(search.toLowerCase())
+  const matchingPlans = plans.filter(
+    (plan) =>
+      (plan.title || "").toLowerCase().includes(search.toLowerCase()) ||
+      (plan.packageId?.name || "").toLowerCase().includes(search.toLowerCase())
   );
+
+  const filteredPlans = search && matchingPlans.length > 0 ? matchingPlans : plans;
 
   return (
     <div className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-xl relative overflow-hidden font-danaMed" dir="rtl">
@@ -35,16 +38,25 @@ export default function MealPlanList({
           </p>
         </div>
 
-        <div className="relative w-full sm:w-64">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="جستجو بر اساس عنوان یا پکیج..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pr-10 pl-4 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500"
-          />
-          <Search className="w-4 h-4 text-gray-500 absolute top-1/2 right-3.5 -translate-y-1/2" />
-        </div>
+        {search ? (
+          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-2 rounded-xl text-emerald-400 text-xs sm:text-sm font-danaMed">
+            <User className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="text-white/70 font-danaMed">کاربر:</span>
+            <span className="font-bold text-emerald-300 truncate max-w-[200px]">{search}</span>
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="mr-1 p-1 hover:bg-white/10 rounded-md transition-colors text-white/50 hover:text-white cursor-pointer"
+              aria-label="پاک کردن فیلتر"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <div className="text-xs text-neutral-400 bg-white/5 border border-white/10 px-3.5 py-2 rounded-xl">
+            نمایش تمامی برنامه‌های غذایی
+          </div>
+        )}
       </div>
 
       {loading ? (

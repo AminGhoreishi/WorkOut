@@ -27,7 +27,7 @@ import { showAlert, showConfirm } from "@/utils/alert";
 import Pagination from "@/components/common/Pagination";
 
 const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
-  function SubscriptionsTable({ onOpenPlanModal, onEdit, onStatsUpdate }, ref) {
+  function SubscriptionsTable({ onOpenPlanModal, onOpenMealPlanModal, onEdit, onStatsUpdate }, ref) {
     const [subscriptions, setSubscriptions] = useState<SubscriptionItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [totalPages, setTotalPages] = useState(1);
@@ -303,8 +303,10 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                 </button>
 
                                 <Link
-                                  href={`/admin/meal-plans?search=${encodeURIComponent(
-                                    sub.packageId?.name || ""
+                                  href={`/admin/meal-plans?user=${encodeURIComponent(
+                                    (typeof sub.userId === "object"
+                                      ? sub.userId?.fullName || sub.userId?.username || sub.userId?._id
+                                      : sub.userId) || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
                                   className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
