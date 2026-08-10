@@ -3,8 +3,7 @@ import FitnessProfile from "@/model/Fitnessprofile";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { arvanClient } from "@/lib/arvan";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadBase64ToParsPack } from "@/lib/parspack";
 
 const VALID_GOALS = [
   "weight_loss",
@@ -34,43 +33,7 @@ function sanitizeProfile(doc: any) {
   };
 }
 
-async function uploadBase64ToS3(base64Data: string): Promise<string> {
-  const matches = base64Data.match(
-    /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/
-  );
-  if (!matches) {
-    throw new Error("فرمت تصویر نامعتبر است");
-  }
 
-  const contentType = matches[1];
-  const base64Content = matches[2];
-
-  if (!ALLOWED_MIME_TYPES.includes(contentType)) {
-    throw new Error("فرمت تصویر پشتیبانی نمی‌شود");
-  }
-
-  const buffer = Buffer.from(base64Content, "base64");
-
-  if (buffer.length > MAX_IMAGE_BUFFER_SIZE) {
-    throw new Error("حجم تصویر بیش از حد مجاز است");
-  }
-
-  const ext = contentType.split("/")[1] || "jpg";
-  const imageKey = `fitness-profiles/${Date.now()}-${Math.random()
-    .toString(36)
-    .substring(2, 7)}.${ext}`;
-
-  await arvanClient.send(
-    new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET_NAME!,
-      Key: imageKey,
-      Body: buffer,
-      ContentType: contentType,
-    })
-  );
-
-  return `${process.env.S3_PUBLIC_URL}/${imageKey}`;
-}
 
 export async function GET(req: NextRequest) {
   try {
@@ -169,7 +132,7 @@ export async function POST(req: NextRequest) {
         if (photo.startsWith("http://") || photo.startsWith("https://")) {
           uploadedPhotos.push(photo);
         } else if (photo.startsWith("data:")) {
-          const s3Url = await uploadBase64ToS3(photo);
+          const s3Url = await uploadBase64ToParsPack(photo, "fitness-profiles");
           uploadedPhotos.push(s3Url);
         }
       }

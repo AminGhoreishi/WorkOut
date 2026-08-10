@@ -20,6 +20,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "*.parspack.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.parspack.net",
+      },
+      {
+        protocol: "https",
+        hostname: "*.parspack.ir",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {

@@ -94,3 +94,32 @@ export interface PackageModalProps {
   isSubmitting: boolean;
   setValue: any;
 }
+
+export interface SubscriptionPackageFeature {
+  _id?: string;
+  packageId?: string;
+  name: string;
+  description?: string;
+  included?: boolean;
+  sortOrder?: number;
+}
+
+export interface SubscriptionPackageItem {
+  _id: string;
+  id?: string;
+  name: string;
+  slug?: string;
+  price: number | string;
+  duration?: string;
+  popular?: boolean;
+  isPopular?: boolean;
+  features?: (SubscriptionPackageFeature | string)[];
+}
+
+export interface SubscriptionPackagesProps {
+  children?: React.ReactNode;
+}
+
+export interface PackagesGridProps {
+  packages: SubscriptionPackageItem[];
+}

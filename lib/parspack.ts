@@ -1,0 +1,84 @@
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+
+export const parspackClient = new S3Client({
+  region: "default",
+  endpoint: process.env.PARSPACK_S3_ENDPOINT || process.env.S3_ENDPOINT,
+  forcePathStyle: true,
+  credentials: {
+    accessKeyId: (process.env.PARSPACK_S3_ACCESS_KEY_ID || process.env.S3_ACCESS_KEY_ID)!,
+    secretAccessKey: (process.env.PARSPACK_S3_SECRET_ACCESS_KEY || process.env.S3_SECRET_ACCESS_KEY)!,
+  },
+});
+
+export async function uploadFileToParsPack(file: File, folder: string): Promise<string> {
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const ext = file.name.split(".").pop() || "jpg";
+  const cleanFolder = folder.endsWith("/") ? folder : `${folder}/`;
+  const fileKey = `${cleanFolder}${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+  const bucket = process.env.PARSPACK_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+  const publicUrl = process.env.PARSPACK_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL!;
+
+  await parspackClient.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: file.type,
+    }),
+  );
+
+  return `${publicUrl}/${fileKey}`;
+}
+
+export async function uploadBase64ToParsPack(base64Data: string, folder: string): Promise<string> {
+  const matches = base64Data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+  if (!matches) {
+    throw new Error("فرمت تصویر نامعتبر است");
+  }
+
+  const contentType = matches[1];
+  const base64Content = matches[2];
+  const buffer = Buffer.from(base64Content, "base64");
+
+  const ext = contentType.split("/")[1] || "jpg";
+  const cleanFolder = folder.endsWith("/") ? folder : `${folder}/`;
+  const fileKey = `${cleanFolder}${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+  const bucket = process.env.PARSPACK_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+  const publicUrl = process.env.PARSPACK_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL!;
+
+  await parspackClient.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: contentType,
+    }),
+  );
+
+  return `${publicUrl}/${fileKey}`;
+}
+
+export async function deleteFileFromParsPack(fileUrl: string): Promise<boolean> {
+  if (!fileUrl) return false;
+  const publicUrl = process.env.PARSPACK_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL || "";
+  const bucket = process.env.PARSPACK_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+  if (publicUrl && fileUrl.includes(publicUrl)) {
+    const fileKey = fileUrl.split(`${publicUrl}/`)[1];
+    if (fileKey) {
+      try {
+        await parspackClient.send(
+          new DeleteObjectCommand({
+            Bucket: bucket,
+            Key: fileKey,
+          }),
+        );
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+  }
+  return false;
+}

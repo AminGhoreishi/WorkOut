@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     const smsLine = process.env.SMS_IR_LINE;
 
     if (smsUsername && smsPassword && smsLine) {
-      const smsText = encodeURIComponent(`کد ورود شما : ${otpCode}`);
+      const smsText = encodeURIComponent(`کد ورود شما به استار فیت : ${otpCode}`);
       await fetch(
         `https://api.sms.ir/v1/send?username=${smsUsername}&password=${smsPassword}&mobile=${cleanPhone}&line=${smsLine}&text=${smsText}`,
         {

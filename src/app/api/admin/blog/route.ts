@@ -3,7 +3,7 @@ import Blog from "@/model/Blog";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadFileToS3, deleteFileFromS3 } from "@/lib/arvan";
+import { uploadFileToParsPack, deleteFileFromParsPack } from "@/lib/parspack";
 import { validateBlog, validateBlogUpdate } from "@/validator/blog";
 
 async function generateUniqueSlug(title: string): Promise<string> {
@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      imageUrl = await uploadFileToS3(imageFile, "blogs");
+      imageUrl = await uploadFileToParsPack(imageFile, "blogs");
     }
 
     const blog = await Blog.create({
@@ -305,15 +305,15 @@ export async function PUT(req: NextRequest) {
         );
       }
       if (blog.image) {
-        await deleteFileFromS3(blog.image);
+        await deleteFileFromParsPack(blog.image);
       }
-      blog.image = await uploadFileToS3(imageInput, "blogs");
+      blog.image = await uploadFileToParsPack(imageInput, "blogs");
     } else if (
       imageInput === "null" ||
       imageInput === "deleted"
     ) {
       if (blog.image) {
-        await deleteFileFromS3(blog.image);
+        await deleteFileFromParsPack(blog.image);
       }
       blog.image = "";
     }
@@ -373,7 +373,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     if (blog.image) {
-      await deleteFileFromS3(blog.image);
+      await deleteFileFromParsPack(blog.image);
     }
 
     await Blog.findByIdAndDelete(id);

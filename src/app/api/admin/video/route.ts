@@ -17,11 +17,14 @@ export async function POST(req: Request) {
     const durationSec = Number(formData.get("durationSec"));
     const tags = JSON.parse((formData.get("tags") as string) || "[]");
 
+    const bucket = process.env.ARVAN_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+    const publicUrl = process.env.ARVAN_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL!;
+
     const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
     const videoKey = `videos/${Date.now()}-${videoFile.name}`;
     await arvanClient.send(
       new PutObjectCommand({
-        Bucket: process.env.S3_BUCKET_NAME!,
+        Bucket: bucket,
         Key: videoKey,
         Body: videoBuffer,
         ContentType: videoFile.type,
@@ -32,15 +35,15 @@ export async function POST(req: Request) {
     const thumbKey = `thumbnails/${Date.now()}-${thumbnailFile.name}`;
     await arvanClient.send(
       new PutObjectCommand({
-        Bucket: process.env.S3_BUCKET_NAME!,
+        Bucket: bucket,
         Key: thumbKey,
         Body: thumbBuffer,
         ContentType: thumbnailFile.type,
       }),
     );
 
-    const videoUrl = `${process.env.S3_PUBLIC_URL}/${videoKey}`;
-    const thumbnailUrl = `${process.env.S3_PUBLIC_URL}/${thumbKey}`;
+    const videoUrl = `${publicUrl}/${videoKey}`;
+    const thumbnailUrl = `${publicUrl}/${thumbKey}`;
 
     const video = await Video.create({
       title,
@@ -107,29 +110,29 @@ export async function DELETE(req: Request) {
     }
 
     try {
-      if (video.url && video.url.includes(process.env.S3_PUBLIC_URL!)) {
-        const videoKey = video.url.split(`${process.env.S3_PUBLIC_URL!}/`)[1];
+      const bucket = process.env.ARVAN_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME!;
+      const publicUrl = process.env.ARVAN_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL!;
+
+      if (video.url && (video.url.includes(publicUrl) || video.url.includes(process.env.S3_PUBLIC_URL!))) {
+        const urlPrefix = video.url.includes(publicUrl) ? publicUrl : process.env.S3_PUBLIC_URL!;
+        const videoKey = video.url.split(`${urlPrefix}/`)[1];
         if (videoKey) {
           await arvanClient.send(
             new DeleteObjectCommand({
-              Bucket: process.env.S3_BUCKET_NAME!,
+              Bucket: bucket,
               Key: videoKey,
             }),
           );
         }
       }
 
-      if (
-        video.thumbnailUrl &&
-        video.thumbnailUrl.includes(process.env.S3_PUBLIC_URL!)
-      ) {
-        const thumbKey = video.thumbnailUrl.split(
-          `${process.env.S3_PUBLIC_URL!}/`,
-        )[1];
+      if (video.thumbnailUrl && (video.thumbnailUrl.includes(publicUrl) || video.thumbnailUrl.includes(process.env.S3_PUBLIC_URL!))) {
+        const urlPrefix = video.thumbnailUrl.includes(publicUrl) ? publicUrl : process.env.S3_PUBLIC_URL!;
+        const thumbKey = video.thumbnailUrl.split(`${urlPrefix}/`)[1];
         if (thumbKey) {
           await arvanClient.send(
             new DeleteObjectCommand({
-              Bucket: process.env.S3_BUCKET_NAME!,
+              Bucket: bucket,
               Key: thumbKey,
             }),
           );

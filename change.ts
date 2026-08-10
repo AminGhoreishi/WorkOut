@@ -1993,8 +1993,79 @@ export const modifiedFiles = [
     id: 398,
     filePath: "src/components/layout/admin/SidebarContext.tsx",
     description: "Isolated usePathname in PathnameListener component wrapped in Suspense to prevent layout prerender errors during PPR build without code comments."
+  },
+  {
+    id: 399,
+    filePath: "lib/arvan.ts",
+    description: "Updated Arvan Cloud S3 storage client and fallback environment variables specifically for admin video upload management without code comments."
+  },
+  {
+    id: 400,
+    filePath: "lib/parspack.ts",
+    description: "Created ParsPack S3 storage client and helper functions (uploadFileToParsPack, uploadBase64ToParsPack, deleteFileFromParsPack) for user photos and article images without code comments."
+  },
+  {
+    id: 401,
+    filePath: "src/app/api/admin/video/route.ts",
+    description: "Updated admin video upload and delete handlers to explicitly use Arvan Cloud S3 storage without code comments."
+  },
+  {
+    id: 402,
+    filePath: "src/app/api/admin/blog/route.ts",
+    description: "Updated blog article image upload, update, and deletion logic to use ParsPack object storage without code comments."
+  },
+  {
+    id: 403,
+    filePath: "src/app/api/user/fitness-profile/route.ts",
+    description: "Updated fitness profile body photos upload logic to use uploadBase64ToParsPack from ParsPack object storage without code comments."
+  },
+  {
+    id: 404,
+    filePath: "src/app/api/user/ticket/route.ts",
+    description: "Updated user ticket file attachments upload logic to use uploadFileToParsPack from ParsPack object storage without code comments."
+  },
+  {
+    id: 405,
+    filePath: "next.config.ts",
+    description: "Configured ParsPack storage domain patterns (*.parspack.com, *.parspack.net, *.parspack.ir) in Next.js images remotePatterns without code comments."
+  },
+  {
+    id: 406,
+    filePath: ".env",
+    description: "Defined separate S3 credentials and bucket URLs for ARVAN_S3 (admin videos) and PARSPACK_S3 (user photos & article images)."
+  },
+  {
+    id: 407,
+    filePath: ".env",
+    description: "Updated PARSPACK_S3 environment variables with actual endpoint (c482833.parspack.net), access key, and secret key."
+  },
+  {
+    id: 408,
+    filePath: "src/app/api/auth/send-otp/route.ts",
+    description: "Updated SMS OTP text template to 'کد ورود شما به استار فیت :' without code comments."
+  },
+  {
+    id: 409,
+    filePath: "src/types/package.ts",
+    description: "Added SubscriptionPackagesProps, PackagesGridProps, SubscriptionPackageItem, and SubscriptionPackageFeature interfaces without comments."
+  },
+  {
+    id: 410,
+    filePath: "src/modules/packages/PackagesGrid.tsx",
+    description: "Extracted PackagesGrid component and PackagesSkeleton loading fallback for Suspense without comments."
+  },
+  {
+    id: 411,
+    filePath: "src/modules/packages/SubscriptionPackages.tsx",
+    description: "Refactored SubscriptionPackages container to render page header/footer layout and accept children for Suspense scoping without comments."
+  },
+  {
+    id: 412,
+    filePath: "src/app/(main)/packages/page.tsx",
+    description: "Scoped Suspense boundary strictly to PackagesGrid content with PackagesSkeleton fallback without comments."
   }
 ];
+
 
 
 

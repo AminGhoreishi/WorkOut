@@ -3,6 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import Packagefeature from "@/model/Packagefeature";
 import SubscriptionPackages from "@/modules/packages/SubscriptionPackages";
+import PackagesGrid, { PackagesSkeleton } from "@/modules/packages/PackagesGrid";
 import { connection } from "next/server";
 
 async function PackagesContent() {
@@ -12,9 +13,12 @@ async function PackagesContent() {
   const features = await Packagefeature.find().lean();
 
   const packagesWithFeatures = packages.map((pkg) => ({
-    ...pkg,
     _id: pkg._id.toString(),
+    name: pkg.name,
+    slug: pkg.slug,
     price: pkg.price.monthly,
+    popular: pkg.isPopular,
+    duration: "اشتراک دوره",
     features: features
       .filter((f) => f.packageId.toString() === pkg._id.toString())
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -28,13 +32,15 @@ async function PackagesContent() {
       })),
   }));
 
-  return <SubscriptionPackages packages={packagesWithFeatures} />;
+  return <PackagesGrid packages={packagesWithFeatures} />;
 }
 
 export default function page() {
   return (
-    <Suspense fallback={null}>
-      <PackagesContent />
-    </Suspense>
+    <SubscriptionPackages>
+      <Suspense fallback={<PackagesSkeleton />}>
+        <PackagesContent />
+      </Suspense>
+    </SubscriptionPackages>
   );
 }
