@@ -23,6 +23,10 @@ export interface VerifyPaymentClientResponse {
   message?: string;
 }
 
+export interface CheckoutPaymentFormInputs {
+  paymentRef: string;
+}
+
 export interface CheckoutPaymentFormProps {
   order: CheckoutOrderInfo;
   paymentRefInput: string;
@@ -38,4 +42,14 @@ export interface CheckoutPendingVerificationProps {
   formatNumber: (num: number) => string;
 }
 
-
+export interface CheckoutCardSectionProps {
+  order: CheckoutOrderInfo;
+  formattedCardNumber: string;
+  copied: boolean;
+  onCopyCard: () => void;
+  paymentRefInput: string;
+  onPaymentRefChange: (value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  isSubmitting: boolean;
+  formatNumber: (num: number) => string;
+}

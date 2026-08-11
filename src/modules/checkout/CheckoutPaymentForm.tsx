@@ -1,7 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { CreditCard, FileText, Loader2 } from "lucide-react";
-import type { CheckoutPaymentFormProps } from "@/types/checkout";
+import type {
+  CheckoutPaymentFormProps,
+  CheckoutPaymentFormInputs,
+} from "@/types/checkout";
 
 export default function CheckoutPaymentForm({
   order,
@@ -11,10 +16,31 @@ export default function CheckoutPaymentForm({
   isSubmitting,
   formatNumber,
 }: CheckoutPaymentFormProps) {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<CheckoutPaymentFormInputs>({
+    defaultValues: {
+      paymentRef: paymentRefInput || "",
+    },
+  });
+
+  useEffect(() => {
+    setValue("paymentRef", paymentRefInput || "");
+  }, [paymentRefInput, setValue]);
+
+  const handleFormSubmit = (data: CheckoutPaymentFormInputs, e?: React.BaseSyntheticEvent) => {
+    if (e) {
+      onSubmit(e as unknown as React.FormEvent);
+    }
+  };
+
   return (
     <div className="lg:col-span-5 space-y-6">
       <form
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(handleFormSubmit)}
         className="bg-zinc-900/80 backdrop-blur-xl border border-amber-500/30 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-5"
       >
         <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent pb-3 border-b border-amber-500/20 font-morabbaReg">
@@ -60,11 +86,26 @@ export default function CheckoutPaymentForm({
           </label>
           <input
             type="text"
-            value={paymentRefInput}
-            onChange={(e) => onPaymentRefChange(e.target.value)}
+            inputMode="numeric"
+            dir="ltr"
+            {...register("paymentRef", {
+              required: "لطفاً کد پیگیری یا شماره ارجاع واریز را وارد کنید.",
+              pattern: {
+                value: /^[0-9۰-۹]+$/,
+                message: "کد پیگیری باید فقط شامل اعداد باشد.",
+              },
+              onChange: (e) => onPaymentRefChange(e.target.value),
+            })}
             placeholder="مثال: ۱۲۳۴۵۶۷۸ یا شماره ارجاع تراکنش"
-            className="w-full bg-black/60 border border-amber-500/30 rounded-xl px-3.5 py-3 text-amber-100 placeholder:text-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors"
+            className={`w-full bg-black/60 border ${
+              errors.paymentRef ? "border-red-500" : "border-amber-500/30"
+            } rounded-xl px-3.5 py-3 text-amber-100 placeholder:text-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors text-right`}
           />
+          {errors.paymentRef && (
+            <span className="text-[11px] text-red-400 font-medium block mt-1">
+              {errors.paymentRef.message}
+            </span>
+          )}
         </div>
 
         <button

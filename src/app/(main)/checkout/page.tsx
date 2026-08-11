@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import CheckoutContent from "@/modules/checkout/CheckoutContent";
+import CheckoutSkeleton from "@/modules/checkout/CheckoutSkeleton";
 import type { CheckoutPageProps } from "@/types/checkout";
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page(props: CheckoutPageProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<CheckoutSkeleton />}>
       <CheckoutContent {...props} />
     </Suspense>
   );
