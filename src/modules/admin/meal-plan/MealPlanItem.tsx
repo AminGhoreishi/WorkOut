@@ -38,7 +38,9 @@ export default function MealPlanItem({
             <h3 className="font-bold text-white text-base font-morabbaReg">{plan.title}</h3>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-xs text-gray-400">
-                پکیج: {plan.packageId?.name || "بدون پکیج"}
+                {plan.userId
+                  ? `کاربر: ${typeof plan.userId === "object" ? (plan.userId.fullName || plan.userId.username || plan.userId.email || plan.userId._id) : plan.userId}`
+                  : `پکیج: ${plan.packageId?.name || "عمومی"}`}
               </span>
               <span className="w-1 h-1 rounded-full bg-white/20" />
               <span className="text-[10px] text-gray-400 ss02">

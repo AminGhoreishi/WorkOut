@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { X, Utensils } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import type { MealPlanFormInputs, PlanMealItem, MealPlanFormProps } from "@/types/meal-plan";
+import type { MealPlanFormInputs, PlanMealItem, MealPlanFormProps, MealPlanFormItemInput } from "@/types/meal-plan";
 import MealPlanFormFields from "./MealPlanFormFields";
 
 export default function MealPlanForm({
   packages = [],
+  users = [],
   foods = [],
   editingPlan,
   onCancel,
@@ -26,6 +27,7 @@ export default function MealPlanForm({
     defaultValues: {
       title: "",
       description: "",
+      userId: "",
       packageId: "",
       isActive: true,
       breakfast: [],
@@ -38,20 +40,27 @@ export default function MealPlanForm({
   useEffect(() => {
     if (editingPlan) {
       const mapMealItems = (items: PlanMealItem[]) => {
-        return items
-          .filter((item) => item && item.foodId !== null && item.foodId !== undefined)
-          .map((item) => ({
-            foodId: item.foodId!._id,
-            name: item.foodId!.name,
-            quantity: item.quantity,
-            unit: item.unit || item.foodId!.unit || "گرم",
-          }));
+        return (items || [])
+          .filter((item) => item && item.foodId)
+          .map((item) => {
+            const foodIdStr = typeof item.foodId === "object" ? item.foodId?._id : item.foodId;
+            const foodNameStr = typeof item.foodId === "object" ? item.foodId?.name : "";
+            const matchedFood = foods.find((f) => String(f._id) === String(foodIdStr));
+            return {
+              foodId: String(foodIdStr || ""),
+              name: foodNameStr || matchedFood?.name || "غذا",
+              quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 100,
+              unit: item.unit || matchedFood?.unit || "گرم",
+            };
+          })
+          .filter((item) => item.foodId.trim() !== "");
       };
 
       reset({
         title: editingPlan.title || "",
         description: editingPlan.description || "",
-        packageId: editingPlan.packageId?._id || "",
+        userId: typeof editingPlan.userId === "object" ? editingPlan.userId?._id : (editingPlan.userId || ""),
+        packageId: typeof editingPlan.packageId === "object" ? editingPlan.packageId?._id : (editingPlan.packageId || ""),
         isActive: editingPlan.isActive !== false,
         breakfast: mapMealItems(editingPlan.breakfast || []),
         lunch: mapMealItems(editingPlan.lunch || []),
@@ -62,6 +71,7 @@ export default function MealPlanForm({
       reset({
         title: "",
         description: "",
+        userId: "",
         packageId: "",
         isActive: true,
         breakfast: [],
@@ -70,26 +80,32 @@ export default function MealPlanForm({
         snack: [],
       });
     }
-  }, [editingPlan, reset]);
+  }, [editingPlan, foods, reset]);
 
   const onSubmit: SubmitHandler<MealPlanFormInputs> = async (data) => {
     try {
-      const sanitizeMeal = (items: { foodId: string; quantity: number | string; unit: string }[]) =>
-        items.map((item) => ({
-          foodId: item.foodId,
-          quantity: Number(item.quantity) || 0,
-          unit: item.unit,
-        }));
+      const sanitizeMeal = (items: MealPlanFormItemInput[]) =>
+        (items || [])
+          .filter((item) => item && item.foodId && String(item.foodId).trim() !== "")
+          .map((item) => {
+            const parsedQty = Number(item.quantity);
+            return {
+              foodId: String(item.foodId).trim(),
+              quantity: !isNaN(parsedQty) && parsedQty > 0 ? parsedQty : 100,
+              unit: item.unit ? String(item.unit).trim() : "گرم",
+            };
+          });
 
       const payload = {
         title: data.title.trim(),
-        description: data.description?.trim(),
-        packageId: data.packageId,
+        description: data.description?.trim() || "",
+        userId: data.userId && data.userId.trim() !== "" ? data.userId.trim() : null,
+        packageId: data.packageId && data.packageId.trim() !== "" ? data.packageId.trim() : null,
         isActive: data.isActive,
-        breakfast: sanitizeMeal(data.breakfast || []),
-        lunch: sanitizeMeal(data.lunch || []),
-        dinner: sanitizeMeal(data.dinner || []),
-        snack: sanitizeMeal(data.snack || []),
+        breakfast: sanitizeMeal(data.breakfast),
+        lunch: sanitizeMeal(data.lunch),
+        dinner: sanitizeMeal(data.dinner),
+        snack: sanitizeMeal(data.snack),
       };
 
       const url = editingPlan ? `/api/admin/meal-plan/${editingPlan._id}` : "/api/admin/meal-plan";
@@ -151,6 +167,7 @@ export default function MealPlanForm({
         control={control}
         watch={watch}
         packages={packages}
+        users={users}
         foods={foods}
         isSubmitting={isSubmitting}
         onCancel={onCancel}

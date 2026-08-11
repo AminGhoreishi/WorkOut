@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { Plus, Utensils } from "lucide-react";
 import { showAlert, showConfirm } from "@/utils/alert";
-import type { FoodItem, PackageItem, MealPlanData } from "@/types/meal-plan";
+import type { FoodItem, PackageItem, MealPlanData, UserItem } from "@/types/meal-plan";
 import MealPlanForm from "./MealPlanForm";
 import MealPlanList from "./MealPlanList";
 
@@ -29,10 +29,12 @@ export default function MealPlansManagement() {
   } = useSWR<{ plans: MealPlanData[] }>("/api/admin/meal-plan", fetcher);
 
   const { data: packagesData } = useSWR<{ packages: PackageItem[] }>("/api/admin/package", fetcher);
+  const { data: usersData } = useSWR<{ users: UserItem[] }>("/api/admin/subscription/users", fetcher);
   const { data: foodsData } = useSWR<FoodItem[]>("/api/food?all=true", fetcher);
 
   const plans: MealPlanData[] = plansData?.plans || [];
   const packages: PackageItem[] = packagesData?.packages || [];
+  const users: UserItem[] = usersData?.users || [];
   const foods: FoodItem[] = Array.isArray(foodsData) ? foodsData : (foodsData as any)?.foods || [];
 
   const [search, setSearch] = useState(initialSearch);
@@ -170,6 +172,7 @@ export default function MealPlansManagement() {
         {showForm && (
           <MealPlanForm
             packages={packages}
+            users={users}
             foods={foods}
             editingPlan={editingPlan}
             onCancel={handleCancelForm}

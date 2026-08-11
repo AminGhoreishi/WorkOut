@@ -12,7 +12,8 @@ const MealPlanItemSchema = new Schema(
 
 const MealPlanSchema = new Schema<IMealPlan>(
   {
-    packageId: { type: Schema.Types.ObjectId, ref: "Package", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: false },
+    packageId: { type: Schema.Types.ObjectId, ref: "Package", required: false },
     title: { type: String, required: true },
     description: { type: String, default: "" },
     breakfast: { type: [MealPlanItemSchema], default: [] },

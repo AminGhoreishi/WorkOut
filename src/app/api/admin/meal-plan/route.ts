@@ -18,6 +18,7 @@ export async function GET() {
     }
 
     const plans = await MealPlan.find({})
+      .populate("userId", "username fullName email avatar")
       .populate("packageId")
       .populate("breakfast.foodId")
       .populate("lunch.foodId")
@@ -52,16 +53,20 @@ export async function POST(req: NextRequest) {
 
     const validationResult = validateMealPlan(body);
     if (validationResult !== true) {
+      const detailMsgs = Array.isArray(validationResult)
+        ? validationResult.map((e: any) => e.message).join(" | ")
+        : "";
       return NextResponse.json(
-        { error: "داده‌های ارسالی معتبر نیستند.", details: validationResult },
+        { error: detailMsgs ? `داده‌های ارسالی معتبر نیستند: ${detailMsgs}` : "داده‌های ارسالی معتبر نیستند.", details: validationResult },
         { status: 400 }
       );
     }
 
-    const { packageId, title, description, breakfast, lunch, dinner, snack, isActive } = body;
+    const { userId, packageId, title, description, breakfast, lunch, dinner, snack, isActive } = body;
 
     const newPlan = await MealPlan.create({
-      packageId,
+      userId: userId || null,
+      packageId: packageId || null,
       title,
       description: description || "",
       breakfast: breakfast || [],

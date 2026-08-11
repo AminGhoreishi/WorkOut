@@ -109,7 +109,8 @@ export interface MealPlanItem {
 
 export interface MealPlan {
   _id: string;
-  packageId: string | mongoose.Types.ObjectId;
+  userId?: string | mongoose.Types.ObjectId;
+  packageId?: string | mongoose.Types.ObjectId;
   title: string;
   description?: string;
   breakfast: MealPlanItem[];

@@ -29,6 +29,7 @@ export interface MealPlanData {
   _id: string;
   title: string;
   description?: string;
+  userId?: string | any | null;
   packageId?: PackageItem | null;
   isActive: boolean;
   breakfast?: PlanMealItem[];
@@ -42,6 +43,7 @@ export interface MealPlanData {
 export interface IMealPlan extends Document {
   title: string;
   description?: string;
+  userId?: mongoose.Types.ObjectId;
   packageId?: mongoose.Types.ObjectId;
   isActive: boolean;
   breakfast?: {
@@ -68,6 +70,13 @@ export interface IMealPlan extends Document {
   updatedAt: Date;
 }
 
+export interface UserItem {
+  _id: string;
+  fullName?: string;
+  username?: string;
+  email?: string;
+}
+
 export interface MealPlanFormItemInput {
   foodId: string;
   name?: string;
@@ -78,7 +87,8 @@ export interface MealPlanFormItemInput {
 export interface MealPlanFormInputs {
   title: string;
   description?: string;
-  packageId: string;
+  userId?: string;
+  packageId?: string;
   isActive: boolean;
   breakfast: MealPlanFormItemInput[];
   lunch: MealPlanFormItemInput[];
@@ -88,6 +98,7 @@ export interface MealPlanFormInputs {
 
 export interface MealPlanFormProps {
   packages: PackageItem[];
+  users?: UserItem[];
   foods: FoodItem[];
   editingPlan: MealPlanData | null;
   onCancel: () => void;
@@ -121,6 +132,7 @@ export interface MealPlanFormFieldsProps {
   control: any;
   watch: any;
   packages: PackageItem[];
+  users?: UserItem[];
   foods: FoodItem[];
   isSubmitting: boolean;
   onCancel: () => void;
