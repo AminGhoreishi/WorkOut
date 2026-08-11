@@ -56,4 +56,14 @@ export interface AdminUsersApiResponse {
   message?: string;
 }
 
+export interface AdminCreateUserPayload {
+  username: string;
+  phone: string;
+  password: string;
+  email?: string;
+  fullName?: string;
+  role?: "user" | "admin" | "coach";
+  status?: "active" | "expired" | "blocked";
+}
+
 export type { IOtp } from "./otp";
