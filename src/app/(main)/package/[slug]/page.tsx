@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/model/Package";
 import PackageSlugPageContent from "@/modules/packages/packageDetails/PackageSlugContent";
+import PackageDetailsSkeleton from "@/modules/packages/packageDetails/PackageDetailsSkeleton";
 import type { PackageSlugPageProps } from "@/types/package";
 
 export async function generateStaticParams() {
@@ -52,7 +53,7 @@ export async function generateMetadata({
 
 export default function PackageSlugPage(props: PackageSlugPageProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<PackageDetailsSkeleton />}>
       <PackageSlugPageContent {...props} />
     </Suspense>
   );

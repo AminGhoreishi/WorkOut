@@ -11,6 +11,7 @@ import PackageStats from "./PackageStats";
 import { Check, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { iconMap } from "@/utils/icons";
+import PackageDetailsSkeleton from "./PackageDetailsSkeleton";
 import type { PackageDetailsProps } from "@/types/package";
 
 const fetcher = async (url: string) => {
@@ -37,6 +38,9 @@ export default function PackageDetails({
   );
 
   const packageData = fetchedPackage || initialPackage;
+  if (!packageData) {
+    return <PackageDetailsSkeleton />;
+  }
   const PackageIcon = iconMap[packageData.icon] || Sparkles;
 
   return (
