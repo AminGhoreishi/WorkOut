@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         Key: videoKey,
         Body: videoBuffer,
         ContentType: videoFile.type,
+        ACL: "public-read",
       }),
     );
 
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
         Key: thumbKey,
         Body: thumbBuffer,
         ContentType: thumbnailFile.type,
+        ACL: "public-read",
       }),
     );
 

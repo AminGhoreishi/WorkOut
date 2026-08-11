@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import NutritionPageContent from "@/modules/dashboard/nutrition/NutritionContent";
+import NutritionSkeleton from "@/modules/dashboard/nutrition/NutritionSkeleton";
 
 export const metadata: Metadata = {
   title: "استار فیت | مدیریت تغذیه و کالری‌شمار روزانه",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function NutritionPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<NutritionSkeleton />}>
       <NutritionPageContent />
     </Suspense>
   );

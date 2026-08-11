@@ -2,7 +2,6 @@
 
 import useSWR from "swr";
 import FAQ from "@/modules/home/FAQ";
-import Testimonials from "@/modules/home/Testimonials";
 import Breadcrumb from "./Breadcrumb";
 import PackageFeatures from "./PackageFeatures";
 import PriceCard from "./PriceCard";
@@ -164,8 +163,6 @@ export default function PackageDetails({
       </section>
 
       <PackageFeatures features={features} />
-
-      <Testimonials />
 
       <FAQ />
     </div>

@@ -89,7 +89,7 @@ export default function CheckoutCardSection({
                 <span className="text-zinc-500 text-[11px] block mb-0.5">
                   نام صاحب حساب
                 </span>
-                <span className="font-bold text-amber-100">استار فیت</span>
+                <span className="font-bold text-amber-100">میرآفتابی</span>
               </div>
               <div className="text-left dir-ltr">
                 <span className="text-zinc-500 text-[11px] block mb-0.5 text-right">

@@ -2368,6 +2368,21 @@ export const modifiedFiles = [
     id: 473,
     filePath: "src/modules/checkout/CheckoutPaymentForm.tsx",
     description: "Implemented react-hook-form numeric Regex pattern validation for payment tracking code input without code comments."
+  },
+  {
+    id: 474,
+    filePath: "src/modules/checkout/CheckoutCardSection.tsx",
+    description: "Updated bank card account holder name to Mir Aftabi without code comments."
+  },
+  {
+    id: 475,
+    filePath: "lib/arvan.ts",
+    description: "Added ACL public-read parameter to S3 PutObjectCommand configurations for uploadFileToS3 and uploadBase64ToS3 without code comments."
+  },
+  {
+    id: 476,
+    filePath: "src/app/api/admin/video/route.ts",
+    description: "Added ACL public-read parameter to video and thumbnail S3 PutObjectCommand configurations in admin video upload route without code comments."
   }
 ];
 

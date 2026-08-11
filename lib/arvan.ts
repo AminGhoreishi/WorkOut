@@ -24,6 +24,7 @@ export async function uploadFileToS3(file: File, folder: string): Promise<string
       Key: fileKey,
       Body: buffer,
       ContentType: file.type,
+      ACL: "public-read",
     }),
   );
 
@@ -53,6 +54,7 @@ export async function uploadBase64ToS3(base64Data: string, folder: string): Prom
       Key: fileKey,
       Body: buffer,
       ContentType: contentType,
+      ACL: "public-read",
     }),
   );
 
