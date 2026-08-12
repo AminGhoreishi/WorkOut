@@ -99,11 +99,10 @@ export default function LoginForm() {
                 setIsRegister(false);
                 setServerError("");
               }}
-              className={`flex-1 py-3 rounded-lg transition-colors ${
-                !isRegister
-                  ? "bg-orange-500 text-white"
-                  : "text-white/60 hover:text-white"
-              }`}
+              className={`flex-1 py-3 rounded-lg transition-colors ${!isRegister
+                ? "bg-orange-500 text-white"
+                : "text-white/60 hover:text-white"
+                }`}
             >
               ورود
             </button>
@@ -112,11 +111,10 @@ export default function LoginForm() {
                 setIsRegister(true);
                 setServerError("");
               }}
-              className={`flex-1 py-3 rounded-lg transition-colors ${
-                isRegister
-                  ? "bg-orange-500 text-white"
-                  : "text-white/60 hover:text-white"
-              }`}
+              className={`flex-1 py-3 rounded-lg transition-colors ${isRegister
+                ? "bg-orange-500 text-white"
+                : "text-white/60 hover:text-white"
+                }`}
             >
               ثبت نام
             </button>
