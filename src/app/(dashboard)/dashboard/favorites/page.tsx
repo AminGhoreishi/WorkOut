@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import WishModel from "@/model/Wish";
 import FavoritesManagement from "@/modules/dashboard/favorites/FavoritesManagement";
 import type { FavoriteArticleItem } from "@/types/favorites";
+import { connection } from "next/server";
 
 export const metadata = {
   title: "استارفیت | مقالات علاقه‌مندی‌های من",
@@ -14,6 +15,7 @@ export const metadata = {
 };
 
 async function FavoritesContent() {
+  await connection();
   try {
     await dbConnect();
   } catch {

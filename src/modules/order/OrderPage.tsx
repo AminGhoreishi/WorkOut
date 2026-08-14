@@ -166,8 +166,7 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-neutral-950 text-amber-50 py-6 sm:py-10 px-3 sm:px-4 relative overflow-hidden"
-      style={{ fontFamily: "Dana, sans-serif" }}
+      className="min-h-screen bg-gradient-to-br from-black font-danaMed via-zinc-950 to-neutral-950 text-amber-50 py-6 sm:py-10 px-3 sm:px-4 relative overflow-hidden"
       dir="rtl"
     >
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -186,8 +185,7 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
           <div className="flex items-center gap-2 sm:gap-3">
             <Sparkles className="w-5 h-5 sm:w-8 sm:h-8 text-amber-400 shrink-0" />
             <h1
-              className="text-lg sm:text-3xl lg:text-4xl bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-extrabold leading-tight"
-              style={{ fontFamily: "Marbeh, sans-serif" }}
+              className="text-lg sm:text-3xl font-morabbaBold lg:text-4xl bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-extrabold leading-tight"
             >
               تکمیل سفارش اشتراک VIP
             </h1>
@@ -211,8 +209,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <h2
-                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2"
-                style={{ fontFamily: "Marbeh, sans-serif" }}
+                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2 font-morabbaBold"
+      
               >
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                 پکیج انتخابی
@@ -247,8 +245,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
 
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <h2
-                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2"
-                style={{ fontFamily: "Marbeh, sans-serif" }}
+                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2 font-morabbaBold"
+      
               >
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                 انتخاب دوره پرداخت
@@ -274,8 +272,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                     </div>
 
                     <div
-                      className="text-amber-400 font-bold text-xs sm:text-base whitespace-nowrap shrink-0"
-                      style={{ fontFamily: "Marbeh, sans-serif" }}
+                      className="text-amber-400 font-bold text-xs sm:text-base whitespace-nowrap shrink-0 font-morabbaBold"
+            
                     >
                       {formatNumber(packageData.price?.[cycle] || 0)} تومان
                     </div>
@@ -286,8 +284,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
 
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <h2
-                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2"
-                style={{ fontFamily: "Marbeh, sans-serif" }}
+                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2 font-morabbaBold"
+      
               >
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                 اطلاعات خریدار
@@ -368,8 +366,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
           <div className="lg:col-span-1">
             <div className="bg-zinc-900/80 backdrop-blur-xl border border-amber-500/30 rounded-2xl p-4 sm:p-6 sticky top-8 shadow-2xl">
               <h2
-                className="text-sm sm:text-lg font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent mb-4 sm:mb-6 pb-3 border-b border-amber-500/20"
-                style={{ fontFamily: "Marbeh, sans-serif" }}
+                className="text-sm sm:text-lg font-bold font-morabbaBold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent mb-4 sm:mb-6 pb-3 border-b border-amber-500/20"
+      
               >
                 خلاصه صورت‌حساب
               </h2>
@@ -392,8 +390,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                 <div className="my-4 sm:my-6 pt-4 border-t border-amber-500/20 flex justify-between items-center text-amber-100">
                   <span className="text-xs sm:text-sm font-bold">مبلغ قابل پرداخت:</span>
                   <span
-                    className="text-lg sm:text-2xl font-extrabold text-amber-400"
-                    style={{ fontFamily: "Marbeh, sans-serif" }}
+                    className="text-lg sm:text-2xl font-morabbaBold font-extrabold text-amber-400"
+          
                   >
                     {formatNumber(getFinalPrice())} تومان
                   </span>

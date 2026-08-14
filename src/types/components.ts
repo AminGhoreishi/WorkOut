@@ -107,3 +107,11 @@ export interface UserDropdownProps {
   email?: string;
   role?: string;
 }
+
+export interface WhyChooseUsItem {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+

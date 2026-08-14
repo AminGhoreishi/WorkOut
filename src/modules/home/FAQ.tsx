@@ -11,7 +11,9 @@ export default function FAQ() {
               متداول
             </span>
           </h2>
-          <p className="text-xs sm:text-lg text-neutral-400">پاسخ سوالات رایج شما</p>
+          <p className="text-xs sm:text-lg text-neutral-400">
+            پاسخ سوالات رایج درباره خدمات و برنامه‌های استارفیت.
+          </p>
         </div>
         <div className="space-y-3 sm:space-y-4">
           {FAQS_LIST.map((faq, index) => (

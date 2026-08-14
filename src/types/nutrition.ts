@@ -183,7 +183,7 @@ export interface FoodFormProps {
   register: UseFormRegister<FoodFormData>;
   errors: FieldErrors<FoodFormData>;
   isSubmitting: boolean;
-  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<unknown>;
 }
 
 export interface FoodsTableRef {

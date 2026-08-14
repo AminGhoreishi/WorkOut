@@ -99,7 +99,7 @@ export default function Header({
             </div>
 
             <Link
-              href="/packages"
+              href="/dashboard/workout"
               className="md:hidden p-2 text-neutral-300 hover:text-amber-400 transition-colors"
               aria-label="پکیج‌های ورزشی"
             >

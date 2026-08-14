@@ -8,6 +8,7 @@ import SubscriptionModel from "@/model/Subscription";
 import OrderModel from "@/model/Order";
 import ProgressChartManagement from "@/modules/dashboard/progress/ProgressChartManagement";
 import NoPackageProgressAccess from "@/modules/dashboard/progress/NoPackageProgressAccess";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "نمودار پیشرفت | استار فیت",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProgressPage() {
+  await connection();
   registerModels();
   await dbConnect();
 

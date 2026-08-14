@@ -12,18 +12,17 @@ export default function HeroSection() {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-danaMed">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span>باشگاه اختصاصی استارفیت</span>
+                <span>باشگاه آنلاین استارفیت</span>
               </div>
               <h1 className="text-4xl font-morabbaReg md:text-6xl font-bold leading-tight text-white">
-                بدن رویایی خود را با{" "}
+                تمرین کن. پیشرفتت را ببین.{" "}
                 <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
-                  استایل طلایی
-                </span>{" "}
-                بستازید
+                  بهتر شو.
+                </span>
               </h1>
               <p className="text-xl text-neutral-300 font-danaMed leading-relaxed">
-                با برنامه‌های تمرینی تخصصی و مربیگری حرفه‌ای، به اهداف فیتنس خود
-                برسید
+                برنامه‌های تمرینی و تغذیه‌ای اختصاصی‌سازی‌شده، متناسب با هدف، شرایط
+                بدنی و امکانات شما؛ همراه با پشتیبانی و پایش روند پیشرفت.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 font-danaMed">
                 <Link
@@ -33,9 +32,6 @@ export default function HeroSection() {
                   <span>مشاهده پکیج‌ها</span>
                   <BsArrowLeft className="w-5 h-5" />
                 </Link>
-                <button className="border-2 border-amber-500/30 hover:border-amber-400 hover:bg-amber-500/10 text-amber-200 px-8 py-4 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.08)]">
-                  مشاوره رایگان
-                </button>
               </div>
             </div>
             <div className="relative">

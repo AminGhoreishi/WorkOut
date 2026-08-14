@@ -12,6 +12,7 @@ import TicketModel from "@/model/Ticket";
 import BlogModel from "@/model/Blog";
 import WishModel from "@/model/Wish";
 import AdminDashboardUser from "@/modules/dashboard/AdminDashboardUser/AdminDashboardUser";
+import { connection } from "next/server";
 import type {
   DashboardUser,
   DashboardSubscription,
@@ -25,6 +26,7 @@ const registerPageModels = () => {
 };
 
 export default async function Page() {
+  await connection();
   registerModels();
   registerPageModels();
 

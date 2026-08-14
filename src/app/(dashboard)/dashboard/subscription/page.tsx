@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import SubscriptionModel from "@/model/Subscription";
 import OrderModel from "@/model/Order";
 import SubscriptionView from "@/modules/subscription/SubscriptionView";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "اشتراک من | استار فیت",
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SubscriptionPage() {
+  await connection();
   registerModels();
   await dbConnect();
   const session = await getServerSession(authOptions);

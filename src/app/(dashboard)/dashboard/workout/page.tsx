@@ -6,6 +6,7 @@ import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
 import Subscription from "@/model/Subscription";
 import WorkoutView from "@/modules/dashboard/workout/WorkoutView";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "برنامه تمرینی من | استار فیت",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function UserWorkoutPage() {
+  await connection();
   registerModels();
   await dbConnect();
   const session = await getServerSession(authOptions);

@@ -61,7 +61,7 @@ export default function UserDropdown({
     <div
       ref={portalRef}
       style={{ top: `${pos.top}px`, right: `${pos.right}px` }}
-      className="fixed w-60 bg-zinc-950/95 backdrop-blur-xl border border-amber-500/25 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.8)] z-[9999] overflow-hidden"
+      className="fixed font-danaMed! w-60 bg-zinc-950/95 backdrop-blur-xl border border-amber-500/25 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.8)] z-[9999] overflow-hidden"
       dir="rtl"
     >
       <div className="px-4 py-3.5 border-b border-amber-500/15 flex items-center gap-3">
@@ -124,7 +124,7 @@ export default function UserDropdown({
           onClick={() =>
             signOut({
               redirect: true,
-              callbackUrl: "/login",
+              callbackUrl: "https://starfitteam.ir/login",
             })
           }
           className="flex items-center gap-3 px-4 py-2.5 text-red-400 hover:bg-red-500/10 transition-colors text-xs sm:text-sm font-medium w-full cursor-pointer"
