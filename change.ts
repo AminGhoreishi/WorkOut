@@ -17,7 +17,7 @@ export const modifiedFiles = [
   {
     id: "4",
     filePath: "src/modules/packages/PackagesGrid.tsx",
-    description: "Refactor popular package card styling for mobile: add rich background gradient and top banner, remove scale and yellow ring"
+    description: "Refactor popular package card styling for mobile and adjust feature list font size to text-xs below sm breakpoint"
   },
   {
     id: "5",
@@ -63,5 +63,45 @@ export const modifiedFiles = [
     id: "13",
     filePath: "src/components/layout/Header.tsx",
     description: "Replace پشتیبانی navigation link with درباره ما (/introduce)"
+  },
+  {
+    id: "14",
+    filePath: "src/modules/admin/pr/CreatePRModal.tsx",
+    description: "Replace HTML date input with Jalali (Shamsi) DatePicker using react-multi-date-picker"
+  },
+  {
+    id: "15",
+    filePath: "src/modules/admin/pr/PersonalRecords.tsx",
+    description: "Update button label from تعریف متس جدید to تعریف رکورد جدید"
+  },
+  {
+    id: "16",
+    filePath: "src/modules/packages/PackagesSkeleton.tsx",
+    description: "Extract PackagesSkeleton into a dedicated component file"
+  },
+  {
+    id: "17",
+    filePath: "src/modules/dashboard/progress/AddProgressRecordModal.tsx",
+    description: "Replace standard HTML date input with Jalali (Shamsi) DatePicker and simplify exercise name field by removing select dropdown"
+  },
+  {
+    id: "18",
+    filePath: "validator/progress.ts",
+    description: "Extract DEFAULT_CATEGORIES, DEFAULT_UNITS constants and add validateProgressRecordInput validation function"
+  },
+  {
+    id: "19",
+    filePath: "src/modules/dashboard/progress/ProgressChartManagement.tsx",
+    description: "Use dedicated /api/user/workout-progress/count SWR endpoint for completed workouts count"
+  },
+  {
+    id: "20",
+    filePath: "src/app/api/user/workout-progress/route.ts",
+    description: "Clean up GET handler to focus solely on exercise progress list"
+  },
+  {
+    id: "21",
+    filePath: "src/app/api/user/workout-progress/count/route.ts",
+    description: "Create dedicated API route for counting completed workouts using countDocuments"
   }
 ];

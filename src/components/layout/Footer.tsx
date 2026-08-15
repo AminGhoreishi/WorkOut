@@ -74,13 +74,8 @@ export default function Footer() {
                 </Link>
               </div>
               <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
+                <a href="/introduce" className="hover:text-amber-400 transition-colors">
                   درباره ما
-                </a>
-              </div>
-              <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
-                  تماس با ما
                 </a>
               </div>
             </div>
@@ -89,30 +84,25 @@ export default function Footer() {
             <h4 className="font-bold text-white mb-4">خدمات</h4>
             <div className="space-y-3 text-neutral-400 text-sm font-danaMed">
               <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
-                  مربیگری آنلاین
+                <a href="/dashboard/meal-plans" className="hover:text-amber-400 transition-colors">
+                  برنامه غذایی
                 </a>
               </div>
-              <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
+               <div>
+                <a href="/dashboard/workouts" className="hover:text-amber-400 transition-colors">
                   برنامه تمرینی
                 </a>
               </div>
               <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
-                  برنامه غذایی
-                </a>
-              </div>
-              <div>
                 <Link
-                  href="/tickets"
+                  href="/dashboard/tickets"
                   className="hover:text-amber-400 transition-colors"
                 >
                   پشتیبانی
                 </Link>
               </div>
               <div>
-                <a href="#" className="hover:text-amber-400 transition-colors">
+                <a href="/dashboard/tickets" className="hover:text-amber-400 transition-colors">
                   مشاوره رایگان
                 </a>
               </div>

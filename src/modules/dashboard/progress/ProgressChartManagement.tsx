@@ -44,7 +44,6 @@ const fetcher = async (url: string) => {
 };
 
 export default function ProgressChartManagement() {
-  const [selectedTest, setSelectedTest] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const {
@@ -60,24 +59,14 @@ export default function ProgressChartManagement() {
   } = useSWR("/api/user/fitness-profile", fetcher);
 
   const {
-    data: workoutProgressData,
-  } = useSWR("/api/user/workout-progress", fetcher);
+    data: workoutCountData,
+  } = useSWR("/api/user/workout-progress/count", fetcher);
 
   const records: UserPRRecord[] = prData?.records || [];
   const profile: UserFitnessProfile | null = profileData?.profile || null;
-  const completedWorkoutsCount = workoutProgressData?.progress
-    ? workoutProgressData.progress.filter((p: { completed: boolean }) => p.completed).length
-    : 0;
+  const completedWorkoutsCount = workoutCountData?.count ?? 0;
 
-  const availableTests = Array.from(
-    new Set(records.map((r) => r.testName).filter((t): t is string => Boolean(t)))
-  );
-
-  const filteredRecords = records.filter((r) =>
-    selectedTest === "all" ? true : r.testName === selectedTest
-  );
-
-  const sortedRecords = [...filteredRecords].sort(
+  const sortedRecords = [...records].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
@@ -175,22 +164,7 @@ export default function ProgressChartManagement() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-              {availableTests.length > 0 && (
-                <select
-                  value={selectedTest}
-                  onChange={(e) => setSelectedTest(e.target.value)}
-                  className="bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
-                >
-                  <option value="all">همه حرکت‌ها و تست‌ها</option>
-                  {availableTests.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              )}
-
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md cursor-pointer"
@@ -227,7 +201,6 @@ export default function ProgressChartManagement() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => mutatePRData()}
-        availableTests={availableTests}
       />
     </div>
   );

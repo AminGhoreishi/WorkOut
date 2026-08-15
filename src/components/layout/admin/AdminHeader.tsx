@@ -7,7 +7,7 @@ import type { AdminHeaderProps } from "@/types/admin";
 
 export default function AdminHeader({
   username = "مدیر",
-  role = "admin",
+  role ,
   avatar = "م",
   newTicketsCount = 0,
 }: AdminHeaderProps) {
@@ -58,7 +58,7 @@ export default function AdminHeader({
                   {username}
                 </div>
                 <div className="text-amber-400/80 text-xs">
-                  {role === "admin" ? "مدیر سیستم" : "مربی"}
+                  {role === "admin" ? "مدیر سیستم" : "شاگرد"}
                 </div>
               </div>
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-full flex items-center justify-center shadow-md border border-amber-400">

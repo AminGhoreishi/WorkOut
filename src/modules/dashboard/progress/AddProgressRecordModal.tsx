@@ -2,33 +2,21 @@
 
 import { useState } from "react";
 import { X, PlusCircle, AlertCircle, Loader2 } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import type { AddProgressRecordModalProps, NewPRRecordInput } from "@/types/progress";
-
-const DEFAULT_CATEGORIES = [
-  "قدرتی",
-  "استقامت",
-  "هوازی",
-  "انعطاف پذیری",
-  "وزن بدن",
-  "سایر",
-];
-
-const DEFAULT_UNITS = [
-  "کیلوگرم",
-  "تکرار",
-  "دقیقه",
-  "ثانیه",
-  "متر",
-  "کیلومتر",
-  "سانتی‌متر",
-  "درصد",
-];
+import {
+  DEFAULT_CATEGORIES,
+  DEFAULT_UNITS,
+  validateProgressRecordInput,
+} from "@/validator/progress";
 
 export default function AddProgressRecordModal({
   isOpen,
   onClose,
   onSuccess,
-  availableTests,
 }: AddProgressRecordModalProps) {
   const [formData, setFormData] = useState<NewPRRecordInput>({
     testName: "",
@@ -38,43 +26,22 @@ export default function AddProgressRecordModal({
     date: new Date().toISOString().split("T")[0],
     notes: "",
   });
-  const [isCustomTest, setIsCustomTest] = useState<boolean>(false);
-  const [customTestName, setCustomTestName] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   if (!isOpen) return null;
 
-  const handleTestSelectChange = (val: string) => {
-    if (val === "__custom__") {
-      setIsCustomTest(true);
-      setFormData((prev) => ({ ...prev, testName: "" }));
-    } else {
-      setIsCustomTest(false);
-      setFormData((prev) => ({ ...prev, testName: val }));
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
 
-    const finalTestName = isCustomTest ? customTestName.trim() : formData.testName.trim();
-
-    if (!finalTestName) {
-      setErrorMessage("لطفا نام حرکت یا تست را وارد کنید.");
+    const validationError = validateProgressRecordInput(formData);
+    if (validationError) {
+      setErrorMessage(validationError);
       return;
     }
 
-    if (!formData.value || isNaN(Number(formData.value))) {
-      setErrorMessage("لطفا یک مقدار عددی معتبر وارد کنید.");
-      return;
-    }
-
-    if (!formData.unit.trim()) {
-      setErrorMessage("لطفا واحد اندازه‌گیری را مشخص کنید.");
-      return;
-    }
+    const finalTestName = formData.testName.trim();
 
     try {
       setIsSubmitting(true);
@@ -104,8 +71,6 @@ export default function AddProgressRecordModal({
         date: new Date().toISOString().split("T")[0],
         notes: "",
       });
-      setCustomTestName("");
-      setIsCustomTest(false);
       onSuccess();
       onClose();
     } catch (err: unknown) {
@@ -151,45 +116,15 @@ export default function AddProgressRecordModal({
             <label className="block text-xs text-white/70 mb-1.5 font-medium">
               نام حرکت یا تست ورزشی <span className="text-amber-400">*</span>
             </label>
-            {availableTests.length > 0 && !isCustomTest ? (
-              <div className="space-y-2">
-                <select
-                  value={formData.testName}
-                  onChange={(e) => handleTestSelectChange(e.target.value)}
-                  className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
-                >
-                  <option value="">-- انتخاب از حرکات قبلی --</option>
-                  {availableTests.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                  <option value="__custom__">+ افزودن حرکت جدید...</option>
-                </select>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  placeholder="مثلا: پرس سینه، اسکات، پلانک..."
-                  value={customTestName}
-                  onChange={(e) => setCustomTestName(e.target.value)}
-                  className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-                {availableTests.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsCustomTest(false);
-                      setCustomTestName("");
-                    }}
-                    className="text-[11px] text-amber-400 hover:underline"
-                  >
-                    انتخاب از لیست حرکات قبلی
-                  </button>
-                )}
-              </div>
-            )}
+            <input
+              type="text"
+              placeholder="مثلا: پرس سینه، اسکات، پلانک..."
+              value={formData.testName}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, testName: e.target.value }))
+              }
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -251,15 +186,28 @@ export default function AddProgressRecordModal({
 
             <div>
               <label className="block text-xs text-white/70 mb-1.5 font-medium">
-                تاریخ ثبت
+                تاریخ ثبت (شمسی)
               </label>
-              <input
-                type="date"
-                value={formData.date}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, date: e.target.value }))
-                }
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+              <DatePicker
+                value={formData.date ? new Date(formData.date) : new Date()}
+                onChange={(date) => {
+                  if (date) {
+                    const jsDate = date.toDate();
+                    const year = jsDate.getFullYear();
+                    const month = String(jsDate.getMonth() + 1).padStart(2, "0");
+                    const day = String(jsDate.getDate()).padStart(2, "0");
+                    setFormData((prev) => ({ ...prev, date: `${year}-${month}-${day}` }));
+                  } else {
+                    setFormData((prev) => ({ ...prev, date: "" }));
+                  }
+                }}
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+                portal
+                className="bg-dark"
+                inputClass="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 text-right cursor-pointer"
+                containerClassName="w-full"
               />
             </div>
           </div>

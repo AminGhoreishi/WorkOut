@@ -19,6 +19,9 @@ export default async function AdminHeaderContainer() {
     TicketModel.countDocuments({ status: "pending" }),
   ]);
 
+  console.log(dbUser.role);
+  
+
   if (!dbUser) {
     return <AdminHeader username="کاربر" role="user" avatar="ک" newTicketsCount={newTicketsCount} />;
   }

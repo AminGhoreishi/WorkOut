@@ -51,7 +51,6 @@ export interface AddProgressRecordModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  availableTests: string[];
 }
 
 export interface NoPackageProgressAccessProps {

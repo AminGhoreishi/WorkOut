@@ -17,7 +17,7 @@ export default function SubscriptionPackages({
               اشتراک طلایی
             </span>
           </h1>
-          <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-md md:text-xl text-neutral-400 max-w-2xl mx-auto">
             بهترین پکیج را برای دستیابی به اهداف تناسب اندام خود انتخاب کنید
           </p>
         </div>

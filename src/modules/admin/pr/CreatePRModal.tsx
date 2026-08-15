@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
 import { X, Loader2 } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import { showAlert } from "@/utils/alert";
 import type { CreatePRModalProps, PRFormInput, TestMetricItem } from "@/types/pr";
 
@@ -20,6 +24,7 @@ export default function CreatePRModal({
     handleSubmit,
     setValue,
     reset,
+    control,
     formState: { errors },
   } = useForm<PRFormInput>({
     defaultValues: {
@@ -35,7 +40,7 @@ export default function CreatePRModal({
 
   const { data: metricsData } = useSWR(
     isOpen ? "/api/admin/metric" : null,
-    fetcher,
+    fetcher
   );
   const metrics: TestMetricItem[] = metricsData?.metrics || [];
 
@@ -93,7 +98,7 @@ export default function CreatePRModal({
         const errData = await res.json();
         showAlert("خطا", errData.message || "خطا در ثبت رکورد", "error");
       }
-    } catch (err: unknown) {
+    } catch {
       showAlert("خطا", "خطا در برقراری ارتباط با سرور", "error");
     } finally {
       setSubmitting(false);
@@ -109,12 +114,13 @@ export default function CreatePRModal({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-lg bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-lg bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl z-10 min-h-[580px] max-h-[92vh] flex flex-col font-danaMed">
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h2 className="text-xl text-white font-bold font-morabbaReg">
             ثبت رکورد شخصی جدید (PR)
           </h2>
           <button
+            type="button"
             onClick={onClose}
             className="text-white/60 hover:text-white transition-colors cursor-pointer"
           >
@@ -124,7 +130,8 @@ export default function CreatePRModal({
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="p-6 space-y-4 overflow-y-auto flex-1"
+          className="p-6 pb-8 space-y-5 overflow-y-auto flex-1"
+          dir="rtl"
         >
           <input type="hidden" {...register("testName")} />
           <input type="hidden" {...register("category")} />
@@ -169,12 +176,40 @@ export default function CreatePRModal({
           </div>
 
           <div>
-            <label className="block text-white/80 text-sm mb-2">تاریخ ثبت</label>
-            <input
-              type="date"
-              {...register("date", { required: true })}
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-left text-sm cursor-pointer"
+            <label className="block text-white/80 text-sm mb-2">تاریخ ثبت (شمسی)</label>
+            <Controller
+              control={control}
+              name="date"
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  value={value ? new Date(value) : new Date()}
+                  onChange={(date) => {
+                    if (date) {
+                      const jsDate = date.toDate();
+                      const year = jsDate.getFullYear();
+                      const month = String(jsDate.getMonth() + 1).padStart(2, "0");
+                      const day = String(jsDate.getDate()).padStart(2, "0");
+                      onChange(`${year}-${month}-${day}`);
+                    } else {
+                      onChange("");
+                    }
+                  }}
+                  calendar={persian}
+                  locale={persian_fa}
+                  calendarPosition="bottom-right"
+                  portal
+                  className="bg-dark"
+                  inputClass="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-right text-sm cursor-pointer"
+                  containerClassName="w-full"
+                />
+              )}
             />
+            {errors.date && (
+              <p className="text-red-400 text-xs mt-1">
+                انتخاب تاریخ الزامی است.
+              </p>
+            )}
           </div>
 
           <div>

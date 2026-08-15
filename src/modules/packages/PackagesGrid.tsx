@@ -3,30 +3,7 @@ import { BiCheck, BiDumbbell } from "react-icons/bi";
 import { BsArrowLeft } from "react-icons/bs";
 import type { PackagesGridProps } from "@/types/package";
 
-export function PackagesSkeleton() {
-  return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="bg-neutral-900/80 backdrop-blur-lg border border-amber-500/10 rounded-2xl p-8 animate-pulse flex flex-col justify-between h-[480px]"
-        >
-          <div>
-            <div className="w-16 h-16 bg-neutral-800 rounded-2xl mb-6" />
-            <div className="h-8 bg-neutral-800 rounded-lg w-2/3 mb-4" />
-            <div className="h-10 bg-neutral-800 rounded-lg w-1/2 mb-6" />
-            <div className="space-y-3 mb-8">
-              <div className="h-4 bg-neutral-800 rounded w-full" />
-              <div className="h-4 bg-neutral-800 rounded w-5/6" />
-              <div className="h-4 bg-neutral-800 rounded w-4/6" />
-            </div>
-          </div>
-          <div className="h-12 bg-neutral-800 rounded-xl w-full" />
-        </div>
-      ))}
-    </div>
-  );
-}
+export { PackagesSkeleton } from "./PackagesSkeleton";
 
 export default function PackagesGrid({ packages }: PackagesGridProps) {
   return (
@@ -75,7 +52,7 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
               {pkg.features?.map((feature: any, index: number) => (
                 <li
                   key={index}
-                  className="flex items-start gap-3 text-neutral-300"
+                  className="flex items-start gap-3 text-xs sm:text-sm text-neutral-300"
                 >
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
@@ -108,7 +85,7 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
 
           <Link
             href={`/package/${pkg.slug || pkg._id}`}
-            className={`w-full py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`w-full py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-base ${
               pkg.popular
                 ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
                 : "bg-amber-500/10 hover:bg-amber-500 text-amber-300 hover:text-neutral-950 border border-amber-500/30"
