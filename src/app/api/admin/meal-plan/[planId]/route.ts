@@ -36,7 +36,7 @@ export async function PUT(
     const validationResult = validateMealPlanUpdate(data);
     if (validationResult !== true) {
       const detailMsgs = Array.isArray(validationResult)
-        ? validationResult.map((e: any) => e.message).join(" | ")
+        ? Array.from(new Set(validationResult.map((e: any) => e.message).filter(Boolean))).join(" | ")
         : "";
       return NextResponse.json(
         { error: detailMsgs ? `داده‌های ارسالی معتبر نیستند: ${detailMsgs}` : "داده‌های ارسالی معتبر نیستند.", details: validationResult },

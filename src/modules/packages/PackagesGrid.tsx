@@ -34,16 +34,21 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
       {packages.map((pkg) => (
         <div
           key={pkg._id || pkg.id}
-          className={`relative bg-neutral-900/80 backdrop-blur-lg border ${
+          className={`relative overflow-hidden backdrop-blur-lg rounded-2xl p-6 sm:p-8 hover:bg-neutral-900 transition-all flex flex-col justify-between ${
             pkg.popular
-              ? "border-2 border-amber-400 scale-105 shadow-[0_0_30px_rgba(234,179,8,0.2)] z-10"
-              : "border-amber-500/20 hover:border-amber-400/50 shadow-[0_0_20px_rgba(234,179,8,0.05)]"
-          } rounded-2xl p-8 hover:bg-neutral-900 transition-all flex flex-col justify-between`}
+              ? "bg-gradient-to-b from-amber-500/20 via-amber-950/30 to-neutral-900/95 border border-amber-500/35 md:border-2 md:border-amber-400 md:scale-105 shadow-[0_0_30px_rgba(234,179,8,0.15)] z-10"
+              : "bg-neutral-900/80 border border-amber-500/20 hover:border-amber-400/50 shadow-[0_0_20px_rgba(234,179,8,0.05)]"
+          }`}
         >
           {pkg.popular && (
-            <div className="absolute -top-4 right-1/2 translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 px-6 py-1 rounded-full text-sm font-bold shadow-md">
-              محبوب‌ترین
-            </div>
+            <>
+              <div className="md:hidden w-[calc(100%+3rem)] sm:w-[calc(100%+4rem)] -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6 py-2 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 text-center font-bold text-sm tracking-wide shadow-md flex items-center justify-center gap-1.5">
+                <span>محبوب‌ترین</span>
+              </div>
+              <div className="hidden md:block absolute -top-4 right-1/2 translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 px-6 py-1 rounded-full text-sm font-bold shadow-md">
+                محبوب‌ترین
+              </div>
+            </>
           )}
 
           <div>

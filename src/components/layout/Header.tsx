@@ -71,10 +71,10 @@ export default function Header({
                 مقالات
               </Link>
               <Link
-                href="/dashboard/tickets"
-                className={`${getLinkClass("/tickets")} max-lg:hidden `}
+                href="/introduce"
+                className={`${getLinkClass("/introduce")} max-lg:hidden`}
               >
-                پشتیبانی
+                درباره ما
               </Link>
             </div>
 

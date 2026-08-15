@@ -4,8 +4,18 @@ import { danaMedium, danaLight, danaBold, morabbaReg } from "./fonts";
 import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
+  title: {
+    default: "استار فیت | سامانه تخصصی تناسب اندام و بدنسازی",
+    template: "%s | استار فیت",
+  },
+  description:
+    "استار فیت؛ پلتفرم تخصصی برنامه‌ریزی هوشمند تمرینی، تغذیه و مربیگری اختصاصی.",
+  verification: {
+    google: "googlee29da57a8e735d16",
+  },
   icons: {
     icon: [
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon.ico", sizes: "any" },
@@ -35,6 +45,12 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <head>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="48x48"
+          href="/favicon-48x48.png"
+        />
         <link
           rel="icon"
           type="image/png"

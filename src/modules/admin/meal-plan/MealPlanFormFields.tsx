@@ -99,7 +99,18 @@ export default function MealPlanFormFields({
           <label className="text-xs text-gray-400">عنوان برنامه</label>
           <input
             type="text"
-            {...register("title", { required: "وارد کردن عنوان برنامه الزامی است." })}
+            {...register("title", {
+              required: "وارد کردن عنوان برنامه الزامی است.",
+              validate: (value: string) => {
+                if (!value || value.trim().length === 0) {
+                  return "وارد کردن عنوان برنامه الزامی است.";
+                }
+                if (value.trim().length < 2) {
+                  return "عنوان برنامه باید حداقل ۲ کاراکتر باشد.";
+                }
+                return true;
+              },
+            })}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500"
             placeholder="مثال: رژیم کاهش وزن پکیج طلایی"
           />

@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { X, Utensils } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import type { MealPlanFormInputs, PlanMealItem, MealPlanFormProps, MealPlanFormItemInput } from "@/types/meal-plan";
+import type {
+  MealPlanFormInputs,
+  PlanMealItem,
+  MealPlanFormProps,
+  MealPlanFormItemInput,
+} from "@/types/meal-plan";
 import MealPlanFormFields from "./MealPlanFormFields";
 
 export default function MealPlanForm({
@@ -36,6 +41,8 @@ export default function MealPlanForm({
       snack: [],
     },
   });
+
+  const editingPlanId = editingPlan?._id;
 
   useEffect(() => {
     if (editingPlan) {
@@ -80,7 +87,7 @@ export default function MealPlanForm({
         snack: [],
       });
     }
-  }, [editingPlan, foods, reset]);
+  }, [editingPlanId, reset]);
 
   const onSubmit: SubmitHandler<MealPlanFormInputs> = async (data) => {
     try {
@@ -96,8 +103,18 @@ export default function MealPlanForm({
             };
           });
 
+      const trimmedTitle = data.title ? data.title.trim() : "";
+      if (!trimmedTitle || trimmedTitle.length < 2) {
+        showAlert({
+          title: "خطا",
+          text: "عنوان برنامه الزامی است و باید حداقل ۲ کاراکتر باشد.",
+          icon: "error",
+        });
+        return;
+      }
+
       const payload = {
-        title: data.title.trim(),
+        title: trimmedTitle,
         description: data.description?.trim() || "",
         userId: data.userId && data.userId.trim() !== "" ? data.userId.trim() : null,
         packageId: data.packageId && data.packageId.trim() !== "" ? data.packageId.trim() : null,
