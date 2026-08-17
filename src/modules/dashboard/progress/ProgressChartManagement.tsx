@@ -45,6 +45,7 @@ const fetcher = async (url: string) => {
 
 export default function ProgressChartManagement() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedTest, setSelectedTest] = useState<string>("");
 
   const {
     data: prData,
@@ -66,7 +67,20 @@ export default function ProgressChartManagement() {
   const profile: UserFitnessProfile | null = profileData?.profile || null;
   const completedWorkoutsCount = workoutCountData?.count ?? 0;
 
-  const sortedRecords = [...records].sort(
+  const availableTests = Array.from(
+    new Set(records.map((r) => r.testName).filter(Boolean))
+  );
+
+  const activeTest =
+    selectedTest && availableTests.includes(selectedTest)
+      ? selectedTest
+      : availableTests[0] || "";
+
+  const filteredRecords = records.filter(
+    (r) => r.testName === activeTest
+  );
+
+  const sortedRecords = [...filteredRecords].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
@@ -165,9 +179,24 @@ export default function ProgressChartManagement() {
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              {availableTests.length > 0 && (
+                <div className="w-full sm:w-auto">
+                  <select
+                    value={activeTest}
+                    onChange={(e) => setSelectedTest(e.target.value)}
+                    className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                  >
+                    {availableTests.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md cursor-pointer whitespace-nowrap"
               >
                 <Plus className="w-4 h-4" />
                 <span>ثبت رکورد جدید</span>

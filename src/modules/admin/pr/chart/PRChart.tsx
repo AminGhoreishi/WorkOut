@@ -39,7 +39,7 @@ const fetcher = (url: string) =>
   });
 
 export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
-  const [selectedTest, setSelectedTest] = useState<string>("all");
+  const [selectedTest, setSelectedTest] = useState<string>("");
 
   const {
     data: prData,
@@ -67,8 +67,13 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
     new Set(records.map((r) => r.testName).filter(Boolean)),
   );
 
-  const filteredRecords = records.filter((r) =>
-    selectedTest === "all" ? true : r.testName === selectedTest,
+  const activeTest =
+    selectedTest && availableTests.includes(selectedTest)
+      ? selectedTest
+      : availableTests[0] || "";
+
+  const filteredRecords = records.filter(
+    (r) => r.testName === activeTest,
   );
 
   const sortedRecords = [...filteredRecords].sort(
@@ -178,11 +183,10 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
           {availableTests.length > 0 && (
             <div className="w-full sm:w-auto">
               <select
-                value={selectedTest}
+                value={activeTest}
                 onChange={(e) => setSelectedTest(e.target.value)}
                 className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
               >
-                <option value="all">همه حرکت‌ها و تست‌ها</option>
                 {availableTests.map((t) => (
                   <option key={t} value={t}>
                     {t}

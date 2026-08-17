@@ -255,7 +255,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
       className="font-danaMed  pt-4 md:pt-8 bg-neutral-950 min-h-screen text-white"
       dir="rtl"
     >
-      <div className="container mx-auto ">
+      <div className="container mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">

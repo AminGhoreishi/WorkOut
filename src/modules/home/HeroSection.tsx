@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BiDumbbell } from "react-icons/bi";
 import { BsArrowLeft } from "react-icons/bs";
 
 export default function HeroSection() {
@@ -34,10 +34,31 @@ export default function HeroSection() {
                 </Link>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative min-h-[420px] sm:min-h-[480px] flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 to-yellow-400/10 rounded-3xl blur-2xl pointer-events-none" />
-              <div className="aspect-square relative z-10 rounded-3xl bg-neutral-900/80 backdrop-blur-xl border border-amber-500/30 flex items-center justify-center shadow-[0_0_35px_rgba(234,179,8,0.15)]">
-                <BiDumbbell className="w-36 h-36 text-amber-400/80 animate-pulse" />
+              <div className="relative w-full max-w-md h-[400px] sm:h-[460px] flex items-center justify-center">
+                <div className="absolute top-0 right-4 w-[68%] h-[80%] rounded-3xl overflow-hidden border border-amber-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.5)] -rotate-3 hover:rotate-0 transition-transform duration-500 z-10 bg-neutral-900">
+                  <Image
+                    src="/images/hero/hero-1.jpg"
+                    alt="تمرینات دویدن و هوازی استارفیت"
+                    fill
+                    sizes="(max-width: 768px) 70vw, 350px"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent pointer-events-none" />
+                </div>
+                <div className="absolute bottom-0 left-4 w-[68%] h-[80%] rounded-3xl overflow-hidden border border-amber-400/40 shadow-[0_15px_35px_rgba(234,179,8,0.2)] rotate-6 hover:rotate-0 transition-transform duration-500 z-20 bg-neutral-900">
+                  <Image
+                    src="/images/hero/hero-2.jpg"
+                    alt="تمرینات استقامت و قدرتی استارفیت"
+                    fill
+                    sizes="(max-width: 768px) 70vw, 350px"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent pointer-events-none" />
+                </div>
               </div>
             </div>
           </div>

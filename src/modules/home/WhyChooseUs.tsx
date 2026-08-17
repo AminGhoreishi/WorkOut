@@ -33,7 +33,7 @@ const whyChooseUsData: WhyChooseUsItem[] = [
 export default function WhyChooseUs() {
   return (
     <section className="py-20 bg-neutral-950/80 font-danaMed relative">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             چرا{" "}

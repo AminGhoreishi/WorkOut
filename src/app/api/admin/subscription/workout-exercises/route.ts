@@ -42,7 +42,7 @@ export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
-    const { id, name, sets, reps, restSec, videoId, videoId2, sortOrder } = body;
+    const { id, name, sets, reps, weight, restSec, videoId, videoId2, sortOrder } = body;
 
     if (!id) {
       return NextResponse.json({ message: "شناسه حرکت الزامی است" }, { status: 400 });
@@ -52,6 +52,7 @@ export async function PUT(req: NextRequest) {
     if (name !== undefined) updatedData.name = name;
     if (sets !== undefined) updatedData.sets = sets;
     if (reps !== undefined) updatedData.reps = reps;
+    if (weight !== undefined) updatedData.weight = Number(weight);
     if (restSec !== undefined) updatedData.restSec = restSec;
     if (videoId !== undefined) updatedData.videoId = videoId || null;
     if (videoId2 !== undefined) updatedData.videoId2 = videoId2 || null;
@@ -86,6 +87,49 @@ export async function DELETE(req: NextRequest) {
     }
 
     return NextResponse.json({ message: "حرکت با موفقیت حذف شد" });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    await dbConnect();
+    const body = await req.json();
+    const { id, exerciseId, weight } = body;
+    const targetId = id || exerciseId;
+
+    if (!targetId) {
+      return NextResponse.json(
+        { message: "شناسه حرکت الزامی است" },
+        { status: 400 }
+      );
+    }
+
+    if (weight === undefined || isNaN(Number(weight))) {
+      return NextResponse.json(
+        { message: "مقدار وزنه نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    const exercise = await WorkoutExercise.findByIdAndUpdate(
+      targetId,
+      { weight: Number(weight) },
+      { new: true }
+    );
+
+    if (!exercise) {
+      return NextResponse.json(
+        { message: "حرکت پیدا نشد" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      exercise,
+      message: "وزنه با موفقیت بروزرسانی شد",
+    });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

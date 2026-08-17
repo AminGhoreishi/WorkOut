@@ -72,6 +72,7 @@ export interface WorkoutExercise {
   name: string;
   sets: number;
   reps: string;
+  weight?: number;
   restSec: number;
   sortOrder: number;
 }
@@ -81,6 +82,7 @@ export interface ExerciseItem {
   name: string;
   sets: number;
   reps: string;
+  weight?: number;
   restSec: number;
   videoId?: VideoInfo | null;
   videoId2?: VideoInfo | null;
@@ -145,6 +147,7 @@ export interface IWorkoutExercise extends Document {
   name: string;
   sets: number;
   reps: string;
+  weight?: number;
   restSec: number;
   sortOrder: number;
   createdAt: Date;
@@ -166,6 +169,7 @@ export interface WorkoutExerciseFormInputs {
   name: string;
   sets: number;
   reps: string;
+  weight?: number;
   restSec: number;
   videoId: string;
   videoId2: string;

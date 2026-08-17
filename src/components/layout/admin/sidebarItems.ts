@@ -247,6 +247,13 @@ export function getUserMenuItems(
           badge: null,
           href: "/dashboard/tickets",
         },
+        {
+          id: "testimonials",
+          label: "ثبت نظرات و تجربیات",
+          icon: MessageSquare,
+          badge: null,
+          href: "/dashboard/testimonials",
+        },
       ],
     },
   ];

@@ -53,7 +53,7 @@ export async function getHomePlans(): Promise<HomeWorkoutPlanItem[]> {
   await connection();
   await dbConnect();
   const dbPackages = await PackageModel.find({ isActive: true })
-    .select("_id name tagline description icon price")
+    .select("_id name tagline description icon price slug")
     .sort({ createdAt: -1 })
     .limit(3)
     .lean();
@@ -77,6 +77,7 @@ export async function getHomePlans(): Promise<HomeWorkoutPlanItem[]> {
 
     return {
       id: pkg._id.toString(),
+      slug: pkg.slug || pkg._id.toString(),
       title: pkg.name,
       description: pkg.tagline || pkg.description || "",
       duration: "۱۲ هفته",

@@ -127,11 +127,20 @@ export interface IMealPlan extends Omit<MealPlan, "_id" | "createdAt" | "updated
   updatedAt: Date;
 }
 
+export type ActivityLevel = "low" | "light" | "moderate" | "high" | "extra";
+export type CalcGender = "male" | "female";
+
+export interface FitnessCalorieCalculatorProps {
+  isOpen: boolean;
+  onApplyCalorie: (calorie: number) => void;
+}
+
 export interface EditTargetModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
   targetCalories: number;
+  requiredCalories?: number;
   targetMacros: { protein: number; carbs: number; fat: number };
   targetWater: number;
   onSaveTargets: (
@@ -140,6 +149,7 @@ export interface EditTargetModalProps {
     carbs: number,
     fat: number,
     water: number,
+    requiredCalories?: number,
   ) => void;
 }
 

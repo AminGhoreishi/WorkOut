@@ -103,5 +103,195 @@ export const modifiedFiles = [
     id: "21",
     filePath: "src/app/api/user/workout-progress/count/route.ts",
     description: "Create dedicated API route for counting completed workouts using countDocuments"
+  },
+  {
+    id: "22",
+    filePath: "src/modules/home/Testimonials.tsx",
+    description: "Create Testimonials section component displaying real user reviews, star ratings, and success achievements"
+  },
+  {
+    id: "23",
+    filePath: "src/templates/HomeTemplate.tsx",
+    description: "Include Testimonials section on the home page"
+  },
+  {
+    id: "24",
+    filePath: "src/types/testimonial.ts",
+    description: "Create TypeScript interface types for Testimonial model"
+  },
+  {
+    id: "25",
+    filePath: "model/Testimonial.ts",
+    description: "Create Mongoose Schema and model for Testimonials (user reviews & success stories)"
+  },
+  {
+    id: "26",
+    filePath: "src/app/api/user/testimonials/route.ts",
+    description: "Create user testimonials API route for fetching and submitting user reviews"
+  },
+  {
+    id: "27",
+    filePath: "src/components/layout/admin/sidebarItems.ts",
+    description: "Add Testimonials navigation link to user dashboard sidebar menu"
+  },
+  {
+    id: "28",
+    filePath: "src/modules/dashboard/testimonials/AddTestimonialModal.tsx",
+    description: "Create modal component for user testimonial submission with star rating and achievement input"
+  },
+  {
+    id: "29",
+    filePath: "src/modules/dashboard/testimonials/UserTestimonialsManagement.tsx",
+    description: "Create user dashboard testimonials management component"
+  },
+  {
+    id: "30",
+    filePath: "src/app/(dashboard)/dashboard/testimonials/page.tsx",
+    description: "Create dashboard testimonials page route with StarFit metadata"
+  },
+  {
+    id: "31",
+    filePath: "src/modules/home/HeroSection.tsx",
+    description: "Replace placeholder dumbbell icon with dynamic dual-image overlapping layout for hero section"
+  },
+  {
+    id: "32",
+    filePath: "lib/homeData.ts",
+    description: "Include slug field in getHomePlans package query and object mapping"
+  },
+  {
+    id: "33",
+    filePath: "src/modules/home/WorkoutPlansList.tsx",
+    description: "Replace static button element with Next.js Link component navigating to package details page"
+  },
+  {
+    id: "34",
+    filePath: "src/types/components.ts",
+    description: "Add optional slug property to HomeWorkoutPlanItem interface"
+  },
+  {
+    id: "35",
+    filePath: "src/app/(main)/introduce/page.tsx",
+    description: "Redesign Introduce page focused on coach Amirhossein Miraftabi credentials, personal training, and football conditioning with Black & Gold theme"
+  },
+  {
+    id: "36",
+    filePath: "model/WorkoutExercise.ts",
+    description: "Add weight field to WorkoutExercise Mongoose schema"
+  },
+  {
+    id: "37",
+    filePath: "src/types/workout.ts",
+    description: "Add optional weight property to WorkoutExercise, ExerciseItem, IWorkoutExercise, and WorkoutExerciseFormInputs interfaces"
+  },
+  {
+    id: "38",
+    filePath: "src/app/api/admin/subscription/workout-exercises/route.ts",
+    description: "Support weight property in PUT update endpoint for workout exercises"
+  },
+  {
+    id: "39",
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Add weight input field to workout exercise form and request payloads"
+  },
+  {
+    id: "40",
+    filePath: "src/modules/admin/workouts/WorkoutExercisesSection.tsx",
+    description: "Display weight meta information in workout exercise list cards"
+  },
+  {
+    id: "41",
+    filePath: "model/WorkoutExercise.ts",
+    description: "Update weight field type from string to number with default value 0"
+  },
+  {
+    id: "42",
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Refactor form state management to use react-hook-form hook (register, handleSubmit, reset)"
+  },
+  {
+    id: "43",
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Refactor submit logic into a single modular onSubmit function handling POST and PUT dynamically"
+  },
+  {
+    id: "44",
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Refactor submitWorkoutExercise helper to return fetch Response and handle ok check and alert messaging inside onSubmit"
+  },
+  {
+    id: "45",
+    filePath: "src/modules/admin/workouts/WorkoutExerciseForm.tsx",
+    description: "Explicitly capture error parameter in catch block to maintain cross-parser compatibility"
+  },
+  {
+    id: "46",
+    filePath: "src/app/globals.css",
+    description: "Set font-family of swal container, popup, title, content, buttons, and inputs to var(--font-danaMed)"
+  },
+  {
+    id: "47",
+    filePath: "src/utils/alert.ts",
+    description: "Update SweetAlert customClass title property from font-morabbaReg to font-danaMed"
+  },
+  {
+    id: "48",
+    filePath: "src/app/api/admin/subscription/workout-exercises/route.ts",
+    description: "Add PATCH HTTP handler to support updating exercise weight"
+  },
+  {
+    id: "49",
+    filePath: "src/modules/dashboard/workout/ExercisesList.tsx",
+    description: "Add pencil icon button next to exercise weight to enable inline editing and sending PATCH requests to update weight"
+  },
+  {
+    id: "50",
+    filePath: "src/types/nutrition.ts",
+    description: "Add optional requiredCalories field to EditTargetModalProps interface"
+  },
+  {
+    id: "51",
+    filePath: "src/modules/dashboard/nutrition/EditTargetModal.tsx",
+    description: "Add کالری مورد نیاز input field and tempRequiredCalories state to EditTargetModal"
+  },
+  {
+    id: "52",
+    filePath: "src/types/nutrition.ts",
+    description: "Add ActivityLevel and CalcGender type definitions for BMR calculation"
+  },
+  {
+    id: "53",
+    filePath: "src/modules/dashboard/nutrition/EditTargetModal.tsx",
+    description: "Fetch fitness profile data (height, weight, age) and implement BMR calculation with activity level multiplier for required calories"
+  },
+  {
+    id: "54",
+    filePath: "src/types/nutrition.ts",
+    description: "Add FitnessCalorieCalculatorProps interface type definition"
+  },
+  {
+    id: "55",
+    filePath: "src/modules/dashboard/nutrition/FitnessCalorieCalculator.tsx",
+    description: "Create dedicated FitnessCalorieCalculator component for fetching fitness profile and calculating BMR/daily calories"
+  },
+  {
+    id: "56",
+    filePath: "src/modules/dashboard/nutrition/EditTargetModal.tsx",
+    description: "Refactor EditTargetModal to use extracted FitnessCalorieCalculator component"
+  },
+  {
+    id: "57",
+    filePath: "validator/progress.ts",
+    description: "Add سرعت and توان categories to DEFAULT_CATEGORIES in progress validator"
+  },
+  {
+    id: "58",
+    filePath: "src/modules/dashboard/progress/ProgressChartManagement.tsx",
+    description: "Add test dropdown select (excluding all option) and filter chart data by selected test"
+  },
+  {
+    id: "59",
+    filePath: "src/modules/admin/pr/chart/PRChart.tsx",
+    description: "Remove option all from select dropdown in PRChart component"
   }
 ];

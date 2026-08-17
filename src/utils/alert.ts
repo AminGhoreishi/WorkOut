@@ -46,7 +46,7 @@ export function showAlert(
       color: "#ffffff",
       customClass: {
         popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
-        title: "font-morabbaReg text-amber-400 font-bold",
+        title: "font-danaMed text-amber-400 font-bold",
         confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
       },
     });
@@ -74,7 +74,7 @@ export function showAlert(
     color: "#ffffff",
     customClass: {
       popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
-      title: "font-morabbaReg text-amber-400 font-bold",
+      title: "font-danaMed text-amber-400 font-bold",
       confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
     },
   });
@@ -105,7 +105,7 @@ export async function showConfirm(
       color: "#ffffff",
       customClass: {
         popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
-        title: "font-morabbaReg text-amber-400 font-bold",
+        title: "font-danaMed text-amber-400 font-bold",
         confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
         cancelButton: "bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-5 py-2.5 rounded-xl text-xs border border-white/10",
       },
@@ -136,7 +136,7 @@ export async function showConfirm(
     color: "#ffffff",
     customClass: {
       popup: "border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/10 font-danaMed",
-      title: "font-morabbaReg text-amber-400 font-bold",
+      title: "font-danaMed text-amber-400 font-bold",
       confirmButton: "bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs border-0",
       cancelButton: "bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-5 py-2.5 rounded-xl text-xs border border-white/10",
     },

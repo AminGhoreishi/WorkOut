@@ -5,15 +5,20 @@ import {
   CheckCircle2,
   Dumbbell,
   TrendingUp,
+  Weight,
   Timer,
   Info,
   ChevronDown,
   Play,
   HelpCircle,
   SlidersHorizontal,
+  Pencil,
+  Check,
+  X,
 } from "lucide-react";
 import type { ExercisesListProps } from "@/types/workout";
 import ExerciseFeedbackForm from "./ExerciseFeedbackForm";
+import { showToast } from "@/utils/alert";
 
 export default function ExercisesList({
   exercises,
@@ -30,6 +35,10 @@ export default function ExercisesList({
   );
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [weights, setWeights] = useState<Record<string, number>>({});
+  const [editingWeightId, setEditingWeightId] = useState<string | null>(null);
+  const [tempWeight, setTempWeight] = useState<string>("");
+  const [savingWeightId, setSavingWeightId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -79,6 +88,45 @@ export default function ExercisesList({
     }
   };
 
+  const handleStartEditWeight = (exerciseId: string, currentWeight: number) => {
+    setEditingWeightId(exerciseId);
+    setTempWeight(String(currentWeight ?? 0));
+  };
+
+  const handleSaveWeight = async (exerciseId: string) => {
+    const parsedWeight = parseFloat(tempWeight);
+    if (isNaN(parsedWeight) || parsedWeight < 0) {
+      showToast({ title: "لطفاً یک عدد معتبر وارد کنید", icon: "error" });
+      return;
+    }
+
+    const previousWeight = weights[exerciseId];
+    setWeights((prev) => ({ ...prev, [exerciseId]: parsedWeight }));
+    setSavingWeightId(exerciseId);
+
+    try {
+      const res = await fetch("/api/admin/subscription/workout-exercises", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: exerciseId, weight: parsedWeight }),
+      });
+
+      if (!res.ok) {
+        throw new Error("خطا در بروزرسانی وزنه");
+      }
+
+      setEditingWeightId(null);
+      showToast({ title: "وزنه بروزرسانی شد", icon: "success" });
+    } catch {
+      if (previousWeight !== undefined) {
+        setWeights((prev) => ({ ...prev, [exerciseId]: previousWeight }));
+      }
+      showToast({ title: "خطا در ثبت وزنه", icon: "error" });
+    } finally {
+      setSavingWeightId(null);
+    }
+  };
+
   return (
     <div className="space-y-4 font-danaMed" dir="rtl">
       {exercises.map((exercise, idx) => {
@@ -94,10 +142,9 @@ export default function ExercisesList({
             key={exercise._id}
             className={`
               relative overflow-visible rounded-2xl ss02 border transition-all duration-300 bg-white/[0.03]
-              ${
-                isCompleted
-                  ? "border-amber-500/40 bg-amber-500/10 shadow-inner"
-                  : "border-white/10 hover:border-amber-500/30 hover:bg-white/5"
+              ${isCompleted
+                ? "border-amber-500/40 bg-amber-500/10 shadow-inner"
+                : "border-white/10 hover:border-amber-500/30 hover:bg-white/5"
               }
             `}
           >
@@ -108,10 +155,9 @@ export default function ExercisesList({
                   onClick={() => toggleExercise(exercise._id)}
                   className={`
                     w-7 h-7 rounded-lg border flex items-center justify-center flex-shrink-0 transition-all duration-200 mt-1 cursor-pointer
-                    ${
-                      isCompleted
-                        ? "bg-amber-400 border-amber-400 text-neutral-950"
-                        : "border-white/20 hover:border-amber-500/40 bg-white/5 text-transparent"
+                    ${isCompleted
+                      ? "bg-amber-400 border-amber-400 text-neutral-950"
+                      : "border-white/20 hover:border-amber-500/40 bg-white/5 text-transparent"
                     }
                   `}
                 >
@@ -143,6 +189,63 @@ export default function ExercisesList({
                       <span>{exercise.reps} تکرار</span>
                     </div>
                     <div className="flex items-center gap-1">
+                      <Weight className="w-3.5 h-3.5 text-amber-400" />
+                      {editingWeightId === exercise._id ? (
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            value={tempWeight}
+                            onChange={(e) => setTempWeight(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleSaveWeight(exercise._id);
+                              if (e.key === "Escape") setEditingWeightId(null);
+                            }}
+                            className="w-14 px-1 py-0.5 bg-neutral-900 border border-amber-500/50 rounded text-xs text-amber-400 focus:outline-none focus:border-amber-400 font-danaMed"
+                            autoFocus
+                          />
+                          <span className="text-xs font-danaMed text-neutral-400">کیلوگرم</span>
+                          <button
+                            type="button"
+                            disabled={savingWeightId === exercise._id}
+                            onClick={() => handleSaveWeight(exercise._id)}
+                            className="p-0.5 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                            title="ذخیره"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingWeightId(null)}
+                            className="p-0.5 text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                            title="انصراف"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          <span className="font-danaMed">
+                            وزنه: {weights[exercise._id] ?? exercise.weight ?? 0} کیلوگرم
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleStartEditWeight(
+                                exercise._id,
+                                weights[exercise._id] ?? exercise.weight ?? 0
+                              )
+                            }
+                            className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors cursor-pointer"
+                            title="ویرایش وزنه"
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1">
                       <Timer className="w-3.5 h-3.5 text-amber-400" />
                       <span className="font-danaMed">
                         استراحت: {exercise.restSec} ثانیه
@@ -162,10 +265,9 @@ export default function ExercisesList({
                   }
                   className={`
                     flex items-center gap-1 px-3 py-2 text-sm sm:text-xs rounded-xl transition-all cursor-pointer
-                    ${
-                      isExpanded
-                        ? "bg-white/10 text-white"
-                        : "text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10"
+                    ${isExpanded
+                      ? "bg-white/10 text-white"
+                      : "text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10"
                     }
                   `}
                 >
@@ -238,11 +340,10 @@ export default function ExercisesList({
                         );
                         setOpenDropdownId(null);
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
-                        isExpanded
+                      className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${isExpanded
                           ? "bg-amber-500/20 text-amber-300 font-bold"
                           : "text-neutral-300 hover:bg-white/5"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         <Info className="w-4 h-4 text-amber-400" />
@@ -266,11 +367,10 @@ export default function ExercisesList({
                           );
                           setOpenDropdownId(null);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
-                          activeQuestionsId === exercise._id
+                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${activeQuestionsId === exercise._id
                             ? "bg-amber-500/20 text-amber-300 font-bold"
                             : "text-neutral-300 hover:bg-white/5"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2">
                           <HelpCircle className="w-4 h-4 text-amber-400" />
@@ -293,11 +393,10 @@ export default function ExercisesList({
                           );
                           setOpenDropdownId(null);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
-                          playingVideo === exercise._id
+                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${playingVideo === exercise._id
                             ? "bg-amber-500/20 text-amber-300 font-bold"
                             : "text-neutral-300 hover:bg-white/5"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2">
                           <Play className="w-4 h-4 text-amber-400 fill-current" />

@@ -2,12 +2,14 @@ import { useState, useEffect, memo } from "react";
 import { useSWRConfig } from "swr";
 import { Flame, Plus } from "lucide-react";
 import type { EditTargetModalProps } from "@/types/nutrition";
+import FitnessCalorieCalculator from "./FitnessCalorieCalculator";
 
 const EditTargetModal: React.FC<EditTargetModalProps> = ({
   isOpen,
   onClose,
   userId,
   targetCalories,
+  requiredCalories = 2200,
   targetMacros,
   targetWater,
   onSaveTargets,
@@ -15,6 +17,9 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
   const { mutate } = useSWRConfig();
   const [tempTargetCalories, setTempTargetCalories] = useState(
     targetCalories.toString(),
+  );
+  const [tempRequiredCalories, setTempRequiredCalories] = useState(
+    requiredCalories.toString(),
   );
   const [tempTargetProtein, setTempTargetProtein] = useState(
     targetMacros.protein.toString(),
@@ -32,23 +37,25 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setTempTargetCalories(targetCalories.toString());
+      setTempRequiredCalories((requiredCalories ?? 2200).toString());
       setTempTargetProtein(targetMacros.protein.toString());
       setTempTargetCarbs(targetMacros.carbs.toString());
       setTempTargetFat(targetMacros.fat.toString());
       setTempTargetWater(targetWater.toString());
     }
-  }, [isOpen, targetCalories, targetMacros, targetWater]);
+  }, [isOpen, targetCalories, requiredCalories, targetMacros, targetWater]);
 
   if (!isOpen) return null;
 
   const handleSave = async () => {
     const calories = Math.max(0, parseInt(tempTargetCalories) || 2200);
+    const reqCalories = Math.max(0, parseInt(tempRequiredCalories) || 2200);
     const protein = Math.max(0, parseInt(tempTargetProtein) || 140);
     const carbs = Math.max(0, parseInt(tempTargetCarbs) || 240);
     const fat = Math.max(0, parseInt(tempTargetFat) || 70);
     const water = Math.max(0, parseInt(tempTargetWater) || 2500);
 
-    onSaveTargets(calories, protein, carbs, fat, water);
+    onSaveTargets(calories, protein, carbs, fat, water, reqCalories);
 
     try {
       const response = await fetch("/api/nutrition", {
@@ -58,6 +65,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
         },
         body: JSON.stringify({
           tempTargetCalories: calories,
+          tempRequiredCalories: reqCalories,
           tempTargetProtein: protein,
           tempTargetCarbs: carbs,
           tempTargetFat: fat,
@@ -79,7 +87,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
       dir="rtl"
     >
       <div onClick={onClose} className="fixed inset-0 z-40 bg-black/80"></div>
-      <div className="bg-neutral-900 border z-50 border-amber-500/20 rounded-3xl w-full max-w-md p-6 shadow-2xl relative">
+      <div className="bg-neutral-900 border z-50 border-amber-500/20 rounded-3xl w-full max-w-md p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-amber-500/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
@@ -105,6 +113,26 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500/50 text-sm ss02"
             />
           </div>
+
+          <div>
+            <label className="block text-neutral-300 mb-2 text-xs font-medium">
+              کالری مورد نیاز:
+            </label>
+            <input
+              type="number"
+              value={tempRequiredCalories}
+              onChange={(e) => setTempRequiredCalories(e.target.value)}
+              placeholder="مثال: ۲۲۰۰"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500/50 text-sm ss02"
+            />
+          </div>
+
+          <FitnessCalorieCalculator
+            isOpen={isOpen}
+            onApplyCalorie={(cal) =>
+              setTempRequiredCalories(cal.toString())
+            }
+          />
 
           <div>
             <label className="block text-neutral-300 mb-2 text-xs font-medium">

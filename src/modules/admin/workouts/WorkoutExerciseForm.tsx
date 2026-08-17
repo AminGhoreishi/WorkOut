@@ -1,7 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { WorkoutExerciseFormProps } from "@/types/workout";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import type {
+  WorkoutExerciseFormProps,
+  WorkoutExerciseFormInputs,
+} from "@/types/workout";
 import { showAlert } from "@/utils/alert";
 
 export default function WorkoutExerciseForm({
@@ -12,39 +16,34 @@ export default function WorkoutExerciseForm({
   onCancel,
   defaultSortOrder,
 }: WorkoutExerciseFormProps) {
-  const [exerciseForm, setExerciseForm] = useState({
-    name: "",
-    sets: 3,
-    reps: "12-10-8",
-    restSec: 60,
-    videoId: "",
-    videoId2: "",
-    sortOrder: defaultSortOrder,
-  });
+  const { register, handleSubmit, reset } =
+    useForm<WorkoutExerciseFormInputs>();
 
   useEffect(() => {
     if (editingExercise) {
-      setExerciseForm({
+      reset({
         name: editingExercise.name,
         sets: editingExercise.sets,
         reps: editingExercise.reps,
+        weight: editingExercise.weight || 0,
         restSec: editingExercise.restSec,
         videoId: editingExercise.videoId?._id || "",
         videoId2: editingExercise.videoId2?._id || "",
         sortOrder: editingExercise.sortOrder,
       });
     } else {
-      setExerciseForm({
+      reset({
         name: "",
         sets: 3,
         reps: "12-10-8",
+        weight: 0,
         restSec: 60,
         videoId: "",
         videoId2: "",
         sortOrder: defaultSortOrder,
       });
     }
-  }, [editingExercise, defaultSortOrder]);
+  }, [editingExercise, defaultSortOrder, reset]);
 
   const getVideoLevelLabel = (level?: string) => {
     if (!level) return "مبتدی";
@@ -56,25 +55,47 @@ export default function WorkoutExerciseForm({
     return labels[level] || level;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitWorkoutExercise = async (data: WorkoutExerciseFormInputs) => {
+    if (editingExercise) {
+      return await fetch("/api/admin/subscription/workout-exercises", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editingExercise._id,
+          name: data.name,
+          sets: Number(data.sets),
+          reps: data.reps,
+          weight: Number(data.weight || 0),
+          restSec: Number(data.restSec),
+          videoId: data.videoId || null,
+          videoId2: data.videoId2 || null,
+          sortOrder: Number(data.sortOrder),
+        }),
+      });
+    } else {
+      return await fetch("/api/admin/subscription/workout-exercises", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dayId: selectedDayId,
+          name: data.name,
+          sets: Number(data.sets),
+          reps: data.reps,
+          weight: Number(data.weight || 0),
+          restSec: Number(data.restSec),
+          videoId: data.videoId || undefined,
+          videoId2: data.videoId2 || undefined,
+          sortOrder: Number(data.sortOrder),
+        }),
+      });
+    }
+  };
+
+  const onSubmit = async (data: WorkoutExerciseFormInputs) => {
     if (!selectedDayId) return;
     try {
       if (editingExercise) {
-        const res = await fetch("/api/admin/subscription/workout-exercises", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: editingExercise._id,
-            name: exerciseForm.name,
-            sets: Number(exerciseForm.sets),
-            reps: exerciseForm.reps,
-            restSec: Number(exerciseForm.restSec),
-            videoId: exerciseForm.videoId || null,
-            videoId2: exerciseForm.videoId2 || null,
-            sortOrder: Number(exerciseForm.sortOrder),
-          }),
-        });
+        const res = await submitWorkoutExercise(data);
         if (res.ok) {
           onSuccess();
         } else {
@@ -86,20 +107,7 @@ export default function WorkoutExerciseForm({
           });
         }
       } else {
-        const res = await fetch("/api/admin/subscription/workout-exercises", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            dayId: selectedDayId,
-            name: exerciseForm.name,
-            sets: Number(exerciseForm.sets),
-            reps: exerciseForm.reps,
-            restSec: Number(exerciseForm.restSec),
-            videoId: exerciseForm.videoId || undefined,
-            videoId2: exerciseForm.videoId2 || undefined,
-            sortOrder: Number(exerciseForm.sortOrder),
-          }),
-        });
+        const res = await submitWorkoutExercise(data);
         if (res.ok) {
           onSuccess();
         } else {
@@ -111,7 +119,7 @@ export default function WorkoutExerciseForm({
           });
         }
       }
-    } catch {
+    } catch (error) {
       showAlert({
         title: "خطا",
         text: "خطا در ثبت اطلاعات حرکت ورزشی",
@@ -122,7 +130,7 @@ export default function WorkoutExerciseForm({
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 text-right font-danaMed animate-in fade-in slide-in-from-top-4 duration-200"
       dir="rtl"
     >
@@ -137,13 +145,7 @@ export default function WorkoutExerciseForm({
           <input
             type="text"
             placeholder="مثلا: جلو بازو دمبل تناوبی"
-            value={exerciseForm.name}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                name: e.target.value,
-              })
-            }
+            {...register("name", { required: true })}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400"
             required
           />
@@ -153,13 +155,7 @@ export default function WorkoutExerciseForm({
             ویدیو آموزشی ۱
           </label>
           <select
-            value={exerciseForm.videoId}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                videoId: e.target.value,
-              })
-            }
+            {...register("videoId")}
             className="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
           >
             <option value="">بدون ویدیو اول</option>
@@ -175,13 +171,7 @@ export default function WorkoutExerciseForm({
             ویدیو آموزشی ۲ (اختیاری)
           </label>
           <select
-            value={exerciseForm.videoId2}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                videoId2: e.target.value,
-              })
-            }
+            {...register("videoId2")}
             className="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
           >
             <option value="">بدون ویدیو دوم</option>
@@ -194,7 +184,7 @@ export default function WorkoutExerciseForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div>
           <label className="block text-white/70 text-[10px] mb-1">
             تعداد ست
@@ -202,13 +192,7 @@ export default function WorkoutExerciseForm({
           <input
             type="number"
             placeholder="۳"
-            value={exerciseForm.sets}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                sets: Number(e.target.value),
-              })
-            }
+            {...register("sets", { required: true, valueAsNumber: true })}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
@@ -220,15 +204,20 @@ export default function WorkoutExerciseForm({
           <input
             type="text"
             placeholder="12-10-8 یا ۱۲"
-            value={exerciseForm.reps}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                reps: e.target.value,
-              })
-            }
+            {...register("reps", { required: true })}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-[10px] mb-1">
+            وزنه (کیلوگرم)
+          </label>
+          <input
+            type="number"
+            placeholder="۱۰"
+            {...register("weight", { valueAsNumber: true })}
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/40 focus:outline-none focus:border-amber-400 ss02"
           />
         </div>
         <div>
@@ -238,13 +227,7 @@ export default function WorkoutExerciseForm({
           <input
             type="number"
             placeholder="۶۰"
-            value={exerciseForm.restSec}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                restSec: Number(e.target.value),
-              })
-            }
+            {...register("restSec", { required: true, valueAsNumber: true })}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />
@@ -256,13 +239,7 @@ export default function WorkoutExerciseForm({
           <input
             type="number"
             placeholder="۱"
-            value={exerciseForm.sortOrder}
-            onChange={(e) =>
-              setExerciseForm({
-                ...exerciseForm,
-                sortOrder: Number(e.target.value),
-              })
-            }
+            {...register("sortOrder", { required: true, valueAsNumber: true })}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
             required
           />

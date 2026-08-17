@@ -82,6 +82,12 @@ export default function WorkoutExercisesSection({
                   <span>{ex.sets} ست</span>
                   <span>•</span>
                   <span>{ex.reps} تکرار</span>
+                  {Boolean(ex.weight) && (
+                    <>
+                      <span>•</span>
+                      <span>وزنه: {ex.weight} kg</span>
+                    </>
+                  )}
                   <span>•</span>
                   <span>استراحت: {ex.restSec}s</span>
                   {ex.videoId && (

@@ -9,6 +9,7 @@ const WorkoutExerciseSchema = new Schema<IWorkoutExercise>(
     name: { type: String, required: true },
     sets: { type: Number, required: true },
     reps: { type: String, required: true },
+    weight: { type: Number, default: 0 },
     restSec: { type: Number, default: 60 },
     sortOrder: { type: Number, default: 0 },
   },

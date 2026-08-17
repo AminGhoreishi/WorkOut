@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BiCheckCircle, BiTrendingUp } from "react-icons/bi";
 import { BsClock } from "react-icons/bs";
 import type { WorkoutPlansProps } from "@/types/components";
@@ -45,12 +46,12 @@ export default function WorkoutPlansList({ plans }: WorkoutPlansProps) {
               ))}
             </ul>
           </div>
-          <button
-            type="button"
-            className="w-full bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 hover:from-amber-500 hover:via-amber-400 hover:to-yellow-500 text-amber-400 hover:text-neutral-950 font-bold border border-amber-500/30 hover:border-amber-400 py-3 rounded-xl transition-all duration-300 shadow-sm hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] cursor-pointer text-xs"
+          <Link
+            href={`/package/${plan.slug || plan.id}`}
+            className="w-full bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 hover:from-amber-500 hover:via-amber-400 hover:to-yellow-500 text-amber-400 hover:text-neutral-950 font-bold border border-amber-500/30 hover:border-amber-400 py-3 rounded-xl transition-all duration-300 shadow-sm hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] text-xs flex items-center justify-center text-center"
           >
             مشاهده جزئیات
-          </button>
+          </Link>
         </div>
       ))}
     </div>

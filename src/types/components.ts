@@ -52,6 +52,7 @@ export interface HomeArticleItem {
 
 export interface HomeWorkoutPlanItem {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   duration: string;
@@ -113,5 +114,16 @@ export interface WhyChooseUsItem {
   icon: string;
   title: string;
   description: string;
+}
+
+export interface TestimonialItem {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  badge: string;
+  rating: number;
+  comment: string;
+  achievement: string;
 }
 
