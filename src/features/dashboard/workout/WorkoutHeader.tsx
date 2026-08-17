@@ -1,6 +1,6 @@
-import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Sparkles, Utensils } from "lucide-react";
 import type { WorkoutHeaderProps } from "@/types/workout";
-import WorkoutDownloadButton from "./WorkoutDownloadButton";
 
 export default function WorkoutHeader({
   workoutPlan,
@@ -41,10 +41,13 @@ export default function WorkoutHeader({
         </div>
 
         <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-col gap-4 self-stretch md:self-auto justify-between md:justify-center">
-          <WorkoutDownloadButton
-            workoutPlan={workoutPlan}
-            workoutDays={workoutDays}
-          />
+          <Link
+            href="/dashboard/meal-plans"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-semibold px-5 py-3 rounded-xl text-sm transition-all duration-300 shadow-lg cursor-pointer whitespace-nowrap"
+          >
+            <Utensils className="w-4 h-4 text-neutral-950" />
+            <span>برنامه غذایی</span>
+          </Link>
         </div>
       </div>
     </div>

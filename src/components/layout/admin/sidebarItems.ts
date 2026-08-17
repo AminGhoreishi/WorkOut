@@ -199,6 +199,13 @@ export function getUserMenuItems(
           href: "/dashboard/workout",
         },
         {
+          id: "meal-plan",
+          label: "برنامه غذایی",
+          icon: Utensils,
+          badge: null,
+          href: "/dashboard/meal-plans",
+        },
+        {
           id: "progress",
           label: "نمودار پیشرفت",
           icon: TrendingUp,

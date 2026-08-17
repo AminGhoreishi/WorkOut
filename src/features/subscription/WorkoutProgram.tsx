@@ -1,10 +1,11 @@
+import Link from "next/link";
 import {
   Dumbbell,
   Calendar,
   CheckCircle,
   PlayCircle,
-  Download,
   Clock,
+  Utensils,
 } from "lucide-react";
 import type { WorkoutPlanProps } from "@/types/workout";
 
@@ -41,13 +42,13 @@ export default function WorkoutProgram({
               <p className="text-neutral-400">{plan.description || "برنامه اختصاصی تناسب اندام"}</p>
             </div>
             <div className="flex gap-4">
-              <button
-                type="button"
+              <Link
+                href="/dashboard/meal-plans"
                 className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-bold px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md"
               >
-                <Download className="w-5 h-5 text-neutral-950" />
-                دانلود PDF
-              </button>
+                <Utensils className="w-5 h-5 text-neutral-950" />
+                <span>برنامه غذایی</span>
+              </Link>
               <button
                 type="button"
                 className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-xl transition-all cursor-pointer font-bold"

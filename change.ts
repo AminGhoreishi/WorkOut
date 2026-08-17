@@ -298,5 +298,45 @@ export const modifiedFiles = [
     id: "60",
     filePath: "tsconfig.json",
     description: "Migrate project architecture to feature-driven folder structure (src/features, src/models, src/validators, src/lib, src/styles)"
+  },
+  {
+    id: "61",
+    filePath: "package.json",
+    description: "Remove PDF generation packages (@react-pdf/renderer, arabic-persian-reshaper) and PDF download components"
+  },
+  {
+    id: "62",
+    filePath: "src/features/dashboard/workout/WorkoutHeader.tsx",
+    description: "Replace PDF download button with Meal Plan button navigating to /nutrition"
+  },
+  {
+    id: "63",
+    filePath: "src/components/layout/admin/sidebarItems.ts",
+    description: "Add برنامه غذایی (Meal Plan) navigation link to user dashboard sidebar menu"
+  },
+  {
+    id: "64",
+    filePath: "src/app/api/user/meal-plan/route.ts",
+    description: "Create API route for fetching active user meal plan populated with food items and macro values"
+  },
+  {
+    id: "65",
+    filePath: "src/features/dashboard/meal-plans/UserMealPlansManagement.tsx",
+    description: "Create UserMealPlansManagement component displaying user meal plan meals (breakfast, lunch, dinner, snack) and macro breakdown"
+  },
+  {
+    id: "66",
+    filePath: "src/app/(dashboard)/dashboard/meal-plans/page.tsx",
+    description: "Create /dashboard/meal-plans page route with StarFit metadata"
+  },
+  {
+    id: "67",
+    filePath: "src/features/dashboard/meal-plans/MealSection.tsx",
+    description: "Extract MealSection component to dedicated file"
+  },
+  {
+    id: "68",
+    filePath: "src/features/dashboard/meal-plans/mealPlanHelpers.ts",
+    description: "Extract nutrient and meal total calculation functions to helper file"
   }
 ];

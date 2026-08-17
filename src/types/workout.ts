@@ -253,11 +253,6 @@ export interface SimpleWeek {
   days: DayItem[];
 }
 
-export interface DownloadButtonProps {
-  workoutPlan: WorkoutPlan;
-  workoutDays: DayItem[];
-}
-
 export interface VideosManagementRef {
   fetchVideos: () => Promise<void>;
 }

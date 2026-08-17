@@ -138,3 +138,16 @@ export interface MealPlanFormFieldsProps {
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
 }
+
+export interface UserMealPlanResponse {
+  success: boolean;
+  plan: MealPlanData | null;
+  message?: string;
+}
+
+export interface MealSectionProps {
+  title: string;
+  icon: React.ElementType;
+  items: PlanMealItem[];
+  badgeColor: string;
+}
