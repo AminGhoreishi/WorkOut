@@ -1,4 +1,4 @@
-import PersonalRecords from "@/modules/admin/pr/PersonalRecords";
+import PersonalRecords from "@/features/admin/pr/PersonalRecords";
 import type { AdminPRPageProps } from "@/types/pr";
 
 export const metadata = {

@@ -3,15 +3,15 @@ import registerModels from "@/lib/registerModels";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import SubscriptionModel from "@/model/Subscription";
-import UserModel from "@/model/User";
-import WorkoutPlanModel from "@/model/WorkoutPlan";
-import WorkoutDayModel from "@/model/WorkoutDay";
-import WorkoutExerciseModel from "@/model/WorkoutExercise";
-import TicketModel from "@/model/Ticket";
-import BlogModel from "@/model/Blog";
-import WishModel from "@/model/Wish";
-import AdminDashboardUser from "@/modules/dashboard/AdminDashboardUser/AdminDashboardUser";
+import SubscriptionModel from "@/models/Subscription";
+import UserModel from "@/models/User";
+import WorkoutPlanModel from "@/models/WorkoutPlan";
+import WorkoutDayModel from "@/models/WorkoutDay";
+import WorkoutExerciseModel from "@/models/WorkoutExercise";
+import TicketModel from "@/models/Ticket";
+import BlogModel from "@/models/Blog";
+import WishModel from "@/models/Wish";
+import AdminDashboardUser from "@/features/dashboard/AdminDashboardUser/AdminDashboardUser";
 import { connection } from "next/server";
 import type {
   DashboardUser,

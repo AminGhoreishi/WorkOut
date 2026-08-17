@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Order from "@/model/Order";
-import AdminPayments from "@/modules/admin/payments/AdminPayments";
+import Order from "@/models/Order";
+import AdminPayments from "@/features/admin/payments/AdminPayments";
 import type { AdminPaymentStats } from "@/types/admin-payments";
 
 export const metadata: Metadata = {

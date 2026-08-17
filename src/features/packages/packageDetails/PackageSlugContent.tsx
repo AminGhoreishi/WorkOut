@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Package from "@/model/Package";
-import Packagefeature from "@/model/Packagefeature";
-import PackageDetails from "@/modules/packages/packageDetails/PackageDetails";
+import Package from "@/models/Package";
+import Packagefeature from "@/models/Packagefeature";
+import PackageDetails from "@/features/packages/packageDetails/PackageDetails";
 import type { PackageSlugPageProps } from "@/types/package";
 
 export default async function PackageSlugPageContent({ params }: PackageSlugPageProps) {

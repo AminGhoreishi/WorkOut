@@ -4,10 +4,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
-import SubscriptionModel from "@/model/Subscription";
-import OrderModel from "@/model/Order";
-import ProgressChartManagement from "@/modules/dashboard/progress/ProgressChartManagement";
-import NoPackageProgressAccess from "@/modules/dashboard/progress/NoPackageProgressAccess";
+import SubscriptionModel from "@/models/Subscription";
+import OrderModel from "@/models/Order";
+import ProgressChartManagement from "@/features/dashboard/progress/ProgressChartManagement";
+import NoPackageProgressAccess from "@/features/dashboard/progress/NoPackageProgressAccess";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {

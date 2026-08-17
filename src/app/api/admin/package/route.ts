@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import Package from "@/model/Package";
-import PackageFeature from "@/model/Packagefeature";
+import Package from "@/models/Package";
+import PackageFeature from "@/models/Packagefeature";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

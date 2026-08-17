@@ -4,8 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
-import Subscription from "@/model/Subscription";
-import WorkoutView from "@/modules/dashboard/workout/WorkoutView";
+import Subscription from "@/models/Subscription";
+import WorkoutView from "@/features/dashboard/workout/WorkoutView";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {

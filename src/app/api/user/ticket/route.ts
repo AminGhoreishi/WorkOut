@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import Ticket from "@/model/Ticket";
-import User from "@/model/User";
+import Ticket from "@/models/Ticket";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

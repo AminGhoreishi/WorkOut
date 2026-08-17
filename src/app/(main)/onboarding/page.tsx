@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import OnboardingPageContent from "@/modules/onboarding/OnboardingContent";
-import OnboardingSkeleton from "@/modules/onboarding/OnboardingSkeleton";
+import OnboardingPageContent from "@/features/onboarding/OnboardingContent";
+import OnboardingSkeleton from "@/features/onboarding/OnboardingSkeleton";
 
 export const metadata: Metadata = {
   title: "استار فیت | تکمیل مشخصات ورزشی",

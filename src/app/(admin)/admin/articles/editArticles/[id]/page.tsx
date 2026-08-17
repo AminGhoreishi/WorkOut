@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import EditArticle from "@/modules/admin/dashboard/articles/editArticle/EditArticle";
+import EditArticle from "@/features/admin/dashboard/articles/editArticle/EditArticle";
 
 async function EditArticleContent({
   params,

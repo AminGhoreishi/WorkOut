@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Packagefeature from "@/model/Packagefeature";
+import Packagefeature from "@/models/Packagefeature";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(

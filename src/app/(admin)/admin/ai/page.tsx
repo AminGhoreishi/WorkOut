@@ -1,4 +1,4 @@
-import AdminAiChat from "@/modules/admin/ai/AdminAiChat";
+import AdminAiChat from "@/features/admin/ai/AdminAiChat";
 
 export const metadata = {
   title: "هوش مصنوعی مدیریت | پیشخوان",

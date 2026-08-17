@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import Subscription from "@/model/Subscription";
-import WorkoutPlan from "@/model/WorkoutPlan";
-import Food from "@/model/Food";
-import Blog from "@/model/Blog";
-import Comment from "@/model/Comment";
-import Coach from "@/model/Coach";
-import Order from "@/model/Order";
+import User from "@/models/User";
+import Subscription from "@/models/Subscription";
+import WorkoutPlan from "@/models/WorkoutPlan";
+import Food from "@/models/Food";
+import Blog from "@/models/Blog";
+import Comment from "@/models/Comment";
+import Coach from "@/models/Coach";
+import Order from "@/models/Order";
 import type {
   AiToolsStatsData,
   AiToolsStatsResponse,

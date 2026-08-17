@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/User";
-import TicketModel from "@/model/Ticket";
+import UserModel from "@/models/User";
+import TicketModel from "@/models/Ticket";
 import AdminHeader from "./AdminHeader";
 
 export default async function AdminHeaderContainer() {

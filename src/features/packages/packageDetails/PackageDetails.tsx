@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import FAQ from "@/modules/home/FAQ";
+import FAQ from "@/features/home/FAQ";
 import Breadcrumb from "./Breadcrumb";
 import PackageFeatures from "./PackageFeatures";
 import PriceCard from "./PriceCard";

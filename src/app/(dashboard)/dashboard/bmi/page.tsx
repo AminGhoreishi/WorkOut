@@ -1,4 +1,4 @@
-import BMICalculator from "@/modules/dashboard/bmi/BMICalculator";
+import BMICalculator from "@/features/dashboard/bmi/BMICalculator";
 
 export const metadata = {
   title: "استارفیت | محاسبه شاخص توده بدنی (BMI)",

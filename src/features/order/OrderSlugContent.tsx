@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Package from "@/model/Package";
-import OrderPage from "@/modules/order/OrderPage";
+import Package from "@/models/Package";
+import OrderPage from "@/features/order/OrderPage";
 import type { OrderPackageInfo, OrderSlugPageProps } from "@/types/order";
 
 export function OrderPageSkeleton() {

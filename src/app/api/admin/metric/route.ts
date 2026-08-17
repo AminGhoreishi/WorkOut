@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import TestMetric from "@/model/TestMetric";
+import TestMetric from "@/models/TestMetric";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

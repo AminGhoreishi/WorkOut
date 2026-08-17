@@ -1,9 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import Subscription from "@/model/Subscription";
-import Blog from "@/model/Blog";
-import Comment from "@/model/Comment";
-import Video from "@/model/Video";
+import User from "@/models/User";
+import Subscription from "@/models/Subscription";
+import Blog from "@/models/Blog";
+import Comment from "@/models/Comment";
+import Video from "@/models/Video";
 import { NextResponse } from "next/server";
 
 export async function GET() {

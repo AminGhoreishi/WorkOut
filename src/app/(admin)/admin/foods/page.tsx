@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import FoodsContainer from "@/modules/admin/foods/FoodsContainer";
+import FoodsContainer from "@/features/admin/foods/FoodsContainer";
 
 export const metadata: Metadata = {
   title: "بانک غذاها | استار فیت",

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import AdminAdminsContainer from "@/modules/admin/admins/AdminAdminsContainer";
+import User from "@/models/User";
+import AdminAdminsContainer from "@/features/admin/admins/AdminAdminsContainer";
 
 export const metadata: Metadata = {
   title: "مدیریت مدیران | استار فیت",

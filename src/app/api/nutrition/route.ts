@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import NutritionLog from "@/model/NutritionLog";
+import NutritionLog from "@/models/NutritionLog";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import SubscriptionPageContent from "@/modules/subscription/SubscriptionContent";
+import SubscriptionPageContent from "@/features/subscription/SubscriptionContent";
 
 export const metadata: Metadata = {
   title: "استار فیت | برنامه‌های تمرینی",

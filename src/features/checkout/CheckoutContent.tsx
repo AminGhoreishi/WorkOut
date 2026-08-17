@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Order from "@/model/Order";
-import CheckoutPage from "@/modules/checkout/CheckoutPage";
+import Order from "@/models/Order";
+import CheckoutPage from "@/features/checkout/CheckoutPage";
 import type { CheckoutOrderInfo, CheckoutPageProps } from "@/types/checkout";
 
 export default async function CheckoutContent({ searchParams }: CheckoutPageProps) {

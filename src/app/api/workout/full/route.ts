@@ -1,12 +1,12 @@
 import dbConnect from "@/lib/dbConnect";
-import WorkoutPlan from "@/model/WorkoutPlan";
-import WorkoutDay from "@/model/WorkoutDay";
-import WorkoutExercise from "@/model/WorkoutExercise";
-import Subscription from "@/model/Subscription";
+import WorkoutPlan from "@/models/WorkoutPlan";
+import WorkoutDay from "@/models/WorkoutDay";
+import WorkoutExercise from "@/models/WorkoutExercise";
+import Subscription from "@/models/Subscription";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import "@/model/Video"
+import "@/models/Video"
 
 export async function GET(req: NextRequest) {
   try {

@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Wish from "@/model/Wish";
+import Wish from "@/models/Wish";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

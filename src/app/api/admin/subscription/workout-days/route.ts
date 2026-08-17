@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import WorkoutDay from "@/model/WorkoutDay";
+import WorkoutDay from "@/models/WorkoutDay";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -77,7 +77,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: "روز تمرینی پیدا نشد" }, { status: 404 });
     }
 
-    const WorkoutExercise = (await import("@/model/WorkoutExercise")).default;
+    const WorkoutExercise = (await import("@/models/WorkoutExercise")).default;
     await WorkoutExercise.deleteMany({ dayId: id });
 
     return NextResponse.json({ message: "روز تمرینی و حرکات آن با موفقیت حذف شدند" });

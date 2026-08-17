@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PackagesManagement from "@/modules/admin/package/PackagesManagement";
+import PackagesManagement from "@/features/admin/package/PackagesManagement";
 
 export const metadata: Metadata = {
   title: "مدیریت پکیج‌ها | استار فیت",

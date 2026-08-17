@@ -3,8 +3,8 @@ import dbConnect from "@/lib/dbConnect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import WishModel from "@/model/Wish";
-import FavoritesManagement from "@/modules/dashboard/favorites/FavoritesManagement";
+import WishModel from "@/models/Wish";
+import FavoritesManagement from "@/features/dashboard/favorites/FavoritesManagement";
 import type { FavoriteArticleItem } from "@/types/favorites";
 import { connection } from "next/server";
 

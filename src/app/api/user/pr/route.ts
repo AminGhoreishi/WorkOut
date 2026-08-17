@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
-import Pr from "@/model/Pr";
-import Subscription from "@/model/Subscription";
-import Order from "@/model/Order";
+import Pr from "@/models/Pr";
+import Subscription from "@/models/Subscription";
+import Order from "@/models/Order";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

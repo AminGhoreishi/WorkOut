@@ -1,4 +1,4 @@
-import Articles from "@/modules/articles/Articles";
+import Articles from "@/features/articles/Articles";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

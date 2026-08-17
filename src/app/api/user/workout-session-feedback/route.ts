@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import WorkoutSessionFeedback from "@/model/WorkoutSessionFeedback";
+import WorkoutSessionFeedback from "@/models/WorkoutSessionFeedback";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

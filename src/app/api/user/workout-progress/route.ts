@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import ExerciseProgress from "@/model/ExerciseProgress";
+import ExerciseProgress from "@/models/ExerciseProgress";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

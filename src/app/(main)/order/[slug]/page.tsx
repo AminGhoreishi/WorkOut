@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
-import Package from "@/model/Package";
-import OrderSlugPageContent, { OrderPageSkeleton } from "@/modules/order/OrderSlugContent";
+import Package from "@/models/Package";
+import OrderSlugPageContent, { OrderPageSkeleton } from "@/features/order/OrderSlugContent";
 import type { OrderSlugPageProps } from "@/types/order";
 
 export async function generateStaticParams() {

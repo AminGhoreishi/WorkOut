@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
-import Comment from "@/model/Comment";
-import Blog from "@/model/Blog";
-import User from "@/model/User";
+import Comment from "@/models/Comment";
+import Blog from "@/models/Blog";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

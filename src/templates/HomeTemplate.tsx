@@ -1,9 +1,9 @@
-import HeroSection from "@/modules/home/HeroSection";
-import FAQ from "@/modules/home/FAQ";
-import WhyChooseUs from "@/modules/home/WhyChooseUs";
-import WorkoutPlans from "@/modules/home/WorkoutPlans";
-import LatestArticles from "@/modules/home/LatestArticles";
-import Testimonials from "@/modules/home/Testimonials";
+import HeroSection from "@/features/home/HeroSection";
+import FAQ from "@/features/home/FAQ";
+import WhyChooseUs from "@/features/home/WhyChooseUs";
+import WorkoutPlans from "@/features/home/WorkoutPlans";
+import LatestArticles from "@/features/home/LatestArticles";
+import Testimonials from "@/features/home/Testimonials";
 
 export default function HomeTemplate() {
   return (

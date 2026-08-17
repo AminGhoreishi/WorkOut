@@ -1,4 +1,4 @@
-import UserProfileManagement from "@/modules/dashboard/profile/UserProfileManagement";
+import UserProfileManagement from "@/features/dashboard/profile/UserProfileManagement";
 
 export const metadata = {
   title: "استارفیت | پروفایل من",

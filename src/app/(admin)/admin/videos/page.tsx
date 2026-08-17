@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import VideosPageModule from "@/modules/admin/videos/VideosPageModule";
+import VideosPageModule from "@/features/admin/videos/VideosPageModule";
 
 export const metadata: Metadata = {
   title: "مدیریت ویدیوها | استار فیت",

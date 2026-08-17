@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
+import User from "@/models/User";
 import type { AdminDashboardAdminProps } from "@/types/admin";
 import RecentComments from "./RecentComments";
 import RecentUsers from "./RecentUsers";

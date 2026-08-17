@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
-import Subscription from "@/model/Subscription";
-import User from "@/model/User";
-import Package from "@/model/Package";
+import Subscription from "@/models/Subscription";
+import User from "@/models/User";
+import Package from "@/models/Package";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 

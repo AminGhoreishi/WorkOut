@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import WorkoutExercise from "@/model/WorkoutExercise";
+import WorkoutExercise from "@/models/WorkoutExercise";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

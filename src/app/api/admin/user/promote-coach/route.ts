@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import Coach from "@/model/Coach";
-import User from "@/model/User";
+import Coach from "@/models/Coach";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

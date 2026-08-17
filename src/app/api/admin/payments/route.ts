@@ -1,9 +1,9 @@
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Order from "@/model/Order";
-import Subscription from "@/model/Subscription";
-import User from "@/model/User";
-import Package from "@/model/Package";
+import Order from "@/models/Order";
+import Subscription from "@/models/Subscription";
+import User from "@/models/User";
+import Package from "@/models/Package";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

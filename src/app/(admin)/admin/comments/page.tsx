@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AdminComments from "@/modules/admin/comments/AdminComments";
+import AdminComments from "@/features/admin/comments/AdminComments";
 
 export const metadata: Metadata = {
   title: "مدیریت دیدگاه‌ها | استار فیت",

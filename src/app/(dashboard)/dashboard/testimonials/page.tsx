@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import UserTestimonialsManagement from "@/modules/dashboard/testimonials/UserTestimonialsManagement";
+import UserTestimonialsManagement from "@/features/dashboard/testimonials/UserTestimonialsManagement";
 
 export const metadata: Metadata = {
   title: "نظرات و تجربیات | استار فیت",

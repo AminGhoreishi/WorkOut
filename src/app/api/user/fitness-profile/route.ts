@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import FitnessProfile from "@/model/Fitnessprofile";
+import FitnessProfile from "@/models/Fitnessprofile";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Blog from "@/model/Blog";
+import Blog from "@/models/Blog";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";

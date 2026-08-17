@@ -1,8 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
-import BlogModel from "@/model/Blog";
-import UserModel from "@/model/User";
-import PackageModel from "@/model/Package";
-import PackageFeatureModel from "@/model/Packagefeature";
+import BlogModel from "@/models/Blog";
+import UserModel from "@/models/User";
+import PackageModel from "@/models/Package";
+import PackageFeatureModel from "@/models/Packagefeature";
 import { connection } from "next/server";
 import type {
   HomeArticleItem,

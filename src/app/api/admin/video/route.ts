@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Video from "@/model/Video";
+import Video from "@/models/Video";
 import { arvanClient } from "@/lib/arvan";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";

@@ -1,8 +1,8 @@
 import { connection } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Package from "@/model/Package";
-import Packagefeature from "@/model/Packagefeature";
-import PackagesGrid from "@/modules/packages/PackagesGrid";
+import Package from "@/models/Package";
+import Packagefeature from "@/models/Packagefeature";
+import PackagesGrid from "@/features/packages/PackagesGrid";
 
 export default async function PackagesContent() {
   await connection();

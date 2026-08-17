@@ -11,7 +11,7 @@ import {
   DEFAULT_CATEGORIES,
   DEFAULT_UNITS,
   validateProgressRecordInput,
-} from "@/validator/progress";
+} from "@/validators/progress";
 
 export default function AddProgressRecordModal({
   isOpen,

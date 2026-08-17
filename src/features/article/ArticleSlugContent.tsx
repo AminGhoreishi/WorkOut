@@ -3,11 +3,11 @@ import { getServerSession } from "next-auth";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Blog from "@/model/Blog";
-import Wish from "@/model/Wish";
-import ArticleDetail from "@/modules/article/ArticleDetail";
+import Blog from "@/models/Blog";
+import Wish from "@/models/Wish";
+import ArticleDetail from "@/features/article/ArticleDetail";
 import type { ArticlePageProps } from "@/types/blog";
-import "@/model/Comment";
+import "@/models/Comment";
 
 export default async function ArticlePageContent({ params }: ArticlePageProps) {
   await connection();

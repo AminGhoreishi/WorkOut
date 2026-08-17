@@ -1,10 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
-import Blog from "@/model/Blog";
+import Blog from "@/models/Blog";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadFileToS3, deleteFileFromS3 } from "@/lib/arvan";
-import { validateBlog, validateBlogUpdate } from "@/validator/blog";
+import { validateBlog, validateBlogUpdate } from "@/validators/blog";
 
 async function generateUniqueSlug(title: string): Promise<string> {
   const baseSlug = title

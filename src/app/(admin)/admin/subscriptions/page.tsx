@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
-import Subscription from "@/model/Subscription";
-import SubscriptionsManagement from "@/modules/admin/subscription/SubscriptionsManagement";
+import Subscription from "@/models/Subscription";
+import SubscriptionsManagement from "@/features/admin/subscription/SubscriptionsManagement";
 import type { SubscriptionStats } from "@/types/subscription";
 import { connection } from "next/server";
 

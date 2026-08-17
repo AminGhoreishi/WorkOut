@@ -1,9 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
-import Blog from "@/model/Blog";
-import Ticket from "@/model/Ticket";
-import User from "@/model/User";
-import Order from "@/model/Order";
-import AdminDashboardAdmin from "@/modules/admin/dashboard/AdminDashboardAdmin";
+import Blog from "@/models/Blog";
+import Ticket from "@/models/Ticket";
+import User from "@/models/User";
+import Order from "@/models/Order";
+import AdminDashboardAdmin from "@/features/admin/dashboard/AdminDashboardAdmin";
 import { connection } from "next/server";
 
 export default async function page() {

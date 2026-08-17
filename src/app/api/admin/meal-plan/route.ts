@@ -1,9 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
-import MealPlan from "@/model/MealPlan";
+import MealPlan from "@/models/MealPlan";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { validateMealPlan } from "@/validator/meal-plan";
+import { validateMealPlan } from "@/validators/meal-plan";
 
 export async function GET() {
   try {

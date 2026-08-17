@@ -20,9 +20,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/model/*": ["./model/*"],
-      "@/lib/*": ["./lib/*"],
-      "@/validator/*": ["./validator/*"]
+      "@/features/*": ["./src/features/*"],
+      "@/modules/*": ["./src/features/*"],
+      "@/models/*": ["./src/models/*"],
+      "@/model/*": ["./src/models/*"],
+      "@/validators/*": ["./src/validators/*"],
+      "@/validator/*": ["./src/validators/*"],
+      "@/lib/*": ["./src/lib/*"]
     }
   },
   "include": [

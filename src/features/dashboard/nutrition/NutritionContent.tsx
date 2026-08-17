@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import SubscriptionModel from "@/model/Subscription";
-import NutritionTracker from "@/modules/dashboard/nutrition/NutritionTracker";
+import SubscriptionModel from "@/models/Subscription";
+import NutritionTracker from "@/features/dashboard/nutrition/NutritionTracker";
 
 export default async function NutritionPageContent() {
   await connection();

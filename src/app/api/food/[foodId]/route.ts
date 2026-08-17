@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Food from "@/model/Food";
+import Food from "@/models/Food";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
-import Blog from "@/model/Blog";
-import AdminArticles from "@/modules/admin/dashboard/articles/AdminArticles";
+import Blog from "@/models/Blog";
+import AdminArticles from "@/features/admin/dashboard/articles/AdminArticles";
 import type { AdminBlogStats } from "@/types/blog";
 import { connection } from "next/server";
 

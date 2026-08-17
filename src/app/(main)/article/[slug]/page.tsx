@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
-import Blog from "@/model/Blog";
-import ArticlePageContent from "@/modules/article/ArticleSlugContent";
-import ArticleSkeleton from "@/modules/article/ArticleSkeleton";
+import Blog from "@/models/Blog";
+import ArticlePageContent from "@/features/article/ArticleSlugContent";
+import ArticleSkeleton from "@/features/article/ArticleSkeleton";
 import type { ArticlePageProps } from "@/types/blog";
 
 export async function generateStaticParams() {

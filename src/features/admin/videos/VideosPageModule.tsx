@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import VideosManagement from "@/modules/admin/subscription/VideosManagement";
-import UploadVideoModal from "@/modules/admin/subscription/UploadVideoModal";
+import VideosManagement from "@/features/admin/subscription/VideosManagement";
+import UploadVideoModal from "@/features/admin/subscription/UploadVideoModal";
 import VideoPlayerModal from "@/components/VideoPlayerModal";
 import type { VideoInfo, VideosManagementRef } from "@/types/workout";
 

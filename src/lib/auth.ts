@@ -2,8 +2,8 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
-import User from "@/model/User";
-import Ban from "@/model/Ban";
+import User from "@/models/User";
+import Ban from "@/models/Ban";
 import dbConnect from "@/lib/dbConnect";
 import { toEnglishDigits } from "@/utils/numbers";
 

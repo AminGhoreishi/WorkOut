@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import AdminUsers from "@/modules/admin/users/AdminUsers";
+import User from "@/models/User";
+import AdminUsers from "@/features/admin/users/AdminUsers";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {

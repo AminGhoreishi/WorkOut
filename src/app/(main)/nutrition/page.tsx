@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import NutritionPageContent from "@/modules/dashboard/nutrition/NutritionContent";
-import NutritionSkeleton from "@/modules/dashboard/nutrition/NutritionSkeleton";
+import NutritionPageContent from "@/features/dashboard/nutrition/NutritionContent";
+import NutritionSkeleton from "@/features/dashboard/nutrition/NutritionSkeleton";
 
 export const metadata: Metadata = {
   title: "استار فیت | مدیریت تغذیه و کالری‌شمار روزانه",

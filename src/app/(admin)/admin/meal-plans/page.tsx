@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import MealPlansManagement from "@/modules/admin/meal-plan/MealPlansManagement";
+import MealPlansManagement from "@/features/admin/meal-plan/MealPlansManagement";
 
 export const metadata: Metadata = {
   title: "مدیریت برنامه‌های غذایی | استار فیت",

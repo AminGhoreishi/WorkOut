@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
-import WorkoutProgram from "@/modules/subscription/WorkoutProgram";
+import WorkoutProgram from "@/features/subscription/WorkoutProgram";
 
 export default async function SubscriptionPageContent() {
   await connection();

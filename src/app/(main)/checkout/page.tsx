@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import CheckoutContent from "@/modules/checkout/CheckoutContent";
-import CheckoutSkeleton from "@/modules/checkout/CheckoutSkeleton";
+import CheckoutContent from "@/features/checkout/CheckoutContent";
+import CheckoutSkeleton from "@/features/checkout/CheckoutSkeleton";
 import type { CheckoutPageProps } from "@/types/checkout";
 
 export const metadata: Metadata = {

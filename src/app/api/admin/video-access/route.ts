@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Videoaccess from "@/model/Videoaccess";
+import Videoaccess from "@/models/Videoaccess";
 
 import { NextResponse } from "next/server";
 

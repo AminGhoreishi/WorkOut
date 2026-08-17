@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import OtpForm from "@/modules/auth/OtpForm";
+import OtpForm from "@/features/auth/OtpForm";
 
 export const metadata: Metadata = {
   title: "تایید کد ورود | استارفیت",

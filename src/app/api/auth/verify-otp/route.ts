@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import Otp from "@/model/Otp";
-import Ban from "@/model/Ban";
+import User from "@/models/User";
+import Otp from "@/models/Otp";
+import Ban from "@/models/Ban";
 import { toEnglishDigits } from "@/utils/numbers";
 
 export async function POST(req: NextRequest) {

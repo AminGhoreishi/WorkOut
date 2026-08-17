@@ -1,4 +1,4 @@
-import FitnessProfileManagement from "@/modules/dashboard/fitness-profile/FitnessProfileManagement";
+import FitnessProfileManagement from "@/features/dashboard/fitness-profile/FitnessProfileManagement";
 
 export const metadata = {
   title: "استارفیت | پروفایل ورزشی من",

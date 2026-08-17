@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AdminTickets from "@/modules/admin/tickets/AdminTickets";
+import AdminTickets from "@/features/admin/tickets/AdminTickets";
 
 export const metadata: Metadata = {
   title: "مدیریت تیکت‌های پشتیبانی | استار فیت",

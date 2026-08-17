@@ -293,5 +293,10 @@ export const modifiedFiles = [
     id: "59",
     filePath: "src/modules/admin/pr/chart/PRChart.tsx",
     description: "Remove option all from select dropdown in PRChart component"
+  },
+  {
+    id: "60",
+    filePath: "tsconfig.json",
+    description: "Migrate project architecture to feature-driven folder structure (src/features, src/models, src/validators, src/lib, src/styles)"
   }
 ];

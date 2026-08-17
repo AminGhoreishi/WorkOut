@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import Ban from "@/model/Ban";
+import User from "@/models/User";
+import Ban from "@/models/Ban";
 import { toEnglishDigits } from "@/utils/numbers";
 
 export async function POST(req: NextRequest) {

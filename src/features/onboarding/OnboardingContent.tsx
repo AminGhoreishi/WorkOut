@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { connection } from "next/server";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import FitnessProfile from "@/model/Fitnessprofile";
-import OnboardingForm from "@/modules/onboarding/OnboardingForm";
+import FitnessProfile from "@/models/Fitnessprofile";
+import OnboardingForm from "@/features/onboarding/OnboardingForm";
 import type { FitnessProfileData } from "@/types/fitness-profile";
 
 

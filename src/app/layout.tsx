@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/styles/globals.css";
 import { danaMedium, danaLight, danaBold, morabbaReg } from "./fonts";
 import NextTopLoader from "nextjs-toploader";
 

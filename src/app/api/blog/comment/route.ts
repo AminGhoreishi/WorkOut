@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Comment from "@/model/Comment";
+import Comment from "@/models/Comment";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

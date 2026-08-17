@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/model/User";
-import Subscription from "@/model/Subscription";
-import Ban from "@/model/Ban";
+import User from "@/models/User";
+import Subscription from "@/models/Subscription";
+import Ban from "@/models/Ban";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Subscription from "@/model/Subscription";
+import Subscription from "@/models/Subscription";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";

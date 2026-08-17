@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LoginForm from "@/modules/auth/LoginForm";
+import LoginForm from "@/features/auth/LoginForm";
 
 export const metadata: Metadata = {
   title: "ورود یا ثبت‌نام | استارفیت",

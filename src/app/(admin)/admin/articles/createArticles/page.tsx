@@ -1,4 +1,4 @@
-import CreateArticle from "@/modules/admin/dashboard/articles/createArticle/CreateArticle";
+import CreateArticle from "@/features/admin/dashboard/articles/createArticle/CreateArticle";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import type { ArticleAuthorInfo } from "@/types/blog";

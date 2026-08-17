@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import Testimonial from "@/model/Testimonial";
-import User from "@/model/User";
+import Testimonial from "@/models/Testimonial";
+import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

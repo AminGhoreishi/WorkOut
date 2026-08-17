@@ -5,9 +5,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-import SubscriptionModel from "@/model/Subscription";
-import OrderModel from "@/model/Order";
-import SubscriptionView from "@/modules/subscription/SubscriptionView";
+import SubscriptionModel from "@/models/Subscription";
+import OrderModel from "@/models/Order";
+import SubscriptionView from "@/features/subscription/SubscriptionView";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {

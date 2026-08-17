@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import SubscriptionPackages from "@/modules/packages/SubscriptionPackages";
-import PackagesContent from "@/modules/packages/PackagesContent";
-import { PackagesSkeleton } from "@/modules/packages/PackagesSkeleton";
+import SubscriptionPackages from "@/features/packages/SubscriptionPackages";
+import PackagesContent from "@/features/packages/PackagesContent";
+import { PackagesSkeleton } from "@/features/packages/PackagesSkeleton";
 
 export const metadata: Metadata = {
   title: "استار فیت | پکیج‌های اشتراک",

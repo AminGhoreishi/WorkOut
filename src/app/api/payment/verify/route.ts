@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
-import Order from "@/model/Order";
-import Subscription from "@/model/Subscription";
+import Order from "@/models/Order";
+import Subscription from "@/models/Subscription";
 import type { VerifyPaymentPayload } from "@/types/order";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";

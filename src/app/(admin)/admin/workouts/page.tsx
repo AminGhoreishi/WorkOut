@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import WorkoutsManagement from "@/modules/admin/workouts/WorkoutsManagement";
+import WorkoutsManagement from "@/features/admin/workouts/WorkoutsManagement";
 
 export const metadata: Metadata = {
   title: "مدیریت برنامه‌های تمرینی | استار فیت",
