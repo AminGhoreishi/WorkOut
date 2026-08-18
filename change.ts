@@ -338,5 +338,45 @@ export const modifiedFiles = [
     id: "68",
     filePath: "src/features/dashboard/meal-plans/mealPlanHelpers.ts",
     description: "Extract nutrient and meal total calculation functions to helper file"
+  },
+  {
+    id: "69",
+    filePath: "src/features/dashboard/meal-plans/UserMealPlansManagement.tsx",
+    description: "Update layout of summary cards on mobile screens (<sm) to place icon on top and label with value inline"
+  },
+  {
+    id: "70",
+    filePath: "src/features/dashboard/tickets/UserTicketChat.tsx",
+    description: "Refactor ticket chat messages layout to use shadcn Message UI components (MessageGroup, Message, MessageAvatar, MessageContent, MessageHeader)"
+  },
+  {
+    id: "71",
+    filePath: "src/lib/dbConnect.ts",
+    description: "Fix dbConnect connection caching to validate connection.readyState (prevent returning stale disconnected instances) and configure bufferCommands"
+  },
+  {
+    id: "72",
+    filePath: "src/models/Package.ts",
+    description: "Set bufferCommands: false on PackageSchema options to disable Mongoose 10s query buffering"
+  },
+  {
+    id: "73",
+    filePath: "src/features/dashboard/tickets/TicketItem.tsx",
+    description: "Extract ticket item card component into dedicated file TicketItem.tsx"
+  },
+  {
+    id: "74",
+    filePath: "src/features/dashboard/tickets/TicketChatMessages.tsx",
+    description: "Extract ticket chat messages container component into dedicated file TicketChatMessages.tsx"
+  },
+  {
+    id: "75",
+    filePath: "src/features/dashboard/tickets/TicketChatHeader.tsx",
+    description: "Extract ticket chat header component into dedicated file TicketChatHeader.tsx"
+  },
+  {
+    id: "76",
+    filePath: "src/features/dashboard/tickets/TicketChatFooter.tsx",
+    description: "Extract ticket chat reply form and footer component into dedicated file TicketChatFooter.tsx"
   }
 ];

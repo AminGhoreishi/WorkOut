@@ -1,311 +1,132 @@
-"use client";
+  "use client";
 
 import { useState } from "react";
-import { MessageSquare, Shield, Lock, Send, ArrowRight } from "lucide-react";
+import { MessageSquare, ArrowRight } from "lucide-react";
 import type { UserTicketChatProps } from "@/types/ticket";
 import { showAlert } from "@/utils/alert";
-import {
-  getStatusBadge,
-  getStatusLabel,
-  getCategoryBadge,
-  getCategoryLabel,
-} from "./ticketHelpers";
+import TicketItem from "./TicketItem";
+import TicketChatMessages from "./TicketChatMessages";
+import TicketChatHeader from "./TicketChatHeader";
+import TicketChatFooter from "./TicketChatFooter";
 
-const isVideo = (url?: string) => {
-  if (!url) return false;
-  const videoExtensions = [".mp4", ".mov", ".webm", ".avi", ".mkv"];
-  const lowerUrl = url.toLowerCase().split("?")[0];
-  return videoExtensions.some((ext) => lowerUrl.endsWith(ext));
-};
+  export default function UserTicketChat({
+    tickets,
+    selectedTicket,
+    setSelectedTicket,
+    chatEndRef,
+    onTicketUpdated,
+  }: UserTicketChatProps) {
+    const [replyText, setReplyText] = useState("");
+    const [sendingReply, setSendingReply] = useState(false);
 
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "";
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString("fa-IR");
-  } catch {
-    return dateStr;
-  }
-};
+    const handleSendReply = async (e: React.FormEvent) => {
+      e.preventDefault();
+      const trimmed = replyText.trim();
+      if (!selectedTicket || !trimmed || sendingReply) return;
 
-const formatTime = (dateStr?: string) => {
-  if (!dateStr) return "";
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "";
-    return d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
-  } catch {
-    return "";
-  }
-};
+      setSendingReply(true);
+      try {
+        const res = await fetch("/api/user/ticket", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: selectedTicket._id,
+            messageText: trimmed,
+          }),
+        });
 
-export default function UserTicketChat({
-  tickets,
-  selectedTicket,
-  setSelectedTicket,
-  chatEndRef,
-  onTicketUpdated,
-}: UserTicketChatProps) {
-  const [replyText, setReplyText] = useState("");
-  const [sendingReply, setSendingReply] = useState(false);
+        const data = await res.json().catch(() => ({}));
 
-  const handleSendReply = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = replyText.trim();
-    if (!selectedTicket || !trimmed || sendingReply) return;
-
-    setSendingReply(true);
-    try {
-      const res = await fetch("/api/user/ticket", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: selectedTicket._id,
-          messageText: trimmed,
-        }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok && data.ticket) {
-        setReplyText("");
-        setSelectedTicket(data.ticket);
-        if (onTicketUpdated) {
-          onTicketUpdated();
+        if (res.ok && data.ticket) {
+          setReplyText("");
+          setSelectedTicket(data.ticket);
+          if (onTicketUpdated) {
+            onTicketUpdated();
+          }
+        } else {
+          throw new Error(data.message || "خطا در ارسال پیام");
         }
-      } else {
-        throw new Error(data.message || "خطا در ارسال پیام");
+      } catch (err: unknown) {
+        showAlert("خطا", (err as Error).message || "ارسال پاسخ ناموفق بود.", "error");
+      } finally {
+        setSendingReply(false);
       }
-    } catch (err: any) {
-      showAlert("خطا", err.message || "ارسال پاسخ ناموفق بود.", "error");
-    } finally {
-      setSendingReply(false);
-    }
-  };
+    };
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start font-danaMed">
-      <div
-        className={`lg:col-span-5 space-y-4 ${
-          selectedTicket ? "hidden lg:block" : "block"
-        }`}
-      >
-        <h2 className="text-white font-bold text-lg mb-2 font-morabbaReg">
-          درخواست‌های من
-        </h2>
-        {tickets.length === 0 ? (
-          <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
-            <MessageSquare className="w-12 h-12 mx-auto opacity-20 mb-3 text-amber-400" />
-            شما هیچ تیکت پشتیبانی ثبت نکرده‌اید.
-          </div>
-        ) : (
-          <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
-            {tickets.map((t) => {
-              const isSelected = selectedTicket?._id === t._id;
-              return (
-                <div
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start font-danaMed">
+        <div
+          className={`lg:col-span-5 space-y-4 ${
+            selectedTicket ? "hidden lg:block" : "block"
+          }`}
+        >
+          <h2 className="text-white font-bold text-lg mb-2 font-morabbaReg">
+            درخواست‌های من
+          </h2>
+          {tickets.length === 0 ? (
+            <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl">
+              <MessageSquare className="w-12 h-12 mx-auto opacity-20 mb-3 text-amber-400" />
+              شما هیچ تیکت پشتیبانی ثبت نکرده‌اید.
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+              {tickets.map((t) => (
+                <TicketItem
                   key={t._id}
-                  onClick={() => setSelectedTicket(t)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-3 ${ isSelected ? "bg-amber-500/15 border-amber-500 text-white shadow-lg shadow-amber-500/10" : "bg-white/[0.03] border-white/10 text-white hover:bg-white/5" }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <span className="font-bold text-sm line-clamp-1">
-                      {t.subject}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 rounded border text-[9px] ${getCategoryBadge(t.category)}`}
-                    >
-                      {getCategoryLabel(t.category)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
-                    {t.description}
-                  </p>
-                  <div className="flex justify-between items-center text-[10px] text-neutral-400 pt-2 border-t border-white/5">
-                    <span
-                      className={`px-2 py-0.5 rounded-full border text-[9px] ${getStatusBadge(t.status)}`}
-                    >
-                      {getStatusLabel(t.status)}
-                    </span>
-                    <span className="ss02">
-                      {formatDate(t.createdAt)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                  ticket={t}
+                  isSelected={selectedTicket?._id === t._id}
+                  onSelect={setSelectedTicket}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div
+          className={`lg:col-span-7 ${
+            !selectedTicket ? "hidden lg:block" : "block"
+          }`}
+        >
+          {selectedTicket && (
+            <button
+              type="button"
+              onClick={() => setSelectedTicket(null)}
+              className="mb-3 bg-white/5 hover:bg-white/10 text-amber-400 border border-amber-500/20 px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer font-bold"
+            >
+              <ArrowRight className="w-4 h-4" />
+              <span>بازگشت به درخواست‌ها</span>
+            </button>
+          )}
+
+          {!selectedTicket ? (
+            <div className="h-[480px] border border-dashed border-amber-500/20 rounded-2xl flex flex-col items-center justify-center text-neutral-400 p-8 text-center bg-white/[0.02]">
+              <MessageSquare className="w-16 h-16 mb-4 opacity-20 text-amber-400" />
+              <h4 className="font-bold text-lg text-white mb-2 font-morabbaReg">
+                تیکتی انتخاب نشده است
+              </h4>
+              <p className="text-sm">
+                برای مشاهده پاسخ‌ها و گفتگو، یکی از درخواست‌های خود را انتخاب کنید.
+              </p>
+            </div>
+          ) : (
+            <div className="bg-white/[0.03] border border-amber-500/15 rounded-2xl overflow-hidden flex flex-col h-[580px] shadow-2xl">
+              <TicketChatHeader selectedTicket={selectedTicket} />
+
+              <TicketChatMessages
+                selectedTicket={selectedTicket}
+                chatEndRef={chatEndRef}
+              />
+
+              <TicketChatFooter
+                selectedTicketStatus={selectedTicket.status}
+                replyText={replyText}
+                setReplyText={setReplyText}
+                sendingReply={sendingReply}
+                onSendReply={handleSendReply}
+              />
+            </div>
+          )}
+        </div>
       </div>
-
-      <div
-        className={`lg:col-span-7 ${
-          !selectedTicket ? "hidden lg:block" : "block"
-        }`}
-      >
-        {selectedTicket && (
-          <button
-            type="button"
-            onClick={() => setSelectedTicket(null)}
-            className="mb-3 bg-white/5 hover:bg-white/10 text-amber-400 border border-amber-500/20 px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer font-bold"
-          >
-            <ArrowRight className="w-4 h-4" />
-            <span>بازگشت به درخواست‌ها</span>
-          </button>
-        )}
-
-        {!selectedTicket ? (
-          <div className="h-[480px] border border-dashed border-amber-500/20 rounded-2xl flex flex-col items-center justify-center text-neutral-400 p-8 text-center bg-white/[0.02]">
-            <MessageSquare className="w-16 h-16 mb-4 opacity-20 text-amber-400" />
-            <h4 className="font-bold text-lg text-white mb-2 font-morabbaReg">
-              تیکتی انتخاب نشده است
-            </h4>
-            <p className="text-sm">
-              برای مشاهده پاسخ‌ها و گفتگو، یکی از درخواست‌های خود را انتخاب کنید.
-            </p>
-          </div>
-        ) : (
-          <div className="bg-white/[0.03] border border-amber-500/15 rounded-2xl overflow-hidden flex flex-col h-[580px] shadow-2xl">
-            <div className="p-4 border-b border-white/10 bg-black/40 flex justify-between items-center">
-              <div>
-                <h3 className="text-md font-bold text-white line-clamp-1 mb-1 font-morabbaReg">
-                  {selectedTicket.subject}
-                </h3>
-                <div className="flex flex-wrap gap-2 items-center">
-                  <span
-                    className={`px-2 py-0.5 rounded-full border text-[8px] font-semibold ${getStatusBadge(selectedTicket.status)}`}
-                  >
-                    {getStatusLabel(selectedTicket.status)}
-                  </span>
-                  <span
-                    className={`px-2 py-0.5 rounded border text-[8px] ${getCategoryBadge(selectedTicket.category)}`}
-                  >
-                    {getCategoryLabel(selectedTicket.category)}
-                  </span>
-                  <span className="text-[9px] text-neutral-400 ss02">
-                    ثبت: {formatDate(selectedTicket.createdAt)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/20">
-              <div className="flex gap-3 max-w-[85%] mr-auto flex-row-reverse">
-                <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold flex-shrink-0">
-                  من
-                </div>
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl rounded-tl-none p-3 text-white text-xs">
-                  <div className="text-amber-400/70 text-[9px] mb-1 font-bold">من</div>
-                  <p className="leading-relaxed whitespace-pre-line text-neutral-200">
-                    {selectedTicket.description}
-                  </p>
-                  {selectedTicket.videoUrl && (
-                    <div className="mt-3 rounded-xl overflow-hidden border border-white/10 max-w-sm bg-black/40">
-                      {isVideo(selectedTicket.videoUrl) ? (
-                        <video
-                          src={selectedTicket.videoUrl}
-                          controls
-                          className="w-full h-auto max-h-56 object-cover"
-                        />
-                      ) : (
-                        <a
-                          href={selectedTicket.videoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block relative group overflow-hidden"
-                        >
-                          <img
-                            src={selectedTicket.videoUrl}
-                            alt="پیوست حرکت"
-                            className="w-full h-auto max-h-56 object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-white">
-                            مشاهده تصویر کامل
-                          </div>
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {selectedTicket.messages &&
-                selectedTicket.messages.map((msg) => {
-                  const isSupport =
-                    typeof msg.senderId === "object" && msg.senderId !== null
-                      ? (msg.senderId as any).role === "admin" ||
-                        (msg.senderId as any).role === "coach"
-                      : true;
-
-                  return (
-                    <div
-                      key={msg._id}
-                      className={`flex gap-3 max-w-[85%] ${isSupport ? "justify-start" : "mr-auto flex-row-reverse"}`}
-                    >
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 border ${ isSupport ? "bg-amber-500/20 border-amber-500/30 text-amber-400" : "bg-amber-500/10 border-amber-500/20 text-amber-300" }`}
-                      >
-                        {isSupport ? (
-                          <Shield className="w-4 h-4 text-amber-400" />
-                        ) : (
-                          "من"
-                        )}
-                      </div>
-                      <div
-                        className={`rounded-2xl p-3 text-white text-xs border ${ isSupport ? "bg-white/5 border-white/10 rounded-tr-none" : "bg-amber-500/10 border-amber-500/20 rounded-tr-none" }`}
-                      >
-                        <div className="flex justify-between items-center gap-6 text-neutral-400 text-[9px] mb-1">
-                          <span>{isSupport ? "پشتیبان فیت‌کوچ" : "من"}</span>
-                          <span className="ss02">
-                            {formatTime(msg.createdAt)}
-                          </span>
-                        </div>
-                        <p className="leading-relaxed whitespace-pre-line text-neutral-200">
-                          {msg.text}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              <div ref={chatEndRef} />
-            </div>
-
-            <div className="p-4 border-t border-white/10 bg-black/40">
-              {selectedTicket.status === "closed" ? (
-                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center text-amber-400 text-xs flex items-center justify-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  این تیکت پشتیبانی بسته شده است. در صورت نیاز تیکت جدیدی ایجاد
-                  کنید.
-                </div>
-              ) : (
-                <form onSubmit={handleSendReply} className="flex gap-2">
-                  <textarea
-                    rows={1}
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder="پاسخ خود را در اینجا بنویسید..."
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:border-amber-500/50 resize-none leading-relaxed h-11 min-h-[44px] max-h-24 overflow-y-auto"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendReply(e);
-                      }
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!replyText.trim() || sendingReply}
-                    className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold hover:opacity-95 w-12 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    <Send className="w-4 h-4 rotate-180 text-neutral-950" />
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+    );
+  }

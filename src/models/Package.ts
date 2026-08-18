@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IPackage } from "@/types/package";
+import type { IPackage } from "@/types/package";
 
 const PackageSchema = new Schema<IPackage>(
   {
@@ -19,7 +19,7 @@ const PackageSchema = new Schema<IPackage>(
     isActive: { type: Boolean, default: true },
     hasMealPlan: { type: Boolean, default: false },
   },
-  { timestamps: true, versionKey: false },
+  { timestamps: true, versionKey: false, bufferCommands: false },
 );
 
 export default mongoose.models.Package ||

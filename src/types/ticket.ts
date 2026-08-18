@@ -105,3 +105,26 @@ export interface TicketMutateApiResponse {
   ticket?: IClientTicket;
   message?: string;
 }
+
+export interface TicketItemProps {
+  ticket: IClientTicket;
+  isSelected: boolean;
+  onSelect: (ticket: IClientTicket) => void;
+}
+
+export interface TicketChatMessagesProps {
+  selectedTicket: IClientTicket;
+  chatEndRef: RefObject<HTMLDivElement | null>;
+}
+
+export interface TicketChatHeaderProps {
+  selectedTicket: IClientTicket;
+}
+
+export interface TicketChatFooterProps {
+  selectedTicketStatus: IClientTicket["status"];
+  replyText: string;
+  setReplyText: (val: string) => void;
+  sendingReply: boolean;
+  onSendReply: (e: React.FormEvent) => void;
+}

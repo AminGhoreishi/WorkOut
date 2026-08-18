@@ -1,4 +1,4 @@
-import { IClientTicket as ITicket } from "@/types/ticket";
+import type { IClientTicket as ITicket } from "@/types/ticket";
 
 export const getStatusBadge = (status: ITicket["status"]) => {
   switch (status) {
@@ -58,4 +58,33 @@ export const getCategoryLabel = (category: ITicket["category"]) => {
     default:
       return category;
   }
+};
+
+export const formatDate = (dateStr?: string) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("fa-IR");
+  } catch {
+    return dateStr;
+  }
+};
+
+export const formatTime = (dateStr?: string) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
+};
+
+export const isVideo = (url?: string) => {
+  if (!url) return false;
+  const videoExtensions = [".mp4", ".mov", ".webm", ".avi", ".mkv"];
+  const lowerUrl = url.toLowerCase().split("?")[0];
+  return videoExtensions.some((ext) => lowerUrl.endsWith(ext));
 };

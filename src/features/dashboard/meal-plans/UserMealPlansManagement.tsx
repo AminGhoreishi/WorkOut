@@ -129,43 +129,43 @@ export default function UserMealPlansManagement() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-            <div className="bg-white/[0.03] border border-white/10 p-4 rounded-2xl flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="bg-white/[0.03] border border-white/10 p-3.5 sm:p-4 rounded-2xl flex flex-col items-start gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0">
                 <Flame className="w-5 h-5" />
               </div>
-              <div>
-                <p className="text-xs text-neutral-400">کالری کل روزانه</p>
-                <p className="text-base sm:text-xl font-bold text-white ss02 mt-0.5">{totalDailyCalories} kcal</p>
+              <div className="w-full flex flex-row items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-1">
+                <p className="text-xs text-neutral-400 whitespace-nowrap">کالری کل روزانه</p>
+                <p className="text-xs sm:text-xl font-bold text-white ss02 sm:mt-0.5 whitespace-nowrap">{totalDailyCalories} kcal</p>
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/10 p-4 rounded-2xl flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <div className="bg-white/[0.03] border border-white/10 p-3.5 sm:p-4 rounded-2xl flex flex-col items-start gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
                 <Dumbbell className="w-5 h-5" />
               </div>
-              <div>
-                <p className="text-xs text-neutral-400">پروتئین کل</p>
-                <p className="text-base sm:text-xl font-bold text-white ss02 mt-0.5">{totalDailyProtein} g</p>
+              <div className="w-full flex flex-row items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-1">
+                <p className="text-xs text-neutral-400 whitespace-nowrap">پروتئین کل</p>
+                <p className="textxs sm:text-xl font-bold text-white ss02 sm:mt-0.5 whitespace-nowrap">{totalDailyProtein} g</p>
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/10 p-4 rounded-2xl flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <div className="bg-white/[0.03] border border-white/10 p-3.5 sm:p-4 rounded-2xl flex flex-col items-start gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
                 <Wheat className="w-5 h-5" />
               </div>
-              <div>
-                <p className="text-xs text-neutral-400">کربوهیدرات کل</p>
-                <p className="text-base sm:text-xl font-bold text-white ss02 mt-0.5">{totalDailyCarbs} g</p>
+              <div className="w-full flex flex-row items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-1">
+                <p className="text-xs text-neutral-400 whitespace-nowrap">کربوهیدرات کل</p>
+                <p className="text-xs sm:text-xl font-bold text-white ss02 sm:mt-0.5 whitespace-nowrap">{totalDailyCarbs} g</p>
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/10 p-4 rounded-2xl flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-pink-500/10 text-pink-400 border border-pink-500/20">
+            <div className="bg-white/[0.03] border border-white/10 p-3.5 sm:p-4 rounded-2xl flex flex-col items-start gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-pink-500/10 text-pink-400 border border-pink-500/20 shrink-0">
                 <PieChart className="w-5 h-5" />
               </div>
-              <div>
-                <p className="text-xs text-neutral-400">چربی کل</p>
-                <p className="text-base sm:text-xl font-bold text-white ss02 mt-0.5">{totalDailyFat} g</p>
+              <div className="w-full flex flex-row items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-1">
+                <p className="text-xs text-neutral-400 whitespace-nowrap">چربی کل</p>
+                <p className="text-sm sm:text-xl font-bold text-white ss02 sm:mt-0.5 whitespace-nowrap">{totalDailyFat} g</p>
               </div>
             </div>
           </div>
