@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import { showAlert, showConfirm } from "@/utils/alert";
 import type {
   WorkoutExercise,
   WorkoutExercisesSectionProps,
@@ -13,7 +14,6 @@ export default function WorkoutExercisesSection({
   exercises,
   videos,
   onFetchExercises,
-  onDeleteExercise,
 }: WorkoutExercisesSectionProps) {
   const [showExerciseForm, setShowExerciseForm] = useState(false);
   const [editingExercise, setEditingExercise] =
@@ -23,6 +23,35 @@ export default function WorkoutExercisesSection({
     onFetchExercises(selectedDay._id);
     setShowExerciseForm(false);
     setEditingExercise(null);
+  };
+
+  const handleDeleteExercise = async (id: string) => {
+    const confirmed = await showConfirm({
+      title: "حذف حرکت تمرینی",
+      text: "آیا از حذف این حرکت تمرینی اطمینان دارید؟",
+      confirmButtonText: "بله، حذف شود",
+      icon: "warning",
+    });
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(
+        `/api/admin/subscription/workout-exercises?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (res.ok) {
+        onFetchExercises(selectedDay._id);
+      }
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در حذف حرکت تمرینی",
+        icon: "error",
+      });
+    }
   };
 
   return (
@@ -117,7 +146,7 @@ export default function WorkoutExercisesSection({
                 </button>
                 <button
                   type="button"
-                  onClick={() => onDeleteExercise(ex._id)}
+                  onClick={() => handleDeleteExercise(ex._id)}
                   className="bg-white/5 hover:bg-red-500/20 border border-white/10 text-red-400 p-2 rounded-lg transition-colors cursor-pointer"
                   title="حذف"
                 >

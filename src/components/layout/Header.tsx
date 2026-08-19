@@ -31,7 +31,7 @@ export default function Header({
           <div className="flex justify-between items-center h-16 relative">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-neutral-300 hover:text-amber-400 focus:outline-none transition-colors"
+              className="lg:hidden p-2 text-neutral-300 hover:text-amber-400 focus:outline-none transition-colors"
               aria-label="منوی اصلی"
             >
               {isMobileMenuOpen ? (
@@ -43,7 +43,7 @@ export default function Header({
 
             <Link
               href="/"
-              className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center gap-2 group"
+              className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-2 group"
             >
               <Image
                 src="/android-chrome-192x192.png"
@@ -57,7 +57,7 @@ export default function Header({
               </span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+            <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
               <Link href="/" className={getLinkClass("/")}>
                 خانه
               </Link>
@@ -70,15 +70,12 @@ export default function Header({
               <Link href="/articles" className={getLinkClass("/articles")}>
                 مقالات
               </Link>
-              <Link
-                href="/introduce"
-                className={`${getLinkClass("/introduce")} max-lg:hidden`}
-              >
+              <Link href="/introduce" className={getLinkClass("/introduce")}>
                 درباره ما
               </Link>
             </div>
 
-            <div className="hidden md:flex items-center">
+            <div className="hidden lg:flex items-center">
               {authSlot ? (
                 authSlot
               ) : session ? (
@@ -100,7 +97,7 @@ export default function Header({
 
             <Link
               href="/dashboard/workout"
-              className="md:hidden p-2 text-neutral-300 hover:text-amber-400 transition-colors"
+              className="lg:hidden p-2 text-neutral-300 hover:text-amber-400 transition-colors"
               aria-label="پکیج‌های ورزشی"
             >
               <Dumbbell className="w-7 h-7 text-amber-400" />

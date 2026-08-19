@@ -5,12 +5,19 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { packageId, title, description } = await req.json();
+    const { packageId, userId, subscriptionId, title, description } = await req.json();
 
-    const plan = await WorkoutPlan.create({ packageId, title, description });
+    const plan = await WorkoutPlan.create({
+      packageId,
+      userId: userId || null,
+      subscriptionId: subscriptionId || null,
+      title: title || "برنامه تمرینی اختصاصی",
+      description: description || "",
+    });
     return NextResponse.json({ plan }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -19,14 +26,17 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(req.url);
     const packageId = searchParams.get("packageId");
+    const userId = searchParams.get("userId");
 
-    const query = packageId
-      ? { packageId, isActive: true }
-      : { isActive: true };
+    const query: Record<string, unknown> = { isActive: true };
+    if (packageId) query.packageId = packageId;
+    if (userId) query.userId = userId;
+
     const plans = await WorkoutPlan.find(query);
     return NextResponse.json({ plans });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -40,7 +50,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: "شناسه برنامه الزامی است" }, { status: 400 });
     }
 
-    const updatedData: any = {};
+    const updatedData: Record<string, unknown> = {};
     if (title !== undefined) updatedData.title = title;
     if (description !== undefined) updatedData.description = description;
     if (isActive !== undefined) updatedData.isActive = isActive;
@@ -52,8 +62,9 @@ export async function PUT(req: NextRequest) {
     }
 
     return NextResponse.json({ plan });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -74,8 +85,9 @@ export async function DELETE(req: NextRequest) {
     }
 
     return NextResponse.json({ message: "برنامه با موفقیت حذف شد" });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 

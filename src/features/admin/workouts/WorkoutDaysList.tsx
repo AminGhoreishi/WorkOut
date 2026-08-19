@@ -1,15 +1,54 @@
 "use client";
 
+import { memo } from "react";
 import { Edit, Trash2 } from "lucide-react";
+import { showAlert, showConfirm } from "@/utils/alert";
 import type { WorkoutDaysListProps } from "@/types/workout";
 
-export default function WorkoutDaysList({
+function WorkoutDaysList({
   workoutDays,
   selectedDay,
   onSelectDay,
   onEditDay,
+  onDayDeleted,
   onDeleteDay,
 }: WorkoutDaysListProps) {
+  const handleDeleteDay = async (id: string) => {
+    if (onDeleteDay) {
+      onDeleteDay(id);
+      return;
+    }
+
+    const confirmed = await showConfirm({
+      title: "حذف روز تمرینی",
+      text: "آیا از حذف این روز و تمامی حرکات ورزشی آن اطمینان دارید؟",
+      confirmButtonText: "بله، حذف شود",
+      icon: "warning",
+    });
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/admin/subscription/workout-days?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        if (selectedDay?._id === id) {
+          onSelectDay(null);
+        }
+        if (onDayDeleted) {
+          onDayDeleted();
+        }
+      }
+    } catch {
+      showAlert({
+        title: "خطا",
+        text: "خطا در حذف روز",
+        icon: "error",
+      });
+    }
+  };
+
   if (workoutDays.length === 0) {
     return (
       <div className="text-white/40 text-center text-xs p-8 border border-dashed border-white/10 rounded-xl font-danaMed" dir="rtl">
@@ -60,7 +99,7 @@ export default function WorkoutDaysList({
               </button>
               <button
                 type="button"
-                onClick={() => onDeleteDay(day._id)}
+                onClick={() => handleDeleteDay(day._id)}
                 className={`p-1.5 rounded transition-all cursor-pointer ${
                   isSelected
                     ? "hover:bg-black/10 text-neutral-900"
@@ -77,3 +116,27 @@ export default function WorkoutDaysList({
     </div>
   );
 }
+
+function areWorkoutDaysPropsEqual(
+  prevProps: WorkoutDaysListProps,
+  nextProps: WorkoutDaysListProps
+) {
+  if (prevProps.selectedDay?._id !== nextProps.selectedDay?._id) {
+    return false;
+  }
+  if (prevProps.workoutDays.length !== nextProps.workoutDays.length) {
+    return false;
+  }
+  for (let i = 0; i < prevProps.workoutDays.length; i++) {
+    if (
+      prevProps.workoutDays[i]._id !== nextProps.workoutDays[i]._id ||
+      prevProps.workoutDays[i].dayName !== nextProps.workoutDays[i].dayName ||
+      prevProps.workoutDays[i].muscleGroup !== nextProps.workoutDays[i].muscleGroup
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export default memo(WorkoutDaysList, areWorkoutDaysPropsEqual);

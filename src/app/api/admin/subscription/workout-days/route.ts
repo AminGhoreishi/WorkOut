@@ -10,8 +10,9 @@ export async function POST(req: NextRequest) {
 
     const days = await WorkoutDay.insertMany(items);
     return NextResponse.json({ days }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -20,17 +21,26 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(req.url);
     const planId = searchParams.get("planId");
+    const weekId = searchParams.get("weekId");
+    const userId = searchParams.get("userId");
 
-    if (!planId)
+    const query: Record<string, unknown> = {};
+    if (planId) query.planId = planId;
+    if (weekId) query.weekId = weekId;
+    if (userId) query.userId = userId;
+
+    if (!planId && !weekId && !userId) {
       return NextResponse.json(
-        { message: "planId الزامی است" },
+        { message: "شناسه الزامی است" },
         { status: 400 },
       );
+    }
 
-    const days = await WorkoutDay.find({ planId }).sort({ sortOrder: 1 });
+    const days = await WorkoutDay.find(query).sort({ sortOrder: 1 });
     return NextResponse.json({ days });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -38,16 +48,18 @@ export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
-    const { id, dayName, muscleGroup, sortOrder } = body;
+    const { id, dayName, muscleGroup, sortOrder, weekId, userId } = body;
 
     if (!id) {
       return NextResponse.json({ message: "شناسه روز تمرینی الزامی است" }, { status: 400 });
     }
 
-    const updatedData: any = {};
+    const updatedData: Record<string, unknown> = {};
     if (dayName !== undefined) updatedData.dayName = dayName;
     if (muscleGroup !== undefined) updatedData.muscleGroup = muscleGroup;
     if (sortOrder !== undefined) updatedData.sortOrder = sortOrder;
+    if (weekId !== undefined) updatedData.weekId = weekId;
+    if (userId !== undefined) updatedData.userId = userId;
 
     const day = await WorkoutDay.findByIdAndUpdate(id, updatedData, { new: true });
 
@@ -56,8 +68,9 @@ export async function PUT(req: NextRequest) {
     }
 
     return NextResponse.json({ day });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 
@@ -81,8 +94,9 @@ export async function DELETE(req: NextRequest) {
     await WorkoutExercise.deleteMany({ dayId: id });
 
     return NextResponse.json({ message: "روز تمرینی و حرکات آن با موفقیت حذف شدند" });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 

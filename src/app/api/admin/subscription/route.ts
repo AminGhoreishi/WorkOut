@@ -13,12 +13,17 @@ export async function GET(req: NextRequest) {
     const limit = searchParams.get("limit") || "10";
     const status = searchParams.get("status");
     const search = searchParams.get("search");
+    const packageId = searchParams.get("packageId");
 
     const skip = (Number(page) - 1) * Number(limit);
 
     let query: any = {};
     if (status && status !== "all") {
       query.status = status;
+    }
+
+    if (packageId) {
+      query.packageId = packageId;
     }
 
     if (search) {
@@ -35,7 +40,7 @@ export async function GET(req: NextRequest) {
     }
 
     const subscriptions = await Subscription.find(query)
-      .populate("userId", "username fullName email phone")
+      .populate("userId", "username fullName email phone avatar")
       .populate("packageId", "name slug colorClass price")
       .sort({ createdAt: -1 })
       .skip(skip)

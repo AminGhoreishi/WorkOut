@@ -378,5 +378,40 @@ export const modifiedFiles = [
     id: "76",
     filePath: "src/features/dashboard/tickets/TicketChatFooter.tsx",
     description: "Extract ticket chat reply form and footer component into dedicated file TicketChatFooter.tsx"
+  },
+  {
+    id: "77",
+    filePath: "src/components/layout/admin/sidebarItems.ts",
+    description: "Categorize getUserMenuItems items into titled MenuSection groups (منوی اصلی, تمرین و تغذیه, پروفایل و شخصی, پشتیبانی و نظرات)"
+  },
+  {
+    id: "78",
+    filePath: "src/features/home/Testimonials.tsx",
+    description: "Make Testimonials component responsive for mobile and tablet screens with adaptive container padding and grid layout"
+  },
+  {
+    id: "79",
+    filePath: "src/components/layout/Header.tsx",
+    description: "Update Header breakpoint classes from md to lg to trigger MobileMenu on screens below lg (tablet & mobile)"
+  },
+  {
+    id: "80",
+    filePath: "src/components/layout/MobileMenu.tsx",
+    description: "Add درباره ما navigation link to MobileMenu items"
+  },
+  {
+    id: "81",
+    filePath: ".env",
+    description: "Update NEXTAUTH_URL and NEXT_PUBLIC_URL environment variables to https://starfitteam.ir"
+  },
+  {
+    id: "82",
+    filePath: "src/types/workout.ts",
+    description: "Add userId and subscriptionId optional fields to WorkoutPlan and IWorkoutPlan interfaces"
+  },
+  {
+    id: "83",
+    filePath: "src/models/WorkoutPlan.ts",
+    description: "Add userId and subscriptionId fields referencing User and Subscription models to WorkoutPlan schema"
   }
 ];

@@ -28,10 +28,19 @@ export async function GET(req: NextRequest) {
         { status: 403 },
       );
 
-    const plan = await WorkoutPlan.findOne({
+    let plan = await WorkoutPlan.findOne({
       packageId: subscription.packageId,
+      userId: session.user.id,
       isActive: true,
     });
+
+    if (!plan) {
+      plan = await WorkoutPlan.findOne({
+        packageId: subscription.packageId,
+        userId: null,
+        isActive: true,
+      });
+    }
 
     if (!plan)
       return NextResponse.json(

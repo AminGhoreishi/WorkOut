@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
@@ -28,11 +28,11 @@ export default function MobileMenu({
   mobileAuthSlot,
   getLinkClass,
 }: MobileMenuProps) {
-  const [mounted, setMounted] = useState<boolean>(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -53,6 +53,7 @@ export default function MobileMenu({
     { href: "/packages", label: "پکیج‌ها", icon: Package },
     { href: "/nutrition", label: "کالری شمار", icon: Utensils },
     { href: "/articles", label: "مقالات", icon: Newspaper },
+    { href: "/introduce", label: "درباره ما", icon: User },
     { href: "/dashboard/tickets", label: "پشتیبانی", icon: Headset },
   ];
 

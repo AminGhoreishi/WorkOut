@@ -20,7 +20,7 @@ import {
   Film,
   TrendingUp,
 } from "lucide-react";
-import { SidebarCounts, MenuItem, MenuSection } from "@/types/sidebar";
+import type { SidebarCounts, MenuSection } from "@/types/sidebar";
 
 export function getAdminMenuItems(
   counts: SidebarCounts,
@@ -175,7 +175,7 @@ export function getUserMenuItems(
 ): MenuSection[] {
   return [
     {
-      title: "منوی کاربر",
+      title: "منوی اصلی",
       items: [
         {
           id: "dashboard",
@@ -191,9 +191,14 @@ export function getUserMenuItems(
           badge: null,
           href: "/dashboard/subscription",
         },
+      ],
+    },
+    {
+      title: "تمرین و تغذیه",
+      items: [
         {
           id: "workout",
-          label: "برنامه ی تمرینی",
+          label: "برنامه‌ی تمرینی",
           icon: Dumbbell,
           badge: null,
           href: "/dashboard/workout",
@@ -212,6 +217,25 @@ export function getUserMenuItems(
           badge: null,
           href: "/dashboard/progress",
         },
+        {
+          id: "bmi",
+          label: "شاخص توده بدنی (BMI)",
+          icon: Activity,
+          badge: null,
+          href: "/dashboard/bmi",
+        },
+        {
+          id: "nutrition",
+          label: "تغذیه و کالری‌شمار",
+          icon: Salad,
+          badge: null,
+          href: "/nutrition",
+        },
+      ],
+    },
+    {
+      title: "پروفایل و شخصی",
+      items: [
         {
           id: "profile",
           label: "پروفایل سایت",
@@ -233,20 +257,11 @@ export function getUserMenuItems(
           badge: counts.wishlist > 0 ? formatNumber(counts.wishlist) : null,
           href: "/dashboard/favorites",
         },
-        {
-          id: "bmi",
-          label: "شاخص توده بدنی (BMI)",
-          icon: Activity,
-          badge: null,
-          href: "/dashboard/bmi",
-        },
-        {
-          id: "nutrition",
-          label: "تغذیه و کالری‌شمار",
-          icon: Salad,
-          badge: null,
-          href: "/nutrition",
-        },
+      ],
+    },
+    {
+      title: "پشتیبانی و نظرات",
+      items: [
         {
           id: "tickets",
           label: "تیکت‌ها",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import useSWR from "swr";
 import { showAlert, showConfirm } from "@/utils/alert";
 import {
@@ -10,14 +10,19 @@ import {
   Dumbbell,
   Package,
   ChevronDown,
+  Users,
+  Search,
+  X,
 } from "lucide-react";
 import type {
   PackageInfo,
+  UserInfo,
   WorkoutPlan,
   WorkoutWeekInfo,
   WorkoutDay,
   VideoInfo,
   WorkoutExercise,
+  SubscriptionItem,
 } from "@/types/workout";
 import VideoPlayerModal from "@/components/VideoPlayerModal";
 import WorkoutDayForm from "./WorkoutDayForm";
@@ -26,8 +31,11 @@ import EditPlanInfoForm from "./EditPlanInfoForm";
 import WorkoutWeeksList from "./WorkoutWeeksList";
 import WorkoutDaysList from "./WorkoutDaysList";
 import CreatePlanForm from "./CreatePlanForm";
+import UserSearchInput from "./UserSearchInput";
+import AddWorkoutDropdown from "./AddWorkoutDropdown";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const EMPTY_ARRAY: any[] = [];
 
 export default function WorkoutsManagement() {
   const [selectedPackage, setSelectedPackage] = useState<PackageInfo | null>(null);
@@ -37,21 +45,31 @@ export default function WorkoutsManagement() {
   const [isEditingPlanInfo, setIsEditingPlanInfo] = useState(false);
   const [showDayForm, setShowDayForm] = useState(false);
   const [editingDay, setEditingDay] = useState<WorkoutDay | null>(null);
-  const [showAddDropdown, setShowAddDropdown] = useState(false);
   const [watchingVideo, setWatchingVideo] = useState<VideoInfo | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
 
   const { data: pkgData, isLoading: loadingPackages } = useSWR(
     "/api/admin/package",
     fetcher
   );
-  const packages: PackageInfo[] = pkgData?.packages || [];
+  const packages: PackageInfo[] = pkgData?.packages ?? EMPTY_ARRAY;
 
   const { data: vidData } = useSWR("/api/admin/video", fetcher);
-  const videos: VideoInfo[] = vidData?.videos || [];
+  const videos: VideoInfo[] = vidData?.videos ?? EMPTY_ARRAY;
+
+  const { data: subsData, isLoading: loadingSubs } = useSWR(
+    selectedPackage
+      ? `/api/admin/subscription?packageId=${selectedPackage._id}&limit=100`
+      : null,
+    fetcher
+  );
+  const packageSubscriptions: SubscriptionItem[] = subsData?.subscriptions ?? EMPTY_ARRAY;
 
   const { data: monthData, mutate: mutatePlan, isLoading: loadingPlan } = useSWR(
     selectedPackage
-      ? `/api/admin/subscription/workout-month?packageId=${selectedPackage._id}`
+      ? selectedUser
+        ? `/api/admin/subscription/workout-plans?packageId=${selectedPackage._id}&userId=${selectedUser._id}`
+        : `/api/admin/subscription/workout-plans?packageId=${selectedPackage._id}`
       : null,
     fetcher
   );
@@ -60,11 +78,11 @@ export default function WorkoutsManagement() {
 
   const { data: weeksData, mutate: mutateWeeks } = useSWR(
     selectedPackage && workoutPlan
-      ? `/api/admin/subscription/workout-week?packageId=${selectedPackage._id}`
+      ? `/api/admin/subscription/workout-week?planId=${workoutPlan._id}`
       : null,
     fetcher
   );
-  const workoutWeeks: WorkoutWeekInfo[] = weeksData?.weeks || [];
+  const workoutWeeks: WorkoutWeekInfo[] = weeksData?.weeks ?? EMPTY_ARRAY;
 
   const activeWeek = selectedWeek || (workoutWeeks.length > 0 ? workoutWeeks[0] : null);
 
@@ -74,7 +92,7 @@ export default function WorkoutsManagement() {
       : null,
     fetcher
   );
-  const workoutDays: WorkoutDay[] = daysData?.days || [];
+  const workoutDays: WorkoutDay[] = daysData?.days ?? EMPTY_ARRAY;
 
   const { data: exercisesData, mutate: mutateExercises } = useSWR(
     selectedDay
@@ -82,34 +100,9 @@ export default function WorkoutsManagement() {
       : null,
     fetcher
   );
-  const exercises: WorkoutExercise[] = exercisesData?.exercises || [];
+  const exercises: WorkoutExercise[] = exercisesData?.exercises ?? EMPTY_ARRAY;
 
-  const handleCreateWeek = async () => {
-    if (!selectedPackage) return;
-    try {
-      const res = await fetch("/api/admin/subscription/workout-week", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId: selectedPackage._id }),
-      });
-      if (res.ok) {
-        showAlert({
-          title: "موفقیت",
-          text: "هفته جدید با موفقیت ایجاد شد",
-          icon: "success",
-        });
-        mutateWeeks();
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "خطا در ایجاد هفته جدید",
-        icon: "error",
-      });
-    }
-  };
-
-  const handleDeleteWeek = async (id: string) => {
+  const handleDeleteWeek = useCallback(async (id: string) => {
     const confirmed = await showConfirm({
       title: "حذف هفته",
       text: "آیا از حذف این هفته اطمینان دارید؟",
@@ -142,16 +135,16 @@ export default function WorkoutsManagement() {
         icon: "error",
       });
     }
-  };
+  }, [selectedWeek, mutateWeeks]);
 
-  const handleSelectPackage = (pkg: PackageInfo) => {
+  const handleSelectPackage = useCallback((pkg: PackageInfo) => {
     setSelectedPackage(pkg);
     setSelectedWeek(null);
     setSelectedDay(null);
     setShowDayForm(false);
-  };
+  }, []);
 
-  const handleDeletePlan = async () => {
+  const handleDeletePlan = useCallback(async () => {
     if (!workoutPlan) return;
     const confirmed = await showConfirm({
       title: "حذف برنامه تمرینی",
@@ -164,7 +157,7 @@ export default function WorkoutsManagement() {
 
     try {
       const res = await fetch(
-        `/api/admin/subscription/workout-month?id=${workoutPlan._id}`,
+        `/api/admin/subscription/workout-plans?id=${workoutPlan._id}`,
         {
           method: "DELETE",
         }
@@ -188,77 +181,45 @@ export default function WorkoutsManagement() {
         icon: "error",
       });
     }
-  };
+  }, [workoutPlan, mutatePlan, mutateWeeks, mutateDays]);
 
-  const handleDaySuccess = () => {
+  const handleDaySuccess = useCallback(() => {
     mutateDays();
     setShowDayForm(false);
     setEditingDay(null);
-  };
+  }, [mutateDays]);
 
-  const handleDeleteDay = async (id: string) => {
-    const confirmed = await showConfirm({
-      title: "حذف روز تمرینی",
-      text: "آیا از حذف این روز و تمامی حرکات ورزشی آن اطمینان دارید؟",
-      confirmButtonText: "بله، حذف شود",
-      icon: "warning",
-    });
-
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch(`/api/admin/subscription/workout-days?id=${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        if (selectedDay?._id === id) {
-          setSelectedDay(null);
-        }
-        mutateDays();
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "خطا در حذف روز",
-        icon: "error",
-      });
-    }
-  };
-
-  const handleDeleteExercise = async (id: string) => {
-    const confirmed = await showConfirm({
-      title: "حذف حرکت تمرینی",
-      text: "آیا از حذف این حرکت تمرینی اطمینان دارید؟",
-      confirmButtonText: "بله، حذف شود",
-      icon: "warning",
-    });
-
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch(
-        `/api/admin/subscription/workout-exercises?id=${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (res.ok) {
-        mutateExercises();
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "خطا در حذف حرکت تمرینی",
-        icon: "error",
-      });
-    }
-  };
-
-  const handleWeekSelect = (week: WorkoutWeekInfo) => {
+  const handleWeekSelect = useCallback((week: WorkoutWeekInfo) => {
     setSelectedWeek(week);
     setSelectedDay(null);
     setShowDayForm(false);
-  };
+  }, []);
+
+  const handleAddNewDay = useCallback(() => {
+    setEditingDay(null);
+    setShowDayForm(true);
+  }, []);
+
+  const handleWeekCreated = useCallback(() => {
+    mutateWeeks();
+  }, [mutateWeeks]);
+
+  const handleSelectDay = useCallback((day: WorkoutDay | null) => {
+    setSelectedDay(day);
+  }, []);
+
+  const handleEditDay = useCallback((day: WorkoutDay) => {
+    setEditingDay(day);
+    setShowDayForm(true);
+  }, []);
+
+  const handleDayDeleted = useCallback(() => {
+    mutateDays();
+  }, [mutateDays]);
+
+  const handleFetchExercises = useCallback(() => {
+    mutateExercises();
+  }, [mutateExercises]);
 
   return (
     <div className="overflow-hidden font-danaMed" dir="rtl">
@@ -290,7 +251,7 @@ export default function WorkoutsManagement() {
                     <div
                       key={pkg._id}
                       onClick={() => handleSelectPackage(pkg)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-2 ${ isSelected ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg" : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10" }`}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col gap-2 ${isSelected ? "bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border-amber-400 text-white shadow-lg" : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"}`}
                     >
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-sm">{pkg.name}</span>
@@ -326,28 +287,35 @@ export default function WorkoutsManagement() {
                 <div className="space-y-6">
                   <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-amber-500/10 to-yellow-600/5">
                     <div>
-                      <div className="text-xs text-amber-400 font-bold mb-1">
-                        پکیج انتخاب شده
+                      <div className="text-xs text-amber-400 font-bold mb-1 flex items-center gap-2">
+                        <span>پکیج انتخاب شده</span>
+                        <span className="bg-amber-500/20 text-amber-300 text-[11px] px-2 py-0.5 rounded-full font-semibold ss02">
+                          {packageSubscriptions.length} کاربر دارای اشتراک
+                        </span>
                       </div>
                       <h3 className="text-xl font-bold text-white font-morabbaReg">
                         {selectedPackage.name}
                       </h3>
                     </div>
-                    {workoutPlan && (
-                      <button
-                        type="button"
-                        onClick={handleDeletePlan}
-                        className="bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer font-bold"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        حذف کل برنامه تمرینی
-                      </button>
-                    )}
+                    <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                      <UserSearchInput setSelectedUser={setSelectedUser} />
+                      {workoutPlan && (
+                        <button
+                          type="button"
+                          onClick={handleDeletePlan}
+                          className="bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer font-bold shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          <span>حذف کل برنامه تمرینی</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {!workoutPlan ? (
                     <CreatePlanForm
                       selectedPackage={selectedPackage}
+                      selectedUser={selectedUser}
                       onSuccess={() => mutatePlan()}
                     />
                   ) : (
@@ -391,50 +359,14 @@ export default function WorkoutsManagement() {
                           <span className="text-white font-bold text-sm">
                             روزهای تمرینی
                           </span>
-                          <div className="relative">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setShowAddDropdown(!showAddDropdown)
-                              }
-                              className="bg-amber-500/10 hover:bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                              <span>افزودن جدید</span>
-                              <ChevronDown
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${showAddDropdown ? "rotate-180" : ""}`}
-                              />
-                            </button>
-
-                            {showAddDropdown && (
-                              <div className="absolute left-0 mt-2 w-36 bg-neutral-900 border border-white/10 rounded-lg shadow-xl py-1.5 z-20">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    handleCreateWeek();
-                                    setShowAddDropdown(false);
-                                  }}
-                                  className="w-full text-right px-4 py-2 text-xs text-white/80 hover:text-white hover:bg-white/5 flex items-center gap-2 transition-colors cursor-pointer"
-                                >
-                                  <Plus className="w-3.5 h-3.5 text-purple-400" />
-                                  <span>هفته ی جدید</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={!activeWeek}
-                                  onClick={() => {
-                                    setEditingDay(null);
-                                    setShowDayForm(true);
-                                    setShowAddDropdown(false);
-                                  }}
-                                  className="w-full text-right px-4 py-2 text-xs text-white/80 disabled:opacity-50 disabled:cursor-not-allowed hover:text-white hover:bg-white/5 flex items-center gap-2 transition-colors cursor-pointer"
-                                >
-                                  <Plus className="w-3.5 h-3.5 text-amber-400" />
-                                  <span>روز جدید</span>
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <AddWorkoutDropdown
+                            packageId={selectedPackage._id}
+                            workoutPlanId={workoutPlan._id}
+                            userId={selectedUser?._id}
+                            hasActiveWeek={Boolean(activeWeek)}
+                            onWeekCreated={handleWeekCreated}
+                            onAddNewDay={handleAddNewDay}
+                          />
                         </div>
 
                         <div className="space-y-3">
@@ -453,6 +385,7 @@ export default function WorkoutsManagement() {
                           <WorkoutDayForm
                             editingDay={editingDay}
                             workoutPlanId={activeWeek._id}
+                            userId={selectedUser?._id}
                             onSuccess={handleDaySuccess}
                             onCancel={() => {
                               setShowDayForm(false);
@@ -465,12 +398,9 @@ export default function WorkoutsManagement() {
                         <WorkoutDaysList
                           workoutDays={workoutDays}
                           selectedDay={selectedDay}
-                          onSelectDay={(day) => setSelectedDay(day)}
-                          onEditDay={(day) => {
-                            setEditingDay(day);
-                            setShowDayForm(true);
-                          }}
-                          onDeleteDay={handleDeleteDay}
+                          onSelectDay={handleSelectDay}
+                          onEditDay={handleEditDay}
+                          onDayDeleted={handleDayDeleted}
                         />
                       </div>
 
@@ -487,8 +417,7 @@ export default function WorkoutsManagement() {
                             selectedDay={selectedDay}
                             exercises={exercises}
                             videos={videos}
-                            onFetchExercises={() => mutateExercises()}
-                            onDeleteExercise={handleDeleteExercise}
+                            onFetchExercises={handleFetchExercises}
                           />
                         )}
                       </div>

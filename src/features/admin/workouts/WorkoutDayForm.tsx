@@ -8,6 +8,7 @@ import { showAlert } from "@/utils/alert";
 export default function WorkoutDayForm({
   editingDay,
   workoutPlanId,
+  userId,
   onSuccess,
   onCancel,
   defaultSortOrder,
@@ -49,6 +50,7 @@ export default function WorkoutDayForm({
             dayName: data.dayName,
             muscleGroup: data.muscleGroup,
             sortOrder: Number(data.sortOrder),
+            userId: userId || null,
           }),
         });
         if (res.ok) {
@@ -73,6 +75,7 @@ export default function WorkoutDayForm({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             planId: workoutPlanId,
+            userId: userId || null,
             dayName: data.dayName,
             muscleGroup: data.muscleGroup,
             sortOrder: Number(data.sortOrder),

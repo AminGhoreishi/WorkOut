@@ -10,7 +10,7 @@ export default function LatestArticlesList({
   articles,
 }: LatestArticlesListProps) {
   return articles && articles.length > 0 ? (
-    <div className="grid md:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
       {articles.map((a) => (
         <Link
           key={a.id}

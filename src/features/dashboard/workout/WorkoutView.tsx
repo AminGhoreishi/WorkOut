@@ -35,6 +35,7 @@ const fetcher = async (url: string) => {
 export default function WorkoutView({
   subscription,
   userId,
+  hasFitnessProfile
 }: WorkoutViewProps) {
   const [selectedWeekId, setSelectedWeekId] = useState<string>("");
   const [selectedDayId, setSelectedDayId] = useState<string>("");
@@ -48,7 +49,9 @@ export default function WorkoutView({
     mutate: mutateWeeks,
   } = useSWR<{ weeks: SimpleWeek[] }>(
     packageId
-      ? `/api/admin/subscription/workout-week?packageId=${packageId}`
+      ? userId
+        ? `/api/admin/subscription/workout-week?packageId=${packageId}&userId=${userId}`
+        : `/api/admin/subscription/workout-week?packageId=${packageId}`
       : null,
     fetcher,
     {
@@ -123,7 +126,7 @@ export default function WorkoutView({
   }
 
   if (workoutWeek.length === 0) {
-    return <NoWorkoutPlan />;
+    return <NoWorkoutPlan  hasFitnessProfile={hasFitnessProfile} />;
   }
 
   const activeWeek =

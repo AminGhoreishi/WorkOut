@@ -7,6 +7,7 @@ export interface UserInfo {
   fullName?: string;
   email?: string;
   phone?: string;
+  avatar?: string;
 }
 
 export interface PackageInfo {
@@ -32,6 +33,8 @@ export interface SubscriptionItem {
 export interface WorkoutPlan {
   _id: string;
   packageId: string;
+  userId?: string;
+  subscriptionId?: string;
   title: string;
   description?: string;
   isActive: boolean;
@@ -40,6 +43,8 @@ export interface WorkoutPlan {
 export interface WorkoutWeekInfo {
   _id: string;
   packageId: string;
+  planId?: string;
+  userId?: string;
   title: string;
   createdAt?: string;
 }
@@ -47,6 +52,8 @@ export interface WorkoutWeekInfo {
 export interface WorkoutDay {
   _id: string;
   planId: string;
+  weekId?: string;
+  userId?: string;
   dayName: string;
   muscleGroup: string;
   sortOrder: number;
@@ -106,6 +113,8 @@ export interface WorkoutPlanProps {
 
 export interface IWorkoutPlan extends Document {
   packageId: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
+  subscriptionId?: mongoose.Types.ObjectId;
   title: string;
   description?: string;
   isActive: boolean;
@@ -115,6 +124,8 @@ export interface IWorkoutPlan extends Document {
 
 export interface IWorkoutweek extends Document {
   packageId: mongoose.Types.ObjectId;
+  planId?: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
   title?: string;
   workoutdays?: unknown[];
   workoutexcersice?: unknown[];
@@ -133,6 +144,8 @@ export interface IWorkoutmonth extends Document {
 
 export interface IWorkoutDay extends Document {
   planId: mongoose.Types.ObjectId;
+  weekId?: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
   dayName: string;
   muscleGroup: string;
   sortOrder: number;
@@ -202,6 +215,7 @@ export interface VideoPlayerModalProps {
 export interface WorkoutDayFormProps {
   editingDay: WorkoutDay | null;
   workoutPlanId: string;
+  userId?: string;
   onSuccess: (updatedDay?: WorkoutDay) => void;
   onCancel: () => void;
   defaultSortOrder: number;
@@ -234,6 +248,11 @@ export interface WorkoutViewProps {
     };
   };
   userId?: string;
+  hasFitnessProfile?: boolean;
+}
+
+export interface NoWorkoutPlanProps {
+  hasFitnessProfile?: boolean;
 }
 
 export interface WorkoutHeaderProps {
@@ -282,6 +301,7 @@ export interface WorkoutErrorStateProps {
 
 export interface CreatePlanFormProps {
   selectedPackage: PackageInfo;
+  selectedUser?: UserInfo | null;
   onSuccess: (plan: WorkoutPlan) => void;
 }
 
@@ -298,8 +318,8 @@ export interface WorkoutExercisesSectionProps {
   selectedDay: WorkoutDay;
   exercises: WorkoutExercise[];
   videos: VideoInfo[];
-  onFetchExercises: (dayId: string) => void;
-  onDeleteExercise: (id: string) => void;
+  onFetchExercises: (dayId?: string) => void;
+  onDeleteExercise?: (id: string) => void;
 }
 
 export interface EditPlanInfoFormProps {
@@ -318,7 +338,23 @@ export interface WorkoutWeeksListProps {
 export interface WorkoutDaysListProps {
   workoutDays: WorkoutDay[];
   selectedDay: WorkoutDay | null;
-  onSelectDay: (day: WorkoutDay) => void;
+  onSelectDay: (day: WorkoutDay | null) => void;
   onEditDay: (day: WorkoutDay) => void;
-  onDeleteDay: (id: string) => void;
+  onDayDeleted?: () => void;
+  onDeleteDay?: (id: string) => void;
 }
+
+export interface UserSearchInputProps {
+  setSelectedUser: (user: UserInfo | null) => void;
+  placeholder?: string;
+}
+
+export interface AddWorkoutDropdownProps {
+  packageId?: string;
+  workoutPlanId?: string;
+  userId?: string;
+  hasActiveWeek: boolean;
+  onWeekCreated: () => void;
+  onAddNewDay: () => void;
+}
+

@@ -1,9 +1,10 @@
 "use client";
 
+import { memo } from "react";
 import { Trash2 } from "lucide-react";
 import type { WorkoutWeeksListProps } from "@/types/workout";
 
-export default function WorkoutWeeksList({
+function WorkoutWeeksList({
   workoutWeeks,
   selectedWeek,
   onSelectWeek,
@@ -38,7 +39,7 @@ export default function WorkoutWeeksList({
                 e.stopPropagation();
                 onDeleteWeek(week._id);
               }}
-              className="p-1 rounded hover:bg-white/10 text-red-400 cursor-pointer"
+              className="p-1.5 hover:bg-white/10 rounded text-red-400 transition-colors cursor-pointer"
               title="حذف هفته"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -49,3 +50,26 @@ export default function WorkoutWeeksList({
     </div>
   );
 }
+
+function areWorkoutWeeksPropsEqual(
+  prevProps: WorkoutWeeksListProps,
+  nextProps: WorkoutWeeksListProps
+) {
+  if (prevProps.selectedWeek?._id !== nextProps.selectedWeek?._id) {
+    return false;
+  }
+  if (prevProps.workoutWeeks.length !== nextProps.workoutWeeks.length) {
+    return false;
+  }
+  for (let i = 0; i < prevProps.workoutWeeks.length; i++) {
+    if (
+      prevProps.workoutWeeks[i]._id !== nextProps.workoutWeeks[i]._id ||
+      prevProps.workoutWeeks[i].title !== nextProps.workoutWeeks[i].title
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export default memo(WorkoutWeeksList, areWorkoutWeeksPropsEqual);

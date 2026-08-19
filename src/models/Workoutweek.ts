@@ -4,6 +4,8 @@ import { IWorkoutweek } from "@/types/workout";
 const WorkoutweekSchema = new Schema<IWorkoutweek>(
   {
     packageId: { type: Schema.Types.ObjectId, ref: "Package", required: true },
+    planId: { type: Schema.Types.ObjectId, ref: "WorkoutPlan", default: null },
+    userId: { type: Schema.Types.ObjectId, ref: "User", default: null },
     title: { type: String },
   },
   {
@@ -16,9 +18,10 @@ const WorkoutweekSchema = new Schema<IWorkoutweek>(
 
 WorkoutweekSchema.pre("save", async function () {
   if (!this.title) {
-    const count = await (this.constructor as any).countDocuments({
-      packageId: this.packageId,
-    });
+    const query: Record<string, unknown> = { packageId: this.packageId };
+    if (this.planId) query.planId = this.planId;
+    else if (this.userId) query.userId = this.userId;
+    const count = await (this.constructor as any).countDocuments(query);
     const persianWords = [
       "اول",
       "دوم",

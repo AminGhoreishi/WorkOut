@@ -8,7 +8,7 @@ export default function WorkoutPlansList({ plans }: WorkoutPlansProps) {
   const displayPlans = plans || [];
 
   return (
-    <div className="grid md:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
       {displayPlans.map((plan) => (
         <div
           key={plan.id}

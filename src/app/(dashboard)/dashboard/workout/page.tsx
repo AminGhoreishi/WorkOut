@@ -7,6 +7,7 @@ import registerModels from "@/lib/registerModels";
 import Subscription from "@/models/Subscription";
 import WorkoutView from "@/features/dashboard/workout/WorkoutView";
 import { connection } from "next/server";
+import Fitnessprofile from "@/models/Fitnessprofile";
 
 export const metadata: Metadata = {
   title: "برنامه تمرینی من | استار فیت",
@@ -30,9 +31,13 @@ export default async function UserWorkoutPage() {
     .populate("packageId", "tagline isActive name")
     .lean();
 
+ const hasFitnessProfile = Boolean(await Fitnessprofile.exists({ userId: session.user.id }));
+
+
+
   const plainSubscription = subscription
     ? JSON.parse(JSON.stringify(subscription))
     : null;
 
-  return <WorkoutView subscription={plainSubscription} userId={session.user.id} />;
+  return <WorkoutView subscription={plainSubscription} userId={session.user.id} hasFitnessProfile={hasFitnessProfile} />;
 }
