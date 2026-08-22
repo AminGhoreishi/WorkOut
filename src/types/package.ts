@@ -118,6 +118,7 @@ export interface SubscriptionPackageItem {
 
 export interface SubscriptionPackagesProps {
   children?: React.ReactNode;
+  packages?: SubscriptionPackageItem[];
 }
 
 export interface PackagesGridProps {

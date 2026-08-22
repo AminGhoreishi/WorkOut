@@ -25,7 +25,7 @@ export default function IntroducePage() {
       <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-16 relative z-10 space-y-20">
+      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-16 relative z-10 space-y-20">
         <header className="text-center space-y-6 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 border border-amber-500/30 text-amber-400 text-xs md:text-sm font-semibold shadow-[0_0_15px_rgba(234,179,8,0.15)]">
             <Award className="w-4 h-4 text-amber-400 shrink-0" />
@@ -47,10 +47,10 @@ export default function IntroducePage() {
           </p>
         </header>
 
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <section className="grid  grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-neutral-900/80 backdrop-blur-xl border border-amber-500/20 p-6 rounded-2xl text-center space-y-2 shadow-[0_0_20px_rgba(234,179,8,0.05)] hover:border-amber-500/40 transition-colors">
             <Award className="w-8 h-8 mx-auto text-amber-400" />
-            <span className="text-2xl font-extrabold text-white font-morabbaBold block">
+            <span className="text-2xl max-sm:text-lg font-extrabold text-white font-morabbaBold block">
               مربی رسمی
             </span>
             <span className="text-neutral-400 text-xs block">
@@ -60,7 +60,7 @@ export default function IntroducePage() {
 
           <div className="bg-neutral-900/80 backdrop-blur-xl border border-amber-500/20 p-6 rounded-2xl text-center space-y-2 shadow-[0_0_20px_rgba(234,179,8,0.05)] hover:border-amber-500/40 transition-colors">
             <UserCheck className="w-8 h-8 mx-auto text-amber-400" />
-            <span className="text-2xl font-extrabold text-white font-morabbaBold block">
+            <span className="text-2xl max-sm:text-lg font-extrabold text-white font-morabbaBold block">
               پرسونال ترینینگ
             </span>
             <span className="text-neutral-400 text-xs block">
@@ -70,7 +70,7 @@ export default function IntroducePage() {
 
           <div className="bg-neutral-900/80 backdrop-blur-xl border border-amber-500/20 p-6 rounded-2xl text-center space-y-2 shadow-[0_0_20px_rgba(234,179,8,0.05)] hover:border-amber-500/40 transition-colors">
             <Trophy className="w-8 h-8 mx-auto text-amber-400" />
-            <span className="text-2xl font-extrabold text-white font-morabbaBold block">
+            <span className="text-2xl max-sm:text-lg font-extrabold text-white font-morabbaBold block">
               بدنسازی فوتبال
             </span>
             <span className="text-neutral-400 text-xs block">
@@ -80,7 +80,7 @@ export default function IntroducePage() {
 
           <div className="bg-neutral-900/80 backdrop-blur-xl border border-amber-500/20 p-6 rounded-2xl text-center space-y-2 shadow-[0_0_20px_rgba(234,179,8,0.05)] hover:border-amber-500/40 transition-colors">
             <Dumbbell className="w-8 h-8 mx-auto text-amber-400" />
-            <span className="text-2xl font-extrabold text-white font-morabbaBold block">
+            <span className="text-2xl max-sm:text-lg font-extrabold text-white font-morabbaBold block">
               تناسب اندام
             </span>
             <span className="text-neutral-400 text-xs block">
@@ -207,7 +207,7 @@ export default function IntroducePage() {
 
         <section className="bg-neutral-900/70 border border-amber-500/20 rounded-3xl p-8 md:p-12 space-y-8 backdrop-blur-xl">
           <div className="space-y-3 text-center md:text-right">
-            <h2 className="text-2xl md:text-3xl font-bold font-morabbaBold text-white">
+            <h2 className="text-2xl max-sm:text-lg md:text-3xl font-bold font-morabbaBold text-white">
               چرا سیستم مربیگری استار فیت با امیرحسین میرآفتابی؟
             </h2>
             <p className="text-neutral-400 text-xs md:text-sm">

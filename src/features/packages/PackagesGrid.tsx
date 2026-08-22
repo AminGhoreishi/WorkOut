@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BiCheck, BiDumbbell } from "react-icons/bi";
-import { BsArrowLeft } from "react-icons/bs";
+import { BsArrowLeft, BsStarFill } from "react-icons/bs";
 import type { PackagesGridProps } from "@/types/package";
 
 export { PackagesSkeleton } from "./PackagesSkeleton";
@@ -18,14 +18,10 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
           }`}
         >
           {pkg.popular && (
-            <>
-              <div className="md:hidden w-[calc(100%+3rem)] sm:w-[calc(100%+4rem)] -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6 py-2 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 text-center font-bold text-sm tracking-wide shadow-md flex items-center justify-center gap-1.5">
-                <span>محبوب‌ترین</span>
-              </div>
-              <div className="hidden md:block absolute -top-4 right-1/2 translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 px-6 py-1 rounded-full text-sm font-bold shadow-md">
-                محبوب‌ترین
-              </div>
-            </>
+            <div className="w-[calc(100%+3rem)] sm:w-[calc(100%+4rem)] -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6 py-2.5 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 text-center font-bold text-xs sm:text-sm tracking-wide shadow-md flex items-center justify-center gap-1.5 font-danaMed">
+              <BsStarFill className="w-3.5 h-3.5 text-neutral-950" />
+              <span>محبوب‌ترین پکیج</span>
+            </div>
           )}
 
           <div>

@@ -76,11 +76,12 @@ export async function POST(req: NextRequest) {
       code: otpCode,
     });
 
-    const apiKey = process.env.IRANPAYAMAK_API_KEY || "jLePanroKfVAUkWHcI30peKmeYfD5adPWmiIpCT50V0bxMomRV";
-    const lineNumber = process.env.IRANPAYAMAK_LINE_NUMBER || "50002178584000";
+    const apiKey = process.env.IRANPAYAMAK_API_KEY || "";
+    const lineNumber = process.env.IRANPAYAMAK_LINE_NUMBER || "";
+    const patternCode = process.env.IRANPAYAMAK_PATTERN_CODE || "";
 
     const patternPayload: IranPayamakPatternPayload = {
-      code: "8O45kAGUSe",
+      code: patternCode,
       attributes: {
         code: otpCode,
         var1: otpCode,
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
       number_format: "english",
     };
 
-    const res = await fetch("https://api.iranpayamak.com/ws/v1/sms/pattern", {
+    await fetch("https://api.iranpayamak.com/ws/v1/sms/pattern", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,9 +100,6 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify(patternPayload),
     });
-
-    const data = await res.json();
-    console.log("data", data);
 
     return NextResponse.json(
       { message: "کد تایید با موفقیت ارسال شد" },

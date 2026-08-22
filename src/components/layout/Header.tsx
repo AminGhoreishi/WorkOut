@@ -70,7 +70,7 @@ export default function Header({
               <Link href="/articles" className={getLinkClass("/articles")}>
                 مقالات
               </Link>
-              <Link href="/introduce" className={getLinkClass("/introduce")}>
+              <Link href="/about" className={getLinkClass("/introduce")}>
                 درباره ما
               </Link>
             </div>

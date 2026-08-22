@@ -1,11 +1,15 @@
 "use client";
+
 import Link from "next/link";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BiDumbbell, BiArrowBack } from "react-icons/bi";
+import { BsShieldCheck, BsPencilSquare, BsArrowClockwise } from "react-icons/bs";
 import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { toEnglishDigits } from "@/utils/numbers";
-import type { AuthApiResponse } from "@/types/auth";
+import type { AuthApiResponse, OtpFormInputs } from "@/types/auth";
 
 function OtpFormContent() {
   const searchParams = useSearchParams();
@@ -20,13 +24,26 @@ function OtpFormContent() {
       ? rawCallbackUrl
       : "/dashboard";
 
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState<number>(120);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isResending, setIsResending] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<OtpFormInputs>({
+    defaultValues: {
+      code: "",
+    },
+  });
+
+  const codeValue = watch("code") || "";
 
   useEffect(() => {
     if (!phone || !/^09\d{9}$/.test(phone)) {
@@ -50,16 +67,20 @@ function OtpFormContent() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handleOtpChange = (index: number, value: string) => {
+  const handleDigitChange = (index: number, val: string) => {
     setServerError("");
     setSuccessMessage("");
-    const cleanVal = toEnglishDigits(value).replace(/\D/g, "");
-    if (!cleanVal && value !== "") return;
+    const cleanVal = toEnglishDigits(val).replace(/\D/g, "");
+    if (!cleanVal && val !== "") return;
 
     const digit = cleanVal.slice(-1);
-    const newOtp = [...otp];
-    newOtp[index] = digit;
-    setOtp(newOtp);
+    const codeArr = ["", "", "", "", ""];
+    for (let i = 0; i < 5; i++) {
+      codeArr[i] = codeValue[i] || "";
+    }
+    codeArr[index] = digit;
+    const newCode = codeArr.join("");
+    setValue("code", newCode, { shouldValidate: true });
 
     if (digit && index < 4) {
       inputRefs.current[index + 1]?.focus();
@@ -68,10 +89,10 @@ function OtpFormContent() {
 
   const handleKeyDown = (
     index: number,
-    e: React.KeyboardEvent<HTMLInputElement>,
+    e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Backspace") {
-      if (!otp[index] && index > 0) {
+      if (!codeValue[index] && index > 0) {
         inputRefs.current[index - 1]?.focus();
       }
     } else if (e.key === "ArrowLeft" && index > 0) {
@@ -90,23 +111,16 @@ function OtpFormContent() {
 
     if (!cleanDigits) return;
 
-    const newOtp = ["", "", "", "", ""];
-    for (let i = 0; i < cleanDigits.length; i++) {
-      newOtp[i] = cleanDigits[i];
-    }
-    setOtp(newOtp);
-
+    setValue("code", cleanDigits, { shouldValidate: true });
     const targetIndex = Math.min(cleanDigits.length, 4);
     inputRefs.current[targetIndex]?.focus();
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<OtpFormInputs> = async (data) => {
     setServerError("");
     setSuccessMessage("");
-    const code = otp.join("");
 
-    if (code.length < 5) {
+    if (data.code.length < 5) {
       setServerError("لطفاً کد ۵ رقمی را کامل وارد کنید");
       return;
     }
@@ -118,7 +132,7 @@ function OtpFormContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phone,
-          code,
+          code: data.code,
         }),
       });
 
@@ -171,7 +185,7 @@ function OtpFormContent() {
 
       if (res.ok) {
         setTimeLeft(120);
-        setOtp(["", "", "", "", ""]);
+        setValue("code", "", { shouldValidate: true });
         inputRefs.current[0]?.focus();
         setSuccessMessage("کد تایید جدید ارسال شد");
       } else {
@@ -185,112 +199,147 @@ function OtpFormContent() {
 
   return (
     <div
-      className="min-h-screen bg-black font-danaMed flex items-center justify-center p-4 relative overflow-hidden"
+      className="min-h-screen bg-black font-danaMed flex items-center justify-center p-4 sm:p-6 relative overflow-hidden"
       dir="rtl"
     >
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-600/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-md animate-in fade-in duration-300 relative z-10">
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-3 group">
-            <BiDumbbell className="w-12 h-12 text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
-            <span className="font-bold text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
+            <BiDumbbell className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
+            <span className="font-bold text-2xl sm:text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 tracking-wide">
               استارفیت
             </span>
           </Link>
-          <p className="text-amber-100/60 text-sm">به جامعه فیتنس ما بپیوندید</p>
+          <p className="text-amber-100/60 text-xs sm:text-sm">ورود امن و سریع به حساب کاربری</p>
         </div>
 
-        <div className="bg-zinc-950/80 backdrop-blur-xl border border-amber-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(245,158,11,0.05)] rounded-2xl p-8 relative overflow-hidden">
-          <div className="animate-in slide-in-from-left-4 duration-300">
-            <div className="flex items-center gap-2 mb-6">
-              <Link
-                href="/login"
-                className="text-zinc-400 hover:text-amber-400 p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors cursor-pointer"
-              >
-                <BiArrowBack className="w-5 h-5 transform scale-x-[-1]" />
-              </Link>
-              <div className="flex-1 text-center pr-6">
-                <h2 className="text-xl font-bold text-amber-100 mb-1">
-                  تایید شماره تلفن
-                </h2>
-                <p className="text-amber-200/60 text-xs leading-relaxed truncate max-w-[280px]">
-                  کد تایید ۵ رقمی به {phone || "شماره تلفن شما"} ارسال گردید
-                </p>
+        <div className="bg-zinc-950/85 backdrop-blur-2xl border border-amber-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(245,158,11,0.08)] rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+          <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-800/80">
+            <Link
+              href="/login"
+              className="w-9 h-9 bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 rounded-xl flex items-center justify-center text-zinc-400 hover:text-amber-400 transition-all cursor-pointer"
+            >
+              <BiArrowBack className="w-5 h-5 transform scale-x-[-1]" />
+            </Link>
+
+            <div className="text-center">
+              <h2 className="text-lg sm:text-xl font-bold text-white flex items-center justify-center gap-2">
+                <BsShieldCheck className="w-5 h-5 text-amber-400" />
+                <span>کد تایید ورود</span>
+              </h2>
+            </div>
+
+            <Link
+              href="/login"
+              className="w-9 h-9 bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 rounded-xl flex items-center justify-center text-zinc-400 hover:text-amber-400 transition-all cursor-pointer"
+              title="ویرایش شماره"
+            >
+              <BsPencilSquare className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="text-center mb-6">
+            <p className="text-zinc-400 text-xs sm:text-sm">
+              کد ۵ رقمی پیامک‌شده به شماره زیر را وارد کنید:
+            </p>
+            <span className="inline-block mt-2 font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg text-sm sm:text-base dir-ltr">
+              {phone || "---"}
+            </span>
+          </div>
+
+          {serverError && (
+            <div className="mb-4 p-3.5 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 text-xs sm:text-sm text-center">
+              {serverError}
+            </div>
+          )}
+
+          {errors.code && (
+            <div className="mb-4 p-3.5 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 text-xs sm:text-sm text-center">
+              {errors.code.message}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs sm:text-sm text-center">
+              {successMessage}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <input
+              type="hidden"
+              {...register("code", {
+                required: "لطفاً کد ۵ رقمی را کامل وارد کنید",
+                minLength: {
+                  value: 5,
+                  message: "کد ۵ رقمی ناقص است",
+                },
+              })}
+            />
+
+            <div>
+              <div className="flex justify-center gap-2.5 sm:gap-3" dir="ltr">
+                {[0, 1, 2, 3, 4].map((index) => (
+                  <input
+                    key={index}
+                    ref={(el) => {
+                      inputRefs.current[index] = el;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={codeValue[index] || ""}
+                    onChange={(e) => handleDigitChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    onPaste={handlePaste}
+                    className="w-11 h-14 sm:w-13 sm:h-16 bg-zinc-900/80 border border-amber-500/25 rounded-2xl text-center text-amber-300 font-bold text-xl sm:text-2xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40 focus:scale-105 transition-all shadow-inner"
+                  />
+                ))}
               </div>
             </div>
 
-            {serverError && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm text-center">
-                {serverError}
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-sm text-center">
-                {successMessage}
-              </div>
-            )}
-
-            <form onSubmit={handleVerifyOtp} className="space-y-6">
-              <div>
-                <label className="block text-amber-100/90 mb-4 text-xs font-semibold text-center">
-                  کد تایید ۵ رقمی را وارد کنید
-                </label>
-                <div className="flex justify-center gap-3" dir="ltr">
-                  {otp.map((digit, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => {
-                        inputRefs.current[index] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      onPaste={handlePaste}
-                      className="w-12 h-14 bg-zinc-900/80 border border-amber-500/20 rounded-xl text-center text-amber-300 font-bold text-xl focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 focus:bg-zinc-800/90 transition-all"
-                    />
-                  ))}
+            <div className="flex items-center justify-between text-xs sm:text-sm text-zinc-400 pt-2 border-t border-zinc-800/60">
+              {timeLeft > 0 ? (
+                <div className="flex items-center gap-1.5 text-zinc-400">
+                  <span>ارسال مجدد کد تا</span>
+                  <span className="font-mono font-bold text-amber-400 bg-zinc-900 px-2 py-0.5 rounded-md border border-zinc-800">
+                    {formatTime(timeLeft)}
+                  </span>
                 </div>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-zinc-400">
-                {timeLeft > 0 ? (
-                  <span>ارسال مجدد کد پس از {formatTime(timeLeft)}</span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleResendCode}
-                    disabled={isResending}
-                    className="text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors disabled:opacity-50"
-                  >
-                    {isResending ? "در حال ارسال..." : "ارسال مجدد کد تایید"}
-                  </button>
-                )}
-                <Link
-                  href="/login"
-                  className="text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors"
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResendCode}
+                  disabled={isResending}
+                  className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors disabled:opacity-50"
                 >
-                  ویرایش شماره تلفن
-                </Link>
-              </div>
+                  <BsArrowClockwise className="w-4 h-4" />
+                  <span>{isResending ? "در حال ارسال..." : "ارسال مجدد کد"}</span>
+                </button>
+              )}
 
-              <button
-                type="submit"
-                disabled={isSubmitting || otp.join("").length < 5}
-                className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35"
+              <Link
+                href="/login"
+                className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
               >
-                {isSubmitting ? "در حال تایید..." : "ورود به حساب کاربری"}
-              </button>
-            </form>
-          </div>
+                ویرایش شماره
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting || codeValue.length < 5}
+              className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 sm:py-4 rounded-2xl transition-all text-sm sm:text-base cursor-pointer shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transform hover:-translate-y-0.5"
+            >
+              {isSubmitting ? "در حال تایید..." : "تایید و ورود به سیستم"}
+            </button>
+          </form>
         </div>
 
-        <div className="text-center mt-6 text-zinc-400 text-sm">
+        <div className="text-center mt-6 text-zinc-400 text-xs sm:text-sm">
           <Link href="/" className="hover:text-amber-400 transition-colors">
             بازگشت به صفحه اصلی
           </Link>
@@ -304,7 +353,7 @@ export default function OtpForm() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed">
+        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed text-xs sm:text-sm">
           بارگذاری...
         </div>
       }

@@ -1,68 +1,155 @@
 "use client";
 
 import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
-import type { WhyChooseUsItem } from "@/types/components";
+import {
+  BsBullseye,
+  BsBarChartLine,
+  BsPlayCircle,
+  BsChatDots,
+  BsCheckCircleFill,
+  BsArrowLeft,
+  BsLightningChargeFill,
+  BsTrophyFill,
+} from "react-icons/bs";
+import Link from "next/link";
 
-const whyChooseUsData: WhyChooseUsItem[] = [
+const featureItems = [
   {
-    id: "personalized-program",
-    icon: "🎯",
-    title: "برنامه شخصی‌سازی‌شده",
-    description: "برنامه بر اساس هدف، سطح تمرین، شرایط بدنی و امکانات شما طراحی می‌شود.",
+    id: "personalized",
+    icon: <BsBullseye className="w-6 h-6" />,
+    title: "برنامه‌ریزی ۱۰۰٪ اختصاصی",
+    subtitle: "تنظیم‌شده بر اساس آنالیز دقیق بدن، امکانات و هدف شما",
+    badge: "اختصاصی",
   },
   {
-    id: "measurable-progress",
-    icon: "📊",
-    title: "پیشرفت قابل اندازه‌گیری",
-    description: "روند تمرین، رکوردها و اطلاعات پیشرفت شما در طول مسیر ثبت و بررسی می‌شود.",
+    id: "progress",
+    icon: <BsBarChartLine className="w-6 h-6" />,
+    title: "آنالیز و ثبت هوشمند پیشرفت",
+    subtitle: "پایش مداوم رکوردها، وزن و تغییرات ساختار بدنی",
+    badge: "هوشمند",
   },
   {
-    id: "video-tutorials",
-    icon: "🎥",
-    title: "آموزش و بازخورد",
-    description: "ویدیوهای آموزشی حرکات در اختیار شماست و در پکیج‌های مربوطه، اجرای حرکات نیز بررسی می‌شود.",
+    id: "tutorials",
+    icon: <BsPlayCircle className="w-6 h-6" />,
+    title: "آموزش ویدیویی و بررسی فرم حرکات",
+    subtitle: "دسترسی به بانک ویدیوهای آموزشی و اصلاح خطای اجرایی",
+    badge: "آموزشی",
   },
   {
-    id: "coach-support",
-    icon: "💬",
-    title: "پشتیبانی مربی",
-    description: "سؤالات و مشکلات خود را با مربی در میان می‌گذارید و در طول مسیر بازخورد دریافت می‌کنید.",
+    id: "coaching",
+    icon: <BsChatDots className="w-6 h-6" />,
+    title: "ارتباط و پشتیبانی مستقیم مربی",
+    subtitle: "پاسخ به سؤالات و بازخورد هفتگی در طول مسیر تمرین",
+    badge: "پشتیبانی",
   },
+];
+
+const transformationSteps = [
+  { step: "۱", title: "ثبت‌نام و تکمیل فرم آنالیز بدنی" },
+  { step: "۲", title: "دریافت برنامه اختصاصی تمرین و تغذیه" },
+  { step: "۳", title: "تمرین، پایش پیشرفت و بازخورد مربی" },
 ];
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 bg-neutral-950/80 font-danaMed relative">
-      <div className="container mx-auto">
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            چرا{" "}
-            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+    <section className="relative py-20 lg:py-28 overflow-hidden font-danaMed">
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-yellow-500/10 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="container mx-auto relative z-10">
+        <div className="text-center mb-16 max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.15)]">
+            <BsLightningChargeFill className="w-4 h-4 text-amber-400" />
+            <span>تفاوت استارفیت با روش‌های سنتی</span>
+          </div>
+
+          <h2 className="text-3xl md:text-5xl font-bold font-morabbaReg text-white tracking-tight">
+            چرا مربیگری و پکیج‌های{" "}
+            <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
               استارفیت؟
             </span>
           </h2>
-          <p className="text-neutral-400 text-base md:text-lg leading-relaxed">
-            یک برنامه آماده دریافت نمی‌کنید؛ مسیر تمرینی شما بر اساس شرایط و هدف خودتان طراحی و پیگیری می‌شود.
+
+          <p className="text-neutral-300 text-base md:text-lg leading-relaxed">
+            در استارفیت یک فایل آماده دریافت نمی‌کنید؛ بلکه یک سیستم حرفه‌ای تمرین، تغذیه و مربیگری اختصاصی برای تحول بدنی شما همراهتان است.
           </p>
         </div>
-        <StaggerContainer staggerChildren={0.15} className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {whyChooseUsData.map((item) => (
-            <StaggerItem key={item.id} direction="up">
-              <div className="relative group h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-yellow-600/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all" />
-                <div className="relative h-full bg-neutral-900/80 backdrop-blur-lg border border-amber-500/20 rounded-2xl p-8 hover:bg-neutral-900 transition-all hover:border-amber-400/60 shadow-[0_0_20px_rgba(234,179,8,0.05)] flex flex-col">
-                  <div className="text-5xl mb-4">{item.icon}</div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-neutral-400 text-sm leading-relaxed mt-auto">
-                    {item.description}
-                  </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="lg:col-span-7">
+            <StaggerContainer staggerChildren={0.1} className="space-y-4">
+              {featureItems.map((item) => (
+                <StaggerItem key={item.id} direction="up">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-500/15 to-yellow-500/5 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="relative bg-neutral-900/80 backdrop-blur-xl border border-neutral-800 group-hover:border-amber-500/40 p-5 sm:p-6 rounded-2xl transition-all duration-300 shadow-md group-hover:shadow-[0_10px_30px_rgba(234,179,8,0.1)] flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 group-hover:scale-110 group-hover:bg-gradient-to-tr group-hover:from-amber-500 group-hover:to-yellow-400 group-hover:text-neutral-950 transition-all duration-300 shadow-sm">
+                        {item.icon}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                            {item.title}
+                          </h3>
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-neutral-800 text-amber-400 border border-amber-500/20 shrink-0">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+                          {item.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+
+          <div className="lg:col-span-5 flex">
+            <div className="relative w-full bg-gradient-to-b from-neutral-900 via-neutral-900/90 to-neutral-950 border border-amber-500/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl overflow-hidden group">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="space-y-6 relative z-10">
+                <div className="flex items-center gap-3 pb-4 border-b border-neutral-800">
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                    <BsTrophyFill className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white font-morabbaReg">
+                      مسیر تحول ۳ گامه
+                    </h3>
+                    <p className="text-xs text-neutral-400">از شروع تا نتیجه قطعی</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {transformationSteps.map((s, idx) => (
+                    <div key={idx} className="flex items-center gap-3.5 bg-neutral-950/60 border border-neutral-800/80 p-3.5 rounded-2xl backdrop-blur-sm">
+                      <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-neutral-950 font-bold flex items-center justify-center text-sm shrink-0 shadow-md">
+                        {s.step}
+                      </span>
+                      <span className="text-xs sm:text-sm font-semibold text-neutral-200">
+                        {s.title}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+
+              <div className="pt-6 relative z-10">
+                <Link
+                  href="/packages"
+                  className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold py-4 rounded-2xl shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+                >
+                  <span>شروع مسیر تحول بدنی</span>
+                  <BsArrowLeft className="w-5 h-5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
