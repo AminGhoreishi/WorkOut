@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import {
   Calendar,
@@ -16,6 +16,7 @@ import RestDayView from "./RestDayView";
 import WorkoutExercisesSkeleton from "./WorkoutExercisesSkeleton";
 import WorkoutErrorState from "./WorkoutErrorState";
 import NoWorkoutPlan from "./NoWorkoutPlan";
+import UserWorkoutDaysGrid from "./UserWorkoutDaysGrid";
 import type {
   DayItem,
   ExerciseItem,
@@ -40,7 +41,38 @@ export default function WorkoutView({
   const [selectedWeekId, setSelectedWeekId] = useState<string>("");
   const [selectedDayId, setSelectedDayId] = useState<string>("");
 
+  const handleSelectDayId = useCallback((dayId: string) => {
+    setSelectedDayId(dayId);
+  }, []);
+
   const packageId = subscription?.packageId?._id || "";
+
+  const { data: userPlansData, isLoading: isLoadingUserPlan } = useSWR<{
+    plans: { _id: string; title: string }[];
+  }>(
+    packageId && userId
+      ? `/api/admin/subscription/workout-plans?packageId=${packageId}&userId=${userId}`
+      : null,
+    fetcher
+  );
+
+  const { data: pkgPlansData, isLoading: isLoadingPkgPlan } = useSWR<{
+    plans: { _id: string; title: string }[];
+  }>(
+    packageId && (!userPlansData || userPlansData.plans.length === 0)
+      ? `/api/admin/subscription/workout-plans?packageId=${packageId}`
+      : null,
+    fetcher
+  );
+
+  const currentPlan =
+    userPlansData?.plans && userPlansData.plans.length > 0
+      ? userPlansData.plans[0]
+      : pkgPlansData?.plans && pkgPlansData.plans.length > 0
+      ? pkgPlansData.plans[0]
+      : null;
+
+  const currentPlanId = currentPlan?._id || "";
 
   const {
     data: weeksData,
@@ -48,7 +80,9 @@ export default function WorkoutView({
     isLoading: isLoadingWeeks,
     mutate: mutateWeeks,
   } = useSWR<{ weeks: SimpleWeek[] }>(
-    packageId
+    currentPlanId
+      ? `/api/admin/subscription/workout-week?planId=${currentPlanId}`
+      : packageId
       ? userId
         ? `/api/admin/subscription/workout-week?packageId=${packageId}&userId=${userId}`
         : `/api/admin/subscription/workout-week?packageId=${packageId}`
@@ -60,6 +94,7 @@ export default function WorkoutView({
     }
   );
 
+  const isPlanLoading = (isLoadingUserPlan || isLoadingPkgPlan) && !currentPlan;
   const workoutWeek = weeksData?.weeks || [];
   const activeWeekId = selectedWeekId || workoutWeek[0]?._id || "";
 
@@ -100,7 +135,7 @@ export default function WorkoutView({
 
   const workoutExercises = exercisesData?.exercises || [];
 
-  if (isLoadingWeeks) {
+  if (isLoadingWeeks || isPlanLoading) {
     return (
       <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-danaMed" dir="rtl">
         <div className="text-center space-y-4">
@@ -135,14 +170,14 @@ export default function WorkoutView({
     workoutDays.find((d) => d._id === activeDayId) || workoutDays[0];
 
   const workoutPlan = {
-    _id: "plan",
+    _id: currentPlan?._id || "plan",
     packageId: subscription?.packageId?._id || "",
-    title: subscription?.packageId?.name || "برنامه تمرینی من",
+    title: currentPlan?.title || subscription?.packageId?.name || "برنامه تمرینی من",
     description: activeWeek?.title || "",
     isActive: true,
   };
 
-  const totalExercises = workoutExercises.length;
+  const totalExercises = useMemo(()=> workoutExercises.length, [workoutExercises]);
   const overallProgressPercent = 0;
 
   return (
@@ -191,25 +226,11 @@ export default function WorkoutView({
                 در حال بارگذاری روزها...
               </div>
             ) : (
-              workoutDays.map((day) => {
-                const isActive = day._id === activeDayId;
-                const isRest = !day.exercises || day.exercises.length === 0;
-                return (
-                  <button
-                    key={day._id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedDayId(day._id);
-                    }}
-                    className={`flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center cursor-pointer ${ isActive ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-lg" : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-400 hover:text-white" }`}
-                  >
-                    <span className="text-sm font-bold">{day.dayName}</span>
-                    <span className="text-sm sm:text-[10px] mt-1 opacity-70 truncate max-w-full">
-                      {isRest ? "ریکاوری" : day.muscleGroup}
-                    </span>
-                  </button>
-                );
-              })
+              <UserWorkoutDaysGrid
+                workoutDays={workoutDays}
+                activeDayId={activeDayId}
+                onSelectDayId={handleSelectDayId}
+              />
             )}
           </div>
         </div>

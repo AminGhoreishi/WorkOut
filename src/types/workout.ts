@@ -358,3 +358,9 @@ export interface AddWorkoutDropdownProps {
   onAddNewDay: () => void;
 }
 
+export interface UserWorkoutDaysGridProps {
+  workoutDays: DayItem[];
+  activeDayId: string;
+  onSelectDayId: (dayId: string) => void;
+}
+

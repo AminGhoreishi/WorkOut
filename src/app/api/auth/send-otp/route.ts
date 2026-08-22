@@ -4,6 +4,7 @@ import User from "@/models/User";
 import Otp from "@/models/Otp";
 import Ban from "@/models/Ban";
 import { toEnglishDigits } from "@/utils/numbers";
+import type { IranPayamakPatternPayload } from "@/types/sms";
 
 export async function POST(req: NextRequest) {
   try {
@@ -75,22 +76,32 @@ export async function POST(req: NextRequest) {
       code: otpCode,
     });
 
-    const smsUsername = process.env.SMS_IR_USERNAME;
-    const smsPassword = process.env.SMS_IR_PASSWORD;
-    const smsLine = process.env.SMS_IR_LINE;
+    const apiKey = process.env.IRANPAYAMAK_API_KEY || "jLePanroKfVAUkWHcI30peKmeYfD5adPWmiIpCT50V0bxMomRV";
+    const lineNumber = process.env.IRANPAYAMAK_LINE_NUMBER || "50002178584000";
 
-    if (smsUsername && smsPassword && smsLine) {
-      const smsText = encodeURIComponent(`کد ورود شما به استار فیت : ${otpCode}`);
-      await fetch(
-        `https://api.sms.ir/v1/send?username=${smsUsername}&password=${smsPassword}&mobile=${cleanPhone}&line=${smsLine}&text=${smsText}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "text/plain",
-          },
-        }
-      ).catch(() => {});
-    }
+    const patternPayload: IranPayamakPatternPayload = {
+      code: "8O45kAGUSe",
+      attributes: {
+        code: otpCode,
+        var1: otpCode,
+      },
+      recipient: cleanPhone,
+      line_number: lineNumber,
+      number_format: "english",
+    };
+
+    const res = await fetch("https://api.iranpayamak.com/ws/v1/sms/pattern", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Api-Key": apiKey,
+      },
+      body: JSON.stringify(patternPayload),
+    });
+
+    const data = await res.json();
+    console.log("data", data);
 
     return NextResponse.json(
       { message: "کد تایید با موفقیت ارسال شد" },

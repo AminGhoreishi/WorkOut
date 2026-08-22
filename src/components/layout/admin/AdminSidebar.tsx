@@ -5,6 +5,7 @@ import { ChevronLeft, Menu, LogOut } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { getAdminMenuItems, getUserMenuItems } from "./sidebarItems";
 
 export default function AdminSidebar({ isAdmin = false }) {
@@ -181,13 +182,19 @@ export default function AdminSidebar({ isAdmin = false }) {
         </div>
 
         <div className="absolute bottom-0 bg-neutral-950 left-0 right-0 p-3 border-t border-amber-500/20 font-danaMed">
-          <Link
-            href="/logout"
-            className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
+          <button
+            type="button"
+            onClick={() =>
+              signOut({
+                redirect: true,
+                callbackUrl: "https://starfitteam.ir/login",
+              })
+            }
+            className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
           >
             <LogOut className="w-5 h-5 shrink-0" />
             {isOpen && <span className="flex-1 text-right text-sm">خروج</span>}
-          </Link>
+          </button>
         </div>
       </aside>
     </>

@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { WorkoutSummaryProps } from "@/types/workout";
 
-export default function WorkoutSummary({
+function WorkoutSummary({
   totalExercises,
 }: WorkoutSummaryProps) {
   return (
@@ -35,3 +36,12 @@ export default function WorkoutSummary({
     </div>
   );
 }
+
+function areWorkoutSummaryPropsEqual(
+  prevProps: WorkoutSummaryProps,
+  nextProps: WorkoutSummaryProps
+) {
+  return prevProps.totalExercises === nextProps.totalExercises;
+}
+
+export default memo(WorkoutSummary, areWorkoutSummaryPropsEqual);

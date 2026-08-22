@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { Zap } from "lucide-react";
 
-export default function WeeklyAdvice() {
+function WeeklyAdvice() {
   return (
     <div className="rounded-2xl border border-amber-500/15 bg-white/[0.03] p-5 space-y-4 relative overflow-hidden font-danaMed" dir="rtl">
       <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full blur-2xl" />
@@ -33,3 +34,5 @@ export default function WeeklyAdvice() {
     </div>
   );
 }
+
+export default memo(WeeklyAdvice);
