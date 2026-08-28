@@ -4,30 +4,30 @@ import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   X,
   LogOut,
   LayoutDashboard,
   Shield,
   User,
-  Home,
-  Package,
-  Utensils,
-  Newspaper,
-  Headset,
   LogIn,
   ChevronLeft,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import type { MobileMenuProps } from "@/types/components";
+import { getMobileMenuItems } from "@/components/layout/admin/sidebarItems";
 
 export default function MobileMenu({
   isOpen,
   onClose,
-  session,
+  role,
+  username,
+  email,
+  avatar,
   mobileAuthSlot,
-  getLinkClass,
 }: MobileMenuProps) {
+  const pathname = usePathname();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -43,19 +43,8 @@ export default function MobileMenu({
 
   if (!mounted) return null;
 
-  const role = session?.user?.role;
-  const username = session?.user?.username;
-  const email = session?.user?.email;
-  const avatar = session?.user?.avatar;
-
-  const navItems = [
-    { href: "/", label: "خانه", icon: Home },
-    { href: "/packages", label: "پکیج‌ها", icon: Package },
-    { href: "/nutrition", label: "کالری شمار", icon: Utensils },
-    { href: "/articles", label: "مقالات", icon: Newspaper },
-    { href: "/introduce", label: "درباره ما", icon: User },
-    { href: "/dashboard/tickets", label: "پشتیبانی", icon: Headset },
-  ];
+  const hasUser = Boolean(username || email);
+  const menuSections = getMobileMenuItems(hasUser);
 
   return createPortal(
     <>
@@ -100,52 +89,48 @@ export default function MobileMenu({
             </button>
           </div>
 
-          <nav className="flex flex-col space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const linkClasses = getLinkClass(item.href);
-              const isActive = linkClasses.includes("text-amber-400");
+          <div className="space-y-6">
+            {menuSections.map((section, sectionIdx) => (
+              <div key={sectionIdx}>
+                <h3 className="text-amber-400 text-xs sm:text-sm font-bold mb-3 px-1">
+                  {section.title}
+                </h3>
+                <div className="space-y-0.5">
+                  {section.items.filter(Boolean).map((item) => {
+                    const isActive = pathname === item.href;
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition-all duration-200 group ${
-                    isActive
-                      ? "bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 text-amber-400 font-bold shadow-[0_0_15px_rgba(234,179,8,0.08)]"
-                      : "text-neutral-300 hover:text-amber-300 hover:bg-neutral-900/80 border border-transparent hover:border-amber-500/15"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        isActive
-                          ? "bg-amber-500/20 text-amber-400"
-                          : "text-neutral-400 group-hover:text-amber-400 group-hover:bg-neutral-800/60"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </div>
-                  <ChevronLeft
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isActive
-                        ? "text-amber-400 translate-x-0"
-                        : "text-neutral-600 group-hover:text-amber-400 group-hover:-translate-x-1"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
-          </nav>
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={onClose}
+                        className={`w-full flex items-center justify-between px-1 py-2.5 transition-all duration-200 group ${
+                          isActive
+                            ? "text-amber-400 font-bold"
+                            : "text-white hover:text-amber-300"
+                        }`}
+                      >
+                        <span className="text-sm font-medium">{item.label}</span>
+                        <ChevronLeft
+                          className={`w-4 h-4 transition-transform duration-200 ${
+                            isActive
+                              ? "text-amber-400 translate-x-0"
+                              : "text-neutral-400 group-hover:text-amber-400 group-hover:-translate-x-1"
+                          }`}
+                        />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="pt-5 border-t border-amber-500/20 space-y-3.5 mt-6">
           {mobileAuthSlot ? (
             mobileAuthSlot
-          ) : session ? (
+          ) : hasUser ? (
             <>
               <div className="bg-gradient-to-br from-neutral-900/90 to-neutral-950 border border-amber-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
                 {avatar ? (

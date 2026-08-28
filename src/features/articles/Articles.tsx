@@ -114,10 +114,10 @@ export default function Articles() {
       <section className="py-16 relative overflow-hidden">
         <div className="absolute top-1/4 right-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 text-center font-morabbaReg">
+          <h1 className="text-4xl max-sm:text-2xl md:text-5xl font-bold text-white mb-6 text-center font-morabbaReg">
             مقالات تخصصی ورزشی و تغذیه
           </h1>
-          <p className="text-lg text-neutral-300 text-center max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-base max-sm:text-sm text-neutral-300 text-center max-w-2xl mx-auto mb-10 leading-relaxed">
             جدیدترین مقالات آموزشی بدنسازی، برنامه غذایی و سلامتی تحت نظر
             امیرحسین میرافتابی
           </p>
@@ -129,7 +129,7 @@ export default function Articles() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="جستجو در عنوان یا متن مقالات..."
-                className="w-full bg-neutral-900/80 border border-amber-500/20 rounded-xl px-12 py-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/60 transition-all shadow-lg"
+                className="w-full max-sm:text-sm bg-neutral-900/80 border border-amber-500/20 rounded-xl px-12 py-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/60 transition-all shadow-lg"
               />
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500/70" />
             </div>

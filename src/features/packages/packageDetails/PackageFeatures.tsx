@@ -8,7 +8,7 @@ export default function PackageFeatures({ features }: PackageFeaturesProps) {
     <section className="py-12 sm:py-20 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-sm sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-4 font-morabbaReg">
+          <h2 className="text-xl! sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-4 font-morabbaReg">
             لیست کامل امکانات
           </h2>
           <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto rounded-full mt-3 sm:mt-4" />

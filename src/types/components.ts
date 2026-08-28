@@ -84,7 +84,7 @@ export interface HeaderSession {
 }
 
 export interface HeaderProps {
-  session?: HeaderSession | null;
+  user?: HeaderSessionUser | null;
   authSlot?: React.ReactNode;
   mobileAuthSlot?: React.ReactNode;
 }
@@ -92,9 +92,12 @@ export interface HeaderProps {
 export interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  session?: HeaderSession | null;
+  role?: string;
+  username?: string;
+  email?: string;
+  avatar?: string;
   mobileAuthSlot?: React.ReactNode;
-  getLinkClass: (href: string) => string;
+  getLinkClass?: (href: string) => string;
 }
 
 export interface FAQItem {

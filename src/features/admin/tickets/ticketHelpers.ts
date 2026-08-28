@@ -63,3 +63,33 @@ export const getCategoryLabel = (category: ITicket["category"]) => {
 export const formatNumber = (num: number) => {
   return new Intl.NumberFormat("fa-IR").format(num || 0);
 };
+
+export const isVideo = (url: string) => {
+  const videoExtensions = [".mp4", ".mov", ".webm", ".avi", ".mkv"];
+  return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+};
+
+export const formatDate = (dateStr?: string) => {
+  if (!dateStr) return "—";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("fa-IR");
+  } catch {
+    return dateStr;
+  }
+};
+
+export const formatTime = (dateStr?: string) => {
+  if (!dateStr) return "—";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleTimeString("fa-IR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return dateStr;
+  }
+};

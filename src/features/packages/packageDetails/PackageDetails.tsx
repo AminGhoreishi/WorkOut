@@ -63,7 +63,7 @@ export default function PackageDetails({
                 </div>
               )}
 
-              <div className="space-y-4 sm:space-y-6">
+              <div className="space-y-4 sm:space-y-6 ss02">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
                   <div
                     className="w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-amber-600/20 rounded-2xl flex items-center justify-center border border-amber-500/30 transform hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(234,179,8,0.1)] shrink-0"
@@ -74,7 +74,7 @@ export default function PackageDetails({
                     <h1 className="text-sm sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 mb-2 sm:mb-3 font-morabbaReg leading-tight">
                       {packageData.name}
                     </h1>
-                    <div className="flex items-center gap-2 bg-neutral-900/80 py-1 px-3 rounded-full border border-amber-500/20 w-fit">
+                    <div className="flex  items-center gap-2 bg-neutral-900/80 py-1 px-3 rounded-full border border-amber-500/20 w-fit">
                       <div className="flex items-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <Star

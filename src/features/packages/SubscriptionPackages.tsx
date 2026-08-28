@@ -13,27 +13,27 @@ export default function SubscriptionPackages({
       <div className="absolute top-1/2 left-10 w-[400px] h-[400px] bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <section className="pt-12 pb-12 relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center gap-4">
+        <div className="container mx-auto 2text-center flex flex-col items-center gap-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.15)]">
             <BsTrophyFill className="w-4 h-4 text-amber-400" />
             <span>تعرفه پکیج‌های تخصصی استارفیت</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white font-morabbaReg tracking-tight">
+          <h1 className="text-3xl sm:text-5xl mt-3 lg:text-6xl font-bold text-white font-morabbaReg tracking-tight">
             پکیج‌های{" "}
             <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
               اشتراک اختصاصی
             </span>
           </h1>
 
-          <p className="text-sm sm:text-lg text-neutral-300 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base mt-3 text-neutral-300 max-w-2xl leading-relaxed">
             مناسب‌ترین پکیج تمرین و تغذیه را برای دستیابی سریع و اصولی به هدف تناسب اندام خود انتخاب کنید.
           </p>
         </div>
       </section>
 
       <section className="pb-20 relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
           {children ? children : packages ? <PackagesGrid packages={packages} /> : null}
         </div>
       </section>

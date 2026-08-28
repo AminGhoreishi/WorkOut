@@ -10,7 +10,7 @@ import MobileMenu from "./MobileMenu";
 import type { HeaderProps } from "@/types/components";
 
 export default function Header({
-  session,
+  user,
   authSlot,
   mobileAuthSlot,
 }: HeaderProps) {
@@ -78,12 +78,12 @@ export default function Header({
             <div className="hidden lg:flex items-center">
               {authSlot ? (
                 authSlot
-              ) : session ? (
+              ) : user ? (
                 <UserDropdown
-                  username={session.user?.username || ""}
-                  avatar={session.user?.avatar || ""}
-                  email={session.user?.email || ""}
-                  role={session.user?.role || ""}
+                  username={user.username || ""}
+                  avatar={user.avatar || ""}
+                  email={user.email || ""}
+                  role={user.role || ""}
                 />
               ) : (
                 <Link
@@ -109,7 +109,10 @@ export default function Header({
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        session={session}
+        role={user?.role}
+        username={user?.username}
+        email={user?.email}
+        avatar={user?.avatar}
         mobileAuthSlot={mobileAuthSlot}
         getLinkClass={getLinkClass}
       />

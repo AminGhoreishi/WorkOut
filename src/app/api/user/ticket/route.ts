@@ -98,11 +98,11 @@ export async function POST(req: NextRequest) {
     });
 
     const populatedTicket = await Ticket.findById(ticket._id)
-      .populate("userId", "username fullName email avatar role")
+      .populate("userId", "username fullName email role avatar")
       .lean();
 
     fetch(
-      "https://amin13w.app.n8n.cloud/webhook/23c27848-2fa9-4a10-a5e5-12a547bfbc70",
+      "https://ydge4rrdrdrdrdr.app.n8n.cloud/webhook/c8f6c1ff-99c4-4497-9cd6-e77ebcd25488",
       {
         method: "POST",
         headers: {

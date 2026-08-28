@@ -72,44 +72,52 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account }: any) {
       if (account?.provider === "google") {
-        await dbConnect();
-        if (!user?.email) return false;
+        try {
+          await dbConnect();
+          if (!user?.email) return false;
 
-        const emailClean = user.email.toLowerCase();
-        const existing = await User.findOne({ email: emailClean });
+          const emailClean = user.email.toLowerCase();
+          const existing = await User.findOne({ email: emailClean });
 
-        if (existing) {
-          if (existing.status === "blocked") return false;
-          const isBanned = await Ban.findOne({ userId: existing._id, status: "active" });
-          if (isBanned) return false;
+          if (existing) {
+            if (existing.status === "blocked") return false;
+            const isBanned = await Ban.findOne({ userId: existing._id, status: "active" });
+            if (isBanned) return false;
+
+            let updated = false;
+            if (user.image && !existing.avatar) {
+              existing.avatar = user.image;
+              updated = true;
+            }
+            if (user.name && !existing.fullName) {
+              existing.fullName = user.name;
+              updated = true;
+            }
+            if (updated) {
+              await existing.save();
+            }
+          } else {
+            let fallbackUsername = user.name || emailClean.split("@")[0] || "user";
+            const existingUsername = await User.findOne({ username: fallbackUsername });
+            if (existingUsername) {
+              fallbackUsername = `${fallbackUsername}_${Math.floor(1000 + Math.random() * 9000)}`;
+            }
+
+            await User.create({
+              username: fallbackUsername,
+              fullName: user.name || "",
+              email: emailClean,
+              avatar: user.image || "",
+              password: "",
+              role: "user",
+              status: "active",
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Google signIn callback error:", error);
+          return false;
         }
-
-        if (!existing) {
-          const fallbackUsername = user.name || emailClean.split("@")[0] || "user";
-          await User.create({
-            username: fallbackUsername,
-            fullName: user.name || "",
-            email: emailClean,
-            avatar: user.image || "",
-            password: "",
-            role: "user",
-            status: "active",
-          });
-        } else {
-          let updated = false;
-          if (user.image && !existing.avatar) {
-            existing.avatar = user.image;
-            updated = true;
-          }
-          if (user.name && !existing.fullName) {
-            existing.fullName = user.name;
-            updated = true;
-          }
-          if (updated) {
-            await existing.save();
-          }
-        }
-        return true;
       }
       return true;
     },
@@ -151,7 +159,8 @@ export const authOptions: NextAuthOptions = {
           token.email = dbUser.email || "";
           token.phone = dbUser.phone || "";
         }
-      } catch {
+      } catch (error) {
+        console.error("NextAuth jwt callback error:", error);
         return token;
       }
 
@@ -181,4 +190,5 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 };

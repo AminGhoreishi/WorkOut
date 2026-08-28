@@ -20,6 +20,29 @@ export interface PackageInfo {
   };
 }
 
+export interface PackageCardProps {
+  pkg: PackageInfo;
+  isSelected: boolean;
+  onSelect: (pkg: PackageInfo) => void;
+}
+
+export interface DeletePlanButtonProps {
+  planId: string;
+  setSelectedProgramDay: (day: null) => void;
+  mutatePlan: () => void;
+  mutateProgram: () => void;
+}
+
+export interface SelectedPackageHeaderProps {
+  selectedPackage: PackageInfo;
+  subscriptionCount: number;
+  setSelectedUser: (user: UserInfo | null) => void;
+  workoutPlan: WorkoutPlan | null;
+  setSelectedProgramDay: (day: null) => void;
+  mutatePlan: () => void;
+  mutateProgram: () => void;
+}
+
 export interface SubscriptionItem {
   _id: string;
   userId: UserInfo | null;
@@ -38,21 +61,22 @@ export interface WorkoutPlan {
   title: string;
   description?: string;
   isActive: boolean;
-}
-
-export interface WorkoutWeekInfo {
-  _id: string;
-  packageId: string;
-  planId?: string;
-  userId?: string;
-  title: string;
-  createdAt?: string;
+  programm?:
+    | {
+        _id?: string;
+        planId: string;
+        programs: ProgramDayItem[];
+      }
+    | {
+        _id?: string;
+        planId: string;
+        programs: ProgramDayItem[];
+      }[];
 }
 
 export interface WorkoutDay {
   _id: string;
   planId: string;
-  weekId?: string;
   userId?: string;
   dayName: string;
   muscleGroup: string;
@@ -82,6 +106,7 @@ export interface WorkoutExercise {
   weight?: number;
   restSec: number;
   sortOrder: number;
+  isComplete?: boolean;
 }
 
 export interface ExerciseItem {
@@ -93,6 +118,7 @@ export interface ExerciseItem {
   restSec: number;
   videoId?: VideoInfo | null;
   videoId2?: VideoInfo | null;
+  isComplete?: boolean;
 }
 
 export interface DayItem {
@@ -122,13 +148,83 @@ export interface IWorkoutPlan extends Document {
   updatedAt: Date;
 }
 
-export interface IWorkoutweek extends Document {
-  packageId: mongoose.Types.ObjectId;
-  planId?: mongoose.Types.ObjectId;
-  userId?: mongoose.Types.ObjectId;
-  title?: string;
-  workoutdays?: unknown[];
-  workoutexcersice?: unknown[];
+export interface IProgramExercise {
+  name: string;
+  videoId?: mongoose.Types.ObjectId | null;
+  videoId2?: mongoose.Types.ObjectId | null;
+  sets: number;
+  reps?: string;
+  weight?: number;
+  restSec?: number;
+  isComplete?: boolean;
+}
+
+export interface ProgramExerciseItem {
+  _id?: string;
+  name: string;
+  videoId?: string | null;
+  videoId2?: string | null;
+  sets: number;
+  reps?: string;
+  weight?: number;
+  restSec?: number;
+  isComplete?: boolean;
+}
+
+export interface ProgramExerciseCardProps {
+  exercise: ProgramExerciseItem;
+  index: number;
+  videos: VideoInfo[];
+  setWatchingVideo: (video: VideoInfo | null) => void;
+}
+
+export interface ProgramDayExercisesDetailProps {
+  activeProgramDay: ProgramDayItem;
+  onEditDay: (day: ProgramDayItem) => void;
+  videos: VideoInfo[];
+  setWatchingVideo: (video: VideoInfo | null) => void;
+}
+
+export interface IProgramDay {
+  day: string;
+  muscleGroup: string;
+  exercises: IProgramExercise[];
+}
+
+export interface ProgramDayItem {
+  _id?: string;
+  day: string;
+  muscleGroup: string;
+  exercises: ProgramExerciseItem[];
+}
+
+export interface WorkoutProgramFormInputs {
+  day: string;
+  muscleGroup: string;
+  exerciseInput?: string;
+}
+
+export interface WorkoutProgramFormProps {
+  workoutPlanId: string;
+  userId?: string;
+  editingProgramDay?: ProgramDayItem | null;
+  videos?: VideoInfo[];
+  onSuccess: () => void;
+  onCancel: () => void;
+}
+
+export interface ProgramDaysListProps {
+  planId: string;
+  programDays: ProgramDayItem[];
+  selectedProgramDay: ProgramDayItem | null;
+  onSelectProgramDay: (day: ProgramDayItem | null) => void;
+  onEditProgramDay: (day: ProgramDayItem) => void;
+  mutateProgram: () => void;
+}
+
+export interface IWorkoutProgram extends Document {
+  planId: mongoose.Types.ObjectId;
+  programs: IProgramDay[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -137,14 +233,12 @@ export interface IWorkoutmonth extends Document {
   packageId: mongoose.Types.ObjectId;
   title?: string;
   description?: string;
-  workoutweeks?: unknown[];
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IWorkoutDay extends Document {
   planId: mongoose.Types.ObjectId;
-  weekId?: mongoose.Types.ObjectId;
   userId?: mongoose.Types.ObjectId;
   dayName: string;
   muscleGroup: string;
@@ -328,12 +422,6 @@ export interface EditPlanInfoFormProps {
   onCancel: () => void;
 }
 
-export interface WorkoutWeeksListProps {
-  workoutWeeks: WorkoutWeekInfo[];
-  selectedWeek: WorkoutWeekInfo | null;
-  onSelectWeek: (week: WorkoutWeekInfo) => void;
-  onDeleteWeek: (id: string) => void;
-}
 
 export interface WorkoutDaysListProps {
   workoutDays: WorkoutDay[];
@@ -353,8 +441,6 @@ export interface AddWorkoutDropdownProps {
   packageId?: string;
   workoutPlanId?: string;
   userId?: string;
-  hasActiveWeek: boolean;
-  onWeekCreated: () => void;
   onAddNewDay: () => void;
 }
 

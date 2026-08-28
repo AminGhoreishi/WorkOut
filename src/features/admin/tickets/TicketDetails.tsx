@@ -10,41 +10,15 @@ import {
   getStatusLabel,
   getCategoryBadge,
   getCategoryLabel,
+  isVideo,
+  formatDate,
+  formatTime,
 } from "./ticketHelpers";
-
-const isVideo = (url: string) => {
-  const videoExtensions = [".mp4", ".mov", ".webm", ".avi", ".mkv"];
-  return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
-};
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—";
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString("fa-IR");
-  } catch {
-    return dateStr;
-  }
-};
-
-const formatTime = (dateStr?: string) => {
-  if (!dateStr) return "—";
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleTimeString("fa-IR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return dateStr;
-  }
-};
 
 const TicketDetails = memo(function TicketDetails({
   selectedTicket,
   setSelectedTicket,
+  onRefresh,
 }: TicketDetailsProps) {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const [replyText, setReplyText] = useState("");
@@ -207,6 +181,7 @@ const TicketDetails = memo(function TicketDetails({
 
       if (res.ok) {
         setSelectedTicket(null);
+        onRefresh?.();
         showAlert({
           title: "حذف شد",
           text: "تیکت با موفقیت حذف شد.",

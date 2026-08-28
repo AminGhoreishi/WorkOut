@@ -41,28 +41,14 @@ export default function ExercisesList({
   const [savingWeightId, setSavingWeightId] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProgress = async () => {
-      if (!userId || exercises.length === 0) return;
-      try {
-        const res = await fetch(`/api/user/workout-progress?userid=${userId}`);
-        if (res.ok) {
-          const data = await res.json().catch(() => ({}));
-          const progressMap: Record<string, boolean> = {};
-          if (Array.isArray(data.progress)) {
-            data.progress.forEach(
-              (item: { exerciseId: string; completed: boolean }) => {
-                progressMap[item.exerciseId] = item.completed;
-              }
-            );
-          }
-          setCompletedExercises(progressMap);
-        }
-      } catch {
-        setCompletedExercises({});
+    const progressMap: Record<string, boolean> = {};
+    exercises.forEach((item) => {
+      if (item._id) {
+        progressMap[item._id] = !!item.isComplete;
       }
-    };
-    fetchProgress();
-  }, [userId, exercises]);
+    });
+    setCompletedExercises(progressMap);
+  }, [exercises]);
 
   const toggleExercise = async (exerciseId: string) => {
     const isSelect = !completedExercises[exerciseId];
@@ -73,13 +59,17 @@ export default function ExercisesList({
     }));
 
     try {
-      await fetch(`/api/user/workout-progress`, {
-        method: "POST",
+      const res = await fetch(`/api/admin/subscription/workout-programs`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, completed: isSelect, exerciseId }),
+        body: JSON.stringify({ exerciseId, isComplete: isSelect }),
       });
+
+      if (!res.ok) {
+        throw new Error("خطا در ثبت وضعیت");
+      }
     } catch {
       setCompletedExercises((prev) => ({
         ...prev,
@@ -105,10 +95,10 @@ export default function ExercisesList({
     setSavingWeightId(exerciseId);
 
     try {
-      const res = await fetch("/api/admin/subscription/workout-exercises", {
+      const res = await fetch("/api/admin/subscription/workout-programs", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: exerciseId, weight: parsedWeight }),
+        body: JSON.stringify({ exerciseId, weight: parsedWeight }),
       });
 
       if (!res.ok) {

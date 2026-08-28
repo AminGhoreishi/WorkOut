@@ -67,12 +67,20 @@ export interface TicketListProps {
   children?: ReactNode;
   selectedTicket: IClientTicket | null;
   setSelectedTicket: (ticket: IClientTicket | null) => void;
-  onStatsUpdate: (stats: ITicketStats) => void;
+  tickets: IClientTicket[];
+  totalPages: number;
+  totalItems: number;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  isLoading: boolean;
+  error?: Error | null;
+  onRefresh: () => void;
 }
 
 export interface TicketDetailsProps {
   selectedTicket: IClientTicket | null;
   setSelectedTicket: (ticket: IClientTicket | null) => void;
+  onRefresh?: () => void;
 }
 
 export interface TicketFormValues {
@@ -97,6 +105,14 @@ export interface UserTicketChatProps {
 
 export interface UserTicketsApiResponse {
   tickets?: IClientTicket[];
+  message?: string;
+}
+
+export interface AdminTicketsApiResponse {
+  tickets: IClientTicket[];
+  total: number;
+  totalPages: number;
+  stats?: ITicketStats;
   message?: string;
 }
 

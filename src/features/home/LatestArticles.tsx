@@ -6,7 +6,7 @@ import LatestArticlesCardsSkeleton from "./LatestArticlesCardsSkeleton";
 
 export default function LatestArticles() {
   return (
-    <section className="py-20 bg-neutral-950/80 font-danaMed">
+    <section className="max-sm:py-10 py-20 bg-neutral-950/80 font-danaMed">
       <div className="container mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
@@ -16,11 +16,11 @@ export default function LatestArticles() {
                 مقالات
               </span>
             </h2>
-            <p className="text-neutral-400">آخرین نکات و راهنماهای تمرینی</p>
+            <p className="text-neutral-400 max-sm:text-xs">آخرین نکات و راهنماهای تمرینی</p>
           </div>
           <Link
             href="/articles"
-            className="text-amber-400 hover:text-amber-300 flex items-center gap-2 transition-colors font-semibold"
+            className="text-amber-400 max-sm:text-xs hover:text-amber-300 flex items-center gap-2 transition-colors font-semibold"
           >
             <span>مشاهده همه</span>
             <BsArrowLeft className="w-4 h-4" />

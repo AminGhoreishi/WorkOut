@@ -11,7 +11,7 @@ export default function HeroSection() {
       <section className="relative z-10 py-12 md:py-20 lg:py-28">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-right">
-            <div className="inline-flex  items-center gap-2.5 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-danaMed backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.15)]">
+            <div className="flex sm:inline-flex items-center justify-center max-sm:mx-auto w-fit gap-2.5 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-danaMed backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.15)]">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
@@ -26,8 +26,8 @@ export default function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-sm sm:text-xl text-neutral-300 font-danaMed leading-relaxed max-w-2xl">
-              برنامه‌های تمرینی و تغذیه‌ای اختصاصی‌سازی‌شده، متناسب با هدف، شرایط بدنی و امکانات شما؛ همراه با پشتیبانی همیشگی و پایش دقیق روند پیشرفت.
+            <p className="text-sm sm:text-xl max-sm:text-center text-neutral-300 font-danaMed leading-relaxed max-w-2xl">
+              برنامه‌های تخصصی تمرین و تغذیه متناسب با اهداف شما، همراه با پشتیبانی مستقیم و پایش پیشرفت.
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 font-danaMed pt-2">
@@ -65,7 +65,7 @@ export default function HeroSection() {
           <div className="lg:col-span-5 relative mt-6 lg:mt-0">
             <div className="relative w-full max-w-md lg:max-w-none mx-auto aspect-[4/5] rounded-3xl overflow-hidden border border-amber-500/30 bg-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
               <Image
-                src="/images/hero/hero-1.jpg"
+                src="/images/hero/IMG_20260817_194425_183.jpg"
                 alt="تمرینات اختصاصی استارفیت"
                 fill
                 sizes="(max-width: 1024px) 100vw, 500px"
@@ -80,7 +80,7 @@ export default function HeroSection() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-neutral-400 font-danaMed">هدف تمرینی</p>
-                  <p className="text-sm font-bold text-white font-danaMed">چربی‌سوزی & عضله‌سازی</p>
+                  <p className="text-sm font-bold text-white font-danaMed">بر اساس شرایط و اهداف بلند مدت شما</p>
                 </div>
               </div>
 

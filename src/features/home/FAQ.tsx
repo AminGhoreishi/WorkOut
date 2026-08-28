@@ -2,16 +2,16 @@ import { FAQS_LIST } from "@/constants/faq";
 
 export default function FAQ() {
   return (
-    <section className="py-12 sm:py-20 bg-neutral-950/90 font-danaMed">
+    <section className="max-sm:py-10 py-12 sm:py-20 bg-neutral-950/90 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-sm sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold font-morabbaReg text-white mb-3 sm:mb-4">
             سوالات{" "}
             <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
               متداول
             </span>
           </h2>
-          <p className="text-xs sm:text-lg text-neutral-400">
+          <p className="text-sm sm:text-lg text-neutral-400">
             پاسخ سوالات رایج درباره خدمات و برنامه‌های استارفیت.
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function FAQ() {
             >
               <details className="group">
                 <summary className="p-4 sm:p-6 cursor-pointer list-none flex justify-between items-center gap-3">
-                  <h3 className="text-xs sm:text-lg font-medium text-white group-open:text-amber-300 transition-colors">
+                  <h3 className="text-sm sm:text-lg font-medium text-white group-open:text-amber-300 transition-colors">
                     {faq.question}
                   </h3>
                   <div className="text-amber-400 group-open:rotate-180 transition-transform shrink-0">

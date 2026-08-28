@@ -1,5 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import WorkoutPlan from "@/models/WorkoutPlan";
+import "@/models/WorkoutProgram";
+import "@/models/Video";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -32,7 +34,13 @@ export async function GET(req: NextRequest) {
     if (packageId) query.packageId = packageId;
     if (userId) query.userId = userId;
 
-    const plans = await WorkoutPlan.find(query);
+    const plans = await WorkoutPlan.find(query).populate({
+      path: "programm",
+      populate: [
+        { path: "programs.exercises.videoId" },
+        { path: "programs.exercises.videoId2" },
+      ],
+    });
     return NextResponse.json({ plans });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "خطا در سرور";

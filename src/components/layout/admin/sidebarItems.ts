@@ -1,4 +1,5 @@
 import {
+  Home,
   LayoutDashboard,
   Users,
   Package,
@@ -19,8 +20,11 @@ import {
   Sparkles,
   Film,
   TrendingUp,
+  Tag,
 } from "lucide-react";
 import type { SidebarCounts, MenuSection } from "@/types/sidebar";
+
+
 
 export function getAdminMenuItems(
   counts: SidebarCounts,
@@ -137,6 +141,13 @@ export function getAdminMenuItems(
           icon: CreditCard,
           badge: null,
           href: "/admin/payments",
+        },
+        {
+          id: "discounts",
+          label: "کدهای تخفیف",
+          icon: Tag,
+          badge: null,
+          href: "/admin/discounts",
         },
         {
           id: "reports",
@@ -279,4 +290,145 @@ export function getUserMenuItems(
       ],
     },
   ];
+}
+
+export function getMobileMenuItems(hasRole?: boolean): MenuSection[] {
+  const sections: MenuSection[] = [
+    {
+      title: "منوی اصلی",
+      items: [
+        {
+          id: "home",
+          label: "خانه",
+          icon: Home,
+          badge: null,
+          href: "/",
+        },
+        {
+          id: "packages",
+          label: "پکیج‌ها",
+          icon: Package,
+          badge: null,
+          href: "/packages",
+        },
+        {
+          id: "articles",
+          label: "مقالات",
+          icon: BookOpen,
+          badge: null,
+          href: "/articles",
+        },
+        {
+          id: "introduce",
+          label: "درباره ما",
+          icon: UserCog,
+          badge: null,
+          href: "/introduce",
+        },
+        ...(hasRole
+          ? [
+              {
+                id: "subscription",
+                label: "اشتراک من",
+                icon: CreditCard,
+                badge: null,
+                href: "/dashboard/subscription",
+              },
+            ]
+          : []),
+      ],
+    },
+  ];
+
+  if (hasRole) {
+    sections.push(
+      {
+        title: "تمرین و تغذیه",
+        items: [
+          {
+            id: "workout",
+            label: "برنامه‌ی تمرینی",
+            icon: Dumbbell,
+            badge: null,
+            href: "/dashboard/workout",
+          },
+          {
+            id: "meal-plan",
+            label: "برنامه غذایی",
+            icon: Utensils,
+            badge: null,
+            href: "/dashboard/meal-plans",
+          },
+          {
+            id: "progress",
+            label: "نمودار پیشرفت",
+            icon: TrendingUp,
+            badge: null,
+            href: "/dashboard/progress",
+          },
+          {
+            id: "bmi",
+            label: "شاخص توده بدنی (BMI)",
+            icon: Activity,
+            badge: null,
+            href: "/dashboard/bmi",
+          },
+          {
+            id: "nutrition",
+            label: "تغذیه و کالری‌شمار",
+            icon: Salad,
+            badge: null,
+            href: "/nutrition",
+          },
+        ],
+      },
+      {
+        title: "پروفایل و شخصی",
+        items: [
+          {
+            id: "profile",
+            label: "پروفایل سایت",
+            icon: UserCog,
+            badge: null,
+            href: "/dashboard/profile",
+          },
+          {
+            id: "fitness-profile",
+            label: "پروفایل ورزشی",
+            icon: Dumbbell,
+            badge: null,
+            href: "/dashboard/fitness-profile",
+          },
+          {
+            id: "wishlist",
+            label: "علاقه‌مندی‌ها",
+            icon: Heart,
+            badge: null,
+            href: "/dashboard/favorites",
+          },
+        ],
+      },
+      {
+        title: "پشتیبانی و نظرات",
+        items: [
+          {
+            id: "tickets",
+            label: "تیکت‌ها",
+            icon: Ticket,
+            badge: null,
+            href: "/dashboard/tickets",
+          },
+          {
+            id: "testimonials",
+            label: "ثبت نظرات و تجربیات",
+            icon: MessageSquare,
+            badge: null,
+            href: "/dashboard/testimonials",
+          },
+        ],
+      }
+    );
+  }
+
+  return sections;
 }

@@ -2,6 +2,11 @@ import type mongoose from "mongoose";
 import type { Document } from "mongoose";
 import type { FeatureItem } from "./components";
 
+export interface PackageOption {
+  _id: string;
+  name: string;
+}
+
 export interface Package {
   _id: string;
   name: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { BiDumbbell, BiUser, BiPhone } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -23,11 +23,20 @@ function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const errorParam = searchParams.get("error");
   const rawCallbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const callbackUrl =
     rawCallbackUrl.startsWith("/") && !rawCallbackUrl.startsWith("//")
       ? rawCallbackUrl
       : "/dashboard";
+
+  useEffect(() => {
+    if (errorParam === "OAuthCallback") {
+      setServerError("خطا در تایید هویت ورود با گوگل. لطفاً مجدداً تلاش کنید یا تنظیمات گوگل سرویس دهنده را بررسی نمایید.");
+    } else if (errorParam) {
+      setServerError("خطایی در احراز هویت رخ داده است. لطفاً مجدداً تلاش کنید.");
+    }
+  }, [errorParam]);
 
   const loginForm = useForm<LoginFormData>({
     mode: "onTouched",

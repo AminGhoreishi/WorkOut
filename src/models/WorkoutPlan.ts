@@ -10,8 +10,20 @@ const WorkoutPlanSchema = new Schema<IWorkoutPlan>(
     description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true, versionKey: false },
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
+
+WorkoutPlanSchema.virtual("programm", {
+  ref: "WorkoutProgram",
+  localField: "_id",
+  foreignField: "planId",
+  justOne: true,
+});
 
 export default mongoose.models.WorkoutPlan ||
   mongoose.model<IWorkoutPlan>("WorkoutPlan", WorkoutPlanSchema);

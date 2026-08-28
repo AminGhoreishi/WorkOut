@@ -57,95 +57,97 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="md:col-span-3 font-danaMed">
-            <h4 className="font-bold text-white text-base mb-5 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>دسترسی سریع</span>
-            </h4>
-            <ul className="space-y-3 text-neutral-400 text-sm">
-              <li>
-                <Link
-                  href="/"
-                  className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
-                >
-                  <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                  <span>صفحه اصلی</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/packages"
-                  className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
-                >
-                  <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                  <span>پکیج‌های اشتراک</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/articles"
-                  className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
-                >
-                  <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                  <span>مقالات آموزشی</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
-                >
-                  <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                  <span>درباره استارفیت</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="md:col-span-4 font-danaMed">
-            <h4 className="font-bold text-white text-base mb-5 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>خدمات & مشاوره</span>
-            </h4>
-            <div className="space-y-4">
+          <div className="grid grid-cols-2 md:contents gap-6 sm:gap-8">
+            <div className="md:col-span-3 font-danaMed">
+              <h4 className="font-bold text-white text-base mb-5 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <span>دسترسی سریع</span>
+              </h4>
               <ul className="space-y-3 text-neutral-400 text-sm">
                 <li>
                   <Link
-                    href="/dashboard/meal-plans"
+                    href="/"
                     className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
                   >
                     <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                    <span>برنامه غذایی اختصاصی</span>
+                    <span>صفحه اصلی</span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/dashboard/workouts"
+                    href="/packages"
                     className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
                   >
                     <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                    <span>برنامه تمرینی اختصاصی</span>
+                    <span>پکیج‌های اشتراک</span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/dashboard/tickets"
+                    href="/articles"
                     className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
                   >
                     <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
-                    <span>پشتیبانی و تیکت آنلاین</span>
+                    <span>مقالات آموزشی</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
+                  >
+                    <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
+                    <span>درباره استارفیت</span>
                   </Link>
                 </li>
               </ul>
+            </div>
 
-              <div className="pt-2">
-                <Link
-                  href="/dashboard/tickets"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 border border-amber-500/30 hover:border-amber-400 text-amber-400 hover:text-amber-300 text-xs font-semibold transition-all shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.2)]"
-                >
-                  <BsHeadset className="w-4 h-4" />
-                  <span>درخواست مشاوره رایگان</span>
-                </Link>
+            <div className="md:col-span-4 font-danaMed">
+              <h4 className="font-bold text-white text-base mb-5 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <span>خدمات & مشاوره</span>
+              </h4>
+              <div className="space-y-4">
+                <ul className="space-y-3 text-neutral-400 text-sm">
+                  <li>
+                    <Link
+                      href="/dashboard/meal-plans"
+                      className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
+                    >
+                      <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
+                      <span>برنامه غذایی اختصاصی</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/workouts"
+                      className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
+                    >
+                      <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
+                      <span>برنامه تمرینی اختصاصی</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/tickets"
+                      className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
+                    >
+                      <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />
+                      <span>پشتیبانی و تیکت آنلاین</span>
+                    </Link>
+                  </li>
+                </ul>
+
+                <div className="pt-2">
+                  <Link
+                    href="/dashboard/tickets"
+                    className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 text-xs sm:text-sm font-semibold transition-colors"
+                  >
+                    <BsHeadset className="w-4 h-4" />
+                    <span>درخواست مشاوره رایگان</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

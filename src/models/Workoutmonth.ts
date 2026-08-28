@@ -15,11 +15,5 @@ const WorkoutmonthSchema = new Schema<IWorkoutmonth>(
   }
 );
 
-WorkoutmonthSchema.virtual("workoutweeks", {
-  ref: "Workoutweek",
-  localField: "_id",
-  foreignField: "monthId",
-});
-
 export default mongoose.models.Workoutmonth ||
   mongoose.model<IWorkoutmonth>("Workoutmonth", WorkoutmonthSchema);

@@ -31,9 +31,7 @@ export default async function UserWorkoutPage() {
     .populate("packageId", "tagline isActive name")
     .lean();
 
- const hasFitnessProfile = Boolean(await Fitnessprofile.exists({ userId: session.user.id }));
-
-
+  const hasFitnessProfile = Boolean(await Fitnessprofile.exists({ userId: session.user.id }));
 
   const plainSubscription = subscription
     ? JSON.parse(JSON.stringify(subscription))
