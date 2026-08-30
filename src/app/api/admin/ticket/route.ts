@@ -50,8 +50,9 @@ export async function GET(req: NextRequest) {
     }
 
     const tickets = await Ticket.find(query)
-      .select("userId subject description status category createdAt updatedAt")
+      .select("userId coachId initiatedBy subject description status category createdAt updatedAt")
       .populate("userId", "username fullName email avatar role")
+      .populate("coachId", "username fullName email avatar role")
       .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(Number(limit))

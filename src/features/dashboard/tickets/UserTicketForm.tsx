@@ -66,7 +66,7 @@ export default function UserTicketForm({
         setShowCreateForm(false);
         showAlert(
           "موفقیت",
-          "تیکت شما با موفقیت ثبت شد و به زودی توسط مربیان یا پشتیبانان فیت‌کوچ پاسخ داده خواهد شد.",
+          "تیکت شما با موفقیت ثبت شد و به زودی توسط مربیان یا پشتیبانان استار فیت پاسخ داده خواهد شد.",
           "success",
         );
         if (onTicketCreated) {

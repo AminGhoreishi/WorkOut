@@ -25,6 +25,7 @@ export async function GET(
 
     const ticket = await Ticket.findById(id, "-__v")
       .populate("userId", "username fullName email avatar role")
+      .populate("coachId", "username fullName email avatar role")
       .populate("messages.senderId", "username fullName email avatar role")
       .lean();
 
@@ -72,7 +73,7 @@ export async function PUT(
 
     if (messageText && messageText.trim()) {
       const dbAdmin = await User.findById(session.user.id);
-      const senderName = dbAdmin?.fullName || dbAdmin?.username || session.user.username || "پشتیبان فیت‌کوچ";
+      const senderName = dbAdmin?.fullName || dbAdmin?.username || session.user.username || "پشتیبان استار فیت";
 
       ticket.messages.push({
         senderId: session.user.id,
@@ -90,6 +91,7 @@ export async function PUT(
 
     const updatedTicket = await Ticket.findById(ticket._id)
       .populate("userId", "username fullName email avatar role")
+      .populate("coachId", "username fullName email avatar role")
       .populate("messages.senderId", "username fullName email avatar role")
       .lean();
 

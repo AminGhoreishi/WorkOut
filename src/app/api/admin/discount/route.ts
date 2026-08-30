@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Discount from "@/models/Discount";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
@@ -16,12 +16,22 @@ export async function GET() {
       return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
     }
 
-    const discounts = await Discount.find({})
+    const { searchParams } = new URL(req.url);
+    const status = searchParams.get("status");
+
+    const query: Record<string, any> = {};
+    if (status === "active") {
+      query.isActive = true;
+    } else if (status === "inactive") {
+      query.isActive = false;
+    }
+
+    const discounts = await Discount.find(query)
       .populate("packages", "name slug")
       .sort({ createdAt: -1 })
       .lean();
 
-    return NextResponse.json({ discounts });
+    return NextResponse.json(discounts);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -50,21 +60,19 @@ export async function POST(req: NextRequest) {
       isActive,
     } = body;
 
-    if (!code || typeof code !== "string" || !code.trim()) {
-      return NextResponse.json(
-        { message: "کد تخفیف الزامی است" },
-        { status: 400 },
-      );
-    }
+    const formattedCode =
+      code && typeof code === "string" && code.trim()
+        ? code.trim().toUpperCase()
+        : null;
 
-    const formattedCode = code.trim().toUpperCase();
-
-    const existingDiscount = await Discount.findOne({ code: formattedCode });
-    if (existingDiscount) {
-      return NextResponse.json(
-        { message: "این کد تخفیف قبلاً ثبت شده است" },
-        { status: 400 },
-      );
+    if (formattedCode) {
+      const existingDiscount = await Discount.findOne({ code: formattedCode });
+      if (existingDiscount) {
+        return NextResponse.json(
+          { message: "این کد تخفیف قبلاً ثبت شده است" },
+          { status: 400 },
+        );
+      }
     }
 
     const newDiscount = await Discount.create({
@@ -87,7 +95,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "کد تخفیف با موفقیت ایجاد شد",
+        message: formattedCode
+          ? "کد تخفیف با موفقیت ایجاد شد"
+          : "تخفیف مستقیم پکیج با موفقیت ایجاد شد",
         discount: populatedDiscount,
       },
       { status: 201 },
@@ -131,22 +141,28 @@ export async function PUT(req: NextRequest) {
     const discount = await Discount.findById(id);
     if (!discount) {
       return NextResponse.json(
-        { message: "کد تخفیف مورد نظر پیدا نشد" },
+        { message: "تخفیف مورد نظر پیدا نشد" },
         { status: 404 },
       );
     }
 
-    if (code) {
-      const formattedCode = code.trim().toUpperCase();
-      const existingWithSameCode = await Discount.findOne({
-        code: formattedCode,
-        _id: { $ne: id },
-      });
-      if (existingWithSameCode) {
-        return NextResponse.json(
-          { message: "کد تخفیف دیگری با این عنوان وجود دارد" },
-          { status: 400 },
-        );
+    if (code !== undefined) {
+      const formattedCode =
+        code && typeof code === "string" && code.trim()
+          ? code.trim().toUpperCase()
+          : null;
+
+      if (formattedCode) {
+        const existingWithSameCode = await Discount.findOne({
+          code: formattedCode,
+          _id: { $ne: id },
+        });
+        if (existingWithSameCode) {
+          return NextResponse.json(
+            { message: "کد تخفیف دیگری با این عنوان وجود دارد" },
+            { status: 400 },
+          );
+        }
       }
       discount.code = formattedCode;
     }

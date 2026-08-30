@@ -94,7 +94,7 @@ export default function TicketChatMessages({
                 }`}
               >
                 <MessageHeader className="flex justify-between items-center gap-6 text-neutral-400 text-[9px] mb-1 px-0">
-                  <span>{isSupport ? "پشتیبان فیت‌کوچ" : "من"}</span>
+                  <span>{isSupport ? "پشتیبان استار فیت" : "من"}</span>
                   <span className="ss02">{formatTime(msg.createdAt)}</span>
                 </MessageHeader>
                 <p className="leading-relaxed whitespace-pre-line text-neutral-200">

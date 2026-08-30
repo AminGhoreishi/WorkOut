@@ -3,32 +3,36 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { Tag, Plus } from "lucide-react";
-import type { DiscountItem, DiscountsApiResponse } from "@/types/discount";
+import type { DiscountItem, DiscountsManagementProps } from "@/types/discount";
 import DiscountModal from "./DiscountModal";
 import DiscountStats from "./DiscountStats";
 import DiscountList from "./DiscountList";
 
-const fetcher = async (url: string): Promise<DiscountsApiResponse> => {
+const fetcher = async (url: string): Promise<DiscountItem[]> => {
   const res = await fetch(url);
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "خطا در دریافت لیست تخفیف‌ها");
+    throw new Error(errorData.message || "خطا در دریافت اطلاعات");
   }
   return res.json();
 };
 
-export default function DiscountsManagement() {
+export default function DiscountsManagement({ initialStats }: DiscountsManagementProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
 
-  const { data, error, isLoading, mutate } = useSWR<DiscountsApiResponse>(
-    "/api/admin/discount",
+  const {
+    data: discountsData,
+    error: discountsError,
+    isLoading: isDiscountsLoading,
+    mutate: mutateDiscounts,
+  } = useSWR<DiscountItem[]>(
+    `/api/admin/discount?status=${statusFilter}`,
     fetcher,
     {
       dedupingInterval: 5000,
     },
   );
-
-  const discounts: DiscountItem[] = data?.discounts || [];
 
   return (
     <div className="min-h-screen bg-black/30 md:p-8 font-danaMed" dir="rtl">
@@ -58,19 +62,21 @@ export default function DiscountsManagement() {
           </button>
         </div>
 
-        <DiscountStats discounts={discounts} />
+        <DiscountStats stats={initialStats} />
 
         <DiscountList
-          discounts={discounts}
-          loading={isLoading}
-          error={error ? error.message : null}
-          onRefresh={() => mutate()}
+          discounts={discountsData || []}
+          setStatusFilter={setStatusFilter}
+          loading={isDiscountsLoading}
+          error={discountsError ? discountsError.message : null}
+          onRefresh={() => mutateDiscounts()}
+          statusFilter={statusFilter}
         />
 
         <DiscountModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSuccess={() => mutate()}
+          onSuccess={() => mutateDiscounts()}
         />
       </div>
     </div>

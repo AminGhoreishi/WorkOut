@@ -33,6 +33,16 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
               {pkg.name}
             </h3>
             <div className="mb-6">
+              {pkg.hasDiscount && pkg.originalPrice ? (
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-sm text-neutral-500 line-through ss02">
+                    {pkg.originalPrice.toLocaleString("fa-IR")} تومان
+                  </span>
+                  <span className="text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-md ss02">
+                    {pkg.discountPercent}٪ تخفیف
+                  </span>
+                </div>
+              ) : null}
               <span className="text-3xl font-bold text-amber-400 font-morabbaReg">
                 {typeof pkg.price === "number"
                   ? pkg.price.toLocaleString("fa-IR")

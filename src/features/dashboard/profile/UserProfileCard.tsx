@@ -11,7 +11,7 @@ export default function UserProfileCard({ profile }: UserProfileCardProps) {
       ? "مدیر کل"
       : profile?.role === "coach"
         ? "مربی مجرب"
-        : "ورزشکار فیت‌کوچ";
+        : "ورزشکار استار فیت";
 
   return (
     <div className="md:col-span-1 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 flex flex-col items-center text-center shadow-xl h-fit">

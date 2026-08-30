@@ -21,6 +21,9 @@ export interface OrderPackageInfo {
     quarterly: number;
     biannual: number;
   };
+  originalPrice?: number;
+  discountPercent?: number;
+  hasDiscount?: boolean;
   isActive: boolean;
 }
 
@@ -48,6 +51,7 @@ export interface OrderFormData {
 
 export interface CreateOrderPayload {
   fullName: string;
+  email?: string;
   phone: string;
   packageId: string;
   billingCycle: BillingCycle;

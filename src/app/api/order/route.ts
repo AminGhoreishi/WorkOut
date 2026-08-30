@@ -3,6 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import Order from "@/models/Order";
 import Package from "@/models/Package";
 import User from "@/models/User";
+import Discount from "@/models/Discount";
 import { CreateOrderPayload } from "@/types/order";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body: CreateOrderPayload = await req.json();
-    const { fullName, phone, packageId, billingCycle, discountCode } = body;
+    const { fullName, email, phone, packageId, billingCycle, discountCode } = body;
 
     if (!fullName || !phone || !packageId || !billingCycle) {
       return NextResponse.json(
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { fullName, phone },
+      { fullName, phone, ...(email ? { email } : {}) },
       { new: true }
     );
 
@@ -77,9 +78,58 @@ export async function POST(req: NextRequest) {
     }
 
     let discountPercent = 0;
+    const now = new Date();
 
-    if (discountCode && discountCode.trim().toUpperCase() === "FIT2024") {
-      discountPercent = 15;
+    if (discountCode && discountCode.trim()) {
+      const codeDiscount = await Discount.findOne({
+        code: discountCode.trim().toUpperCase(),
+        isActive: true,
+        startsAt: { $lte: now },
+        $and: [
+          {
+            $or: [{ expiresAt: null }, { expiresAt: { $gte: now } }],
+          },
+        ],
+      });
+
+      if (codeDiscount) {
+        const isPackageAllowed =
+          !codeDiscount.packages ||
+          codeDiscount.packages.length === 0 ||
+          codeDiscount.packages.some((p: any) => String(p) === String(packageId));
+
+        const isUsageAllowed =
+          !codeDiscount.maxUsage ||
+          (codeDiscount.usageCount || 0) < codeDiscount.maxUsage;
+
+        if (isPackageAllowed && isUsageAllowed) {
+          discountPercent = codeDiscount.percent || 0;
+          await Discount.findByIdAndUpdate(codeDiscount._id, {
+            $inc: { usageCount: 1 },
+          });
+        }
+      }
+    } else {
+      const directDiscount = await Discount.findOne({
+        code: null,
+        isActive: true,
+        startsAt: { $lte: now },
+        $and: [
+          {
+            $or: [{ expiresAt: null }, { expiresAt: { $gte: now } }],
+          },
+          {
+            $or: [{ packages: { $size: 0 } }, { packages: packageId }],
+          },
+        ],
+      }).sort({ percent: -1 });
+
+      if (directDiscount) {
+        discountPercent = directDiscount.percent || 0;
+        await Discount.findByIdAndUpdate(directDiscount._id, {
+          $inc: { usageCount: 1 },
+        });
+      }
     }
 
     const amountPaid =

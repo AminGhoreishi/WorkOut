@@ -18,6 +18,9 @@ export interface PricePriceObj {
 
 export interface PriceCardProps {
   price: PricePriceObj;
+  originalPrice?: number;
+  discountPercent?: number;
+  hasDiscount?: boolean;
 }
 
 export interface PackageStatsProps {

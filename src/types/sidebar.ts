@@ -5,6 +5,10 @@ export interface SidebarCounts {
   subscriptions: number;
   articles: number;
   comments: number;
+  activeComments?: number;
+  pendingComments?: number;
+  tickets?: number;
+  admins?: number;
   wishlist: number;
   videos: number;
 }

@@ -17,6 +17,11 @@ export default function TicketChatHeader({
           {selectedTicket.subject}
         </h3>
         <div className="flex flex-wrap gap-2 items-center">
+          {selectedTicket.initiatedBy === "coach" && (
+            <span className="px-2 py-0.5 rounded-full text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">
+              پیام مربی
+            </span>
+          )}
           <span
             className={`px-2 py-0.5 rounded-full border text-[8px] font-semibold ${getStatusBadge(selectedTicket.status)}`}
           >

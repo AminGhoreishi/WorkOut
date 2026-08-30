@@ -13,6 +13,13 @@ const MessageSchema = new Schema<IMessage>(
 const TicketSchema = new Schema<ITicket>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    coachId: { type: Schema.Types.ObjectId, ref: "User", default: null },
+    initiatedBy: {
+      type: String,
+      enum: ["user", "coach"],
+      default: "user",
+      index: true,
+    },
     subject: { type: String, required: true },
     description: { type: String, required: true },
     status: {

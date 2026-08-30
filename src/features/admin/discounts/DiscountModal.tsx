@@ -56,11 +56,13 @@ export default function DiscountModal({
 
   const onSubmit = async (data: DiscountFormData) => {
     try {
+      const formattedCode = data.code?.trim() ? data.code.trim().toUpperCase() : null;
+
       const res = await fetch("/api/admin/discount", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code: data.code.trim().toUpperCase(),
+          code: formattedCode,
           percent: Number(data.percent) || 0,
           packages: data.packageId === "all" ? [] : [data.packageId],
           maxUsage: data.maxUsage ? Number(data.maxUsage) : null,
@@ -72,17 +74,22 @@ export default function DiscountModal({
 
       const resData = await res.json();
       if (!res.ok) {
-        throw new Error(resData.message || "خطا در ثبت کد تخفیف");
+        throw new Error(resData.message || "خطا در ثبت تخفیف");
       }
 
-      showToast({ title: "کد تخفیف با موفقیت ایجاد شد", icon: "success" });
+      showToast({
+        title: formattedCode
+          ? "کد تخفیف با موفقیت ایجاد شد"
+          : "تخفیف مستقیم پکیج با موفقیت ایجاد شد",
+        icon: "success",
+      });
       onSuccess?.();
       onClose();
       reset();
     } catch (err: any) {
       showAlert({
         title: "خطا",
-        text: err.message || "خطایی در ثبت کد تخفیف رخ داد",
+        text: err.message || "خطایی در ثبت تخفیف رخ داد",
         icon: "error",
       });
     }
@@ -100,7 +107,7 @@ export default function DiscountModal({
               <Tag className="w-5 h-5" />
             </span>
             <h3 className="text-lg font-bold text-white font-morabbaReg">
-              تعریف کد تخفیف جدید
+              تعریف تخفیف جدید
             </h3>
           </div>
           <button
@@ -114,21 +121,27 @@ export default function DiscountModal({
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-white/70 mb-2">
-              کد تخفیف (انگلیسی)
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-semibold text-white/70">
+                کد تخفیف (اختیاری)
+              </label>
+              <span className="text-[11px] text-amber-400/80">
+                خالی بگذارید تا تخفیف مستقیم اعمال شود
+              </span>
+            </div>
             <input
               type="text"
-              placeholder="مثال: STARFIT100"
+              placeholder="مثال: STARFIT100 (یا خالی برای تخفیف خودکار)"
               {...register("code", {
-                required: "وارد کردن کد تخفیف الزامی است",
-                pattern: {
-                  value: /^[A-Za-z0-9_-]+$/,
-                  message: "کد تخفیف فقط می‌تواند شامل حروف انگلیسی و اعداد باشد",
-                },
-                minLength: {
-                  value: 3,
-                  message: "کد تخفیف باید حداقل ۳ کاراکتر باشد",
+                validate: (value) => {
+                  if (!value || !value.trim()) return true;
+                  if (value.trim().length < 3) {
+                    return "کد تخفیف باید حداقل ۳ کاراکتر باشد";
+                  }
+                  if (!/^[A-Za-z0-9_-]+$/.test(value.trim())) {
+                    return "کد تخفیف فقط می‌تواند شامل حروف انگلیسی و اعداد باشد";
+                  }
+                  return true;
                 },
               })}
               className={`w-full bg-neutral-950 border rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none uppercase font-mono transition-colors ${

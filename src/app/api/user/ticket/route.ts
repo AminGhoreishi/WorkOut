@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
 
     const tickets = await Ticket.find({ userId: session.user.id })
       .populate("userId", "username fullName email avatar role")
+      .populate("coachId", "username fullName email avatar role")
       .populate("messages.senderId", "username fullName email avatar role")
       .sort({ updatedAt: -1 })
       .lean();
@@ -169,7 +170,7 @@ export async function PUT(req: NextRequest) {
       dbUser?.fullName ||
       dbUser?.username ||
       session.user.username ||
-      "کاربر فیت‌کوچ";
+      "کاربر استار فیت";
 
     ticket.messages.push({
       senderId: session.user.id,

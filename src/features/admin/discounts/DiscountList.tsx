@@ -20,8 +20,10 @@ export default function DiscountList({
   loading,
   error,
   onRefresh,
+  setStatusFilter,
+  statusFilter
 }: DiscountListProps) {
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+ 
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -31,10 +33,11 @@ export default function DiscountList({
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  const handleDelete = async (id: string, code: string) => {
+  const handleDelete = async (id: string, code?: string | null) => {
+    const label = code ? `کد تخفیف "${code}"` : "تخفیف مستقیم پکیج";
     const isConfirmed = await showConfirm(
-      "حذف کد تخفیف",
-      `آیا از حذف کد تخفیف "${code}" اطمینان دارید؟`,
+      "حذف تخفیف",
+      `آیا از حذف ${label} اطمینان دارید؟`,
       "بله، حذف شود",
       "warning",
     );
@@ -49,10 +52,10 @@ export default function DiscountList({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.message || "خطا در حذف کد تخفیف");
+        throw new Error(data.message || "خطا در حذف تخفیف");
       }
 
-      showToast({ title: "کد تخفیف با موفقیت حذف شد", icon: "success" });
+      showToast({ title: "تخفیف با موفقیت حذف شد", icon: "success" });
       onRefresh?.();
     } catch (err: any) {
       showAlert({
@@ -64,12 +67,6 @@ export default function DiscountList({
       setDeletingId(null);
     }
   };
-
-  const filteredDiscounts = discounts.filter((item) => {
-    if (statusFilter === "active") return item.isActive;
-    if (statusFilter === "inactive") return !item.isActive;
-    return true;
-  });
 
   return (
     <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-4 md:p-6 mb-8 backdrop-blur-sm">
@@ -121,19 +118,19 @@ export default function DiscountList({
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
         </div>
-      ) : filteredDiscounts.length === 0 ? (
+      ) : discounts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-white/40 gap-3 text-center">
           <span className="p-4 rounded-2xl bg-neutral-800/50 text-white/30">
             <Tag className="w-8 h-8" />
           </span>
-          <span className="text-sm font-medium">کد تخفیفی یافت نشد</span>
+          <span className="text-sm font-medium">تخفیفی یافت نشد</span>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-right">
             <thead>
               <tr className="border-b border-neutral-800 text-white/40 text-xs font-medium">
-                <th className="pb-4 pr-4">کد تخفیف</th>
+                <th className="pb-4 pr-4">عنوان / کد تخفیف</th>
                 <th className="pb-4 px-4">درصد تخفیف</th>
                 <th className="pb-4 px-4">پکیج‌های مجاز</th>
                 <th className="pb-4 px-4">میزان مصرف</th>
@@ -143,29 +140,36 @@ export default function DiscountList({
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800/60 text-sm">
-              {filteredDiscounts.map((discount) => (
+              {discounts.map((discount) => (
                 <tr
                   key={discount._id}
                   className="hover:bg-white/[0.02] transition-colors group"
                 >
                   <td className="py-4 pr-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-amber-400 tracking-wider bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
-                        {discount.code}
+                    {discount.code ? (
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-amber-400 tracking-wider bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
+                          {discount.code}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleCopy(discount.code!)}
+                          className="text-white/40 hover:text-white p-1 rounded transition-colors cursor-pointer"
+                          title="کپی کد"
+                        >
+                          {copiedCode === discount.code ? (
+                            <Check className="w-4 h-4 text-emerald-400" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 bg-sky-500/10 px-3 py-1.5 rounded-lg border border-sky-500/20">
+                        <Tag className="w-3.5 h-3.5" />
+                        تخفیف مستقیم پکیج
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(discount.code)}
-                        className="text-white/40 hover:text-white p-1 rounded transition-colors cursor-pointer"
-                        title="کپی کد"
-                      >
-                        {copiedCode === discount.code ? (
-                          <Check className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
+                    )}
                   </td>
 
                   <td className="py-4 px-4">

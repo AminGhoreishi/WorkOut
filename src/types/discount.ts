@@ -2,7 +2,7 @@ import type { Document, Types } from "mongoose";
 import type { IPackage } from "@/types/package";
 
 export interface IDiscountSchema {
-  code: string;
+  code?: string | null;
   percent: number;
   packages: Types.ObjectId[] | IPackage[];
   maxUsage?: number | null;
@@ -22,7 +22,7 @@ export interface IDiscount extends Omit<IDiscountSchema, "packages">, Document {
 
 export interface DiscountItem {
   _id: string;
-  code: string;
+  code?: string | null;
   percent: number;
   packages: { _id: string; name: string }[];
   maxUsage?: number | null;
@@ -34,7 +34,7 @@ export interface DiscountItem {
 }
 
 export interface DiscountFormData {
-  code: string;
+  code?: string;
   percent: number;
   packageId: string;
   maxUsage?: number | null;
@@ -49,8 +49,19 @@ export interface DiscountModalProps {
   onSuccess?: () => void;
 }
 
+export interface DiscountStatsData {
+  totalCount: number;
+  activeCount: number;
+  inactiveCount: number;
+  totalUsage: number;
+}
+
+export interface DiscountsManagementProps {
+  initialStats: DiscountStatsData;
+}
+
 export interface DiscountStatsProps {
-  discounts: DiscountItem[];
+  stats: DiscountStatsData;
 }
 
 export interface DiscountListProps {
@@ -58,6 +69,8 @@ export interface DiscountListProps {
   loading?: boolean;
   error?: string | null;
   onRefresh?: () => void;
+  statusFilter: "all" | "active" | "inactive";
+  setStatusFilter: (status: "all" | "active" | "inactive") => void;
 }
 
 export interface DiscountsApiResponse {

@@ -11,6 +11,8 @@ export interface IMessage {
 
 export interface ITicket extends Document {
   userId: mongoose.Types.ObjectId;
+  coachId?: mongoose.Types.ObjectId | null;
+  initiatedBy: "user" | "coach";
   subject: string;
   description: string;
   status: "pending" | "answered" | "closed";
@@ -41,6 +43,8 @@ export interface IClientMessage {
 export interface IClientTicket {
   _id: string;
   userId: IClientUser;
+  coachId?: IClientUser | null;
+  initiatedBy?: "user" | "coach";
   subject: string;
   description: string;
   status: "pending" | "answered" | "closed";
@@ -144,3 +148,43 @@ export interface TicketChatFooterProps {
   sendingReply: boolean;
   onSendReply: (e: React.FormEvent) => void;
 }
+
+export interface AdminSendTicketFormValues {
+  userId: string;
+  subject: string;
+  category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
+  description: string;
+  status: "pending" | "answered" | "closed";
+  file?: FileList | null;
+}
+
+export interface AdminSendTicketProps {
+  initialUserId?: string;
+}
+
+export interface AdminSendTicketPageProps {
+  searchParams: Promise<{ userId?: string }>;
+}
+
+export interface AdminSearchUserResult {
+  _id: string;
+  username: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+  role?: string;
+}
+
+export interface AdminSubscriberUser {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
+export interface AdminSubscriberUsersApiResponse {
+  users: AdminSubscriberUser[];
+  message?: string;
+}
+
+

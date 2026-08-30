@@ -9,21 +9,24 @@ import {
   ArrowRight,
   CheckCircle,
   CreditCard,
-  Gift,
   ShieldCheck,
   Zap,
   Loader2,
   Sparkles,
 } from "lucide-react";
 import type {
-  BillingCycle,
   OrderFormData,
   OrderPageProps,
   CreateOrderResponse,
-  VerifyPaymentResponse,
 } from "@/types/order";
 import type { UserProfileResponse } from "@/types/user-profile";
 import OrderSummarySkeleton from "./OrderSummarySkeleton";
+import {
+  calculateDirectDiscountAmount,
+  calculateCouponDiscountAmount,
+  calculateFinalPrice,
+  formatFaNumber,
+} from "./orderHelpers";
 
 const fetcher = async (url: string): Promise<UserProfileResponse> => {
   const res = await fetch(url);
@@ -79,35 +82,30 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
   }, [profileData, setValue]);
 
   const selectedPackage = watch("selectedPackage");
-  const billingCycle = watch("billingCycle");
   const discountCode = watch("discountCode");
   const agreedToTerms = watch("agreedToTerms");
 
-  const getPrice = (): number => {
-    switch (billingCycle) {
-      case "monthly":
-        return packageData.price?.monthly || 0;
-      case "quarterly":
-        return packageData.price?.quarterly || 0;
-      case "biannual":
-        return packageData.price?.biannual || 0;
-      default:
-        return packageData.price?.monthly || 0;
-    }
-  };
+  const basePrice = packageData.originalPrice || packageData.price?.monthly || 0;
+  const directDiscountPercent = packageData.hasDiscount
+    ? packageData.discountPercent || 0
+    : 0;
 
-  const discountApplied = discountCode?.trim().toUpperCase() === "FIT2024";
+  const couponApplied = discountCode?.trim().toUpperCase() === "FIT2024";
+  const couponDiscountPercent = couponApplied ? 15 : 0;
 
-  const getDiscount = (): number => {
-    if (!discountApplied) return 0;
-    return Math.floor(getPrice() * 0.15);
-  };
-
-  const getFinalPrice = (): number => getPrice() - getDiscount();
-
-  const formatNumber = (num: number): string => {
-    return new Intl.NumberFormat("fa-IR").format(num || 0);
-  };
+  const directDiscountAmount = calculateDirectDiscountAmount(
+    basePrice,
+    directDiscountPercent,
+  );
+  const couponDiscountAmount = calculateCouponDiscountAmount(
+    basePrice,
+    couponDiscountPercent,
+  );
+  const finalPrice = calculateFinalPrice(
+    basePrice,
+    directDiscountPercent,
+    couponDiscountPercent,
+  );
 
   const onSubmit = async (formData: OrderFormData) => {
     setErrorMessage(null);
@@ -127,9 +125,10 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
     try {
       const payload = {
         fullName: formData.fullName,
+        email: formData.email,
         phone: formData.phone,
         packageId: formData.selectedPackage,
-        billingCycle: formData.billingCycle,
+        billingCycle: "monthly",
         discountCode: formData.discountCode ? formData.discountCode.trim() : null,
       };
 
@@ -161,9 +160,6 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
     }
   };
 
-  const availableCycles: BillingCycle[] = ["monthly"];
-  const cyclesToDisplay = availableCycles;
-
   return (
     <div
       className="min-h-screen bg-gradient-to-br from-black font-danaMed via-zinc-950 to-neutral-950 text-amber-50 py-6 sm:py-10 px-3 sm:px-4 relative overflow-hidden"
@@ -172,7 +168,7 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="container mx-auto relative z-10">
         <div className="mb-6 sm:mb-8">
           <Link
             href="/packages"
@@ -210,7 +206,6 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <h2
                 className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2 font-morabbaBold"
-      
               >
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                 پکیج انتخابی
@@ -219,11 +214,7 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
               <div className="grid grid-cols-1 gap-4">
                 <button
                   type="button"
-                  onClick={() => setValue("selectedPackage", packageData._id)}
-                  className={`p-3.5 sm:p-4 rounded-xl border-2 transition-all text-right cursor-pointer flex justify-between items-center gap-3 ${selectedPackage === packageData._id
-                      ? "border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/10"
-                      : "border-amber-500/15 bg-zinc-900/40 hover:border-amber-500/30"
-                    }`}
+                  className="p-3.5 sm:p-4 rounded-xl border-2 transition-all text-right cursor-pointer flex justify-between items-center gap-3 border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/10"
                 >
                   <div className="min-w-0">
                     <div className="text-amber-100 font-bold text-xs sm:text-base mb-1 truncate">
@@ -237,50 +228,13 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                   </div>
 
                   <div className="text-amber-400 font-extrabold text-xs sm:text-sm whitespace-nowrap shrink-0">
-                    از {formatNumber(packageData.price?.monthly || 0)} تومان
+                    از {formatFaNumber(packageData.price?.monthly || 0)} تومان
                   </div>
                 </button>
               </div>
             </div>
 
-            <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
-              <h2
-                className="text-sm sm:text-lg font-bold text-amber-300 mb-3 sm:mb-4 flex items-center gap-2 font-morabbaBold"
-      
-              >
-                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
-                انتخاب دوره پرداخت
-              </h2>
 
-              <div className="space-y-3">
-                {cyclesToDisplay.map((cycle) => (
-                  <button
-                    key={cycle}
-                    type="button"
-                    onClick={() => setValue("billingCycle", cycle)}
-                    className={`w-full p-3.5 sm:p-4 rounded-xl border-2 transition-all flex justify-between items-center gap-3 cursor-pointer ${billingCycle === cycle
-                        ? "border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/10"
-                        : "border-amber-500/15 bg-zinc-900/40 hover:border-amber-500/30"
-                      }`}
-                  >
-                    <div className="text-right min-w-0">
-                      <div className="text-amber-100 font-semibold text-xs sm:text-sm">
-                        {cycle === "monthly" && "یک ماهه (عادی)"}
-                        {cycle === "quarterly" && "سه ماهه (تخفیف ویژه)"}
-                        {cycle === "biannual" && "شش ماهه (بهترین ارزش)"}
-                      </div>
-                    </div>
-
-                    <div
-                      className="text-amber-400 font-bold text-xs sm:text-base whitespace-nowrap shrink-0 font-morabbaBold"
-            
-                    >
-                      {formatNumber(packageData.price?.[cycle] || 0)} تومان
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <h2
@@ -376,13 +330,20 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                 <div className="space-y-3 text-xs sm:text-sm text-zinc-300">
                   <div className="flex justify-between">
                     <span className="text-zinc-400">قیمت پایه:</span>
-                    <span className="font-semibold">{formatNumber(getPrice())} تومان</span>
+                    <span className="font-semibold">{formatFaNumber(basePrice)} تومان</span>
                   </div>
 
-                  {discountApplied && (
+                  {directDiscountPercent > 0 && (
+                    <div className="flex justify-between text-rose-400 font-semibold bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                      <span>تخفیف مستقیم پکیج ({directDiscountPercent}٪):</span>
+                      <span>-{formatFaNumber(directDiscountAmount)} تومان</span>
+                    </div>
+                  )}
+
+                  {couponApplied && (
                     <div className="flex justify-between text-amber-400 font-semibold bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
-                      <span>تخفیف ویژه (۱۵٪):</span>
-                      <span>-{formatNumber(getDiscount())} تومان</span>
+                      <span>کد تخفیف (۱۵٪):</span>
+                      <span>-{formatFaNumber(couponDiscountAmount)} تومان</span>
                     </div>
                   )}
                 </div>
@@ -391,9 +352,8 @@ export default function OrderPage({ packageData, email }: OrderPageProps) {
                   <span className="text-xs sm:text-sm font-bold">مبلغ قابل پرداخت:</span>
                   <span
                     className="text-lg sm:text-2xl font-morabbaBold font-extrabold text-amber-400"
-          
                   >
-                    {formatNumber(getFinalPrice())} تومان
+                    {formatFaNumber(finalPrice)} تومان
                   </span>
                 </div>
 

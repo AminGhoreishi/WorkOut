@@ -17,6 +17,10 @@ export default function AdminSidebar({ isAdmin = false }) {
     subscriptions: 0,
     articles: 0,
     comments: 0,
+    activeComments: 0,
+    pendingComments: 0,
+    tickets: 0,
+    admins: 0,
     wishlist: 0,
     videos: 0,
   });
@@ -32,7 +36,11 @@ export default function AdminSidebar({ isAdmin = false }) {
             users: data.usersCount || 0,
             subscriptions: data.subscriptionsCount || 0,
             articles: data.articlesCount || 0,
-            comments: data.commentsCount ?? data.pendingCommentsCount ?? 0,
+            comments: data.activeCommentsCount ?? data.commentsCount ?? 0,
+            activeComments: data.activeCommentsCount || 0,
+            pendingComments: data.pendingCommentsCount || 0,
+            tickets: data.ticketsCount || 0,
+            admins: data.adminsCount || 0,
             videos: data.videosCount || 0,
           }));
         }

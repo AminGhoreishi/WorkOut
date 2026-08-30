@@ -21,8 +21,8 @@ export default function CheckoutPage({ order }: CheckoutPageClientProps) {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const cardNumber = "6219861864032759";
-  const formattedCardNumber = "6219  8618  6403  2759";
+  const cardNumber = "6219861843440891";
+  const formattedCardNumber = "6219  8618  4344  0891";
 
   const formatNumber = (num: number): string => {
     return new Intl.NumberFormat("fa-IR").format(num || 0);

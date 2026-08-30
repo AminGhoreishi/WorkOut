@@ -22,11 +22,18 @@ export default function TicketItem({
       }`}
     >
       <div className="flex justify-between items-start">
-        <span className="font-bold text-sm line-clamp-1">
-          {ticket.subject}
-        </span>
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className="font-bold text-sm line-clamp-1">
+            {ticket.subject}
+          </span>
+          {ticket.initiatedBy === "coach" && (
+            <span className="px-1.5 py-0.5 rounded text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold shrink-0">
+              پیام مربی
+            </span>
+          )}
+        </div>
         <span
-          className={`px-2 py-0.5 rounded border text-[9px] ${getCategoryBadge(ticket.category)}`}
+          className={`px-2 py-0.5 rounded border text-[9px] shrink-0 mr-2 ${getCategoryBadge(ticket.category)}`}
         >
           {getCategoryLabel(ticket.category)}
         </span>

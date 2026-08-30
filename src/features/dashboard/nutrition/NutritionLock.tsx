@@ -26,7 +26,7 @@ export default function NutritionLock() {
         </h2>
 
         <p className="text-gray-400 text-xs md:text-sm leading-relaxed mb-6">
-          دسترسی به بخش مدیریت تغذیه فیت‌کوچ فقط مخصوص کاربران دارای اشتراک فعال
+          دسترسی به بخش مدیریت تغذیه استار فیت فقط مخصوص کاربران دارای اشتراک فعال
           می‌باشد. برای استفاده از تمامی امکانات، یکی از پکیج‌های ما را تهیه
           کنید.
         </p>
@@ -65,7 +65,7 @@ export default function NutritionLock() {
             className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl shadow-lg shadow-emerald-500/10 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
             <Sparkles className="w-5 h-5 text-white" />
-            <span>خرید و فعال‌سازی اشتراک فیت‌کوچ</span>
+            <span>خرید و فعال‌سازی اشتراک استار فیت</span>
           </Link>
         </div>
       </div>

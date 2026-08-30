@@ -16,6 +16,9 @@ export interface Package {
   price: {
     monthly: number;
   };
+  originalPrice?: number;
+  discountPercent?: number;
+  hasDiscount?: boolean;
   icon: string;
   colorClass: string;
   rating: number;
@@ -115,6 +118,9 @@ export interface SubscriptionPackageItem {
   name: string;
   slug?: string;
   price: number | string;
+  originalPrice?: number;
+  discountPercent?: number;
+  hasDiscount?: boolean;
   duration?: string;
   popular?: boolean;
   isPopular?: boolean;

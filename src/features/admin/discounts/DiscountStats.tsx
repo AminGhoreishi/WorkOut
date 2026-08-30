@@ -3,11 +3,11 @@
 import { Tag, CheckCircle2, Sparkles, Clock } from "lucide-react";
 import type { DiscountStatsProps } from "@/types/discount";
 
-export default function DiscountStats({ discounts }: DiscountStatsProps) {
-  const totalCount = discounts.length;
-  const activeCount = discounts.filter((d) => d.isActive).length;
-  const totalUsage = discounts.reduce((sum, d) => sum + (d.usageCount || 0), 0);
-  const inactiveCount = discounts.filter((d) => !d.isActive).length;
+export default function DiscountStats({ stats }: DiscountStatsProps) {
+  const totalCount = stats.totalCount;
+  const activeCount = stats.activeCount;
+  const totalUsage = stats.totalUsage;
+  const inactiveCount = stats.inactiveCount;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

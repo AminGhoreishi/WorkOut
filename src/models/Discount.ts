@@ -5,10 +5,10 @@ const DiscountSchema = new Schema<IDiscount>(
   {
     code: {
       type: String,
-      required: true,
-      unique: true,
+      default: null,
       trim: true,
       uppercase: true,
+      sparse: true,
     },
     percent: {
       type: Number,

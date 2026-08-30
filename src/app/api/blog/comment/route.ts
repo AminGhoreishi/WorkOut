@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const commenterName = session.user.fullName || session.user.username || "کاربر فیت‌کوچ";
+    const commenterName = session.user.fullName || session.user.username || "کاربر استار فیت";
 
     const comment = await Comment.create({
       blogId,

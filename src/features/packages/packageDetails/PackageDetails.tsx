@@ -144,6 +144,9 @@ export default function PackageDetails({
 
                 <PriceCard
                   price={packageData.price}
+                  originalPrice={packageData.originalPrice}
+                  discountPercent={packageData.discountPercent}
+                  hasDiscount={packageData.hasDiscount}
                 />
 
                 <div className="relative z-10 pt-2">
