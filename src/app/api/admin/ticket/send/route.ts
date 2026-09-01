@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     let subject = "";
     let description = "";
     let category = "";
-    let status = "answered";
+    let status = "coach_sent";
     let file: File | null = null;
 
     const contentType = req.headers.get("content-type") || "";
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       subject = (formData.get("subject") as string) || "";
       description = (formData.get("description") as string) || "";
       category = (formData.get("category") as string) || "";
-      status = (formData.get("status") as string) || "answered";
+      status = (formData.get("status") as string) || "coach_sent";
       file = formData.get("file") as File | null;
     } else {
       const body = await req.json();
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       subject = body.subject || "";
       description = body.description || "";
       category = body.category || "";
-      status = body.status || "answered";
+      status = body.status || "coach_sent";
     }
 
     if (!userId || !subject || !description || !category) {

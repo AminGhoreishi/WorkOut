@@ -100,7 +100,7 @@ export default function AdminSidebar({ isAdmin = false }) {
           ${isOpen ? "lg:w-64" : "lg:w-18"}
         `}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-amber-500/20 font-danaMed">
+        <div className="h-16  flex items-center justify-between px-4 border-b border-amber-500/20 font-danaMed">
           {isOpen ? (
             <>
               <Link href="/" className="flex items-center gap-2 group">
@@ -129,7 +129,7 @@ export default function AdminSidebar({ isAdmin = false }) {
           )}
         </div>
 
-        <div className="h-[calc(100vh-8rem)] overflow-y-auto py-4 px-3 font-danaMed">
+        <div className="h-[calc(100vh-8rem)] max-sm:text-xs! overflow-y-auto py-4 px-3 font-danaMed">
           {menuItems.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-6">
               {isOpen && (

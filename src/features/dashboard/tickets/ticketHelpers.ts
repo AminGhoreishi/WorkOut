@@ -6,6 +6,8 @@ export const getStatusBadge = (status: ITicket["status"]) => {
       return "bg-amber-500/20 text-amber-400 border-amber-500/30";
     case "answered":
       return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+    case "coach_sent":
+      return "bg-amber-500/20 text-amber-300 border-amber-500/40";
     case "closed":
       return "bg-neutral-800 text-neutral-400 border-neutral-700";
     default:
@@ -19,6 +21,8 @@ export const getStatusLabel = (status: ITicket["status"]) => {
       return "در انتظار پاسخ مربی";
     case "answered":
       return "پاسخ داده شده";
+    case "coach_sent":
+      return "ارسال از مربی";
     case "closed":
       return "بسته شده";
     default:

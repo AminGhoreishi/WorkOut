@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, memo } from "react";
-import { AlertCircle, Send } from "lucide-react";
+import { AlertCircle, Send, MessageSquareOff } from "lucide-react";
 import type { TicketDetailsProps, TicketMutateApiResponse } from "@/types/ticket";
 import EmptyTicketState from "./EmptyTicketState";
 import TicketDetailsHeader from "./TicketDetailsHeader";
@@ -60,7 +60,14 @@ const TicketDetails = memo(function TicketDetails({
 
   const handleSendReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedTicket || !replyText.trim() || sendingReply) return;
+    if (
+      !selectedTicket ||
+      selectedTicket.status === "coach_sent" ||
+      selectedTicket.initiatedBy === "coach" ||
+      selectedTicket.status === "closed" ||
+      !replyText.trim() ||
+      sendingReply
+    ) return;
 
     setSendingReply(true);
     try {
@@ -95,6 +102,9 @@ const TicketDetails = memo(function TicketDetails({
   if (!selectedTicket) {
     return <EmptyTicketState />;
   }
+
+  const isCoachMessage =
+    selectedTicket.status === "coach_sent" || selectedTicket.initiatedBy === "coach";
 
   return (
     <div className="lg:col-span-7 bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col h-[650px] shadow-2xl font-danaMed" dir="rtl">
@@ -206,7 +216,12 @@ const TicketDetails = memo(function TicketDetails({
       </div>
 
       <div className="p-4 border-t border-white/10 bg-black/40">
-        {selectedTicket.status === "closed" ? (
+        {isCoachMessage ? (
+          <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-center text-purple-300 text-xs flex items-center justify-center gap-2">
+            <MessageSquareOff className="w-4 h-4 text-purple-400" />
+            این پیام به عنوان «ارسال از مربی» ثبت شده است و نیازی به ارسال پاسخ ندارد.
+          </div>
+        ) : selectedTicket.status === "closed" ? (
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-center text-red-400 text-xs flex items-center justify-center gap-2">
             <AlertCircle className="w-4 h-4" />
             این تیکت پشتیبانی بسته شده است. در صورت تمایل ابتدا دکمه بازگشایی تیکت را کلیک کنید.

@@ -80,7 +80,7 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
       subject: "",
       category: "workout",
       description: "",
-      status: "answered",
+      status: "coach_sent",
       file: null,
     },
   });
@@ -278,7 +278,8 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
                     className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500/50 text-sm cursor-pointer"
                     {...register("status")}
                   >
-                    <option value="answered">پیام از مربی (ارسال مستقیم به کاربر)</option>
+                    <option value="coach_sent">ارسال از مربی (ارسال مستقیم به کاربر)</option>
+                    <option value="answered">پاسخ داده شده</option>
                     <option value="pending">در انتظار بررسی</option>
                     <option value="closed">بسته شده</option>
                   </select>
@@ -396,7 +397,7 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
                   <div>
                     <span className="text-white/40 block text-[11px] mb-1">وضعیت:</span>
                     <span className="inline-block px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 text-[11px]">
-                      {currentStatus === "answered" ? "پیام از مربی" : currentStatus === "pending" ? "در انتظار" : "بسته"}
+                      {currentStatus === "coach_sent" ? "ارسال از مربی" : currentStatus === "answered" ? "پاسخ داده شده" : currentStatus === "pending" ? "در انتظار" : "بسته"}
                     </span>
                   </div>
 
