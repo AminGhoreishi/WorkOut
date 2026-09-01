@@ -1,8 +1,9 @@
 import type { TicketChatFooterProps } from "@/types/ticket";
-import { Lock, Send } from "lucide-react";
+import { Lock, Send, MessageSquareOff } from "lucide-react";
 
 export default function TicketChatFooter({
   selectedTicketStatus,
+  isCoachMessage,
   replyText,
   setReplyText,
   sendingReply,
@@ -10,7 +11,12 @@ export default function TicketChatFooter({
 }: TicketChatFooterProps) {
   return (
     <div className="p-4 border-t border-white/10 bg-black/40">
-      {selectedTicketStatus === "closed" ? (
+      {isCoachMessage ? (
+        <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center text-amber-400 text-xs flex items-center justify-center gap-2">
+          <MessageSquareOff className="w-4 h-4 text-amber-400" />
+          این پیام از طرف مربی ارسال شده است و امکان ارسال پاسخ برای آن وجود ندارد.
+        </div>
+      ) : selectedTicketStatus === "closed" ? (
         <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center text-amber-400 text-xs flex items-center justify-center gap-2">
           <Lock className="w-4 h-4" />
           این تیکت پشتیبانی بسته شده است. در صورت نیاز تیکت جدیدی ایجاد کنید.

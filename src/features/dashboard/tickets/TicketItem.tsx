@@ -23,6 +23,9 @@ export default function TicketItem({
     >
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          {ticket.readNotifications === false && (
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+          )}
           <span className="font-bold text-sm line-clamp-1">
             {ticket.subject}
           </span>

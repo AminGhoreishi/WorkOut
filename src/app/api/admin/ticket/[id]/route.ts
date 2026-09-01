@@ -85,6 +85,7 @@ export async function PUT(
       if (!status) {
         ticket.status = "answered";
       }
+      ticket.readNotifications = false;
     }
 
     await ticket.save();

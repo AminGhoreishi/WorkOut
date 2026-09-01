@@ -130,7 +130,6 @@ export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
 
-    // Session Check
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json(
@@ -149,12 +148,18 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Verify ownership: users can only update/reply to their own tickets
     const ticket = await Ticket.findOne({ _id: id, userId: session.user.id });
     if (!ticket) {
       return NextResponse.json(
         { message: "تیکت یافت نشد یا دسترسی غیرمجاز است." },
         { status: 404 },
+      );
+    }
+
+    if (ticket.initiatedBy === "coach") {
+      return NextResponse.json(
+        { message: "امکان ارسال پاسخ برای پیام‌های ارسالی از طرف مربی وجود ندارد." },
+        { status: 400 },
       );
     }
 
@@ -179,7 +184,6 @@ export async function PUT(req: NextRequest) {
       createdAt: new Date(),
     });
 
-    // Reset status to pending so it flags the support team
     ticket.status = "pending";
 
     await ticket.save();

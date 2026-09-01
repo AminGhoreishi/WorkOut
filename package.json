@@ -51,5 +51,12 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.60.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@ckeditor/ckeditor5-react",
+      "bcrypt",
+      "unrs-resolver"
+    ]
   }
 }

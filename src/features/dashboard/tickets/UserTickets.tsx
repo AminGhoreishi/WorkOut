@@ -48,8 +48,30 @@ export default function UserTickets() {
     mutate();
   };
 
-  const handleSelectTicket = (ticket: IClientTicket | null) => {
+  const handleSelectTicket = async (ticket: IClientTicket | null) => {
     setSelectedTicketId(ticket ? ticket._id : null);
+    if (ticket && ticket.readNotifications === false) {
+      mutate(
+        (currentData) => {
+          if (!currentData?.tickets) return currentData;
+          return {
+            ...currentData,
+            tickets: currentData.tickets.map((t) =>
+              t._id === ticket._id ? { ...t, readNotifications: true } : t
+            ),
+          };
+        },
+        false
+      );
+
+      try {
+        await fetch("/api/user/ticket/read", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ticketId: ticket._id }),
+        });
+      } catch {}
+    }
   };
 
   return (

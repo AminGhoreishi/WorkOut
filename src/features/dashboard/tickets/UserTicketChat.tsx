@@ -22,7 +22,15 @@ import TicketChatFooter from "./TicketChatFooter";
     const handleSendReply = async (e: React.FormEvent) => {
       e.preventDefault();
       const trimmed = replyText.trim();
-      if (!selectedTicket || !trimmed || sendingReply) return;
+      if (
+        !selectedTicket ||
+        selectedTicket.initiatedBy === "coach" ||
+        selectedTicket.status === "closed" ||
+        !trimmed ||
+        sendingReply
+      ) {
+        return;
+      }
 
       setSendingReply(true);
       try {
@@ -119,6 +127,7 @@ import TicketChatFooter from "./TicketChatFooter";
 
               <TicketChatFooter
                 selectedTicketStatus={selectedTicket.status}
+                isCoachMessage={selectedTicket.initiatedBy === "coach"}
                 replyText={replyText}
                 setReplyText={setReplyText}
                 sendingReply={sendingReply}

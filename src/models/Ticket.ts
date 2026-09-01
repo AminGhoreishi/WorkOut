@@ -34,6 +34,11 @@ const TicketSchema = new Schema<ITicket>(
       required: true,
       index: true,
     },
+    readNotifications: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     videoUrl: { type: String },
     messages: [MessageSchema],
   },

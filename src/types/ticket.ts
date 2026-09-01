@@ -17,6 +17,7 @@ export interface ITicket extends Document {
   description: string;
   status: "pending" | "answered" | "closed";
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
+  readNotifications?: boolean;
   videoUrl?: string;
   messages: IMessage[];
   createdAt: Date;
@@ -49,10 +50,17 @@ export interface IClientTicket {
   description: string;
   status: "pending" | "answered" | "closed";
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
+  readNotifications?: boolean;
   videoUrl?: string;
   messages: IClientMessage[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TicketReadApiResponse {
+  success: boolean;
+  message?: string;
+  ticketId?: string;
 }
 
 export interface ITicketStats {
@@ -143,6 +151,7 @@ export interface TicketChatHeaderProps {
 
 export interface TicketChatFooterProps {
   selectedTicketStatus: IClientTicket["status"];
+  isCoachMessage?: boolean;
   replyText: string;
   setReplyText: (val: string) => void;
   sendingReply: boolean;
