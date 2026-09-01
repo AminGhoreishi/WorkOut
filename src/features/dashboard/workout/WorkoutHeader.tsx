@@ -12,11 +12,11 @@ export default function WorkoutHeader({
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
         <div className="space-y-3">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 max-sm:text-xs! rounded-full text-sm sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
             <Sparkles className="w-3.5 h-3.5" />
             برنامه فعال شما
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold font-morabbaReg text-white">
+          <h1 className="text-2xl md:text-3xl max-sm:text-lg! font-bold font-morabbaReg text-white">
             {workoutPlan.title}
           </h1>
           {workoutPlan.description && (
@@ -26,14 +26,14 @@ export default function WorkoutHeader({
           )}
           <div className="flex flex-wrap items-center gap-4 text-sm sm:text-xs text-neutral-300 pt-2">
             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
-              <span className="text-neutral-400">وضعیت برنامه:</span>
-              <span className="font-semibold text-amber-400">
+              <span className="text-neutral-400 max-sm:text-xs!">وضعیت برنامه:</span>
+              <span className="font-semibold max-sm:text-xs! text-amber-400">
                 فعال و در حال اجرا
               </span>
             </div>
             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
-              <span className="text-neutral-400">تعداد روزهای تمرین:</span>
-              <span className="font-semibold text-amber-400 ss02">
+              <span className="text-neutral-400 max-sm:text-xs!">تعداد روزهای تمرین:</span>
+              <span className="font-semibold text-amber-400 ss02 max-sm:text-xs!">
                 {workoutDays.length} روز در هفته
               </span>
             </div>
@@ -46,7 +46,7 @@ export default function WorkoutHeader({
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 font-semibold px-5 py-3 rounded-xl text-sm transition-all duration-300 shadow-lg cursor-pointer whitespace-nowrap"
           >
             <Utensils className="w-4 h-4 text-neutral-950" />
-            <span>برنامه غذایی</span>
+            <span className="max-sm:text-xs!">برنامه غذایی</span>
           </Link>
         </div>
       </div>

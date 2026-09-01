@@ -159,7 +159,7 @@ export default function ExercisesList({
                     <span className="text-[10px] sm:text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
                       {muscleGroup}
                     </span>
-                    <span className="text-sm sm:text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
+                    <span className="text-xs sm:text-xs bg-white/5 text-neutral-400 px-2 py-0.5 rounded-md">
                       حرکت {idx + 1}
                     </span>
                   </div>
@@ -169,17 +169,17 @@ export default function ExercisesList({
                     {exercise.name}
                   </h4>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm max-sm:text-xs text-neutral-400 pt-2 font-semibold font-mono">
+                  <div className="flex flex-wrap max-sm:text-[12px]! items-center gap-x-4 gap-y-1 text-sm max-sm:text-xs text-neutral-400 pt-2 font-semibold font-mono">
                     <div className="flex items-center gap-1">
-                      <Dumbbell className="w-3.5 h-3.5 text-amber-400" />
-                      <span>{exercise.sets} ست</span>
+                      <Dumbbell className="w-3.5 font-danaMed ss02 h-3.5 text-amber-400" />
+                      <span className="font-danaMed">{exercise.sets} ست</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
-                      <span>{exercise.reps} تکرار</span>
+                      <TrendingUp className="w-3.5 font-danaMed ss02 h-3.5 text-amber-400" />
+                      <span className="font-danaMed">{exercise.reps} تکرار</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Weight className="w-3.5 h-3.5 text-amber-400" />
+                      <Weight className="w-3.5 font-danaMed ss02 h-3.5 text-amber-400" />
                       {editingWeightId === exercise._id ? (
                         <div className="flex items-center gap-1">
                           <input
@@ -311,7 +311,7 @@ export default function ExercisesList({
                   }
                   className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-amber-500/20 text-amber-400 text-sm font-semibold rounded-xl transition-all cursor-pointer"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex max-sm:text-xs! items-center gap-2">
                     <SlidersHorizontal className="w-4 h-4 text-amber-400" />
                     <span>گزینه‌های حرکت</span>
                   </div>
@@ -336,11 +336,11 @@ export default function ExercisesList({
                         }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Info className="w-4 h-4 text-amber-400" />
+                        <Info className="w-4 h-4 max-sm:text-xs! text-amber-400" />
                         <span>نکات مربی</span>
                       </div>
                       {isExpanded && (
-                        <span className="text-xs text-amber-400 font-bold">
+                        <span className="text-xs max-sm:text-xs! text-amber-400 font-bold">
                           نمایش داده شد
                         </span>
                       )}

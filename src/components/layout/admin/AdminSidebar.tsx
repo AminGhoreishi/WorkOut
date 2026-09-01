@@ -129,7 +129,7 @@ export default function AdminSidebar({ isAdmin = false }) {
           )}
         </div>
 
-        <div className="h-[calc(100vh-8rem)] max-sm:text-xs! overflow-y-auto py-4 px-3 font-danaMed">
+        <div className="h-[calc(100vh-8rem)] overflow-y-auto py-4 px-3 font-danaMed">
           {menuItems.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-6">
               {isOpen && (
@@ -165,7 +165,7 @@ export default function AdminSidebar({ isAdmin = false }) {
                       <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-neutral-950" : "text-amber-400"}`} />
                       {isOpen && (
                         <>
-                          <span className="flex-1 text-right text-sm">
+                          <span className="flex-1 text-right text-xs sm:text-sm">
                             {item.label}
                           </span>
                           {item.badge && (

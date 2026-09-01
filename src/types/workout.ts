@@ -450,3 +450,9 @@ export interface UserWorkoutDaysGridProps {
   onSelectDayId: (dayId: string) => void;
 }
 
+export interface WorkoutDayHeaderProps {
+  dayName: string;
+  muscleGroup: string;
+  totalExercises: number;
+}
+
