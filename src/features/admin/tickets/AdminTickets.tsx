@@ -55,10 +55,10 @@ export default function AdminTickets() {
       <div className="container mx-auto pt-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 font-morabbaReg">
+            <h1 className="text-3xl max-sm:text-xl font-bold text-white mb-2 font-morabbaReg">
               مدیریت تیکت‌های پشتیبانی
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="text-white/60 max-sm:text-xs text-sm">
               تیکت‌های ارسالی کاربران را پاسخ داده و مشکلات تمرینی، تغذیه‌ای یا پشتیبانی آن‌ها را برطرف کنید.
             </p>
           </div>

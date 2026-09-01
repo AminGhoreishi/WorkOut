@@ -15,7 +15,7 @@ export interface ITicket extends Document {
   initiatedBy: "user" | "coach";
   subject: string;
   description: string;
-  status: "pending" | "answered" | "closed";
+  status: "pending" | "answered" | "closed" | "coach_sent";
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
   readNotifications?: boolean;
   videoUrl?: string;
@@ -48,7 +48,7 @@ export interface IClientTicket {
   initiatedBy?: "user" | "coach";
   subject: string;
   description: string;
-  status: "pending" | "answered" | "closed";
+  status: "pending" | "answered" | "closed" | "coach_sent";
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
   readNotifications?: boolean;
   videoUrl?: string;
@@ -91,6 +91,18 @@ export interface TicketListProps {
 
 export interface TicketDetailsProps {
   selectedTicket: IClientTicket | null;
+  setSelectedTicket: (ticket: IClientTicket | null) => void;
+  onRefresh?: () => void;
+}
+
+export interface TicketDetailsHeaderProps {
+  ticketId: string;
+  status: IClientTicket["status"];
+  category: IClientTicket["category"];
+  createdAt: string;
+  subject: string;
+  senderName: string;
+  senderEmail?: string;
   setSelectedTicket: (ticket: IClientTicket | null) => void;
   onRefresh?: () => void;
 }
@@ -163,7 +175,7 @@ export interface AdminSendTicketFormValues {
   subject: string;
   category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
   description: string;
-  status: "pending" | "answered" | "closed";
+  status: "pending" | "answered" | "closed" | "coach_sent";
   file?: FileList | null;
 }
 

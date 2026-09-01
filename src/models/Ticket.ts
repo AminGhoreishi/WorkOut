@@ -24,7 +24,7 @@ const TicketSchema = new Schema<ITicket>(
     description: { type: String, required: true },
     status: {
       type: String,
-      enum: ["pending", "answered", "closed"],
+      enum: ["pending", "answered", "closed", "coach_sent"],
       default: "pending",
       index: true,
     },

@@ -170,7 +170,7 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
 
   return (
     <div className="min-h-screen text-white font-danaMed pb-16" dir="rtl">
-      <div className="container mx-auto pt-6 max-w-6xl px-4">
+      <div className="container mx-auto pt-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -278,7 +278,7 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
                     className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500/50 text-sm cursor-pointer"
                     {...register("status")}
                   >
-                    <option value="answered">پاسخ داده شده (کاربر پاسخ اولیه را دریافت می‌کند)</option>
+                    <option value="answered">پیام از مربی (ارسال مستقیم به کاربر)</option>
                     <option value="pending">در انتظار بررسی</option>
                     <option value="closed">بسته شده</option>
                   </select>
@@ -396,7 +396,7 @@ export default function AdminSendTicket({ initialUserId }: AdminSendTicketProps)
                   <div>
                     <span className="text-white/40 block text-[11px] mb-1">وضعیت:</span>
                     <span className="inline-block px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 text-[11px]">
-                      {currentStatus === "answered" ? "پاسخ داده شده" : currentStatus === "pending" ? "در انتظار" : "بسته"}
+                      {currentStatus === "answered" ? "پیام از مربی" : currentStatus === "pending" ? "در انتظار" : "بسته"}
                     </span>
                   </div>
 

@@ -19,7 +19,7 @@ const TicketStats = memo(function TicketStats({ stats, formatNumber }: TicketSta
           <MessageSquare className="w-6 h-6 text-blue-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02">
+          <div className="text-2xl max-sm:text-lg font-bold text-white ss02">
             {formatNumber(safeStats.totalCount)}
           </div>
           <div className="text-white/60 text-xs">کل تیکت‌ها</div>
@@ -31,7 +31,7 @@ const TicketStats = memo(function TicketStats({ stats, formatNumber }: TicketSta
           <Clock className="w-6 h-6 text-amber-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02">
+          <div className="text-2xl max-sm:text-lg font-bold text-white ss02">
             {formatNumber(safeStats.pendingCount)}
           </div>
           <div className="text-white/60 text-xs">در انتظار پاسخ</div>
@@ -43,7 +43,7 @@ const TicketStats = memo(function TicketStats({ stats, formatNumber }: TicketSta
           <CheckCircle className="w-6 h-6 text-emerald-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02">
+          <div className="text-2xl max-sm:text-lg font-bold text-white ss02">
             {formatNumber(safeStats.answeredCount)}
           </div>
           <div className="text-white/60 text-xs">پاسخ داده شده</div>
@@ -55,7 +55,7 @@ const TicketStats = memo(function TicketStats({ stats, formatNumber }: TicketSta
           <XCircle className="w-6 h-6 text-white/40" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white ss02">
+          <div className="text-2xl  max-sm:text-lg font-bold text-white ss02">
             {formatNumber(safeStats.closedCount)}
           </div>
           <div className="text-white/60 text-xs">بسته شده</div>

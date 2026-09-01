@@ -132,4 +132,11 @@ export interface TestimonialItem {
   comment: string;
   achievement: string;
 }
+export interface BubbleProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive" | null;
+  align?: "start" | "end";
+}
 
+export type BubbleContentProps = React.HTMLAttributes<HTMLDivElement>;
+export type BubbleGroupProps = React.HTMLAttributes<HTMLDivElement>;
+export type BubbleReactionsProps = React.HTMLAttributes<HTMLDivElement>;
