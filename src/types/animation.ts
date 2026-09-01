@@ -1,6 +1,14 @@
 import type { ReactNode } from "react";
 
-export type AnimationDirection = "up" | "down" | "left" | "right" | "none";
+export type AnimationDirection =
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "zoom-in"
+  | "zoom-out"
+  | "fade"
+  | "none";
 
 export interface StaggerContainerProps {
   children: ReactNode;
@@ -15,5 +23,18 @@ export interface StaggerItemProps {
   direction?: AnimationDirection;
   distance?: number;
   duration?: number;
+  scale?: number;
   className?: string;
 }
+
+export interface ScrollRevealProps {
+  children: ReactNode;
+  direction?: AnimationDirection;
+  distance?: number;
+  duration?: number;
+  delay?: number;
+  once?: boolean;
+  scale?: number;
+  className?: string;
+}
+

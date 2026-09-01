@@ -53,6 +53,10 @@ export interface HomeArticleItem {
   publishDate: string;
 }
 
+export interface LatestArticlesListProps {
+  articles: HomeArticleItem[];
+}
+
 export interface HomeWorkoutPlanItem {
   id: string;
   slug?: string;
