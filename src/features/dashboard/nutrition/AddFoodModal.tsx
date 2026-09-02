@@ -103,10 +103,11 @@ function AddFoodModal({
   const handleSelectPreset = (food: Food) => {
     setSelectedPresetFood(food);
     setSearchQuery(food.name);
+    const unit = food.unit || "";
     if (
-      food.unit.includes("عدد") ||
-      food.unit.includes("پیمانه") ||
-      food.unit.includes("سیخ")
+      unit.includes("عدد") ||
+      unit.includes("پیمانه") ||
+      unit.includes("سیخ")
     ) {
       setValue("foodQuantity", "1");
     } else {
@@ -141,14 +142,15 @@ function AddFoodModal({
 
       let multiplier = 1;
       let unitStr = "گرم";
+      const presetUnit = selectedPresetFood.unit || "";
 
-      if (selectedPresetFood.unit.includes("عدد")) {
+      if (presetUnit.includes("عدد")) {
         multiplier = qty;
         unitStr = "عدد";
-      } else if (selectedPresetFood.unit.includes("پیمانه")) {
+      } else if (presetUnit.includes("پیمانه")) {
         multiplier = qty;
         unitStr = "پیمانه";
-      } else if (selectedPresetFood.unit.includes("سیخ")) {
+      } else if (presetUnit.includes("سیخ")) {
         multiplier = qty;
         unitStr = "سیخ";
       } else {
@@ -350,11 +352,11 @@ function AddFoodModal({
                     <div>
                       <label className="block text-white/80 mb-2 text-xs">
                         مقدار مصرفی (
-                        {selectedPresetFood.unit.includes("عدد")
+                        {(selectedPresetFood.unit || "").includes("عدد")
                           ? "عدد"
-                          : selectedPresetFood.unit.includes("پیمانه")
+                          : (selectedPresetFood.unit || "").includes("پیمانه")
                             ? "پیمانه"
-                            : selectedPresetFood.unit.includes("سیخ")
+                            : (selectedPresetFood.unit || "").includes("سیخ")
                               ? "سیخ"
                               : "گرم"}
                         ):

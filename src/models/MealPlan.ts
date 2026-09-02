@@ -14,7 +14,12 @@ const MealPlanSchema = new Schema<IMealPlan>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: false },
     packageId: { type: Schema.Types.ObjectId, ref: "Package", required: false },
-    title: { type: String, required: true },
+    title: {
+      type: String,
+      required: [true, "عنوان برنامه الزامی است."],
+      minlength: [2, "عنوان برنامه باید حداقل ۲ کاراکتر باشد."],
+      trim: true,
+    },
     description: { type: String, default: "" },
     breakfast: { type: [MealPlanItemSchema], default: [] },
     lunch: { type: [MealPlanItemSchema], default: [] },

@@ -24,7 +24,6 @@ export default function FoodsContainer() {
       protein: 0,
       carbs: 0,
       fat: 0,
-      unit: "گرم",
       type: "all",
       isActive: true,
     },

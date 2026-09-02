@@ -144,3 +144,17 @@ export interface BubbleProps extends React.HTMLAttributes<HTMLDivElement> {
 export type BubbleContentProps = React.HTMLAttributes<HTMLDivElement>;
 export type BubbleGroupProps = React.HTMLAttributes<HTMLDivElement>;
 export type BubbleReactionsProps = React.HTMLAttributes<HTMLDivElement>;
+
+export interface ShadcnPaginationProps extends React.ComponentProps<"nav"> {}
+export interface ShadcnPaginationContentProps extends React.ComponentProps<"ul"> {}
+export interface ShadcnPaginationItemProps extends React.ComponentProps<"li"> {}
+export interface ShadcnPaginationLinkProps extends React.ComponentProps<"button"> {
+  isActive?: boolean;
+}
+export interface ShadcnPaginationPreviousProps extends React.ComponentProps<"button"> {
+  isActive?: boolean;
+}
+export interface ShadcnPaginationNextProps extends React.ComponentProps<"button"> {
+  isActive?: boolean;
+}
+export interface ShadcnPaginationEllipsisProps extends React.ComponentProps<"span"> {}

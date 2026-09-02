@@ -17,7 +17,7 @@ import type {
   FoodsResponse,
 } from "@/types/nutrition";
 import { showAlert, showConfirm } from "@/utils/alert";
-import Pagination from "@/components/common/Pagination";
+import FoodsPagination from "./FoodsPagination";
 
 const fetcher = async (url: string): Promise<FoodsResponse> => {
   const res = await fetch(url);
@@ -135,10 +135,6 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
       }
     };
 
-    const foods = data?.foods || [];
-    const totalItems = data?.totalItems || 0;
-    const totalPages = data?.totalPages || 1;
-
     return (
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden font-danaMed">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
@@ -153,7 +149,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
               )}
             </h2>
             <p className="text-gray-400 text-xs mt-1 ss02">
-              تعداد کل غذاها: {totalItems} مورد
+              تعداد کل غذاها: {data?.totalItems || 0} مورد
             </p>
           </div>
 
@@ -189,7 +185,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
             <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             در حال بارگذاری اطلاعات...
           </div>
-        ) : foods.length === 0 ? (
+        ) : !data?.foods?.length ? (
           <div className="text-center py-12 text-gray-500 border border-dashed border-white/10 rounded-xl text-sm">
             <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-gray-600" />
             هیچ غذایی یافت نشد.
@@ -201,7 +197,6 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                 <thead>
                   <tr className="border-b border-white/10 text-gray-400 text-xs md:text-sm">
                     <th className="pb-3 pr-2">نام غذا</th>
-                    <th className="pb-3">واحد اندازه گیری</th>
                     <th className="pb-3 text-center">کالری (Kcal)</th>
                     <th className="pb-3 text-center">پروتئین</th>
                     <th className="pb-3 text-center">کربوهیدرات</th>
@@ -211,7 +206,7 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10 text-xs md:text-sm text-gray-200">
-                  {foods.map((food) => (
+                  {data?.foods?.map((food) => (
                     <tr
                       key={food._id}
                       className="hover:bg-white/5 transition-colors"
@@ -219,7 +214,6 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                       <td className="py-3.5 pr-2 font-semibold text-white">
                         {food.name}
                       </td>
-                      <td className="py-3.5 text-gray-300">{food.unit}</td>
                       <td className="py-3.5 text-center font-bold text-white ss02">
                         {food.calories}
                       </td>
@@ -275,10 +269,10 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
               </table>
             </div>
 
-            <Pagination
+            <FoodsPagination
               currentPage={page}
-              totalPages={totalPages}
-              totalItems={totalItems}
+              totalPages={data?.totalPages || 1}
+              totalItems={data?.totalItems || 0}
               pageSize={pageSize}
               onPageChange={(newPage) => setPage(newPage)}
             />

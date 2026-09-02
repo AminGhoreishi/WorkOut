@@ -8,7 +8,7 @@ export interface Food {
   protein: number;
   carbs: number;
   fat: number;
-  unit: string;
+  unit?: string;
   isActive: boolean;
   type?: "breakfast" | "lunch" | "dinner" | "snack" | "all";
   createdAt?: string;
@@ -184,7 +184,7 @@ export interface FoodFormData {
   protein: number;
   carbs: number;
   fat: number;
-  unit: string;
+  unit?: string;
   type: "breakfast" | "lunch" | "dinner" | "snack" | "all";
   isActive: boolean;
 }
@@ -216,3 +216,6 @@ export interface PaginationProps {
   pageSize: number;
   onPageChange: (page: number) => void;
 }
+
+export interface FoodsPaginationProps extends PaginationProps {}
+
