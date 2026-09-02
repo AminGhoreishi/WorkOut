@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { ITicket, IMessage } from "@/types/ticket";
+import type { ISendTicketCoach, IMessage } from "@/types/ticket";
 
 const MessageSchema = new Schema<IMessage>(
   {
@@ -10,16 +10,16 @@ const MessageSchema = new Schema<IMessage>(
   { timestamps: { createdAt: true, updatedAt: false }, versionKey: false }
 );
 
-const TicketSchema = new Schema<ITicket>(
+const SendTicketCoachSchema = new Schema<ISendTicketCoach>(
   {
+    coachId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    coachId: { type: Schema.Types.ObjectId, ref: "User", default: null },
     subject: { type: String, required: true },
     description: { type: String, required: true },
     status: {
       type: String,
       enum: ["pending", "answered", "closed", "coach_sent"],
-      default: "pending",
+      default: "coach_sent",
       index: true,
     },
     category: {
@@ -39,4 +39,5 @@ const TicketSchema = new Schema<ITicket>(
   { timestamps: true, versionKey: false }
 );
 
-export default mongoose.models.Ticket || mongoose.model<ITicket>("Ticket", TicketSchema);
+export default mongoose.models.SendTicketCoach ||
+  mongoose.model<ISendTicketCoach>("SendTicketCoach", SendTicketCoachSchema);

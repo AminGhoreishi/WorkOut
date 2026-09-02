@@ -106,6 +106,14 @@ const TicketDetails = memo(function TicketDetails({
   const isCoachMessage =
     selectedTicket.status === "coach_sent" || selectedTicket.initiatedBy === "coach";
 
+  const displayMessages =
+    selectedTicket.messages?.filter((msg, idx) => {
+      if (isCoachMessage && idx === 0 && msg.text.trim() === selectedTicket.description.trim()) {
+        return false;
+      }
+      return true;
+    }) || [];
+
   return (
     <div className="lg:col-span-7 bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col h-[650px] shadow-2xl font-danaMed" dir="rtl">
       <TicketDetailsHeader
@@ -122,17 +130,33 @@ const TicketDetails = memo(function TicketDetails({
 
       <div className="flex-1 overflow-y-auto p-6 bg-black/20">
         <MessageGroup className="space-y-4">
-          <Message align="end">
-            <MessageAvatar className="bg-amber-500/10 border border-amber-500/30 text-amber-400">
-              {selectedTicket.userId?.username?.charAt(0)?.toUpperCase() || "👤"}
+          <Message align={isCoachMessage ? "start" : "end"}>
+            <MessageAvatar
+              className={`border ${
+                isCoachMessage
+                  ? "bg-purple-500/20 border-purple-500/30 text-purple-400"
+                  : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+              }`}
+            >
+              {isCoachMessage
+                ? "🛡️"
+                : selectedTicket.userId?.username?.charAt(0)?.toUpperCase() || "👤"}
             </MessageAvatar>
             <MessageContent>
-              <MessageHeader>
-                <span>{selectedTicket.userId?.fullName || selectedTicket.userId?.username}</span>
-                <span className="ss02">{formatTime(selectedTicket.createdAt)}</span>
+              <MessageHeader className={isCoachMessage ? "text-purple-400/80" : ""}>
+                <span>
+                  {isCoachMessage
+                    ? selectedTicket.coachId?.fullName ||
+                      selectedTicket.coachId?.username ||
+                      "مربی استار فیت"
+                    : selectedTicket.userId?.fullName || selectedTicket.userId?.username}
+                </span>
+                <span className="ss02 text-white/40">{formatTime(selectedTicket.createdAt)}</span>
               </MessageHeader>
-              <Bubble variant="outline">
-                <BubbleContent className="rounded-tl-none">
+              <Bubble variant={isCoachMessage ? "tinted" : "outline"}>
+                <BubbleContent
+                  className={isCoachMessage ? "rounded-tr-none" : "rounded-tl-none"}
+                >
                   <p className="leading-relaxed whitespace-pre-line text-neutral-200">
                     {selectedTicket.description}
                   </p>
@@ -168,8 +192,7 @@ const TicketDetails = memo(function TicketDetails({
             </MessageContent>
           </Message>
 
-          {selectedTicket.messages &&
-            selectedTicket.messages.map((msg) => {
+          {displayMessages.map((msg) => {
               const senderObj = typeof msg.senderId === "object" ? msg.senderId : null;
               const isSupport = senderObj
                 ? senderObj.role === "admin" || senderObj.role === "coach"

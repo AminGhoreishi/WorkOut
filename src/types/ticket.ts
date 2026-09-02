@@ -12,7 +12,20 @@ export interface IMessage {
 export interface ITicket extends Document {
   userId: mongoose.Types.ObjectId;
   coachId?: mongoose.Types.ObjectId | null;
-  initiatedBy: "user" | "coach";
+  subject: string;
+  description: string;
+  status: "pending" | "answered" | "closed" | "coach_sent";
+  category: "workout" | "nutrition" | "form_check" | "injury" | "technical";
+  readNotifications?: boolean;
+  videoUrl?: string;
+  messages: IMessage[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ISendTicketCoach extends Document {
+  coachId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   subject: string;
   description: string;
   status: "pending" | "answered" | "closed" | "coach_sent";

@@ -14,7 +14,16 @@ export default function TicketChatMessages({
   selectedTicket,
   chatEndRef,
 }: TicketChatMessagesProps) {
-  const isCoachInitiated = selectedTicket.initiatedBy === "coach";
+  const isCoachInitiated =
+    selectedTicket.status === "coach_sent" || selectedTicket.initiatedBy === "coach";
+
+  const displayMessages =
+    selectedTicket.messages?.filter((msg, idx) => {
+      if (isCoachInitiated && idx === 0 && msg.text.trim() === selectedTicket.description.trim()) {
+        return false;
+      }
+      return true;
+    }) || [];
 
   return (
     <MessageGroup className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/20">
@@ -63,7 +72,7 @@ export default function TicketChatMessages({
         </Message>
       )}
 
-      {isCoachInitiated && (!selectedTicket.messages || selectedTicket.messages.length === 0) && (
+      {isCoachInitiated && (
         <Message align="start" className="max-w-[85%] justify-start">
           <MessageAvatar className="w-8 h-8 rounded-full text-[10px] font-bold shrink-0 border bg-amber-500/20 border-amber-500/30 text-amber-400">
             <Shield className="w-4 h-4 text-amber-400" />
@@ -109,8 +118,7 @@ export default function TicketChatMessages({
         </Message>
       )}
 
-      {selectedTicket.messages &&
-        selectedTicket.messages.map((msg, index) => {
+      {displayMessages.map((msg) => {
           const sender = msg.senderId as { role?: string } | null;
           const isSupport =
             typeof msg.senderId === "object" && msg.senderId !== null
@@ -156,35 +164,6 @@ export default function TicketChatMessages({
                 <p className="leading-relaxed whitespace-pre-line text-neutral-200">
                   {msg.text}
                 </p>
-                {isCoachInitiated && index === 0 && selectedTicket.videoUrl && (
-                  <div className="mt-3 rounded-xl overflow-hidden border border-white/10 max-w-sm bg-black/40">
-                    {isVideo(selectedTicket.videoUrl) ? (
-                      <video
-                        src={selectedTicket.videoUrl}
-                        controls
-                        className="w-full h-auto max-h-56 object-cover"
-                      />
-                    ) : (
-                      <a
-                        href={selectedTicket.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block relative group overflow-hidden"
-                      >
-                        <Image
-                          src={selectedTicket.videoUrl}
-                          alt="پیوست پیام"
-                          width={400}
-                          height={300}
-                          className="w-full h-auto max-h-56 object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-white">
-                          مشاهده تصویر کامل
-                        </div>
-                      </a>
-                    )}
-                  </div>
-                )}
               </MessageContent>
             </Message>
           );

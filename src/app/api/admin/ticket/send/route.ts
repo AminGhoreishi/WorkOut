@@ -95,20 +95,12 @@ export async function POST(req: NextRequest) {
     const ticket = await Ticket.create({
       userId: targetUser._id,
       coachId: session.user.id,
-      initiatedBy: "coach",
       subject: subject.trim(),
       description: description.trim(),
       category,
       videoUrl: videoUrl || undefined,
       status,
-      messages: [
-        {
-          senderId: session.user.id,
-          senderName,
-          text: description.trim(),
-          createdAt: new Date(),
-        },
-      ],
+      messages: [],
     });
 
     const populatedTicket = await Ticket.findById(ticket._id)
