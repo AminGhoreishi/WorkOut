@@ -16,6 +16,7 @@ const FitnessProfileSchema = new Schema<IFitnessProfile>(
         "muscle_gain",
         "endurance",
         "general_fitness",
+        "athletic_performance",
         "rehabilitation",
       ],
       required: true,

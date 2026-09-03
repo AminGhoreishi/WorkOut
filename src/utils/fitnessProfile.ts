@@ -3,6 +3,7 @@ export const goalLabels: Record<string, string> = {
   muscle_gain: "عضله‌سازی",
   endurance: "افزایش استقامت",
   general_fitness: "آمادگی جسمانی",
+  athletic_performance: "آمادگی جسمانی تخصصی",
   rehabilitation: "توانبخشی",
 };
 

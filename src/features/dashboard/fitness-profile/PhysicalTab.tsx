@@ -25,7 +25,7 @@ export default function PhysicalTab({
                 message: "سن باید عدد و حداکثر ۱۰۰ سال باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left ss02"
           />
           {errors.ageYears && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -46,7 +46,7 @@ export default function PhysicalTab({
                 message: "قد باید عدد و زیر ۳۰۰ سانتی‌متر باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left ss02"
           />
           {errors.heightCm && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -67,7 +67,7 @@ export default function PhysicalTab({
                 message: "وزن باید عدد و زیر ۳۰۰ کیلوگرم باشد",
               },
             })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors text-left ss02"
           />
           {errors.weightKg && (
             <p className="text-amber-400 text-[10px] mt-1 font-semibold">
@@ -79,7 +79,7 @@ export default function PhysicalTab({
 
       <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex gap-3 items-center">
         <Activity className="w-8 h-8 text-amber-400 flex-shrink-0" />
-        <div className="text-xs leading-relaxed text-neutral-300">
+        <div className="text-xs leading-relaxed text-neutral-300 ss02">
           <span className="font-bold text-amber-300 block mb-0.5">
             محاسبه دقیق BMI
           </span>
@@ -87,7 +87,7 @@ export default function PhysicalTab({
             <>
               شاخص توده بدنی شما بر اساس وزن {watchedWeight} کیلوگرم و قد{" "}
               {watchedHeight} سانتی‌متر برابر با{" "}
-              <strong className="text-white">{bmi}</strong> است که در
+              <strong className="text-white ss02">{bmi}</strong> است که در
               محدوده{" "}
               <strong className={bmiCategory.color}>
                 {bmiCategory.label}

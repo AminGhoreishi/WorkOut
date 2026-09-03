@@ -51,7 +51,7 @@ export default function PhotosTab({
             </label>
           )}
         </div>
-        <p className="text-[10px] text-neutral-400 leading-relaxed">
+        <p className="text-[10px] text-neutral-400 leading-relaxed ss02">
           می‌توانید تا حداکثر ۴ تصویر از وضعیت بدنی خود (جلو، پشت، پهلوها)
           بارگذاری کنید.
         </p>

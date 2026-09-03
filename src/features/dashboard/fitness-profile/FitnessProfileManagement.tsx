@@ -281,7 +281,7 @@ export default function FitnessProfileManagement() {
                   <span className="text-xs sm:text-sm text-neutral-300">شاخص BMI:</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs sm:text-lg font-bold">
+                  <span className="text-xs sm:text-lg font-bold ss02">
                     {bmi > 0 ? bmi : "—"}
                   </span>
                   {bmi > 0 && (
@@ -299,7 +299,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     قد (CM)
                   </span>
-                  <span className="text-xs sm:text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block ss02">
                     {errors.heightCm ? "—" : watchedHeight}
                   </span>
                 </div>
@@ -307,7 +307,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     وزن (KG)
                   </span>
-                  <span className="text-xs sm:text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block ss02">
                     {errors.weightKg ? "—" : watchedWeight}
                   </span>
                 </div>
@@ -315,7 +315,7 @@ export default function FitnessProfileManagement() {
                   <span className="block text-[10px] text-neutral-400">
                     سن (سال)
                   </span>
-                  <span className="text-xs sm:text-base font-bold mt-1 block">
+                  <span className="text-xs sm:text-base font-bold mt-1 block ss02">
                     {errors.ageYears ? "—" : watchedAge}
                   </span>
                 </div>

@@ -10,6 +10,7 @@ const VALID_GOALS = [
   "muscle_gain",
   "endurance",
   "general_fitness",
+  "athletic_performance",
   "rehabilitation",
 ];
 

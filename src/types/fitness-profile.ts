@@ -7,6 +7,7 @@ export type FitnessGoal =
   | "muscle_gain"
   | "endurance"
   | "general_fitness"
+  | "athletic_performance"
   | "rehabilitation";
 
 export type EquipmentOption = "none" | "home_basic" | "gym_full";

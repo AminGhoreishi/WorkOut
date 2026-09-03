@@ -1,4 +1,4 @@
-import { TrendingUp, Dumbbell, Zap, Award, Heart } from "lucide-react";
+import { TrendingUp, Dumbbell, Zap, Award, Trophy, Heart } from "lucide-react";
 import type {
   GoalOptionItem,
   ExperienceOptionItem,
@@ -10,6 +10,11 @@ export const GOAL_OPTIONS: GoalOptionItem[] = [
   { val: "muscle_gain", label: "عضله‌سازی و افزایش حجم", icon: Dumbbell },
   { val: "endurance", label: "افزایش استقامت و کاردیو", icon: Zap },
   { val: "general_fitness", label: "آمادگی جسمانی عمومی", icon: Award },
+  {
+    val: "athletic_performance",
+    label: "آمادگی جسمانی تخصصی (برای ورزشکاران مسابقه‌ای)",
+    icon: Trophy,
+  },
   { val: "rehabilitation", label: "توان‌بخشی و بهبود آسیب", icon: Heart },
 ];
 

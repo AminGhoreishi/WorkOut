@@ -51,7 +51,7 @@ export default function TrainingTab({
                 key={num}
                 type="button"
                 onClick={() => setValue("sessionsPerWeek", num)}
-                className={`w-9 h-9 rounded-lg border flex items-center justify-center font-semibold transition-all duration-200 cursor-pointer ${ watchedSessions === num ? "bg-amber-500 border-amber-500 text-neutral-950 font-bold scale-105" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
+                className={`w-9 h-9 rounded-lg border flex items-center justify-center font-semibold transition-all duration-200 cursor-pointer ss02 ${ watchedSessions === num ? "bg-amber-500 border-amber-500 text-neutral-950 font-bold scale-105" : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10" }`}
               >
                 {num}
               </button>
@@ -72,13 +72,13 @@ export default function TrainingTab({
                 e.target.value as TrainingExperienceOption,
               )
             }
-            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer"
+            className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer ss02"
           >
             {EXPERIENCE_OPTIONS.map((item) => (
               <option
                 key={item.val}
                 value={item.val}
-                className="bg-neutral-900 text-white"
+                className="bg-neutral-900 text-white ss02"
               >
                 {item.label} ({item.desc})
               </option>
