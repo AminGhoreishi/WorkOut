@@ -3,18 +3,17 @@
 import {
   useState,
   useEffect,
-  useCallback,
   forwardRef,
   useImperativeHandle,
 } from "react";
+import useSWR from "swr";
 import {
   Loader2,
-  Dumbbell,
   Edit,
   Trash2,
   Search,
-  Utensils,
   Trophy,
+  Activity,
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
@@ -22,54 +21,54 @@ import type {
   SubscriptionItem,
   SubscriptionsTableRef,
   SubscriptionsTableProps,
+  SubscriptionsApiResponse,
 } from "@/types/workout";
 import { showAlert, showConfirm } from "@/utils/alert";
-import Pagination from "@/components/common/Pagination";
+import AppPagination from "@/components/common/AppPagination";
+import UserFitnessProfileModal from "./UserFitnessProfileModal";
+
+const fetcher = async (url: string): Promise<SubscriptionsApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || "خطا در بارگذاری لیست اشتراک‌ها");
+  }
+  return res.json();
+};
 
 const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableProps>(
   function SubscriptionsTable({ onOpenPlanModal, onOpenMealPlanModal, onEdit, onStatsUpdate }, ref) {
-    const [subscriptions, setSubscriptions] = useState<SubscriptionItem[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+    const [fitnessProfileUser, setFitnessProfileUser] = useState<{
+      id: string;
+      name: string;
+    } | null>(null);
 
-    const fetchSubscriptions = useCallback(async () => {
-      setLoading(true);
-      try {
-        const url = `/api/admin/subscription?page=${currentPage}&limit=8&status=${statusFilter}&search=${encodeURIComponent(debouncedSearch)}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("خطا در بارگذاری لیست اشتراک‌ها");
-        const data = await res.json().catch(() => ({}));
-        setSubscriptions(data.subscriptions || []);
-        setTotalPages(data.totalPages || 1);
-      } catch {
-        showAlert({
-          title: "خطا",
-          text: "خطا در بارگذاری اشتراک‌ها",
-          icon: "error",
-        });
-      } finally {
-        setLoading(false);
-      }
-    }, [currentPage, debouncedSearch, statusFilter]);
+    const apiUrl = `/api/admin/subscription?page=${currentPage}&limit=8&status=${statusFilter}&search=${encodeURIComponent(debouncedSearch)}`;
+
+    const {
+      data,
+      error,
+      isLoading,
+      mutate,
+    } = useSWR<SubscriptionsApiResponse>(apiUrl, fetcher, {
+      revalidateOnFocus: false,
+      keepPreviousData: true,
+    });
 
     useImperativeHandle(
       ref,
       () => ({
         refresh() {
-          fetchSubscriptions();
+          mutate();
         },
       }),
-      [fetchSubscriptions]
+      [mutate]
     );
-
-    useEffect(() => {
-      fetchSubscriptions();
-    }, [fetchSubscriptions]);
 
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -79,9 +78,17 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
       return () => clearTimeout(timer);
     }, [searchTerm]);
 
-    const formatNumber = (num: number) => {
-      return new Intl.NumberFormat("fa-IR").format(num || 0);
-    };
+    useEffect(() => {
+      if (error) {
+        showAlert({
+          title: "خطا",
+          text: error.message || "خطا در بارگذاری اشتراک‌ها",
+          icon: "error",
+        });
+      }
+    }, [error]);
+
+ 
 
     const formatDate = (dateString?: string) => {
       if (!dateString) return "-";
@@ -110,7 +117,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
 
       return (
         <span
-          className={`px-2.5 py-1 rounded-full border text-sm sm:text-xs font-medium ${styles[status]}`}
+          className={`px-2.5 py-1 rounded-full border text-sm font-medium ${styles[status]}`}
         >
           {labels[status]}
         </span>
@@ -137,7 +144,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
             text: "اشتراک با موفقیت حذف شد",
             icon: "success",
           });
-          fetchSubscriptions();
+          mutate();
         } else {
           const err = await res.json().catch(() => ({}));
           showAlert({
@@ -176,7 +183,10 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
               <button
                 key={st}
                 type="button"
-                onClick={() => setStatusFilter(st)}
+                onClick={() => {
+                  setStatusFilter(st);
+                  setCurrentPage(1);
+                }}
                 className={`px-4 py-1.5 rounded-lg border text-sm sm:text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${ statusFilter === st ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold border-amber-400" : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10" }`}
               >
                 {st === "all"
@@ -207,7 +217,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {isLoading ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center">
                       <div className="flex items-center justify-center gap-2 text-white/60">
@@ -216,14 +226,20 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                       </div>
                     </td>
                   </tr>
-                ) : subscriptions.length === 0 ? (
+                ) : error ? (
+                  <tr>
+                    <td colSpan={6} className="p-8 text-center text-red-400">
+                      خطا در بارگذاری اطلاعات اشتراک‌ها
+                    </td>
+                  </tr>
+                ) : !data?.subscriptions || data.subscriptions.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-white/40">
                       هیچ اشتراکی پیدا نشد
                     </td>
                   </tr>
                 ) : (
-                  subscriptions.map((sub) => (
+                  data.subscriptions.map((sub) => (
                     <tr
                       key={sub._id}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors text-white text-sm"
@@ -239,7 +255,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                             <div className="font-semibold text-white">
                               {sub.userId?.fullName || "کاربر ناشناس"}
                             </div>
-                            <div className="text-white/50 text-sm sm:text-xs">
+                            <div className="text-white/50 text-sm">
                               @{sub.userId?.username || "username"} |{" "}
                               {sub.userId?.phone || sub.userId?.email || "-"}
                             </div>
@@ -267,7 +283,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                 openDropdownId === sub._id ? null : sub._id
                               )
                             }
-                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-sm sm:text-xs transition-colors cursor-pointer"
+                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors cursor-pointer"
                           >
                             <span>عملیات</span>
                             <ChevronDown
@@ -282,38 +298,6 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                 onClick={() => setOpenDropdownId(null)}
                               />
                               <div className="absolute left-0 top-full mt-1.5 w-48 bg-neutral-900/95 border border-white/15 rounded-xl shadow-2xl z-30 overflow-hidden py-1.5 backdrop-blur-xl">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setOpenDropdownId(null);
-                                    if (sub.packageId) {
-                                      onOpenPlanModal(sub.packageId);
-                                    } else {
-                                      showAlert({
-                                        title: "خطا",
-                                        text: "پکیج یافت نشد!",
-                                        icon: "error",
-                                      });
-                                    }
-                                  }}
-                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-purple-300 hover:bg-purple-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
-                                >
-                                  <Dumbbell className="w-4 h-4 text-purple-400" />
-                                  <span>برنامه تمرینی</span>
-                                </button>
-
-                                <Link
-                                  href={`/admin/meal-plans?user=${encodeURIComponent(
-                                    (typeof sub.userId === "object"
-                                      ? sub.userId?.fullName || sub.userId?.username || sub.userId?._id
-                                      : sub.userId) || ""
-                                  )}`}
-                                  onClick={() => setOpenDropdownId(null)}
-                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
-                                >
-                                  <Utensils className="w-4 h-4 text-emerald-400" />
-                                  <span>برنامه غذایی</span>
-                                </Link>
 
                                 <Link
                                   href={`/admin/pr?userId=${encodeURIComponent(
@@ -322,21 +306,44 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                       : sub.userId) || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
-                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trophy className="w-4 h-4 text-amber-400" />
                                   <span>رکوردهای شخصی (PR)</span>
                                 </Link>
 
-                                <div className="my-1 border-t border-white/10" />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setOpenDropdownId(null);
+                                    const id =
+                                      typeof sub.userId === "object"
+                                        ? sub.userId?._id
+                                        : sub.userId;
+                                    const name =
+                                      typeof sub.userId === "object"
+                                        ? sub.userId?.fullName ||
+                                          sub.userId?.username ||
+                                          "کاربر"
+                                        : "کاربر";
+                                    if (id) {
+                                      setFitnessProfileUser({ id, name });
+                                    }
+                                  }}
+                                  className="w-full text-right px-3.5 py-2 text-sm text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                >
+                                  <Activity className="w-4 h-4 text-emerald-400" />
+                                  <span>پروفایل ورزشی</span>
+                                </button>
 
+                                <div className="my-1 border-t border-white/10" />
                                 <button
                                   type="button"
                                   onClick={() => {
                                     setOpenDropdownId(null);
                                     onEdit(sub);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Edit className="w-4 h-4 text-blue-400" />
                                   <span>ویرایش</span>
@@ -348,7 +355,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     setOpenDropdownId(null);
                                     handleDeleteSubscription(sub._id);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-sm sm:text-xs text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-sm text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trash2 className="w-4 h-4 text-rose-400" />
                                   <span>حذف اشتراک</span>
@@ -365,18 +372,25 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
             </table>
           </div>
 
-          {totalPages > 1 && (
+          {((data?.totalPages ?? 0) > 1) && (
             <div className="p-4">
-              <Pagination
+              <AppPagination
                 currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={subscriptions.length * totalPages}
-                pageSize={8}
+                totalPages={data?.totalPages || 1}
+                totalItems={data?.total}
                 onPageChange={setCurrentPage}
               />
             </div>
           )}
         </div>
+
+        {fitnessProfileUser && (
+          <UserFitnessProfileModal
+            userId={fitnessProfileUser.id}
+            userName={fitnessProfileUser.name}
+            onClose={() => setFitnessProfileUser(null)}
+          />
+        )}
       </div>
     );
   }

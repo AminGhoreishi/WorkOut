@@ -2,13 +2,11 @@
 
 import { useState, useRef } from "react";
 import type {
-  PackageInfo,
   SubscriptionItem,
   SubscriptionsTableRef,
 } from "@/types/workout";
 import type { SubscriptionsManagementProps } from "@/types/subscription";
 import SubscriptionsTable from "./SubscriptionsTable";
-import WorkoutPlanModal from "./WorkoutPlanModal";
 import EditSubscriptionModal from "./EditSubscriptionModal";
 import SubscriptionStats from "./SubscriptionStats";
 
@@ -18,17 +16,8 @@ export default function SubscriptionsManagement({
   const tableRef = useRef<SubscriptionsTableRef>(null);
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showPlanModal, setShowPlanModal] = useState(false);
-
   const [selectedSubscription, setSelectedSubscription] =
     useState<SubscriptionItem | null>(null);
-  const [selectedPackageForPlan, setSelectedPackageForPlan] =
-    useState<PackageInfo | null>(null);
-
-  const handleOpenPlanModal = (pkg: PackageInfo) => {
-    setSelectedPackageForPlan(pkg);
-    setShowPlanModal(true);
-  };
 
   return (
     <div
@@ -49,7 +38,6 @@ export default function SubscriptionsManagement({
 
         <SubscriptionsTable
           ref={tableRef}
-          onOpenPlanModal={handleOpenPlanModal}
           onEdit={(sub) => {
             setSelectedSubscription(sub);
             setShowEditModal(true);
@@ -63,16 +51,8 @@ export default function SubscriptionsManagement({
             onSuccess={() => tableRef.current?.refresh()}
           />
         )}
-
-        {showPlanModal && selectedPackageForPlan && (
-          <WorkoutPlanModal
-            selectedPackageForPlan={selectedPackageForPlan}
-            onClose={() => setShowPlanModal(false)}
-            videos={[]}
-            setWatchingVideo={() => {}}
-          />
-        )}
       </div>
     </div>
   );
 }
+

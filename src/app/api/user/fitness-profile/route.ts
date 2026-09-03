@@ -47,7 +47,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const profile = await FitnessProfile.findOne({ userId: session.user.id }).lean();
+    const { searchParams } = new URL(req.url);
+    const queryUserId = searchParams.get("userId");
+    const targetUserId =
+      (session.user.role === "admin" || session.user.role === "coach") && queryUserId
+        ? queryUserId
+        : session.user.id;
+
+    const profile = await FitnessProfile.findOne({ userId: targetUserId }).lean();
     return NextResponse.json({ profile: sanitizeProfile(profile) });
   } catch (error: any) {
     return NextResponse.json(

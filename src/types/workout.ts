@@ -53,6 +53,12 @@ export interface SubscriptionItem {
   createdAt: string;
 }
 
+export interface SubscriptionsApiResponse {
+  subscriptions: SubscriptionItem[];
+  total: number;
+  totalPages: number;
+}
+
 export interface WorkoutPlan {
   _id: string;
   packageId: string;
@@ -320,10 +326,16 @@ export interface SubscriptionsTableRef {
 }
 
 export interface SubscriptionsTableProps {
-  onOpenPlanModal: (pkg: PackageInfo) => void;
+  onOpenPlanModal?: (pkg: PackageInfo) => void;
   onOpenMealPlanModal?: (pkg: PackageInfo) => void;
   onEdit: (sub: SubscriptionItem) => void;
   onStatsUpdate?: (stats: { total: number; active: number; trial: number; expired: number }) => void;
+}
+
+export interface UserFitnessProfileModalProps {
+  userId: string;
+  userName?: string;
+  onClose: () => void;
 }
 
 export interface ExercisesListProps {
