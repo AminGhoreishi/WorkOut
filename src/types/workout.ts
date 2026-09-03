@@ -371,7 +371,7 @@ export interface VideosManagementRef {
 }
 
 export interface VideosManagementProps {
-  setShowUploadVideoModal: (show: boolean) => void;
+  setShowUploadVideoModal?: (show: boolean) => void;
   setWatchingVideo: (video: VideoInfo | null) => void;
   onVideosUpdate?: (videos: VideoInfo[]) => void;
 }

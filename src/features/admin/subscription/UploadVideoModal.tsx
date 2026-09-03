@@ -10,7 +10,6 @@ export default function UploadVideoModal({
   onUploadSuccess,
 }: UploadVideoModalProps) {
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [newVideoTitle, setNewVideoTitle] = useState("");
   const [newVideoDesc, setNewVideoDesc] = useState("");
   const [newVideoLevel, setNewVideoLevel] = useState("beginner");
@@ -20,10 +19,10 @@ export default function UploadVideoModal({
 
   const handleUploadVideo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!videoFile || !thumbnailFile || !newVideoTitle) {
+    if (!videoFile || !newVideoTitle) {
       showAlert({
         title: "هشدار",
-        text: "لطفاً فایل ویدیو، کاور و عنوان را انتخاب کنید",
+        text: "لطفاً فایل ویدیو و عنوان را وارد کنید",
         icon: "warning",
       });
       return;
@@ -32,7 +31,6 @@ export default function UploadVideoModal({
     try {
       const formData = new FormData();
       formData.append("videoFile", videoFile);
-      formData.append("thumbnailFile", thumbnailFile);
       formData.append("title", newVideoTitle);
       formData.append("description", newVideoDesc);
       formData.append("level", newVideoLevel);
@@ -83,7 +81,7 @@ export default function UploadVideoModal({
       <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-white/10 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/80 backdrop-blur-lg">
           <h2 className="text-sm sm:text-xl text-white font-bold font-morabbaReg">
-            آپلود ویدیوی ورزشی جدید به آروان
+            آپلود ویدیوی ورزشی جدید
           </h2>
           <button
             type="button"
@@ -99,7 +97,7 @@ export default function UploadVideoModal({
           <div className="p-12 text-center text-white space-y-4">
             <Loader2 className="w-12 h-12 animate-spin text-amber-400 mx-auto" />
             <div className="font-bold text-sm">
-              در حال آپلود ویدیو به سرورهای ابری آروان...
+              در حال آپلود ویدیو...
             </div>
             <p className="text-white/50 text-xs">
               لطفاً پنجره را نبندید. آپلود فایل‌های حجیم ممکن است چند دقیقه طول بکشد.
@@ -107,35 +105,19 @@ export default function UploadVideoModal({
           </div>
         ) : (
           <form onSubmit={handleUploadVideo} className="p-6 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-white/80 text-sm sm:text-xs mb-2 font-medium">
-                  فایل ویدیو (MP4)*
-                </label>
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) =>
-                    setVideoFile(e.target.files?.[0] || null)
-                  }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-white/80 text-sm sm:text-xs mb-2 font-medium">
-                  فایل کاور (Thumbnail JPG/PNG)*
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    setThumbnailFile(e.target.files?.[0] || null)
-                  }
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
-                  required
-                />
-              </div>
+            <div>
+              <label className="block text-white/80 text-sm sm:text-xs mb-2 font-medium">
+                فایل ویدیو (MP4)*
+              </label>
+              <input
+                type="file"
+                accept="video/*"
+                onChange={(e) =>
+                  setVideoFile(e.target.files?.[0] || null)
+                }
+                className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
+                required
+              />
             </div>
 
             <div>

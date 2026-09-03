@@ -32,30 +32,37 @@ export async function POST(req: Request) {
       }),
     );
 
-    const thumbBuffer = Buffer.from(await thumbnailFile.arrayBuffer());
-    const thumbKey = `thumbnails/${Date.now()}-${thumbnailFile.name}`;
-    await arvanClient.send(
-      new PutObjectCommand({
-        Bucket: bucket,
-        Key: thumbKey,
-        Body: thumbBuffer,
-        ContentType: thumbnailFile.type,
-        ACL: "public-read",
-      }),
-    );
-
     const videoUrl = `${publicUrl}/${videoKey}`;
-    const thumbnailUrl = `${publicUrl}/${thumbKey}`;
+    let thumbnailUrl = "";
 
-    const video = await Video.create({
+    if (thumbnailFile && typeof thumbnailFile === "object" && typeof (thumbnailFile as any).arrayBuffer === "function") {
+      const thumbBuffer = Buffer.from(await thumbnailFile.arrayBuffer());
+      const thumbKey = `thumbnails/${Date.now()}-${thumbnailFile.name}`;
+      await arvanClient.send(
+        new PutObjectCommand({
+          Bucket: bucket,
+          Key: thumbKey,
+          Body: thumbBuffer,
+          ContentType: thumbnailFile.type,
+          ACL: "public-read",
+        }),
+      );
+      thumbnailUrl = `${publicUrl}/${thumbKey}`;
+    }
+
+    const videoData: Record<string, any> = {
       title,
       description,
       url: videoUrl,
-      thumbnailUrl,
       durationSec,
       level,
       tags,
-    });
+    };
+    if (thumbnailUrl) {
+      videoData.thumbnailUrl = thumbnailUrl;
+    }
+
+    const video = await Video.create(videoData);
 
     return NextResponse.json({ video }, { status: 201 });
   } catch (error: any) {

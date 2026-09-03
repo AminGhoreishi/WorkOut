@@ -6,7 +6,6 @@ const VideoSchema = new Schema<IVideo>(
     title: { type: String, required: true },
     description: { type: String, default: "" },
     url: { type: String, required: true },
-    thumbnailUrl: { type: String, default: "" },
     durationSec: { type: Number, default: 0 },
     level: {
       type: String,

@@ -130,14 +130,16 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
               className="w-full bg-white/5 border border-white/10 rounded-lg pr-10 pl-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-500/30 text-sm sm:text-xs transition-colors"
             />
           </div>
-          <button
-            type="button"
-            onClick={() => setShowUploadVideoModal(true)}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-xl text-sm sm:text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            آپلود ویدیوی ورزشی جدید
-          </button>
+          {setShowUploadVideoModal && (
+            <button
+              type="button"
+              onClick={() => setShowUploadVideoModal(true)}
+              className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold hover:from-amber-400 hover:to-yellow-400 px-4 py-2 rounded-xl text-sm sm:text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              آپلود ویدیوی ورزشی جدید
+            </button>
+          )}
         </div>
 
         {isLoading ? (
