@@ -67,7 +67,11 @@ function ProgramExerciseCard({
         <div className="bg-white/5 rounded-lg py-1 px-1.5">
           <span className="text-white/40 block text-[9px]">وزنه</span>
           <span className="font-semibold text-amber-400">
-            {exercise.weight ? `${exercise.weight} kg` : "آزاد"}
+            {exercise.weight
+              ? typeof exercise.weight === "number" || !isNaN(Number(exercise.weight))
+                ? `${exercise.weight} kg`
+                : exercise.weight
+              : "آزاد"}
           </span>
         </div>
         <div className="bg-white/5 rounded-lg py-1 px-1.5">

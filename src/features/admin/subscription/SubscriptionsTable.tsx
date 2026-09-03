@@ -26,6 +26,7 @@ import type {
 import { showAlert, showConfirm } from "@/utils/alert";
 import AppPagination from "@/components/common/AppPagination";
 import UserFitnessProfileModal from "./UserFitnessProfileModal";
+import { getStatusBadge } from "./subscriptionHelpers";
 
 const fetcher = async (url: string): Promise<SubscriptionsApiResponse> => {
   const res = await fetch(url);
@@ -100,29 +101,6 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
       }
     };
 
-    const getStatusBadge = (status: SubscriptionItem["status"]) => {
-      const styles = {
-        active: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-        trial: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-        expired: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-        cancelled: "bg-red-500/20 text-red-400 border-red-500/30",
-      };
-
-      const labels = {
-        active: "فعال",
-        trial: "تست (Trial)",
-        expired: "منقضی شده",
-        cancelled: "لغو شده",
-      };
-
-      return (
-        <span
-          className={`px-2.5 py-1 rounded-full border text-sm font-medium ${styles[status]}`}
-        >
-          {labels[status]}
-        </span>
-      );
-    };
 
     const handleDeleteSubscription = async (id: string) => {
       const confirmed = await showConfirm({
@@ -207,7 +185,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
           <div className="overflow-x-auto min-h-[360px] pb-28">
             <table className="w-full min-w-[650px] text-right border-collapse">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5 text-white/60 text-sm whitespace-nowrap">
+                <tr className="border-b border-white/10 bg-white/5 text-white/60 text-xs sm:text-sm whitespace-nowrap">
                   <th className="p-4 font-semibold">کاربر</th>
                   <th className="p-4 font-semibold">پکیج</th>
                   <th className="p-4 font-semibold">شروع</th>
@@ -242,7 +220,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                   data.subscriptions.map((sub) => (
                     <tr
                       key={sub._id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors text-white text-sm"
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors text-white text-xs sm:text-sm"
                     >
                       <td className="p-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
@@ -255,7 +233,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                             <div className="font-semibold text-white">
                               {sub.userId?.fullName || "کاربر ناشناس"}
                             </div>
-                            <div className="text-white/50 text-sm">
+                            <div className="text-white/50 text-xs sm:text-sm">
                               @{sub.userId?.username || "username"} |{" "}
                               {sub.userId?.phone || sub.userId?.email || "-"}
                             </div>
@@ -283,7 +261,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                 openDropdownId === sub._id ? null : sub._id
                               )
                             }
-                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors cursor-pointer"
+                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs sm:text-sm transition-colors cursor-pointer"
                           >
                             <span>عملیات</span>
                             <ChevronDown
@@ -306,7 +284,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                       : sub.userId) || ""
                                   )}`}
                                   onClick={() => setOpenDropdownId(null)}
-                                  className="w-full text-right px-3.5 py-2 text-sm text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-xs sm:text-sm text-amber-300 hover:bg-amber-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trophy className="w-4 h-4 text-amber-400" />
                                   <span>رکوردهای شخصی (PR)</span>
@@ -330,7 +308,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                       setFitnessProfileUser({ id, name });
                                     }
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-sm text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-xs sm:text-sm text-emerald-300 hover:bg-emerald-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Activity className="w-4 h-4 text-emerald-400" />
                                   <span>پروفایل ورزشی</span>
@@ -343,7 +321,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     setOpenDropdownId(null);
                                     onEdit(sub);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-sm text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-xs sm:text-sm text-blue-300 hover:bg-blue-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Edit className="w-4 h-4 text-blue-400" />
                                   <span>ویرایش</span>
@@ -355,7 +333,7 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
                                     setOpenDropdownId(null);
                                     handleDeleteSubscription(sub._id);
                                   }}
-                                  className="w-full text-right px-3.5 py-2 text-sm text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                  className="w-full text-right px-3.5 py-2 text-xs sm:text-sm text-rose-400 hover:bg-rose-500/15 flex items-center gap-2.5 transition-colors cursor-pointer"
                                 >
                                   <Trash2 className="w-4 h-4 text-rose-400" />
                                   <span>حذف اشتراک</span>

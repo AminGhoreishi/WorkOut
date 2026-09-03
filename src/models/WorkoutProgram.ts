@@ -15,7 +15,7 @@ const WorkoutProgramSchema = new Schema<IWorkoutProgram>(
             videoId2: { type: Schema.Types.ObjectId, ref: "Video", default: null },
             sets: { type: Number, default: 3 },
             reps: { type: String, default: "" },
-            weight: { type: Number, default: 0 },
+            weight: { type: Schema.Types.Mixed, default: "" },
             restSec: { type: Number, default: 60 },
             isComplete : {type: Boolean, default: false}
           },

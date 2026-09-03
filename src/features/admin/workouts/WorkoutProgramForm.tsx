@@ -25,7 +25,7 @@ export default function WorkoutProgramForm({
   const [videoId2, setVideoId2] = useState("");
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState("10-12");
-  const [weight, setWeight] = useState(0);
+  const [weight, setWeight] = useState("");
   const [restSec, setRestSec] = useState(60);
 
   useEffect(() => {
@@ -55,13 +55,20 @@ export default function WorkoutProgramForm({
       return;
     }
 
+    const trimmedWeight = weight.trim();
+    const parsedWeight = trimmedWeight
+      ? !isNaN(Number(trimmedWeight))
+        ? Number(trimmedWeight)
+        : trimmedWeight
+      : undefined;
+
     const newExercise: ProgramExerciseItem = {
       name: trimmed,
       videoId: videoId || null,
       videoId2: videoId2 || null,
       sets: Number(sets) || 1,
       reps: reps.trim() || "10",
-      weight: Number(weight) || 0,
+      weight: parsedWeight,
       restSec: Number(restSec) || 60,
     };
 
@@ -72,7 +79,7 @@ export default function WorkoutProgramForm({
     setVideoId2("");
     setSets(3);
     setReps("10-12");
-    setWeight(0);
+    setWeight("");
     setRestSec(60);
   };
 
@@ -296,13 +303,13 @@ export default function WorkoutProgramForm({
 
             <div>
               <label className="block text-[11px] text-white/60 mb-1">
-                وزنه (kg)
+                وزنه / توضیحات
               </label>
               <input
-                type="number"
-                min={0}
+                type="text"
                 value={weight}
-                onChange={(e) => setWeight(Number(e.target.value))}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="مثلاً: 15 یا سوپر ست"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
               />
             </div>
@@ -357,7 +364,12 @@ export default function WorkoutProgramForm({
                         {exercise.weight ? (
                           <>
                             <span>•</span>
-                            <span>{exercise.weight} کیلو</span>
+                            <span>
+                              {typeof exercise.weight === "number" ||
+                              !isNaN(Number(exercise.weight))
+                                ? `${exercise.weight} کیلو`
+                                : exercise.weight}
+                            </span>
                           </>
                         ) : null}
                         <span>•</span>

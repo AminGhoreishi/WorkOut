@@ -109,7 +109,7 @@ export interface WorkoutExercise {
   name: string;
   sets: number;
   reps: string;
-  weight?: number;
+  weight?: number | string;
   restSec: number;
   sortOrder: number;
   isComplete?: boolean;
@@ -120,7 +120,7 @@ export interface ExerciseItem {
   name: string;
   sets: number;
   reps: string;
-  weight?: number;
+  weight?: number | string;
   restSec: number;
   videoId?: VideoInfo | null;
   videoId2?: VideoInfo | null;
@@ -160,7 +160,7 @@ export interface IProgramExercise {
   videoId2?: mongoose.Types.ObjectId | null;
   sets: number;
   reps?: string;
-  weight?: number;
+  weight?: number | string;
   restSec?: number;
   isComplete?: boolean;
 }
@@ -172,7 +172,7 @@ export interface ProgramExerciseItem {
   videoId2?: string | null;
   sets: number;
   reps?: string;
-  weight?: number;
+  weight?: number | string;
   restSec?: number;
   isComplete?: boolean;
 }
@@ -282,7 +282,7 @@ export interface WorkoutExerciseFormInputs {
   name: string;
   sets: number;
   reps: string;
-  weight?: number;
+  weight?: number | string;
   restSec: number;
   videoId: string;
   videoId2: string;

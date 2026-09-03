@@ -134,7 +134,7 @@ export async function PATCH(req: NextRequest) {
       updateFields["programs.$[].exercises.$[ex].isComplete"] = Boolean(isComplete);
     }
     if (weight !== undefined) {
-      updateFields["programs.$[].exercises.$[ex].weight"] = Number(weight);
+      updateFields["programs.$[].exercises.$[ex].weight"] = weight;
     }
 
     const program = await WorkoutProgram.findOneAndUpdate(

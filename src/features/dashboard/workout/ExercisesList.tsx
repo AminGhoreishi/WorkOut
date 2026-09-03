@@ -217,7 +217,11 @@ export default function ExercisesList({
                       ) : (
                         <div className="flex items-center gap-1">
                           <span className="font-danaMed">
-                            وزنه: {weights[exercise._id] ?? exercise.weight ?? 0} کیلوگرم
+                            {exercise.weight
+                              ? typeof exercise.weight === "number" || !isNaN(Number(exercise.weight))
+                                ? `وزنه: ${weights[exercise._id] ?? exercise.weight} کیلوگرم`
+                                : `وزنه: ${weights[exercise._id] ?? exercise.weight}`
+                              : "وزنه: آزاد"}
                           </span>
                           <button
                             type="button"
