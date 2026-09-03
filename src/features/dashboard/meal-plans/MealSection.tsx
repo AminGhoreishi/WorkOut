@@ -35,7 +35,7 @@ export default function MealSection({
             {items.map((item, index) => {
               const nutrients = calculateItemNutrients(item);
               const foodName = item.foodId?.name || "ماده غذایی نامشخص";
-              const unit = item.unit || item.foodId?.unit || "گرم";
+              const unit = item.unit || item.foodId?.unit || "";
 
               return (
                 <div

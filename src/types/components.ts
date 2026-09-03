@@ -158,3 +158,11 @@ export interface ShadcnPaginationNextProps extends React.ComponentProps<"button"
   isActive?: boolean;
 }
 export interface ShadcnPaginationEllipsisProps extends React.ComponentProps<"span"> {}
+
+export interface AppPaginationProps {
+  currentPage: number;
+  totalPages: number;
+  totalItems?: number;
+  onPageChange: (page: number) => void;
+  className?: string;
+}

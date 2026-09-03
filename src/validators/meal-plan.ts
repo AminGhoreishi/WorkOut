@@ -22,7 +22,7 @@ const mealPlanSchema = {
       type: "object",
       props: {
         foodId: { type: "string", empty: false },
-        quantity: { type: "number", positive: true },
+        quantity: [{ type: "string", empty: false }, { type: "number" }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -34,7 +34,7 @@ const mealPlanSchema = {
       type: "object",
       props: {
         foodId: { type: "string", empty: false },
-        quantity: { type: "number", positive: true },
+        quantity: [{ type: "string", empty: false }, { type: "number" }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -46,7 +46,7 @@ const mealPlanSchema = {
       type: "object",
       props: {
         foodId: { type: "string", empty: false },
-        quantity: { type: "number", positive: true },
+        quantity: [{ type: "string", empty: false }, { type: "number" }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -58,7 +58,7 @@ const mealPlanSchema = {
       type: "object",
       props: {
         foodId: { type: "string", empty: false },
-        quantity: { type: "number", positive: true },
+        quantity: [{ type: "string", empty: false }, { type: "number" }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },

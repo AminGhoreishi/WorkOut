@@ -32,7 +32,7 @@ export async function GET() {
     }
 
     const users = Array.from(userMap.values());
-    return NextResponse.json({ users }, { status: 200 });
+    return NextResponse.json(users, { status: 200 });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : "Failed to fetch subscribed users";
     return NextResponse.json({ error: errMessage }, { status: 500 });

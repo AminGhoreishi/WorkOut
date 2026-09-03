@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import useSWR from "swr";
 import { Plus, Utensils } from "lucide-react";
-import { showAlert, showConfirm } from "@/utils/alert";
-import type { FoodItem, PackageItem, MealPlanData, UserItem } from "@/types/meal-plan";
+import AppPagination from "@/components/common/AppPagination";
+import type { FoodItem, PackageItem, MealPlanData, UserItem, MealPlansApiResponse } from "@/types/meal-plan";
 import MealPlanForm from "./MealPlanForm";
 import MealPlanList from "./MealPlanList";
 
@@ -19,37 +18,20 @@ const fetcher = async (url: string) => {
 };
 
 export default function MealPlansManagement() {
-  const searchParams = useSearchParams();
-  const initialSearch = searchParams.get("user") || searchParams.get("userId") || searchParams.get("search") || "";
 
+  const [showForm, setShowForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [editingPlan, setEditingPlan] = useState<MealPlanData | null>(null);
+  const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
   const {
     data: plansData,
     isLoading: loadingPlans,
     mutate: mutatePlans,
-  } = useSWR<{ plans: MealPlanData[] }>("/api/admin/meal-plan", fetcher);
+  } = useSWR<MealPlansApiResponse>(`/api/admin/meal-plan?page=${currentPage}`, fetcher);
 
   const { data: packagesData } = useSWR<{ packages: PackageItem[] }>("/api/admin/package", fetcher);
-  const { data: usersData } = useSWR<{ users: UserItem[] }>("/api/admin/subscription/users", fetcher);
-  const { data: foodsData } = useSWR<FoodItem[]>("/api/food?all=true", fetcher);
-
-  const plans: MealPlanData[] = plansData?.plans || [];
-  const packages: PackageItem[] = packagesData?.packages || [];
-  const users: UserItem[] = usersData?.users || [];
-  const foods: FoodItem[] = Array.isArray(foodsData) ? foodsData : (foodsData as any)?.foods || [];
-
-  const [search, setSearch] = useState(initialSearch);
-
-  useEffect(() => {
-    const currentSearch =
-      searchParams.get("user") ||
-      searchParams.get("userId") ||
-      searchParams.get("search") ||
-      "";
-    setSearch(currentSearch);
-  }, [searchParams]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingPlan, setEditingPlan] = useState<MealPlanData | null>(null);
-  const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
+  const { data: users = [] } = useSWR<UserItem[]>("/api/admin/subscription/users", fetcher);
+  const { data: foods = [] } = useSWR<FoodItem[]>("/api/food?all=true", fetcher);
 
   const handleEditClick = (plan: MealPlanData) => {
     setEditingPlan(plan);
@@ -65,79 +47,6 @@ export default function MealPlansManagement() {
     setShowForm(false);
     setEditingPlan(null);
     mutatePlans();
-  };
-
-  const handleToggleActive = async (plan: MealPlanData) => {
-    try {
-      const response = await fetch(`/api/admin/meal-plan/${plan._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isActive: !plan.isActive }),
-      });
-
-      if (response.ok) {
-        showAlert({
-          title: "موفقیت",
-          text: "وضعیت فعال بودن برنامه تغییر یافت.",
-          icon: "success",
-        });
-        mutatePlans();
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        showAlert({
-          title: "خطا",
-          text: errorData.error || errorData.message || "خطا در تغییر وضعیت برنامه",
-          icon: "error",
-        });
-      }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "خطایی در ارتباط رخ داد.",
-        icon: "error",
-      });
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    const confirmed = await showConfirm({
-      title: "آیا مطمئن هستید؟",
-      text: "این برنامه غذایی به طور کامل از سیستم حذف خواهد شد!",
-      confirmButtonText: "بله، حذف شود",
-      icon: "warning",
-    });
-
-    if (confirmed) {
-      try {
-        const response = await fetch(`/api/admin/meal-plan/${id}`, {
-          method: "DELETE",
-        });
-
-        if (response.ok) {
-          showAlert({
-            title: "موفقیت",
-            text: "برنامه غذایی با موفقیت حذف شد.",
-            icon: "success",
-          });
-          mutatePlans();
-        } else {
-          const errorData = await response.json().catch(() => ({}));
-          showAlert({
-            title: "خطا",
-            text: errorData.error || errorData.message || "خطا در حذف برنامه غذایی",
-            icon: "error",
-          });
-        }
-      } catch {
-        showAlert({
-          title: "خطا",
-          text: "خطایی در برقراری ارتباط با سرور رخ داد.",
-          icon: "error",
-        });
-      }
-    }
   };
 
   return (
@@ -171,7 +80,7 @@ export default function MealPlansManagement() {
 
         {showForm && (
           <MealPlanForm
-            packages={packages}
+            packages={packagesData?.packages || []}
             users={users}
             foods={foods}
             editingPlan={editingPlan}
@@ -181,15 +90,19 @@ export default function MealPlansManagement() {
         )}
 
         <MealPlanList
-          plans={plans}
+          plans={plansData?.plans || []}
           loading={loadingPlans}
-          search={search}
-          setSearch={setSearch}
           expandedPlanId={expandedPlanId}
           setExpandedPlanId={setExpandedPlanId}
           onEdit={handleEditClick}
-          onToggleActive={handleToggleActive}
-          onDelete={handleDelete}
+          mutate={mutatePlans}
+        />
+
+        <AppPagination
+          currentPage={currentPage}
+          totalPages={plansData?.totalPages || 1}
+          totalItems={plansData?.total}
+          onPageChange={setCurrentPage}
         />
       </div>
     </div>

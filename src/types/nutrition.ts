@@ -103,8 +103,8 @@ export interface AddFoodModalProps {
 
 export interface MealPlanItem {
   foodId: string | mongoose.Types.ObjectId;
-  quantity: number;
-  unit: string;
+  quantity: string | number;
+  unit?: string;
 }
 
 export interface MealPlan {

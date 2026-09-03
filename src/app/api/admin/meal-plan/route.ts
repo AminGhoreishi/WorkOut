@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { validateMealPlan } from "@/validators/meal-plan";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
@@ -17,6 +17,14 @@ export async function GET() {
       );
     }
 
+    const { searchParams } = new URL(req.url);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const limit = Math.max(1, Number(searchParams.get("limit") || 10));
+    const skip = (page - 1) * limit;
+
+    const total = await MealPlan.countDocuments({});
+    const totalPages = Math.ceil(total / limit) || 1;
+
     const plans = await MealPlan.find({})
       .populate("userId", "username fullName email avatar")
       .populate("packageId")
@@ -25,9 +33,11 @@ export async function GET() {
       .populate("dinner.foodId")
       .populate("snack.foodId")
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .lean();
 
-    return NextResponse.json({ plans }, { status: 200 });
+    return NextResponse.json({ plans, total, totalPages, page }, { status: 200 });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : "Failed to fetch meal plans";
     return NextResponse.json(

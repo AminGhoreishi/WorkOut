@@ -68,8 +68,8 @@ export default function MealPlanFormFields({
     const newItem = {
       foodId: food._id,
       name: food.name,
-      quantity: 100,
-      unit: food.unit || "گرم",
+      quantity: "100 گرم",
+      unit: food.unit || "",
     };
 
     if (activeMealTab === "breakfast") appendBreakfast(newItem);
@@ -101,14 +101,9 @@ export default function MealPlanFormFields({
             type="text"
             {...register("title", {
               required: "وارد کردن عنوان برنامه الزامی است.",
-              validate: (value: string) => {
-                if (!value || value.trim().length === 0) {
-                  return "وارد کردن عنوان برنامه الزامی است.";
-                }
-                if (value.trim().length < 2) {
-                  return "عنوان برنامه باید حداقل ۲ کاراکتر باشد.";
-                }
-                return true;
+              minLength: {
+                value: 2,
+                message: "عنوان برنامه باید حداقل ۲ کاراکتر باشد.",
               },
             })}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder-gray-500"
@@ -231,7 +226,9 @@ export default function MealPlanFormFields({
                             className="w-full text-right px-3 py-2 text-xs text-white hover:bg-emerald-500/20 flex justify-between items-center transition-colors cursor-pointer border-b border-white/5 last:border-0"
                           >
                             <span className="font-semibold">{food.name}</span>
-                            <span className="text-[10px] text-emerald-400 ss02 shrink-0">({food.unit})</span>
+                            {food.unit ? (
+                              <span className="text-[10px] text-emerald-400 ss02 shrink-0">({food.unit})</span>
+                            ) : null}
                           </button>
                         ))
                       )}
@@ -268,7 +265,6 @@ export default function MealPlanFormFields({
                           const typedItem = item as { id: string; name?: string; unit?: string; foodId?: string };
                           const matchedFood = foods.find((f) => String(f._id) === String(typedItem.foodId));
                           const displayName = typedItem.name || matchedFood?.name || "غذا";
-                          const displayUnit = typedItem.unit || matchedFood?.unit || "گرم";
 
                           return (
                             <div
@@ -279,12 +275,11 @@ export default function MealPlanFormFields({
                               <div className="flex items-center gap-2">
                                 <span className="text-gray-400">مقدار:</span>
                                 <input
-                                  type="number"
-                                  min="1"
-                                  {...register(`${tab.key}.${index}.quantity` as const, { valueAsNumber: true })}
-                                  className="w-16 bg-neutral-950 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-emerald-500"
+                                  type="text"
+                                  {...register(`${tab.key}.${index}.quantity` as const)}
+                                  placeholder="مثال: ۱۰۰ گرم یا ۲ عدد"
+                                  className="w-36 bg-neutral-950 border border-white/10 rounded-lg px-2.5 py-1 text-center text-white text-xs focus:outline-none focus:border-emerald-500 placeholder:text-white/30"
                                 />
-                                <span className="text-gray-400 min-w-8">{displayUnit}</span>
                               </div>
                               <button
                                 type="button"

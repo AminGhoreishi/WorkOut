@@ -4,8 +4,8 @@ import { IMealPlan } from "@/types/nutrition";
 const MealPlanItemSchema = new Schema(
   {
     foodId: { type: Schema.Types.ObjectId, ref: "Food", required: true },
-    quantity: { type: Number, required: true },
-    unit: { type: String, required: true, default: "گرم" },
+    quantity: { type: Schema.Types.Mixed, required: true },
+    unit: { type: String, required: false, default: "" },
   },
   { _id: false }
 );
@@ -30,5 +30,8 @@ const MealPlanSchema = new Schema<IMealPlan>(
   { timestamps: true, versionKey: false }
 );
 
-export default mongoose.models.MealPlan ||
-  mongoose.model<IMealPlan>("MealPlan", MealPlanSchema);
+if (mongoose.models.MealPlan) {
+  delete mongoose.models.MealPlan;
+}
+
+export default mongoose.model<IMealPlan>("MealPlan", MealPlanSchema);

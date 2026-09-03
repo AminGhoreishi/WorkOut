@@ -115,7 +115,7 @@ export default function MealPlanItem({
                         <li key={foodIndex} className="text-xs text-gray-300 flex justify-between gap-2">
                           <span className="truncate">{item.foodId?.name || "غذا"}</span>
                           <span className="text-emerald-400 font-semibold ss02 text-[11px] shrink-0">
-                            {item.quantity} {item.unit || item.foodId?.unit || "گرم"}
+                            {item.quantity} {item.unit || item.foodId?.unit || ""}
                           </span>
                         </li>
                       ))}

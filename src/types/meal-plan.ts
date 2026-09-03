@@ -21,7 +21,7 @@ export interface PackageItem {
 
 export interface PlanMealItem {
   foodId: FoodItem | null;
-  quantity: number;
+  quantity: string | number;
   unit?: string;
 }
 
@@ -48,22 +48,22 @@ export interface IMealPlan extends Document {
   isActive: boolean;
   breakfast?: {
     foodId: mongoose.Types.ObjectId;
-    quantity: number;
+    quantity: string | number;
     unit?: string;
   }[];
   lunch?: {
     foodId: mongoose.Types.ObjectId;
-    quantity: number;
+    quantity: string | number;
     unit?: string;
   }[];
   dinner?: {
     foodId: mongoose.Types.ObjectId;
-    quantity: number;
+    quantity: string | number;
     unit?: string;
   }[];
   snack?: {
     foodId: mongoose.Types.ObjectId;
-    quantity: number;
+    quantity: string | number;
     unit?: string;
   }[];
   createdAt: Date;
@@ -80,8 +80,8 @@ export interface UserItem {
 export interface MealPlanFormItemInput {
   foodId: string;
   name?: string;
-  quantity: number | string;
-  unit: string;
+  quantity: string | number;
+  unit?: string;
 }
 
 export interface MealPlanFormInputs {
@@ -108,13 +108,14 @@ export interface MealPlanFormProps {
 export interface MealPlanListProps {
   plans: MealPlanData[];
   loading: boolean;
-  search: string;
-  setSearch: (value: string) => void;
+  search?: string;
+  setSearch?: (value: string) => void;
   expandedPlanId: string | null;
   setExpandedPlanId: (id: string | null) => void;
   onEdit: (plan: MealPlanData) => void;
-  onToggleActive: (plan: MealPlanData) => void;
-  onDelete: (id: string) => void;
+  onToggleActive?: (plan: MealPlanData) => void;
+  onDelete?: (id: string) => void;
+  mutate?: () => void | Promise<any>;
 }
 
 export interface MealPlanItemProps {
@@ -137,6 +138,13 @@ export interface MealPlanFormFieldsProps {
   isSubmitting: boolean;
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
+}
+
+export interface MealPlansApiResponse {
+  plans: MealPlanData[];
+  total?: number;
+  totalPages?: number;
+  page?: number;
 }
 
 export interface UserMealPlanResponse {

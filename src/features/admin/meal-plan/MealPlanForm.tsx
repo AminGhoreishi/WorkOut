@@ -29,6 +29,7 @@ export default function MealPlanForm({
     watch,
     formState: { errors, isSubmitting },
   } = useForm<MealPlanFormInputs>({
+    mode: "onChange",
     defaultValues: {
       title: "",
       description: "",
@@ -56,8 +57,8 @@ export default function MealPlanForm({
             return {
               foodId: String(foodIdStr || ""),
               name: foodNameStr || matchedFood?.name || "غذا",
-              quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 100,
-              unit: item.unit || matchedFood?.unit || "گرم",
+              quantity: item.quantity !== undefined && item.quantity !== null ? String(item.quantity) : "100 گرم",
+              unit: item.unit || matchedFood?.unit || "",
             };
           })
           .filter((item) => item.foodId.trim() !== "");
@@ -74,20 +75,8 @@ export default function MealPlanForm({
         dinner: mapMealItems(editingPlan.dinner || []),
         snack: mapMealItems(editingPlan.snack || []),
       });
-    } else {
-      reset({
-        title: "",
-        description: "",
-        userId: "",
-        packageId: "",
-        isActive: true,
-        breakfast: [],
-        lunch: [],
-        dinner: [],
-        snack: [],
-      });
     }
-  }, [editingPlanId, reset]);
+  }, [editingPlanId]);
 
   const onSubmit: SubmitHandler<MealPlanFormInputs> = async (data) => {
     try {
@@ -95,11 +84,11 @@ export default function MealPlanForm({
         (items || [])
           .filter((item) => item && item.foodId && String(item.foodId).trim() !== "")
           .map((item) => {
-            const parsedQty = Number(item.quantity);
+            const rawQty = item.quantity !== undefined && item.quantity !== null ? String(item.quantity).trim() : "100 گرم";
             return {
               foodId: String(item.foodId).trim(),
-              quantity: !isNaN(parsedQty) && parsedQty > 0 ? parsedQty : 100,
-              unit: item.unit ? String(item.unit).trim() : "گرم",
+              quantity: rawQty || "100 گرم",
+              unit: item.unit ? String(item.unit).trim() : "",
             };
           });
 

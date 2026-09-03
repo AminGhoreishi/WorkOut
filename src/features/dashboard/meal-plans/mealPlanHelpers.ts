@@ -6,8 +6,12 @@ export function calculateItemNutrients(item: PlanMealItem) {
   }
 
   const food = item.foodId;
-  const unit = item.unit || food.unit || "گرم";
-  const multiplier = unit === "گرم" ? item.quantity / 100 : item.quantity;
+  const numQty =
+    typeof item.quantity === "number"
+      ? item.quantity
+      : parseFloat(String(item.quantity).replace(/[^0-9.]/g, "")) || 0;
+  const isGrams = (item.unit || food.unit || "").includes("گرم") || String(item.quantity).includes("گرم");
+  const multiplier = isGrams ? numQty / 100 : (numQty > 0 ? numQty : 1);
 
   return {
     calories: Math.round((food.calories || 0) * multiplier),
