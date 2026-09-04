@@ -25,7 +25,7 @@ import type {
 } from "@/types/workout";
 import { showAlert, showConfirm } from "@/utils/alert";
 import AppPagination from "@/components/common/AppPagination";
-import UserFitnessProfileModal from "./UserFitnessProfileModal";
+import UserFitnessProfileModal from "./fitnessprofilemodal/UserFitnessProfileModal";
 import { getStatusBadge } from "./subscriptionHelpers";
 
 const fetcher = async (url: string): Promise<SubscriptionsApiResponse> => {

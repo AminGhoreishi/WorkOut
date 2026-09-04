@@ -18,3 +18,65 @@ export const equipmentLabels: Record<string, string> = {
   home_basic: "تجهیزات خانگی",
   gym_full: "باشگاه کامل",
 };
+
+export const calculateNutritionTargets = (
+  weightKg: number,
+  heightCm: number,
+  ageYears: number,
+  sessionsPerWeek = 4,
+  goal = "muscle_gain"
+) => {
+  const bmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * ageYears + 5);
+
+  let activityMultiplier = 1.55;
+  if (sessionsPerWeek <= 2) {
+    activityMultiplier = 1.375;
+  } else if (sessionsPerWeek >= 6) {
+    activityMultiplier = 1.65;
+  }
+
+  const tdee = Math.round(bmr * activityMultiplier);
+
+  let surplusOrDeficit = 0;
+  if (goal === "muscle_gain") {
+    surplusOrDeficit = 400;
+  } else if (goal === "weight_loss") {
+    surplusOrDeficit = -400;
+  } else if (goal === "athletic_performance") {
+    surplusOrDeficit = 200;
+  }
+
+  const targetCalories = Math.max(1200, tdee + surplusOrDeficit);
+
+  const proteinGrams = Math.round(weightKg * 2.0);
+  const proteinKcal = Math.round(proteinGrams * 4);
+
+  const fatGrams = Math.round(weightKg * 1.0);
+  const fatKcal = Math.round(fatGrams * 9);
+
+  const remainingKcal = Math.max(0, targetCalories - (proteinKcal + fatKcal));
+  const carbsGrams = Math.round(remainingKcal / 4);
+  const carbsKcal = Math.round(carbsGrams * 4);
+
+  const totalMacroKcal = proteinKcal + fatKcal + carbsKcal || targetCalories;
+  const proteinPercent = Math.round((proteinKcal / totalMacroKcal) * 100);
+  const fatPercent = Math.round((fatKcal / totalMacroKcal) * 100);
+  const carbsPercent = Math.max(0, 100 - (proteinPercent + fatPercent));
+
+  return {
+    bmr,
+    tdee,
+    targetCalories,
+    surplusOrDeficit,
+    proteinGrams,
+    proteinKcal,
+    fatGrams,
+    fatKcal,
+    carbsGrams,
+    carbsKcal,
+    proteinPercent,
+    fatPercent,
+    carbsPercent,
+  };
+};
+

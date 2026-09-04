@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import useSWR from "swr";
 import {
   X,
   Activity,
   User,
-  Target,
-  Dumbbell,
-  Calendar,
-  Ruler,
-  Weight,
   Image as ImageIcon,
   AlertCircle,
   Loader2,
@@ -18,11 +14,9 @@ import {
 } from "lucide-react";
 import type { UserFitnessProfileModalProps } from "@/types/workout";
 import type { FitnessProfileApiResponse } from "@/types/fitness-profile";
-import {
-  goalLabels,
-  experienceLabels,
-  equipmentLabels,
-} from "@/utils/fitnessProfile";
+import { calculateNutritionTargets } from "@/utils/fitnessProfile";
+import FitnessNutritionTargets from "./FitnessNutritionTargets";
+import FitnessProfileStats from "./FitnessProfileStats";
 
 const fetcher = async (url: string): Promise<FitnessProfileApiResponse> => {
   const res = await fetch(url);
@@ -62,7 +56,19 @@ export default function UserFitnessProfileModal({
     }
   );
 
-  const profile = data?.profile;
+  const nutrition =
+    data?.profile &&
+    data.profile.weightKg > 0 &&
+    data.profile.heightCm > 0 &&
+    data.profile.ageYears > 0
+      ? calculateNutritionTargets(
+          data.profile.weightKg,
+          data.profile.heightCm,
+          data.profile.ageYears,
+          data.profile.sessionsPerWeek,
+          data.profile.goal
+        )
+      : null;
 
   return (
     <div
@@ -110,7 +116,7 @@ export default function UserFitnessProfileModal({
               <p className="text-sm font-semibold">خطا در بارگذاری پروفایل ورزشی</p>
               <p className="text-xs mt-1 text-red-400/80">{error.message}</p>
             </div>
-          ) : !profile ? (
+          ) : !data?.profile ? (
             <div className="py-16 text-center text-white/40 space-y-3">
               <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center text-white/30 border border-white/10">
                 <User className="w-8 h-8" />
@@ -124,109 +130,41 @@ export default function UserFitnessProfileModal({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs text-white/50">
-                    <Ruler className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>قد</span>
-                  </div>
-                  <div className="mt-2 font-bold text-white ss02">
-                    {profile.heightCm ? `${profile.heightCm} سانتی‌متر` : "-"}
-                  </div>
-                </div>
+              <FitnessProfileStats profile={data.profile} />
 
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs text-white/50">
-                    <Weight className="w-3.5 h-3.5 text-amber-400" />
-                    <span>وزن</span>
-                  </div>
-                  <div className="mt-2 font-bold text-white ss02">
-                    {profile.weightKg ? `${profile.weightKg} کیلوگرم` : "-"}
-                  </div>
-                </div>
+              {nutrition && <FitnessNutritionTargets nutrition={nutrition} />}
 
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs text-white/50">
-                    <User className="w-3.5 h-3.5 text-blue-400" />
-                    <span>سن</span>
-                  </div>
-                  <div className="mt-2 font-bold text-white ss02">
-                    {profile.ageYears ? `${profile.ageYears} سال` : "-"}
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs text-white/50">
-                    <Calendar className="w-3.5 h-3.5 text-purple-400" />
-                    <span>تمرین هفتگی</span>
-                  </div>
-                  <div className="mt-2 font-bold text-white ss02">
-                    {profile.sessionsPerWeek ? `${profile.sessionsPerWeek} روز` : "-"}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
-                  <div className="flex items-center gap-2 text-xs text-white/50">
-                    <Target className="w-4 h-4 text-emerald-400" />
-                    <span>هدف ورزشی</span>
-                  </div>
-                  <div className="text-sm font-semibold text-white">
-                    {goalLabels[profile.goal] || profile.goal || "-"}
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
-                  <div className="flex items-center gap-2 text-xs text-white/50">
-                    <Dumbbell className="w-4 h-4 text-amber-400" />
-                    <span>سابقه و سطح</span>
-                  </div>
-                  <div className="text-sm font-semibold text-white">
-                    {experienceLabels[profile.trainingExperience] || profile.trainingExperience || "-"}
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
-                  <div className="flex items-center gap-2 text-xs text-white/50">
-                    <Dumbbell className="w-4 h-4 text-blue-400" />
-                    <span>تجهیزات تمرین</span>
-                  </div>
-                  <div className="text-sm font-semibold text-white">
-                    {equipmentLabels[profile.equipment] || profile.equipment || "-"}
-                  </div>
-                </div>
-              </div>
-
-              {profile.notes && (
+              {data.profile.notes && (
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
                   <div className="flex items-center gap-2 text-xs text-white/60 font-semibold">
                     <FileText className="w-4 h-4 text-amber-400" />
                     <span>توضیحات و آسیب‌دیدگی‌های کاربر</span>
                   </div>
                   <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">
-                    {profile.notes}
+                    {data.profile.notes}
                   </p>
                 </div>
               )}
 
-              {profile.bodyPhotos && profile.bodyPhotos.length > 0 && (
+              {data.profile.bodyPhotos && data.profile.bodyPhotos.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-xs text-white/60 font-semibold">
                     <ImageIcon className="w-4 h-4 text-emerald-400" />
-                    <span>تصاویر وضعیت بدنی ({profile.bodyPhotos.length})</span>
+                    <span>تصاویر وضعیت بدنی ({data.profile.bodyPhotos.length})</span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {profile.bodyPhotos.map((photoUrl, idx) => (
+                    {data.profile.bodyPhotos.map((photoUrl, idx) => (
                       <div
                         key={idx}
                         onClick={() => setSelectedImage(photoUrl)}
                         className="relative aspect-[3/4] rounded-xl overflow-hidden bg-black/40 border border-white/10 cursor-pointer group hover:border-emerald-500/50 transition-all"
                       >
-                        <img
+                        <Image
                           src={photoUrl}
                           alt={`عکس بدنی ${idx + 1}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          fill
+                          sizes="(max-width: 640px) 50vw, 25vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs">
                           مشاهده بزرگ‌تر
@@ -264,10 +202,12 @@ export default function UserFitnessProfileModal({
             >
               <X className="w-6 h-6" />
             </button>
-            <img
+            <Image
               src={selectedImage}
               alt="عکس بزرگ‌نمایی شده"
-              className="max-h-[85vh] max-w-full rounded-xl object-contain border border-white/20"
+              width={800}
+              height={1000}
+              className="max-h-[85vh] max-w-full rounded-xl object-contain border border-white/20 w-auto h-auto"
             />
           </div>
         </div>

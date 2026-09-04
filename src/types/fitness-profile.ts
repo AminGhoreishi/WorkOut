@@ -134,3 +134,28 @@ export interface PhotosTabProps {
 }
 
 export interface FitnessProfileSidebarProps {}
+
+export interface NutritionTargetResult {
+  bmr: number;
+  tdee: number;
+  targetCalories: number;
+  surplusOrDeficit: number;
+  proteinGrams: number;
+  proteinKcal: number;
+  fatGrams: number;
+  fatKcal: number;
+  carbsGrams: number;
+  carbsKcal: number;
+  proteinPercent: number;
+  fatPercent: number;
+  carbsPercent: number;
+}
+
+export interface FitnessNutritionTargetsProps {
+  nutrition: NutritionTargetResult;
+}
+
+export interface FitnessProfileStatsProps {
+  profile: FitnessProfileData;
+}
+
