@@ -17,7 +17,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { TrendingUp, Award } from "lucide-react";
-import type { PRChartProps, PRRecordItem } from "@/types/pr";
+import type { PRChartProps, PRRecordItem, PRUserApiResponse } from "@/types/pr";
 import PRHistoryTable from "./PRHistoryTable";
 import { PRNoUserSelected, PRLoadingState, PRErrorState } from "./PRStateViews";
 
@@ -52,7 +52,10 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
     data: userData,
     isLoading: isLoadingUser,
     error: errorUser,
-  } = useSWR(userId ? `/api/admin/user/${userId}` : null, fetcher);
+  } = useSWR<PRUserApiResponse>(
+    userId ? `/api/admin/user/${userId}/info` : null,
+    fetcher
+  );
 
   useEffect(() => {
     if (userId && refreshKey > 0) {
@@ -61,7 +64,6 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
   }, [refreshKey, userId, mutatePR]);
 
   const records: PRRecordItem[] = prData?.records || [];
-  const userInfo = userData?.user;
 
   const availableTests = Array.from(
     new Set(records.map((r) => r.testName).filter(Boolean)),
@@ -171,11 +173,11 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
           <div>
             <h2 className="text-xl text-white font-semibold flex items-center gap-2 font-morabbaReg">
               <TrendingUp className="w-5 h-5 text-amber-400" />
-              روند پیشرفت {userInfo?.fullName || userInfo?.username || "کاربر"}
+              روند پیشرفت {userData?.user?.fullName || userData?.user?.username || "کاربر"}
             </h2>
-            {userInfo && (
+            {userData?.user && (
               <p className="text-xs text-white/50 mt-1">
-                @{userInfo.username} | {userInfo.phone || userInfo.email}
+                @{userData.user.username} | {userData.user.phone || userData.user.email}
               </p>
             )}
           </div>
@@ -209,7 +211,10 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
         )}
       </div>
 
-      <PRHistoryTable sortedRecords={sortedRecords} />
+      <PRHistoryTable
+        sortedRecords={sortedRecords}
+        onDeleteSuccess={() => mutatePR()}
+      />
     </div>
   );
 }

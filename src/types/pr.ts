@@ -80,8 +80,23 @@ export interface PRRecordItem {
 
 export interface PRHistoryTableProps {
   sortedRecords: PRRecordItem[];
+  onDeleteSuccess?: () => void;
 }
 
 export interface PRErrorStateProps {
+  message?: string;
+}
+
+export interface PRUserInfo {
+  _id: string;
+  fullName?: string;
+  username: string;
+  phone?: string;
+  email?: string;
+}
+
+export interface PRUserApiResponse {
+  success: boolean;
+  user?: PRUserInfo;
   message?: string;
 }

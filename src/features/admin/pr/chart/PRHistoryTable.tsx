@@ -1,12 +1,48 @@
 "use client";
 
-import { Award } from "lucide-react";
+import { useState } from "react";
+import { Award, Trash2, Loader2 } from "lucide-react";
+import { showConfirm, showToast, showAlert } from "@/utils/alert";
 import type { PRHistoryTableProps } from "@/types/pr";
 
 export default function PRHistoryTable({
   sortedRecords,
+  onDeleteSuccess,
 }: PRHistoryTableProps) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
   if (!sortedRecords || sortedRecords.length === 0) return null;
+
+  const handleDelete = async (id: string, testName?: string) => {
+    const isConfirmed = await showConfirm(
+      "حذف رکورد",
+      `آیا از حذف رکورد "${testName || "مورد نظر"}" اطمینان دارید؟`,
+      "بله، حذف شود",
+      "warning"
+    );
+
+    if (!isConfirmed) return;
+
+    try {
+      setDeletingId(id);
+      const res = await fetch(`/api/admin/user/pr/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "خطا در حذف رکورد");
+      }
+
+      showToast({ title: "رکورد با موفقیت حذف شد", icon: "success" });
+      onDeleteSuccess?.();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "خطایی رخ داد";
+      showAlert("خطا", message, "error");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl">
@@ -24,6 +60,7 @@ export default function PRHistoryTable({
               <th className="p-3 font-semibold">واحد</th>
               <th className="p-3 font-semibold">تاریخ</th>
               <th className="p-3 font-semibold">توضیحات</th>
+              <th className="p-3 font-semibold text-center">عملیات</th>
             </tr>
           </thead>
           <tbody>
@@ -42,6 +79,21 @@ export default function PRHistoryTable({
                   {new Date(rec.date).toLocaleDateString("fa-IR")}
                 </td>
                 <td className="p-3 text-white/50">{rec.notes || "-"}</td>
+                <td className="p-3 text-center">
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(rec._id, rec.testName)}
+                    disabled={deletingId === rec._id}
+                    className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-all cursor-pointer disabled:opacity-50 inline-flex items-center justify-center"
+                    title="حذف رکورد"
+                  >
+                    {deletingId === rec._id ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-red-400" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

@@ -132,3 +132,5 @@ export interface PhotosTabProps {
   handlePhotoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removePhoto: (index: number) => void;
 }
+
+export interface FitnessProfileSidebarProps {}
