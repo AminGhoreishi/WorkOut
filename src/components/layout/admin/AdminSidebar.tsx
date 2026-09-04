@@ -195,7 +195,7 @@ export default function AdminSidebar({ isAdmin = false }) {
             onClick={() =>
               signOut({
                 redirect: true,
-                callbackUrl: "https://starfitteam.ir/login",
+                callbackUrl: "/login",
               })
             }
             className="w-full flex items-center gap-3 px-3 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"

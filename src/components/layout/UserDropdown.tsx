@@ -124,7 +124,7 @@ export default function UserDropdown({
           onClick={() =>
             signOut({
               redirect: true,
-              callbackUrl: "https://starfitteam.ir/login",
+              callbackUrl: "/login",
             })
           }
           className="flex items-center gap-3 px-4 py-2.5 text-red-400 hover:bg-red-500/10 transition-colors text-xs sm:text-sm font-medium w-full cursor-pointer"
