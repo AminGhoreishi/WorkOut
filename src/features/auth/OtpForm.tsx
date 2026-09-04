@@ -80,10 +80,14 @@ function OtpFormContent() {
     }
     codeArr[index] = digit;
     const newCode = codeArr.join("");
-    setValue("code", newCode, { shouldValidate: true });
+    setValue("code", newCode);
 
     if (digit && index < 4) {
       inputRefs.current[index + 1]?.focus();
+    }
+
+    if (codeArr.every((d) => d !== "")) {
+      submitCode(newCode);
     }
   };
 
@@ -111,20 +115,22 @@ function OtpFormContent() {
 
     if (!cleanDigits) return;
 
-    setValue("code", cleanDigits, { shouldValidate: true });
+    setValue("code", cleanDigits);
     const targetIndex = Math.min(cleanDigits.length, 4);
     inputRefs.current[targetIndex]?.focus();
+
+    if (cleanDigits.length === 5) {
+      submitCode(cleanDigits);
+    }
   };
 
-  const onSubmit: SubmitHandler<OtpFormInputs> = async (data) => {
-    setServerError("");
-    setSuccessMessage("");
-
-    if (data.code.length < 5) {
-      setServerError("لطفاً کد ۵ رقمی را کامل وارد کنید");
+  const submitCode = async (codeToSubmit: string) => {
+    if (codeToSubmit.length < 5 || isSubmitting) {
       return;
     }
 
+    setServerError("");
+    setSuccessMessage("");
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/auth/verify-otp", {
@@ -132,7 +138,7 @@ function OtpFormContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phone,
-          code: data.code,
+          code: codeToSubmit,
         }),
       });
 
@@ -164,6 +170,10 @@ function OtpFormContent() {
       setIsSubmitting(false);
       setServerError("خطایی در تایید کد رخ داد، لطفاً دوباره تلاش کنید");
     }
+  };
+
+  const onSubmit: SubmitHandler<OtpFormInputs> = (data) => {
+    submitCode(data.code);
   };
 
   const handleResendCode = async () => {
@@ -206,14 +216,14 @@ function OtpFormContent() {
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-600/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
+        <div className="text-center mb-5">
           <Link href="/" className="inline-flex items-center gap-2 mb-3 group">
             <BiDumbbell className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110" />
             <span className="font-bold text-2xl sm:text-3xl font-morabbaReg text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 tracking-wide">
               استارفیت
             </span>
           </Link>
-          <p className="text-amber-100/60 text-xs sm:text-sm">ورود امن و سریع به حساب کاربری</p>
+         
         </div>
 
         <div className="bg-zinc-950/85 backdrop-blur-2xl border border-amber-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(245,158,11,0.08)] rounded-3xl p-6 sm:p-8 relative overflow-hidden">
@@ -222,7 +232,7 @@ function OtpFormContent() {
               href="/login"
               className="w-9 h-9 bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 rounded-xl flex items-center justify-center text-zinc-400 hover:text-amber-400 transition-all cursor-pointer"
             >
-              <BiArrowBack className="w-5 h-5 transform scale-x-[-1]" />
+              <BiArrowBack className="w-4 h-4 transform scale-x-[-1]" />
             </Link>
 
             <div className="text-center">
@@ -256,12 +266,6 @@ function OtpFormContent() {
             </div>
           )}
 
-          {errors.code && (
-            <div className="mb-4 p-3.5 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 text-xs sm:text-sm text-center">
-              {errors.code.message}
-            </div>
-          )}
-
           {successMessage && (
             <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs sm:text-sm text-center">
               {successMessage}
@@ -271,13 +275,7 @@ function OtpFormContent() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input
               type="hidden"
-              {...register("code", {
-                required: "لطفاً کد ۵ رقمی را کامل وارد کنید",
-                minLength: {
-                  value: 5,
-                  message: "کد ۵ رقمی ناقص است",
-                },
-              })}
+              {...register("code")}
             />
 
             <div>
@@ -332,7 +330,7 @@ function OtpFormContent() {
             <button
               type="submit"
               disabled={isSubmitting || codeValue.length < 5}
-              className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 sm:py-4 rounded-2xl transition-all text-sm sm:text-base cursor-pointer shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transform hover:-translate-y-0.5"
+              className="w-full bg-gradient-to-r  from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 sm:py-4 rounded-2xl transition-all text-sm sm:text-base cursor-pointer shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transform hover:-translate-y-0.5"
             >
               {isSubmitting ? "در حال تایید..." : "تایید و ورود به سیستم"}
             </button>

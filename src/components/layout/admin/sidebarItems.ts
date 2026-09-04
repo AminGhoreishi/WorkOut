@@ -1,6 +1,7 @@
 import {
   Home,
   LayoutDashboard,
+  User,
   Users,
   Package,
   Calendar,
@@ -23,7 +24,6 @@ import {
   Tag,
 } from "lucide-react";
 import type { SidebarCounts, MenuSection } from "@/types/sidebar";
-
 
 
 export function getAdminMenuItems(
@@ -160,6 +160,13 @@ export function getAdminMenuItems(
           icon: UserCog,
           badge: counts.admins ? formatNumber(counts.admins) : "۱",
           href: "/admin/admins",
+        },
+        {
+          id: "user-dashboard",
+          label: "ورود به داشبورد کاربر",
+          icon: User,
+          badge: null,
+          href: "/dashboard",
         },
       ],
     },
