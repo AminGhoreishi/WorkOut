@@ -50,9 +50,10 @@ export async function GET(req: NextRequest) {
     }
 
     const tickets = await Ticket.find(query)
-      .select("userId coachId initiatedBy subject description status category createdAt updatedAt")
+      .select("userId coachId initiatedBy subject description status category videoUrl messages createdAt updatedAt")
       .populate("userId", "username fullName email avatar role")
       .populate("coachId", "username fullName email avatar role")
+      .populate("messages.senderId", "username fullName email avatar role")
       .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(Number(limit))
@@ -61,21 +62,10 @@ export async function GET(req: NextRequest) {
     const total = await Ticket.countDocuments(query);
     const totalPages = Math.ceil(total / Number(limit));
 
-    const totalCount = await Ticket.countDocuments({});
-    const pendingCount = await Ticket.countDocuments({ status: "pending" });
-    const answeredCount = await Ticket.countDocuments({ status: "answered" });
-    const closedCount = await Ticket.countDocuments({ status: "closed" });
-
     return NextResponse.json({
       tickets,
       total,
       totalPages,
-      stats: {
-        totalCount,
-        pendingCount,
-        answeredCount,
-        closedCount,
-      },
     });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });

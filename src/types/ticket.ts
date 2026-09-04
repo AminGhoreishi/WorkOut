@@ -1,6 +1,7 @@
 import type mongoose from "mongoose";
 import type { Document } from "mongoose";
 import type { ReactNode, RefObject } from "react";
+import type { KeyedMutator } from "swr";
 
 export interface IMessage {
   senderId: mongoose.Types.ObjectId;
@@ -88,6 +89,10 @@ export interface TicketStatsProps {
   formatNumber: (num: number) => string;
 }
 
+export interface AdminTicketsContainerProps {
+  stats: ITicketStats;
+}
+
 export interface TicketListProps {
   children?: ReactNode;
   selectedTicket: IClientTicket | null;
@@ -106,6 +111,37 @@ export interface TicketDetailsProps {
   selectedTicket: IClientTicket | null;
   setSelectedTicket: (ticket: IClientTicket | null) => void;
   onRefresh?: () => void;
+}
+
+export interface TicketFilterOption {
+  key: "all" | "pending" | "answered" | "closed";
+  label: string;
+}
+
+export interface TicketSidebarListProps {
+  tickets: IClientTicket[];
+  selectedTicket: IClientTicket | null;
+  onSelectTicket: (ticket: IClientTicket) => void;
+  filterStatus: "all" | "pending" | "answered" | "closed";
+  setFilterStatus: (status: "all" | "pending" | "answered" | "closed") => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  isLoading?: boolean;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}
+
+export interface TicketChatPanelProps {
+  ticket: IClientTicket | null;
+  mutate: KeyedMutator<AdminTicketsApiResponse>;
+  onTicketDeleted?: (ticketId?: string) => void;
+  onCloseTicket?: (ticketId: string) => void;
+  onReopenTicket?: (ticketId: string) => void;
+  onDeleteTicket?: (ticketId: string) => void;
+  onSendMessage?: (ticketId: string, text: string) => void;
 }
 
 export interface TicketDetailsHeaderProps {
