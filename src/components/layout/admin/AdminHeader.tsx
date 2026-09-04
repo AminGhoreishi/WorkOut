@@ -1,15 +1,18 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Menu, Sparkles } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
+import NotificationDropdown from "../NotificationDropdown";
 import type { AdminHeaderProps } from "@/types/admin";
 
 export default function AdminHeader({
-  username = "مدیر",
-  role ,
-  avatar = "م",
+  username = "کاربر",
+  role,
+  avatar = "ک",
   newTicketsCount = 0,
+  unreadNotificationsCount = 0,
 }: AdminHeaderProps) {
   const { onToggle } = useSidebar();
   const pathname = usePathname();
@@ -28,28 +31,28 @@ export default function AdminHeader({
             </button>
             <div>
               <h1 className="text-xl font-bold text-white font-morabbaReg">
-                داشبورد مدیریت
+                {isAdminPanel ? "داشبورد مدیریت" : "داشبورد کاربری"}
               </h1>
               <p className="text-neutral-400 text-xs">خوش آمدید، {username}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {isAdminPanel && (
-              <>
-                <Link
-                  href="/admin/tickets"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer"
-                  title="تیکت‌های جدید"
-                >
-                  <Bell className="w-4 h-4 text-amber-400" />
-                  <span className="hidden sm:inline">تیکت‌های جدید</span>
-                  {newTicketsCount > 0 && (
-                    <span className="min-w-[18px] h-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full text-[10px] flex items-center justify-center px-1 shadow-md animate-pulse">
-                      {newTicketsCount.toLocaleString("fa-IR")}
-                    </span>
-                  )}
-                </Link>
-              </>
+            {isAdminPanel ? (
+              <Link
+                href="/admin/tickets"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:border-amber-400/50 cursor-pointer"
+                title="تیکت‌های جدید"
+              >
+                <Bell className="w-4 h-4 text-amber-400" />
+                <span className="hidden sm:inline">تیکت‌های جدید</span>
+                {newTicketsCount > 0 && (
+                  <span className="min-w-[18px] h-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-neutral-950 font-bold rounded-full text-[10px] flex items-center justify-center px-1 shadow-md animate-pulse">
+                    {newTicketsCount.toLocaleString("fa-IR")}
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <NotificationDropdown initialUnreadCount={unreadNotificationsCount} />
             )}
 
             <div className="hidden lg:flex items-center gap-3 pr-4 border-r border-amber-500/20">

@@ -3,27 +3,42 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import TicketModel from "@/models/Ticket";
+import NotificationModel from "@/models/Notification";
 import AdminHeader from "./AdminHeader";
 
 export default async function AdminHeaderContainer() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return <AdminHeader username="کاربر" role="user" avatar="ک" newTicketsCount={0} />;
+    return (
+      <AdminHeader
+        username="کاربر"
+        role="user"
+        avatar="ک"
+        newTicketsCount={0}
+        unreadNotificationsCount={0}
+      />
+    );
   }
 
   await dbConnect();
 
-  const [dbUser, newTicketsCount] = await Promise.all([
+  const [dbUser, newTicketsCount, unreadNotificationsCount] = await Promise.all([
     UserModel.findById(session.user.id).lean(),
     TicketModel.countDocuments({ status: "pending" }),
+    NotificationModel.countDocuments({ userId: session.user.id, isRead: false }),
   ]);
 
-  console.log(dbUser.role);
-  
-
   if (!dbUser) {
-    return <AdminHeader username="کاربر" role="user" avatar="ک" newTicketsCount={newTicketsCount} />;
+    return (
+      <AdminHeader
+        username="کاربر"
+        role="user"
+        avatar="ک"
+        newTicketsCount={newTicketsCount}
+        unreadNotificationsCount={unreadNotificationsCount}
+      />
+    );
   }
 
   const displayName = dbUser.fullName || dbUser.username;
@@ -35,6 +50,7 @@ export default async function AdminHeaderContainer() {
       role={dbUser.role}
       avatar={initial}
       newTicketsCount={newTicketsCount}
+      unreadNotificationsCount={unreadNotificationsCount}
     />
   );
 }

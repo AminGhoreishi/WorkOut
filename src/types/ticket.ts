@@ -178,6 +178,8 @@ export interface UserTicketChatProps {
 
 export interface UserTicketsApiResponse {
   tickets?: IClientTicket[];
+  total?: number;
+  totalPages?: number;
   message?: string;
 }
 
@@ -255,6 +257,32 @@ export interface AdminSubscriberUser {
 export interface AdminSubscriberUsersApiResponse {
   users: AdminSubscriberUser[];
   message?: string;
+}
+
+export interface UserTicketSidebarListProps {
+  tickets: IClientTicket[];
+  selectedTicket: IClientTicket | null;
+  onSelectTicket: (ticket: IClientTicket) => void;
+  filterStatus: "all" | "pending" | "answered" | "closed";
+  setFilterStatus: (status: "all" | "pending" | "answered" | "closed") => void;
+  isLoading?: boolean;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}
+
+export interface UserTicketChatPanelProps {
+  ticket: IClientTicket | null;
+  onBackToList?: () => void;
+  onTicketUpdated?: () => void;
+  chatEndRef?: RefObject<HTMLDivElement | null>;
+}
+
+export interface TicketChatEmptyStateProps {
+  title?: string;
+  description?: string;
 }
 
 

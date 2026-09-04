@@ -18,14 +18,44 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const tickets = await Ticket.find({ userId: session.user.id })
-      .populate("userId", "username fullName email avatar role")
-      .populate("coachId", "username fullName email avatar role")
-      .populate("messages.senderId", "username fullName email avatar role")
-      .sort({ updatedAt: -1 })
-      .lean();
+    const { searchParams } = new URL(req.url);
+    const status = searchParams.get("status");
+    const page = searchParams.get("page") || "1";
+    const limit = searchParams.get("limit") || "6";
 
-    return NextResponse.json({ tickets });
+    const query: Record<string, unknown> = { userId: session.user.id };
+
+    if (status && status !== "all") {
+      if (status === "answered") {
+        query.status = { $in: ["answered", "coach_sent"] };
+      } else {
+        query.status = status;
+      }
+    }
+
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.max(1, Number(limit) || 6);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [tickets, total] = await Promise.all([
+      Ticket.find(query)
+        .populate("userId", "username fullName email avatar role")
+        .populate("coachId", "username fullName email avatar role")
+        .populate("messages.senderId", "username fullName email avatar role")
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(limitNum)
+        .lean(),
+      Ticket.countDocuments(query),
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum) || 1;
+
+    return NextResponse.json({
+      tickets,
+      total,
+      totalPages,
+    });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Ticket from "@/models/Ticket";
 import User from "@/models/User";
+import Notification from "@/models/Notification";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -101,6 +102,15 @@ export async function POST(req: NextRequest) {
       videoUrl: videoUrl || undefined,
       status,
       messages: [],
+    });
+
+    await Notification.create({
+      userId: targetUser._id,
+      title: "تیکت جدید از مربی",
+      message: subject.trim(),
+      type: "ticket",
+      link: "/dashboard/tickets",
+      isRead: false,
     });
 
     const populatedTicket = await Ticket.findById(ticket._id)

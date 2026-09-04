@@ -1,24 +1,30 @@
-import type { IClientTicket as ITicket } from "@/types/ticket";
+import type { TicketFilterOption } from "@/types/ticket";
 
-export const getStatusBadge = (status: ITicket["status"]) => {
+export const FILTER_OPTIONS: TicketFilterOption[] = [
+  { key: "all", label: "همه" },
+  { key: "pending", label: "در انتظار" },
+  { key: "answered", label: "پاسخ‌داده" },
+  { key: "closed", label: "بسته" },
+];
+
+export const getStatusBadge = (status: string) => {
   switch (status) {
     case "pending":
-      return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+      return "bg-amber-500/15 text-amber-400 border-amber-500/30";
     case "answered":
-      return "bg-amber-500/10 text-amber-300 border-amber-500/20";
     case "coach_sent":
-      return "bg-amber-500/20 text-amber-300 border-amber-500/40";
+      return "bg-emerald-500/15 text-emerald-400 border-emerald-500/30";
     case "closed":
-      return "bg-neutral-800 text-neutral-400 border-neutral-700";
+      return "bg-white/10 text-white/50 border-white/20";
     default:
-      return "bg-neutral-800 text-neutral-400 border-neutral-700";
+      return "bg-white/10 text-white/50 border-white/20";
   }
 };
 
-export const getStatusLabel = (status: ITicket["status"]) => {
+export const getStatusLabel = (status: string) => {
   switch (status) {
     case "pending":
-      return "در انتظار پاسخ مربی";
+      return "در انتظار پاسخ";
     case "answered":
       return "پاسخ داده شده";
     case "coach_sent":
@@ -30,35 +36,35 @@ export const getStatusLabel = (status: ITicket["status"]) => {
   }
 };
 
-export const getCategoryBadge = (category: ITicket["category"]) => {
+export const getCategoryBadge = (category: string) => {
   switch (category) {
     case "workout":
-      return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+      return "bg-blue-500/15 text-blue-400 border-blue-500/30";
     case "nutrition":
-      return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+      return "bg-emerald-500/15 text-emerald-400 border-emerald-500/30";
     case "form_check":
-      return "bg-amber-500/15 text-amber-400 border-amber-500/25";
+      return "bg-purple-500/15 text-purple-400 border-purple-500/30";
     case "injury":
-      return "bg-amber-500/10 text-amber-500 border-amber-500/20";
+      return "bg-red-500/15 text-red-400 border-red-500/30";
     case "technical":
-      return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+      return "bg-amber-500/15 text-amber-400 border-amber-500/30";
     default:
-      return "bg-white/5 text-neutral-400 border-white/10";
+      return "bg-white/5 text-white/60 border-white/10";
   }
 };
 
-export const getCategoryLabel = (category: ITicket["category"]) => {
+export const getCategoryLabel = (category: string) => {
   switch (category) {
     case "workout":
-      return "سوال تمرینی";
+      return "تمرین";
     case "nutrition":
-      return "سوال تغذیه";
+      return "تغذیه";
     case "form_check":
-      return "بررسی فرم حرکت";
+      return "فرم حرکت";
     case "injury":
-      return "درد یا آسیب";
+      return "آسیب / درد";
     case "technical":
-      return "مشکل سایت";
+      return "پشتیبانی فنی";
     default:
       return category;
   }

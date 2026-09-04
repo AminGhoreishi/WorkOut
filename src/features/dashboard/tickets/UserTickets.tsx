@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import useSWR from "swr";
-import { Plus, ArrowRight, RefreshCw } from "lucide-react";
+import { Plus, ArrowRight, RefreshCw, AlertCircle } from "lucide-react";
 import type { IClientTicket, UserTicketsApiResponse } from "@/types/ticket";
-import UserTicketChat from "./UserTicketChat";
+import UserTicketSidebarList from "./UserTicketSidebarList";
+import UserTicketChatPanel from "./UserTicketChatPanel";
 import UserTicketForm from "./UserTicketForm";
 
 const fetcher = async (url: string): Promise<UserTicketsApiResponse> => {
@@ -12,7 +13,7 @@ const fetcher = async (url: string): Promise<UserTicketsApiResponse> => {
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
     throw new Error(
-      errorData.message || "خطا در دریافت لیست تیکت‌ها",
+      errorData.message || "خطا در دریافت لیست تیکت‌ها"
     );
   }
   return res.json();
@@ -21,20 +22,33 @@ const fetcher = async (url: string): Promise<UserTicketsApiResponse> => {
 export default function UserTickets() {
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+  const [filterStatus, setFilterStatus] = useState<
+    "all" | "pending" | "answered" | "closed"
+  >("all");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const PAGE_SIZE = 6;
+
+  const statusParam =
+    filterStatus !== "all" ? `&status=${filterStatus}` : "";
+  const apiUrl = `/api/user/ticket?page=${currentPage}&limit=${PAGE_SIZE}${statusParam}`;
 
   const {
     data,
     error: swrError,
     isLoading,
+    isValidating,
     mutate,
-  } = useSWR<UserTicketsApiResponse>("/api/user/ticket", fetcher, {
+  } = useSWR<UserTicketsApiResponse>(apiUrl, fetcher, {
     revalidateOnFocus: true,
     dedupingInterval: 5000,
   });
 
-  const tickets = data?.tickets || [];
-  const selectedTicket = tickets.find((t) => t._id === selectedTicketId) || null;
+  const selectedTicket = useMemo(
+    () => data?.tickets?.find((t) => t._id === selectedTicketId) || null,
+    [data?.tickets, selectedTicketId]
+  );
 
   useEffect(() => {
     if (selectedTicket?.messages) {
@@ -42,15 +56,24 @@ export default function UserTickets() {
     }
   }, [selectedTicket?.messages?.length]);
 
+  const handleFilterStatusChange = (
+    status: "all" | "pending" | "answered" | "closed"
+  ) => {
+    setFilterStatus(status);
+    setCurrentPage(1);
+    setSelectedTicketId(null);
+  };
+
   const handleTicketCreated = (newTicketId: string) => {
     setSelectedTicketId(newTicketId);
     setShowCreateForm(false);
     mutate();
   };
 
-  const handleSelectTicket = async (ticket: IClientTicket | null) => {
-    setSelectedTicketId(ticket ? ticket._id : null);
-    if (ticket && ticket.readNotifications === false) {
+  const handleSelectTicket = async (ticket: IClientTicket) => {
+    setSelectedTicketId(ticket._id);
+
+    if (ticket.readNotifications === false) {
       mutate(
         (currentData) => {
           if (!currentData?.tickets) return currentData;
@@ -90,55 +113,96 @@ export default function UserTickets() {
               کارشناسان در میان بگذارید.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            className="bg-gradient-to-r cursor-pointer from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 px-5 py-3 rounded-xl flex items-center gap-2 transition-all font-bold text-sm shadow-md"
-          >
-            {showCreateForm ? (
-              <>
-                <ArrowRight className="w-4 h-4" />
-                بازگشت به گفتگوها
-              </>
-            ) : (
-              <>
-                <Plus className="w-4 h-4" />
-                ثبت تیکت جدید
-              </>
-            )}
-          </button>
-        </div>
 
-        {isLoading ? (
-          <div className="p-12 text-center text-neutral-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl flex flex-col items-center justify-center gap-3">
-            <div className="w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
-            در حال بارگذاری اطلاعات تیکت‌ها...
-          </div>
-        ) : swrError ? (
-          <div className="p-12 text-center text-amber-400 bg-white/[0.03] border border-amber-500/15 rounded-2xl flex flex-col items-center justify-center gap-4">
-            <p>{swrError.message || "بارگذاری تیکت‌ها با خطا مواجه شد."}</p>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <button
               type="button"
               onClick={() => mutate()}
-              className="flex items-center gap-2 bg-amber-500/20 text-amber-400 px-4 py-2 rounded-xl text-xs hover:bg-amber-500/30 transition-all cursor-pointer font-bold"
+              disabled={isValidating}
+              className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white rounded-xl transition-all cursor-pointer disabled:opacity-50"
+              title="بروزرسانی تیکت‌ها"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw
+                className={`w-5 h-5 ${isValidating ? "animate-spin" : ""}`}
+              />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              className="bg-gradient-to-r cursor-pointer from-amber-500 via-amber-400 to-yellow-500 hover:opacity-95 text-neutral-950 px-5 py-3 rounded-xl flex items-center gap-2 transition-all font-bold text-sm shadow-md shrink-0"
+            >
+              {showCreateForm ? (
+                <>
+                  <ArrowRight className="w-4 h-4" />
+                  بازگشت به گفتگوها
+                </>
+              ) : (
+                <>
+                  <Plus className="w-4 h-4" />
+                  ثبت تیکت جدید
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {swrError && (
+          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-between text-xs sm:text-sm">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 shrink-0" />
+              <span>{swrError.message || "بارگذاری تیکت‌ها با خطا مواجه شد."}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => mutate()}
+              className="px-3 py-1 rounded-lg bg-red-500/20 hover:bg-red-500/30 font-semibold cursor-pointer"
+            >
               تلاش مجدد
             </button>
           </div>
-        ) : showCreateForm ? (
+        )}
+
+        {showCreateForm ? (
           <UserTicketForm
             setShowCreateForm={setShowCreateForm}
             onTicketCreated={handleTicketCreated}
           />
         ) : (
-          <UserTicketChat
-            tickets={tickets}
-            selectedTicket={selectedTicket}
-            setSelectedTicket={handleSelectTicket}
-            chatEndRef={chatEndRef}
-            onTicketUpdated={() => mutate()}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div
+              className={`lg:col-span-5 ${
+                selectedTicket ? "hidden lg:block" : "block"
+              }`}
+            >
+              <UserTicketSidebarList
+                tickets={data?.tickets || []}
+                selectedTicket={selectedTicket}
+                onSelectTicket={handleSelectTicket}
+                filterStatus={filterStatus}
+                setFilterStatus={handleFilterStatusChange}
+                isLoading={isLoading}
+                currentPage={currentPage}
+                totalPages={data?.totalPages || 1}
+                totalItems={data?.total || 0}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+
+            <div
+              className={`lg:col-span-7 ${
+                !selectedTicket ? "hidden lg:block" : "block"
+              }`}
+            >
+              <UserTicketChatPanel
+                ticket={selectedTicket}
+                onBackToList={() => setSelectedTicketId(null)}
+                onTicketUpdated={() => mutate()}
+                chatEndRef={chatEndRef}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>

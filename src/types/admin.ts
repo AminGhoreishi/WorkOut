@@ -10,6 +10,7 @@ export interface AdminHeaderProps {
   role?: string;
   avatar?: string;
   newTicketsCount?: number;
+  unreadNotificationsCount?: number;
 }
 
 export interface MonthlyIncomeCardProps {

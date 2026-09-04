@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Ticket from "@/models/Ticket";
 import User from "@/models/User";
+import Notification from "@/models/Notification";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -86,6 +87,15 @@ export async function PUT(
         ticket.status = "answered";
       }
       ticket.readNotifications = false;
+
+      await Notification.create({
+        userId: ticket.userId,
+        title: "پاسخ جدید به تیکت",
+        message: `پاسخی جدید برای تیکت «${ticket.subject}» ثبت شد.`,
+        type: "ticket",
+        link: "/dashboard/tickets",
+        isRead: false,
+      });
     }
 
     await ticket.save();
