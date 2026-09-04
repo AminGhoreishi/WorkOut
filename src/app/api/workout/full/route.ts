@@ -73,6 +73,7 @@ export async function GET(req: NextRequest) {
         _id: plan._id,
         title: plan.title,
         description: plan.description,
+        weeklyAdvice: plan.weeklyAdvice,
       },
       days: daysWithExercises,
     });

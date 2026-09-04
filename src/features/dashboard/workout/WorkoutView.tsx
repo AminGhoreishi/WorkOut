@@ -185,7 +185,7 @@ export default function WorkoutView({
 
           <div className="space-y-6">
             <WorkoutSummary totalExercises={totalExercises} />
-            <WeeklyAdvice />
+            <WeeklyAdvice advice={currentPlan?.weeklyAdvice} />
             <WorkoutAchievements />
           </div>
         </div>

@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
-    const { id, title, description, isActive } = body;
+    const { id, title, description, isActive, weeklyAdvice } = body;
 
     if (!id) {
       return NextResponse.json({ message: "شناسه برنامه الزامی است" }, { status: 400 });
@@ -62,6 +62,7 @@ export async function PUT(req: NextRequest) {
     if (title !== undefined) updatedData.title = title;
     if (description !== undefined) updatedData.description = description;
     if (isActive !== undefined) updatedData.isActive = isActive;
+    if (weeklyAdvice !== undefined) updatedData.weeklyAdvice = weeklyAdvice;
 
     const plan = await WorkoutPlan.findByIdAndUpdate(id, updatedData, { new: true });
 

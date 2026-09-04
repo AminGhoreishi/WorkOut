@@ -59,6 +59,12 @@ export interface SubscriptionsApiResponse {
   totalPages: number;
 }
 
+export interface IWeeklyAdvice {
+  title?: string;
+  description?: string;
+  tips?: string[];
+}
+
 export interface WorkoutPlan {
   _id: string;
   packageId: string;
@@ -66,6 +72,7 @@ export interface WorkoutPlan {
   subscriptionId?: string;
   title: string;
   description?: string;
+  weeklyAdvice?: IWeeklyAdvice;
   isActive: boolean;
   programm?:
     | {
@@ -149,6 +156,7 @@ export interface IWorkoutPlan extends Document {
   subscriptionId?: mongoose.Types.ObjectId;
   title: string;
   description?: string;
+  weeklyAdvice?: IWeeklyAdvice;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -466,5 +474,9 @@ export interface WorkoutDayHeaderProps {
   dayName: string;
   muscleGroup: string;
   totalExercises: number;
+}
+
+export interface WeeklyAdviceProps {
+  advice?: IWeeklyAdvice;
 }
 
