@@ -1,9 +1,8 @@
 <div align="center">
 
-# ⚡ StarFit | استار فیت
+# ⚡ StarFit
 
-### پلتفرم پیشرفته و جامع مدیریت تمرین، تغذیه و مربیگری آنلاین
-**Advanced Full-Stack Fitness, Workout & Nutrition Management Platform**
+### Advanced Full-Stack Fitness, Workout & Nutrition Management Platform
 
 <br />
 
@@ -18,113 +17,116 @@
 
 ---
 
-## 📖 معرفی پروژه (Overview)
+## 📖 Overview
 
-**استار فیت (StarFit)** یک سامانه مدرن، فول‌استک و مقیاس‌پذیر برای ارائه برنامه‌های ورزشی و رژیم غذایی شخصی‌سازی شده است. این پلتفرم با تمرکز بر تجربه کاربری روان (UX)، انیمیشن‌های مینیمال و تم تیره لوکس با المان‌های طلایی طراحی شده و ارتباط مستقیم ورزشکار با مربی را از طریق سیستم تیکتینگ و ارزیابی پیشرفت میسر می‌سازد.
-
----
-
-## ✨ امکانات و قابلیت‌های کلیدی (Key Features)
-
-### 🏋️‍♂️ مدیریت برنامه‌های تمرینی (Workout Engine)
-- **برنامه‌ریزی ماهانه و هفتگی:** تقویم جلسات تمرین، دسته‌بندی حرکات، تعداد ست، تکرار، وزنه‌ها و نکات مربی
-- **ثبت رکوردهای شخصی (PR):** پیگیری پیشرفت فیزیکی و ثبت رکوردهای جدید ورزشکار
-- **بازخورد جلسات (Session Feedback):** امکان ارسال فیدبک پایان تمرین برای تنظیم فشار توسط مربی
-
-### 🥗 مدیریت تغذیه و رژیم غذایی (Meal Plans & Nutrition)
-- **برنامه غذایی اختصاصی:** تفکیک وعده‌های اصلی و میان‌وعده‌ها همراه با ارزش غذایی
-- **پایگاه داده خوراکی‌ها (Food DB):** فهرست جامع مواد غذایی، کالری و درشت‌مغذی‌ها
-- **ثبت گزارش تغذیه روزانه (Nutrition Logs):** رهگیری کالری و ماکروهای مصرفی روزانه
-
-### 💳 بسته‌ها و مدیریت اشتراک (Subscriptions & Packages)
-- **پکیج‌های متنوع مربیگری:** نمایش امکانات، مقایسه پلن‌ها و مزایای ویژه هر سطح
-- **تخفیف‌ها و کوپن‌های هوشمند:** سیستم اعتبارسنجی کدهای تخفیف در مرحله پرداخت
-- **تاریخچه خرید و تراکنش‌ها:** آرشیو پرداخت‌ها و دوره‌های اشتراک فعال/منقضی
-
-### 🎫 تیکتینگ و ارتباط اختصاصی با مربی (Ticketing System)
-- چت مستقیم و ارسال پیام بین ورزشکار و مربی / پشتیبانی
-- پیوست فایل، عکس و ویدیو جهت اصلاح تکنیک‌های ورزشی
-- تغییر وضعیت تیکت‌ها (در انتظار پاسخ، پاسخ داده‌شده، بسته)
-
-### 📝 وبلاگ و مجله تخصصی (Blog & Magazine)
-- مقالات ورزشی و مقالات تغذیه با دسته‌بندی‌های موضوعی
-- محاسبه خودکار زمان مطالعه، تاریخ شمسی، بخش نظرات و امتیازدهی
-- ویرایشگر حرفه‌ای متنی بر پایه CKEditor 5 و بارگذاری مدیا در فضای ابری S3
-
-### 🛡️ احراز هویت و امنیت (Authentication & Security)
-- ورود امن بدون رمز با شماره همراه و ارسال کد تایید یکبار مصرف (OTP)
-- یکپارچه‌سازی با سامانه پیامکی SMS.ir و ایران‌پیامک
-- کنترل سطح دسترسی مبتنی بر نقش (**RBAC**: User / Coach / Admin)
-- سشن‌های توکنیزه و ایمن تحت **NextAuth.js**
+**StarFit** is an enterprise-grade, full-stack fitness and online coaching platform engineered to deliver personalized workout routines and nutrition plans. Built on top of **Next.js 16 (App Router)** and **React 19**, StarFit combines a sleek dark-luxury visual identity, micro-interactions, and real-time coaching support with a resilient data architecture powered by MongoDB and S3-compatible cloud storage.
 
 ---
 
-## 🛠️ پشته فناوری (Tech Stack)
+## ✨ Key Features
 
-| لایه | تکنولوژی‌های استفاده‌شده |
+### 🏋️ Workout & Training Engine
+- **Custom Programs & Schedules:** Structured monthly and weekly training programs with exercise details, sets, reps, load, and coach guidance.
+- **Personal Records (PR):** Track lifting progression, milestones, and personal bests over time.
+- **Session Feedback:** Post-workout feedback submission to let coaches fine-tune workout intensity dynamically.
+
+### 🥗 Nutrition & Meal Planning
+- **Personalized Meal Plans:** Macro-optimized meal breakdowns across breakfast, lunch, dinner, and snacks.
+- **Food & Nutrition Database:** Extensive nutritional data with calorie and macronutrient metrics.
+- **Daily Nutrition Logs:** Real-time user intake logging with historical progress visualization.
+
+### 💳 Subscriptions, Packages & Billing
+- **Tiered Coaching Packages:** Feature matrices, comparative package tiers, and dynamic badge statuses.
+- **Smart Promo Codes & Discounts:** Coupon validation engine with category-specific or package-specific rules.
+- **Purchase History & Invoicing:** Complete order and transaction tracking with active and expired subscription handling.
+
+### 🎫 Direct Coach Ticketing & Messaging
+- **Real-Time Communication:** Direct support tickets between athletes and coaches or support team.
+- **Media Attachments:** Upload photos and videos for exercise form checks and assessments.
+- **Status Lifecycle:** Live status tracking (Pending, Answered, Closed).
+
+### 📝 Health & Fitness Magazine
+- **Rich Content Management:** Categorized health, fitness, and nutrition articles.
+- **Interactive Reading:** Estimated reading time, Persian/Gregorian date formatting, and reader comments.
+- **Rich Text Authoring:** CKEditor 5 WYSIWYG integration paired with direct S3 media storage.
+
+### 🛡️ Authentication & Role-Based Access Control (RBAC)
+- **Passwordless OTP Login:** Phone number verification via integrated SMS gateways.
+- **Strict Role Authorization:** Granular permissions across **Athlete**, **Coach**, and **Admin** tiers.
+- **Session Security:** Tokenized sessions managed by **NextAuth.js**.
+
+### 📱 Progressive Web App (PWA) & Mobile-First UX
+- Fully responsive mobile-first interface styled with Tailwind CSS v4.
+- Offline-ready asset caching via Serwist service workers.
+
+---
+
+## 🛠️ Technology Stack
+
+| Domain | Technologies |
 | :--- | :--- |
-| **Frontend Core** | Next.js 16 (App Router), React 19, TypeScript |
-| **Styling & UI** | Tailwind CSS v4, Lucide React, Framer Motion |
-| **Typography** | فونت‌های فارسی شبنم، دانا (Dana) و مربا (Morabba) |
-| **Data Fetching** | SWR (Caching, Deduplication & Optimistic UI) |
-| **Backend & APIs** | Next.js API Routes, Server Actions |
-| **Database & ODM** | MongoDB, Mongoose |
-| **Authentication** | NextAuth.js, Bcrypt |
-| **Cloud Storage** | AWS S3 SDK (یکپارچه‌شده با ابر آروان و پارس‌پک) |
-| **PWA & Offline** | Serwist / PWA Service Worker |
-| **Validation** | Fastest-Validator, React Hook Form |
+| **Framework & Core** | [Next.js 16 (App Router)](https://nextjs.org/), [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/) |
+| **Styling & Design** | [Tailwind CSS v4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/), [Framer Motion](https://motion.dev/) |
+| **State & Data Fetching** | [SWR](https://swr.vercel.app/) (caching, deduplication, optimistic updates) |
+| **Database & ORM** | [MongoDB](https://www.mongodb.com/), [Mongoose 9](https://mongoosejs.com/) |
+| **Authentication** | [NextAuth.js](https://next-auth.js.org/), [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) |
+| **Object Storage** | AWS S3 SDK (integrated with ArvanCloud and ParsPack S3) |
+| **Messaging & OTP** | SMS.ir & IranPayamak APIs |
+| **Rich Text Editor** | [CKEditor 5 Classic](https://ckeditor.com/ckeditor-5/) |
+| **PWA & Caching** | [Serwist](https://serwist.pages.dev/) |
+| **Schema Validation** | Fastest-Validator, React Hook Form |
 
 ---
 
-## 📁 ساختار پوشه‌های پروژه (Directory Architecture)
+## 📁 Architecture & Directory Structure
 
 ```text
 workout/
-├── public/                # فونت‌ها، تصاویر ایستا، آیکون‌ها و Manifest
+├── public/                # Static assets, fonts, icons, manifest
 ├── src/
-│   ├── app/               # ساختار مسیردهی Next.js App Router
-│   │   ├── (admin)/       # صفحات پنل مدیریت (داشبورد، مالی، کاربران، تیکت‌ها)
-│   │   ├── (auth)/        # صفحات ورود، ثبت‌نام و تایید کد OTP
-│   │   ├── (dashboard)/   # داشبورد اختصاصی ورزشکار و سوابق
-│   │   ├── (main)/        # صفحات اصلی (خانه، مقالات، جزئیات پکیج، مربیان)
-│   │   └── api/           # اندپوینت‌های بک‌اند و وب‌هوک‌ها
-│   ├── components/        # کامپوننت‌های عمومی و UI مشترک (Modal, Input, Button)
-│   ├── constants/         # مقادیر ثابت و گزینه‌های سراسری
-│   ├── features/          # ماژول‌های تفکیک‌شده فیچرها (Packages, Home, Admin, ...)
-│   ├── hooks/             # هوک‌های اختصاصی کلاینت
-│   ├── lib/               # راه‌اندازی دیتابیس، کانفیگ‌های سرور و سرویس‌های S3
-│   ├── models/            # مدل‌ها و اسکیمای Mongoose (بیش از ۳۰ مدل)
-│   ├── styles/            # استایل‌های سراسری، توکن‌های رنگی و فونت‌ها
-│   ├── types/             # تایپ‌ها و اینترفیس‌های تفکیک‌شده TypeScript
-│   ├── utils/             # توابع کمکی محاسباتی، تاریخ شمسی، اعداد و الرت‌ها
-│   └── validators/        # اعتبارسنجی ورودی‌ها و فرم‌ها
-├── .env.example           # الگوی متغیرهای محیطی
-├── next.config.ts         # تنظیمات Next.js و ماژول‌ها
-└── package.json           # وابستگی‌ها و اسکریپت‌های پروژه
+│   ├── app/               # Next.js App Router root
+│   │   ├── (admin)/       # Administration panel (orders, packages, meal plans, users)
+│   │   ├── (auth)/        # Authentication routes (login, OTP verification)
+│   │   ├── (dashboard)/   # Athlete dashboard (profile, active workouts, nutrition)
+│   │   ├── (main)/        # Public pages (home, packages, articles, about)
+│   │   └── api/           # Backend REST endpoints & webhook handlers
+│   ├── components/        # Reusable UI elements (Modals, Inputs, Buttons, Layout)
+│   ├── constants/         # Static configuration, navigation items, category lists
+│   ├── features/          # Domain-driven feature modules (Packages, Articles, Admin, etc.)
+│   ├── hooks/             # Custom client-side React hooks
+│   ├── lib/               # Database connectors, S3 client configuration, auth setup
+│   ├── models/            # 30+ Mongoose models (Users, Workouts, Meals, Packages, etc.)
+│   ├── styles/            # Global design tokens and typography rules
+│   ├── types/             # Explicit TypeScript interfaces and models
+│   ├── utils/             # Helper utilities (date formatting, price calculation, alerts)
+│   └── validators/        # Input and request validation schemas
+├── .env.example           # Environment variables template
+├── next.config.ts         # Next.js runtime configuration
+└── package.json           # Dependencies and scripts
 ```
 
 ---
 
-## 🚀 راهنمای نصب و راه‌اندازی (Getting Started)
+## 🚀 Getting Started
 
-### ۱. پیش‌نیازها
-- **Node.js** نسخه `v20.x` یا بالاتر
-- مدیر بسته **pnpm** (یا npm / yarn)
-- پایگاه داده **MongoDB** فعال
+### 1. Prerequisites
+- **Node.js** `v20.x` or higher
+- **pnpm** package manager (recommended)
+- Active **MongoDB** instance
 
-### ۲. کلون و دریافت مخزن
+### 2. Clone the Repository
 ```bash
 git clone https://github.com/aminQureshi8/WorkOut.git
 cd WorkOut
 ```
 
-### ۳. نصب وابستگی‌ها
+### 3. Install Dependencies
 ```bash
 pnpm install
 ```
 
-### ۴. تنظیم متغیرهای محیطی
-یک فایل `.env.local` در ریشه پروژه ایجاد کرده و متغیرهای مورد نیاز را مقداردهی نمایید:
+### 4. Configure Environment Variables
+Create a `.env.local` file in the project root based on [.env.example](.env.example):
 
 ```env
 # Database
@@ -134,12 +136,12 @@ MONGODB_URI=mongodb://localhost:27017/starfit
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret_key
 
-# Object Storage (S3 / Arvan / ParsPack)
-S3_ENDPOINT=https://s3.ir-thr-at1.arvanstorage.ir
+# S3 Compatible Storage
+S3_ENDPOINT=https://your-s3-endpoint.com
 S3_ACCESS_KEY_ID=your_access_key
 S3_SECRET_ACCESS_KEY=your_secret_key
 S3_BUCKET_NAME=workout
-S3_PUBLIC_URL=https://your-bucket-url.com
+S3_PUBLIC_URL=https://your-public-s3-url.com
 
 # SMS Gateway (OTP)
 SMS_IR_USERNAME=your_sms_user
@@ -147,27 +149,27 @@ SMS_IR_PASSWORD=your_sms_password
 SMS_IR_LINE=your_sms_line
 ```
 
-### ۵. اجرای سرور توسعه
+### 5. Run the Development Server
 ```bash
 pnpm dev
 ```
-برنامه در آدرس [http://localhost:3000](http://localhost:3000) در دسترس خواهد بود.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📜 اسکریپت‌های اصلی (Available Scripts)
+## 📜 Available Scripts
 
-| دستور | توضیح عملکرد |
+| Command | Description |
 | :--- | :--- |
-| `pnpm dev` | اجرای سرور محلی توسعه به همراه Turbopack |
-| `pnpm build` | کامپایل و تولید خروجی نسخه پروداکشن بهینه‌سازی شده |
-| `pnpm start` | اجرای نسخه بیلد شده پروداکشن |
-| `pnpm lint` | بررسی کیفی و تحلیل کدهای پروژه با ESLint |
+| `pnpm dev` | Starts the Next.js development server with Turbopack |
+| `pnpm build` | Compiles and optimizes the project for production |
+| `pnpm start` | Launches the built production server |
+| `pnpm lint` | Runs ESLint to verify code quality and style standards |
 
 ---
 
 <div align="center">
 
-ساخته شده با ❤️ برای جامعه ورزش و تناسب اندام **StarFit**
+Crafted with ❤️ for the **StarFit** fitness community.
 
 </div>
