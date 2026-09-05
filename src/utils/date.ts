@@ -29,11 +29,21 @@ export const getPersianDateLabel = (dateStr: string): string => {
   return `${relativeLabel}${formatter.format(date)}`;
 };
 
-export const formatPersianDate = (dateString?: string | Date): string => {
+export const formatPersianDate = (
+  dateString?: string | Date | null,
+): string => {
   if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return "";
+  }
 };
+
+export const formatDate = formatPersianDate;

@@ -7,6 +7,8 @@ import useSWR from "swr";
 import { Search, User, Clock, BookOpen, Loader2, Inbox } from "lucide-react";
 import { ARTICLE_CATEGORIES } from "@/constants/blog";
 import type { PublicArticleItem } from "@/types/blog";
+import { formatDate } from "@/utils/date";
+import { getReadTime } from "@/utils/article";
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -81,29 +83,6 @@ export default function Articles() {
     setTimeout(() => {
       setIsThrottled(false);
     }, 600);
-  };
-
-  const formatDate = (dateString?: string | null) => {
-    if (!dateString) return "";
-    try {
-      return new Date(dateString).toLocaleDateString("fa-IR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return "";
-    }
-  };
-
-  const getReadTime = (content?: string) => {
-    if (!content) return "۱ دقیقه";
-    const words = content
-      .replace(/<[^>]+>/g, "")
-      .split(/\s+/)
-      .filter(Boolean).length;
-    const minutes = Math.max(1, Math.ceil(words / 200));
-    return new Intl.NumberFormat("fa-IR").format(minutes) + " دقیقه";
   };
 
   return (
