@@ -16,7 +16,6 @@ import {
   Salad,
   Utensils,
   Trophy,
-  Sparkles,
   Film,
   TrendingUp,
   Tag,
@@ -38,13 +37,6 @@ export function getAdminMenuItems(
           icon: LayoutDashboard,
           badge: null,
           href: "/admin",
-        },
-        {
-          id: "ai",
-          label: "هوش مصنوعی",
-          icon: Sparkles,
-          badge: "جدید",
-          href: "/admin/ai",
         },
         {
           id: "users",

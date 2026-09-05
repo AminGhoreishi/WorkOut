@@ -1,6 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 import User from "@/models/User";
 import Ban from "@/models/Ban";
@@ -9,11 +8,6 @@ import { toEnglishDigits } from "@/utils/numbers";
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -70,58 +64,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }: any) {
-      if (account?.provider === "google") {
-        try {
-          await dbConnect();
-          if (!user?.email) return false;
-
-          const emailClean = user.email.toLowerCase();
-          const existing = await User.findOne({ email: emailClean });
-
-          if (existing) {
-            if (existing.status === "blocked") return false;
-            const isBanned = await Ban.findOne({ userId: existing._id, status: "active" });
-            if (isBanned) return false;
-
-            let updated = false;
-            if (user.image && !existing.avatar) {
-              existing.avatar = user.image;
-              updated = true;
-            }
-            if (user.name && !existing.fullName) {
-              existing.fullName = user.name;
-              updated = true;
-            }
-            if (updated) {
-              await existing.save();
-            }
-          } else {
-            let fallbackUsername = user.name || emailClean.split("@")[0] || "user";
-            const existingUsername = await User.findOne({ username: fallbackUsername });
-            if (existingUsername) {
-              fallbackUsername = `${fallbackUsername}_${Math.floor(1000 + Math.random() * 9000)}`;
-            }
-
-            await User.create({
-              username: fallbackUsername,
-              fullName: user.name || "",
-              email: emailClean,
-              avatar: user.image || "",
-              password: "",
-              role: "user",
-              status: "active",
-            });
-          }
-          return true;
-        } catch (error) {
-          console.error("Google signIn callback error:", error);
-          return false;
-        }
-      }
-      return true;
-    },
-
     async jwt({ token, user }: any) {
       try {
         await dbConnect();
