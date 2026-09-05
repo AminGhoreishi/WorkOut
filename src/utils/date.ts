@@ -28,3 +28,12 @@ export const getPersianDateLabel = (dateStr: string): string => {
 
   return `${relativeLabel}${formatter.format(date)}`;
 };
+
+export const formatPersianDate = (dateString?: string | Date): string => {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("fa-IR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};

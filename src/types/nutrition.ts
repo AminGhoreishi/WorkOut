@@ -164,6 +164,7 @@ export interface EditTargetModalProps {
 export interface NutritionDateSelectorProps {
   selectedDate: string;
   onDateChange: (date: string) => void;
+  isPending?: boolean;
 }
 
 export interface NutritionMacrosCardProps {

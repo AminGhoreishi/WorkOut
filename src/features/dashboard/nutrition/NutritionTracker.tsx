@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useTransition } from "react";
 import useSWR from "swr";
 import {
   Salad,
@@ -36,6 +36,14 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
     getLocalDateString(0),
   );
+  const [isPendingDate, startTransition] = useTransition();
+
+  const handleDateChange = useCallback((newDate: string) => {
+    startTransition(() => {
+      setSelectedDate(newDate);
+    });
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMealType, setActiveMealType] =
     useState<keyof MealData>("breakfast");
@@ -170,57 +178,60 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
 
           <NutritionDateSelector
             selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
+            onDateChange={handleDateChange}
+            isPending={isPendingDate}
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-          <div className="lg:col-span-8 bg-white/[0.03] border border-amber-500/15 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
+        <div className={`transition-opacity duration-200 ${isPendingDate ? "opacity-60" : "opacity-100"}`}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <div className="lg:col-span-8 bg-white/[0.03] border border-amber-500/15 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
 
-            <NutritionCalorieHeader
-              targetCalories={targetCalories}
-              targetsLoaded={targetsLoaded}
-              onEditTarget={() => setIsEditingTarget(true)}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-              <NutritionCalorieStats
-                consumedCalories={dailyTotals.calories}
-                caloriesRemaining={caloriesRemaining}
-                calPercent={calPercent}
+              <NutritionCalorieHeader
+                targetCalories={targetCalories}
                 targetsLoaded={targetsLoaded}
+                onEditTarget={() => setIsEditingTarget(true)}
               />
 
-              <NutritionMacrosCard
-                dailyTotals={dailyTotals}
-                targetMacros={targetMacros}
-                targetsLoaded={targetsLoaded}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <NutritionCalorieStats
+                  consumedCalories={dailyTotals.calories}
+                  caloriesRemaining={caloriesRemaining}
+                  calPercent={calPercent}
+                  targetsLoaded={targetsLoaded}
+                />
+
+                <NutritionMacrosCard
+                  dailyTotals={dailyTotals}
+                  targetMacros={targetMacros}
+                  targetsLoaded={targetsLoaded}
+                />
+              </div>
             </div>
+
+            <WaterTracker
+              selectedDate={selectedDate}
+              targetWater={targetWater}
+              userId={userId}
+              waterIntake={currentWater}
+              onWaterChange={handleWaterChange}
+              isLoading={isLoadingMeals}
+            />
           </div>
 
-          <WaterTracker
-            selectedDate={selectedDate}
-            targetWater={targetWater}
-            userId={userId}
-            waterIntake={currentWater}
-            onWaterChange={handleWaterChange}
-            isLoading={isLoadingMeals}
+          <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2 font-morabbaReg">
+            <Utensils className="w-5 h-5 text-amber-400" />
+            وعده‌های غذایی امروز
+          </h3>
+
+          <MealsGrid
+            currentMeals={currentMeals}
+            isLoadingMeals={isLoadingMeals}
+            onDeleteFood={handleDeleteFood}
+            onAddFoodClick={handleAddFoodClick}
           />
         </div>
-
-        <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2 font-morabbaReg">
-          <Utensils className="w-5 h-5 text-amber-400" />
-          وعده‌های غذایی امروز
-        </h3>
-
-        <MealsGrid
-          currentMeals={currentMeals}
-          isLoadingMeals={isLoadingMeals}
-          onDeleteFood={handleDeleteFood}
-          onAddFoodClick={handleAddFoodClick}
-        />
       </div>
 
       <AddFoodModal

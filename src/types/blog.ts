@@ -188,7 +188,6 @@ export interface ArticleCommentsApiResponse {
 
 export interface RelatedArticlesProps {
   relatedArticles: ArticleDetailData[];
-  getReadTime: (content?: string) => string;
 }
 
 export interface ArticleTagsProps {
@@ -208,8 +207,6 @@ export interface ArticleMainContentProps {
   publishDate?: string | Date;
   content: string;
   viewCount: number;
-  formatDate: (dateString?: string | Date) => string;
-  getReadTime: (content?: string) => string;
 }
 
 export interface ArticleActionsBarProps {
@@ -220,6 +217,12 @@ export interface ArticleActionsBarProps {
   totalComments: number;
   isLiked?: boolean;
   isWished?: boolean;
+}
+
+export interface ArticleCommentsProps {
+  articleId: string;
+  userId?: string | null;
+  onCommentsCountChange?: (count: number) => void;
 }
 
 

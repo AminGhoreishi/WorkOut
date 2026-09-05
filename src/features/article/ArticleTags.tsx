@@ -1,8 +1,9 @@
 "use client";
 
+import { memo } from "react";
 import type { ArticleTagsProps } from "@/types/blog";
 
-export default function ArticleTags({ tags }: ArticleTagsProps) {
+function ArticleTags({ tags }: ArticleTagsProps) {
   if (!tags || tags.length === 0) return null;
 
   return (
@@ -23,3 +24,5 @@ export default function ArticleTags({ tags }: ArticleTagsProps) {
     </div>
   );
 }
+
+export default memo(ArticleTags);

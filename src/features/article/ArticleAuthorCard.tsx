@@ -1,8 +1,9 @@
 "use client";
 
+import { memo } from "react";
 import type { ArticleAuthorCardProps } from "@/types/blog";
 
-export default function ArticleAuthorCard({
+function ArticleAuthorCard({
   authorAvatar,
   authorName,
   authorRole,
@@ -27,3 +28,5 @@ export default function ArticleAuthorCard({
     </div>
   );
 }
+
+export default memo(ArticleAuthorCard);

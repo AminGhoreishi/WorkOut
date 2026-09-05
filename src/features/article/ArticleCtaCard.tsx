@@ -1,9 +1,10 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export default function ArticleCtaCard() {
+function ArticleCtaCard() {
   return (
     <div className="rounded-2xl p-5 relative overflow-hidden bg-neutral-900/80 border border-amber-500/30 shadow-lg font-danaMed">
       <div className="absolute -top-4 -left-4 w-20 h-20 rounded-full bg-amber-500/10 blur-xl pointer-events-none" />
@@ -23,3 +24,5 @@ export default function ArticleCtaCard() {
     </div>
   );
 }
+
+export default memo(ArticleCtaCard);

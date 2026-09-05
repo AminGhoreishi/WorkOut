@@ -1,17 +1,18 @@
 "use client";
 
+import { memo } from "react";
 import { Calendar, Clock, Eye } from "lucide-react";
+import { formatPersianDate } from "@/utils/date";
+import { getReadTime } from "@/utils/article";
 import type { ArticleMainContentProps } from "@/types/blog";
 
-export default function ArticleMainContent({
+function ArticleMainContent({
   authorAvatar,
   authorName,
   authorRole,
   publishDate,
   content,
   viewCount,
-  formatDate,
-  getReadTime,
 }: ArticleMainContentProps) {
   return (
     <>
@@ -30,7 +31,7 @@ export default function ArticleMainContent({
         <div className="flex items-center gap-4 text-xs text-neutral-400">
           <span className="flex items-center gap-1">
             <Calendar size={13} className="text-amber-400" />{" "}
-            {formatDate(publishDate)}
+            {formatPersianDate(publishDate)}
           </span>
           <span className="flex items-center gap-1">
             <Clock size={13} className="text-amber-400" />{" "}
@@ -51,3 +52,5 @@ export default function ArticleMainContent({
     </>
   );
 }
+
+export default memo(ArticleMainContent);

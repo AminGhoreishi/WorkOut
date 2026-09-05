@@ -1,11 +1,12 @@
 import { memo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { getLocalDateString, getPersianDateLabel } from "@/utils/date";
 import type { NutritionDateSelectorProps } from "@/types/nutrition";
 
 function NutritionDateSelector({
   selectedDate,
   onDateChange,
+  isPending = false,
 }: NutritionDateSelectorProps) {
   const changeDate = (direction: "next" | "prev") => {
     const [year, month, day] = selectedDate.split("-").map(Number);
@@ -37,8 +38,9 @@ function NutritionDateSelector({
             onDateChange(todayStr);
           }
         }}
-        className="px-3 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white rounded-xl hover:bg-amber-500/10 transition-all cursor-pointer select-none flex-1 text-center"
+        className="px-3 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white rounded-xl hover:bg-amber-500/10 transition-all cursor-pointer select-none flex-1 text-center flex items-center justify-center gap-1.5"
       >
+        {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />}
         <span className="ss02">{getPersianDateLabel(selectedDate)}</span>
       </button>
 

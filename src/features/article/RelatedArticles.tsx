@@ -1,13 +1,14 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, BookOpen } from "lucide-react";
+import { getReadTime } from "@/utils/article";
 import type { RelatedArticlesProps } from "@/types/blog";
 
-export default function RelatedArticles({
+function RelatedArticles({
   relatedArticles,
-  getReadTime,
 }: RelatedArticlesProps) {
   if (!relatedArticles || relatedArticles.length === 0) return null;
 
@@ -50,3 +51,5 @@ export default function RelatedArticles({
     </div>
   );
 }
+
+export default memo(RelatedArticles);
