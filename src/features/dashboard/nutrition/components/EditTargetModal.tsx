@@ -2,12 +2,13 @@ import { useState, useEffect, memo } from "react";
 import { useSWRConfig } from "swr";
 import { Flame, Plus } from "lucide-react";
 import type { EditTargetModalProps } from "@/types/nutrition";
-import FitnessCalorieCalculator from "./FitnessCalorieCalculator";
+import FitnessCalorieCalculator from "../FitnessCalorieCalculator";
 
 const EditTargetModal: React.FC<EditTargetModalProps> = ({
   isOpen,
   onClose,
   userId,
+  selectedDate,
   targetCalories,
   requiredCalories = 2200,
   targetMacros,
@@ -70,6 +71,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
           tempTargetCarbs: carbs,
           tempTargetFat: fat,
           tempTargetWater: water,
+          date: selectedDate,
         }),
       });
 
@@ -129,9 +131,15 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
 
           <FitnessCalorieCalculator
             isOpen={isOpen}
-            onApplyCalorie={(cal) =>
-              setTempRequiredCalories(cal.toString())
-            }
+            onApplyCalorie={(cal, macros) => {
+              setTempTargetCalories(cal.toString());
+              setTempRequiredCalories(cal.toString());
+              if (macros) {
+                setTempTargetProtein(macros.protein.toString());
+                setTempTargetCarbs(macros.carbs.toString());
+                setTempTargetFat(macros.fat.toString());
+              }
+            }}
           />
 
           <div>

@@ -24,9 +24,11 @@ export const calculateNutritionTargets = (
   heightCm: number,
   ageYears: number,
   sessionsPerWeek = 4,
-  goal = "muscle_gain"
+  goal = "muscle_gain",
+  gender: "male" | "female" = "male"
 ) => {
-  const bmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * ageYears + 5);
+  const genderOffset = gender === "female" ? -161 : 5;
+  const bmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * ageYears + genderOffset);
 
   let activityMultiplier = 1.55;
   if (sessionsPerWeek <= 2) {
@@ -38,20 +40,41 @@ export const calculateNutritionTargets = (
   const tdee = Math.round(bmr * activityMultiplier);
 
   let surplusOrDeficit = 0;
-  if (goal === "muscle_gain") {
-    surplusOrDeficit = 400;
-  } else if (goal === "weight_loss") {
+  let proteinMultiplier = 2.0;
+  let fatMultiplier = 1.0;
+
+  if (goal === "weight_loss") {
     surplusOrDeficit = -400;
+    proteinMultiplier = 2.2;
+    fatMultiplier = 0.8;
+  } else if (goal === "muscle_gain") {
+    surplusOrDeficit = 400;
+    proteinMultiplier = 2.0;
+    fatMultiplier = 1.0;
   } else if (goal === "athletic_performance") {
     surplusOrDeficit = 200;
+    proteinMultiplier = 1.8;
+    fatMultiplier = 1.0;
+  } else if (goal === "endurance") {
+    surplusOrDeficit = 0;
+    proteinMultiplier = 1.5;
+    fatMultiplier = 0.9;
+  } else if (goal === "general_fitness") {
+    surplusOrDeficit = 0;
+    proteinMultiplier = 1.6;
+    fatMultiplier = 0.9;
+  } else if (goal === "rehabilitation") {
+    surplusOrDeficit = 0;
+    proteinMultiplier = 1.6;
+    fatMultiplier = 0.9;
   }
 
   const targetCalories = Math.max(1200, tdee + surplusOrDeficit);
 
-  const proteinGrams = Math.round(weightKg * 2.0);
+  const proteinGrams = Math.round(weightKg * proteinMultiplier);
   const proteinKcal = Math.round(proteinGrams * 4);
 
-  const fatGrams = Math.round(weightKg * 1.0);
+  const fatGrams = Math.round(weightKg * fatMultiplier);
   const fatKcal = Math.round(fatGrams * 9);
 
   const remainingKcal = Math.max(0, targetCalories - (proteinKcal + fatKcal));

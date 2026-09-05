@@ -1,5 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
+import type { KeyedMutator } from "swr";
 
 export interface Food {
   _id: string;
@@ -130,18 +131,25 @@ export interface IMealPlan extends Omit<MealPlan, "_id" | "createdAt" | "updated
 export type ActivityLevel = "low" | "light" | "moderate" | "high" | "extra";
 export type CalcGender = "male" | "female";
 
+export interface TargetMacros {
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
 export interface FitnessCalorieCalculatorProps {
   isOpen: boolean;
-  onApplyCalorie: (calorie: number) => void;
+  onApplyCalorie: (calorie: number, macros?: TargetMacros) => void;
 }
 
 export interface EditTargetModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
+  selectedDate?: string;
   targetCalories: number;
   requiredCalories?: number;
-  targetMacros: { protein: number; carbs: number; fat: number };
+  targetMacros: TargetMacros;
   targetWater: number;
   onSaveTargets: (
     calories: number,
@@ -151,6 +159,34 @@ export interface EditTargetModalProps {
     water: number,
     requiredCalories?: number,
   ) => void;
+}
+
+export interface NutritionDateSelectorProps {
+  selectedDate: string;
+  onDateChange: (date: string) => void;
+}
+
+export interface NutritionMacrosCardProps {
+  dailyTotals: {
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  targetMacros: TargetMacros;
+  targetsLoaded: boolean;
+}
+
+export interface NutritionCalorieStatsProps {
+  consumedCalories: number;
+  caloriesRemaining: number;
+  calPercent: number;
+  targetsLoaded: boolean;
+}
+
+export interface NutritionCalorieHeaderProps {
+  targetCalories: number;
+  targetsLoaded: boolean;
+  onEditTarget: () => void;
 }
 
 export interface MealsGridProps {
@@ -218,4 +254,24 @@ export interface PaginationProps {
 }
 
 export interface FoodsPaginationProps extends PaginationProps {}
+
+export interface UseNutritionActionsParams {
+  userId: string;
+  selectedDate: string;
+  logData: NutritionLog | null | undefined;
+  currentMeals: MealData;
+  currentWater: number;
+  targetCalories: number;
+  targetMacros: TargetMacros;
+  targetWater: number;
+  activeMealType: keyof MealData;
+  mutate: KeyedMutator<NutritionLog | null>;
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
+export interface UseNutritionActionsReturn {
+  handleDeleteFood: (mealType: keyof MealData, itemId: string) => Promise<void>;
+  handleSaveFood: (newItem: FoodItem) => void;
+  handleWaterChange: (newAmount: number) => void;
+}
 

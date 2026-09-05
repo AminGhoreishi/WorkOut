@@ -106,25 +106,37 @@ export async function PUT(req: NextRequest) {
     }
 
     const userId = session.user.id;
+    const body = await req.json();
     const {
       tempTargetCalories,
       tempTargetProtein,
       tempTargetCarbs,
       tempTargetFat,
       tempTargetWater,
-    } = await req.json();
+      date,
+    } = body;
+
+    const targetDate =
+      date ||
+      new Date().toISOString().split("T")[0];
+
+    const targetFields = {
+      targetCalories: Number(tempTargetCalories) || 2000,
+      targetProtein: Number(tempTargetProtein) || 120,
+      targetCarbs: Number(tempTargetCarbs) || 220,
+      targetFat: Number(tempTargetFat) || 65,
+      targetWater: Number(tempTargetWater) || 2500,
+    };
+
+    await NutritionLog.findOneAndUpdate(
+      { userId, date: targetDate },
+      { $set: targetFields },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     await NutritionLog.updateMany(
       { userId },
-      {
-        $set: {
-          targetCalories: tempTargetCalories,
-          targetProtein: tempTargetProtein,
-          targetCarbs: tempTargetCarbs,
-          targetFat: tempTargetFat,
-          targetWater: tempTargetWater,
-        },
-      }
+      { $set: targetFields }
     );
 
     return NextResponse.json(

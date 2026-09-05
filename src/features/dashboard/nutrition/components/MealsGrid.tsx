@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Coffee, Utensils, Salad, Sparkles, Trash2, Plus } from "lucide-react";
 import type { MealData, MealsGridProps } from "@/types/nutrition";
-import MealSkeleton from "./MealSkeleton";
+import MealSkeleton from "../MealSkeleton";
 
 const translateMealName = (type: keyof MealData): string => {
   switch (type) {

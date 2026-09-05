@@ -9,7 +9,7 @@ import type {
   Food,
   FoodFormValues,
 } from "@/types/nutrition";
-import ManualFoodInput from "./ManualFoodInput";
+import ManualFoodInput from "../ManualFoodInput";
 import { useForm, FormProvider } from "react-hook-form";
 
 const foodFetcher = async (url: string): Promise<Food[]> => {
