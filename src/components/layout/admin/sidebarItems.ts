@@ -10,8 +10,6 @@ import {
   Dumbbell,
   Ticket,
   CreditCard,
-  BarChart3,
-  Settings,
   UserCog,
   Heart,
   Activity,
@@ -312,11 +310,11 @@ export function getMobileMenuItems(hasRole?: boolean): MenuSection[] {
           href: "/articles",
         },
         {
-          id: "introduce",
+          id: "about",
           label: "درباره ما",
           icon: UserCog,
           badge: null,
-          href: "/introduce",
+          href: "/about",
         },
         ...(hasRole
           ? [
