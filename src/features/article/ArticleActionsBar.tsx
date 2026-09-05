@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useOptimistic, useTransition, memo } from "react";
 import { Heart, MessageSquare, Bookmark, Share2 } from "lucide-react";
 import { showAlert } from "@/utils/alert";
-import type { ArticleActionsBarProps } from "@/types/blog";
+import type { ArticleActionsBarProps, OptimisticLikeState } from "@/types/blog";
 
-export default function ArticleActionsBar({
+function ArticleActionsBar({
   articleId,
   articleTitle,
   userId = null,
@@ -14,11 +14,28 @@ export default function ArticleActionsBar({
   isLiked = false,
   isWished = false,
 }: ArticleActionsBarProps) {
-  const [liked, setLiked] = useState<boolean>(isLiked);
-  const [likeCount, setLikeCount] = useState<number>(initialLikeCount);
-  const [bookmarked, setBookmarked] = useState<boolean>(isWished);
+  const [, startTransition] = useTransition();
 
-  const handleLike = async () => {
+  const [likeState, setLikeState] = useState<OptimisticLikeState>({
+    liked: isLiked,
+    likeCount: initialLikeCount,
+  });
+  const [bookmarkedState, setBookmarkedState] = useState<boolean>(isWished);
+
+  const [optimisticLike, setOptimisticLike] = useOptimistic<
+    OptimisticLikeState,
+    boolean
+  >(likeState, (prev, nextLiked) => ({
+    liked: nextLiked,
+    likeCount: nextLiked ? prev.likeCount + 1 : Math.max(0, prev.likeCount - 1),
+  }));
+
+  const [optimisticBookmarked, setOptimisticBookmarked] = useOptimistic<
+    boolean,
+    boolean
+  >(bookmarkedState, (_prev, nextWished) => nextWished);
+
+  const handleLike = () => {
     if (!userId) {
       showAlert({
         title: "ورود به حساب کاربری",
@@ -29,29 +46,38 @@ export default function ArticleActionsBar({
       return;
     }
 
-    try {
-      const res = await fetch("/api/blog/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blogId: articleId }),
-      });
+    const nextLiked = !optimisticLike.liked;
+    startTransition(async () => {
+      setOptimisticLike(nextLiked);
 
-      if (res.ok) {
-        const data = await res.json();
-        setLiked(data.liked);
-        setLikeCount(data.likes);
+      try {
+        const res = await fetch("/api/blog/like", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ blogId: articleId }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setLikeState({
+            liked: data.liked,
+            likeCount: data.likes,
+          });
+        } else {
+          throw new Error();
+        }
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "پسندیدن مقاله با خطا مواجه شد.",
+          icon: "error",
+          confirmButtonColor: "#eab308",
+        });
       }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "پسندیدن مقاله با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonColor: "#eab308",
-      });
-    }
+    });
   };
 
-  const handleBookmark = async () => {
+  const handleBookmark = () => {
     if (!userId) {
       showAlert({
         title: "ورود به حساب کاربری",
@@ -62,25 +88,32 @@ export default function ArticleActionsBar({
       return;
     }
 
-    try {
-      const res = await fetch("/api/blog/wish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blogId: articleId }),
-      });
+    const nextBookmarked = !optimisticBookmarked;
+    startTransition(async () => {
+      setOptimisticBookmarked(nextBookmarked);
 
-      if (res.ok) {
-        const data = await res.json();
-        setBookmarked(data.wished);
+      try {
+        const res = await fetch("/api/blog/wish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ blogId: articleId }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setBookmarkedState(data.wished);
+        } else {
+          throw new Error();
+        }
+      } catch {
+        showAlert({
+          title: "خطا",
+          text: "انجام عملیات با خطا مواجه شد.",
+          icon: "error",
+          confirmButtonColor: "#eab308",
+        });
       }
-    } catch {
-      showAlert({
-        title: "خطا",
-        text: "انجام عملیات با خطا مواجه شد.",
-        icon: "error",
-        confirmButtonColor: "#eab308",
-      });
-    }
+    });
   };
 
   const handleShare = () => {
@@ -109,13 +142,13 @@ export default function ArticleActionsBar({
         <button
           onClick={handleLike}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
-            liked
+            optimisticLike.liked
               ? "text-rose-400 bg-rose-500/15 border border-rose-500/30"
               : "text-neutral-400 bg-neutral-800/50 hover:text-white border border-amber-500/10"
           }`}
         >
-          <Heart size={16} fill={liked ? "currentColor" : "none"} />
-          {likeCount}
+          <Heart size={16} fill={optimisticLike.liked ? "currentColor" : "none"} />
+          {optimisticLike.likeCount}
         </button>
         <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm text-neutral-400 bg-neutral-800/50 border border-amber-500/10">
           <MessageSquare size={16} className="text-amber-400" />
@@ -127,12 +160,12 @@ export default function ArticleActionsBar({
         <button
           onClick={handleBookmark}
           className={`p-2 rounded-xl transition-all cursor-pointer ${
-            bookmarked
+            optimisticBookmarked
               ? "text-amber-400 bg-amber-500/20 border border-amber-500/30"
               : "text-neutral-400 bg-neutral-800/50 hover:text-white border border-amber-500/10"
           }`}
         >
-          <Bookmark size={16} fill={bookmarked ? "currentColor" : "none"} />
+          <Bookmark size={16} fill={optimisticBookmarked ? "currentColor" : "none"} />
         </button>
         <button
           onClick={handleShare}
@@ -144,3 +177,5 @@ export default function ArticleActionsBar({
     </div>
   );
 }
+
+export default memo(ArticleActionsBar);

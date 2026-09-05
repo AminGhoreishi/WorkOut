@@ -24,8 +24,8 @@ export default function ArticleDetail({
   userId = null,
   isWished = false,
   isLiked = false,
+  totalComments = 0,
 }: ArticleDetailProps) {
-  const [totalComments, setTotalComments] = useState<number>(0);
   const [viewCount, setViewCount] = useState<number>(article?.views || 0);
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function ArticleDetail({
             <ArticleComments
               articleId={article._id}
               userId={userId}
-              onCommentsCountChange={setTotalComments}
+              initialTotalComments={totalComments}
             />
           </div>
 

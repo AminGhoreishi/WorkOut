@@ -108,6 +108,7 @@ export interface ArticleDetailProps {
   currentUser?: ArticleCurrentUser | null;
   isWished?: boolean;
   isLiked?: boolean;
+  totalComments?: number;
 }
 
 export interface ArticlePageProps {
@@ -222,7 +223,14 @@ export interface ArticleActionsBarProps {
 export interface ArticleCommentsProps {
   articleId: string;
   userId?: string | null;
+  initialTotalComments?: number;
   onCommentsCountChange?: (count: number) => void;
 }
+
+export interface OptimisticLikeState {
+  liked: boolean;
+  likeCount: number;
+}
+
 
 

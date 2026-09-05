@@ -7,7 +7,7 @@ import Blog from "@/models/Blog";
 import Wish from "@/models/Wish";
 import ArticleDetail from "@/features/article/ArticleDetail";
 import type { ArticlePageProps } from "@/types/blog";
-import "@/models/Comment";
+import Comment from "@/models/Comment";
 
 export default async function ArticlePageContent({ params }: ArticlePageProps) {
   await connection();
@@ -35,7 +35,7 @@ export default async function ArticlePageContent({ params }: ArticlePageProps) {
 
   const userId = session?.user?.id || null;
 
-  const [relatedBlogs, existingWish] = await Promise.all([
+  const [relatedBlogs, existingWish, totalComments] = await Promise.all([
     Blog.find({
       category: blog.category,
       status: "published",
@@ -46,6 +46,7 @@ export default async function ArticlePageContent({ params }: ArticlePageProps) {
       .limit(3)
       .lean(),
     userId ? Wish.findOne({ userId, blogId: blog._id }).lean() : null,
+    Comment.countDocuments({ blogId: blog._id, isApproved: true }),
   ]);
 
   const isWished = Boolean(existingWish);
@@ -65,6 +66,7 @@ export default async function ArticlePageContent({ params }: ArticlePageProps) {
       currentUser={session?.user || null}
       isWished={isWished}
       isLiked={isLiked}
+      totalComments={totalComments}
     />
   );
 }

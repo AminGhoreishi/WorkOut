@@ -21,6 +21,7 @@ const fetcher = async (url: string): Promise<ArticleCommentsApiResponse> => {
 function ArticleComments({
   articleId,
   userId,
+  initialTotalComments = 0,
   onCommentsCountChange,
 }: ArticleCommentsProps) {
   const [newComment, setNewComment] = useState<string>("");
@@ -67,7 +68,7 @@ function ArticleComments({
     }
   }, [commentsData?.totalCount, onCommentsCountChange]);
 
-  const totalComments: number = commentsData?.totalCount || 0;
+  const totalComments: number = commentsData?.totalCount ?? initialTotalComments;
   const hasMoreComments: boolean = allComments.length < totalComments;
 
   const handleLoadMoreComments = () => {
