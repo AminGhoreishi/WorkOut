@@ -53,7 +53,7 @@ export default function PackageDetails({
       <Breadcrumb packageName={packageData.name} />
 
       <section className="py-8 sm:py-12 lg:py-20 relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 space-y-6 sm:space-y-10">
               {packageData.isPopular && (
