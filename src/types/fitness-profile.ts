@@ -133,7 +133,13 @@ export interface PhotosTabProps {
   removePhoto: (index: number) => void;
 }
 
-export interface FitnessProfileSidebarProps {}
+export interface FitnessProfileSidebarProps {
+  profile?: FitnessProfileData | null;
+}
+
+export interface FitnessProfileManagementProps {
+  initialProfile?: FitnessProfileData | null;
+}
 
 export interface NutritionTargetResult {
   bmr: number;

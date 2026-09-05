@@ -52,10 +52,10 @@ export default function CheckoutPendingVerification({
 
       <div className="pt-2">
         <Link
-          href="/dashboard/subscription"
+          href="/dashboard/fitness-profile"
           className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium py-3.5 rounded-xl transition-all text-center text-xs sm:text-sm flex items-center justify-center gap-2 block"
         >
-          <span>ورود به پنل کاربری</span>
+          <span>ورود به پروفایل ورزشی</span>
         </Link>
       </div>
     </div>

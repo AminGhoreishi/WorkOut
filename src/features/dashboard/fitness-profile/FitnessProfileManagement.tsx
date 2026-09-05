@@ -6,6 +6,7 @@ import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { Loader2, Save, Sparkles } from "lucide-react";
 import { showAlert } from "@/utils/alert";
 import { toEnglishDigits } from "@/utils/numbers";
+import { useRouter } from "next/navigation";
 import FitnessProfileSidebar from "./FitnessProfileSidebar";
 import PhysicalTab from "./PhysicalTab";
 import TrainingTab from "./TrainingTab";
@@ -14,6 +15,7 @@ import type {
   FitnessFormInputs,
   FitnessProfileTab,
   FitnessProfileApiResponse,
+  FitnessProfileManagementProps,
 } from "@/types/fitness-profile";
 
 const fetcher = async (url: string): Promise<FitnessProfileApiResponse> => {
@@ -27,7 +29,10 @@ const fetcher = async (url: string): Promise<FitnessProfileApiResponse> => {
   return res.json();
 };
 
-export default function FitnessProfileManagement() {
+export default function FitnessProfileManagement({
+  initialProfile,
+}: FitnessProfileManagementProps) {
+  const router = useRouter();
   const {
     data: profileResponse,
     isLoading,
@@ -36,13 +41,17 @@ export default function FitnessProfileManagement() {
     "/api/user/fitness-profile",
     fetcher,
     {
+      fallbackData:
+        initialProfile !== undefined ? { profile: initialProfile } : undefined,
       revalidateOnFocus: false,
       dedupingInterval: 15000,
     },
   );
 
   const [saving, setSaving] = useState<boolean>(false);
-  const [bodyPhotos, setBodyPhotos] = useState<string[]>([]);
+  const [bodyPhotos, setBodyPhotos] = useState<string[]>(
+    initialProfile?.bodyPhotos || [],
+  );
   const [activeTab, setActiveTab] = useState<FitnessProfileTab>("physical");
 
   const {
@@ -55,14 +64,14 @@ export default function FitnessProfileManagement() {
   } = useForm<FitnessFormInputs>({
     mode: "all",
     defaultValues: {
-      goal: "general_fitness",
-      sessionsPerWeek: 3,
-      equipment: "none",
-      trainingExperience: "beginner",
-      ageYears: "25",
-      heightCm: "175",
-      weightKg: "70",
-      notes: "",
+      goal: initialProfile?.goal || "general_fitness",
+      sessionsPerWeek: initialProfile?.sessionsPerWeek || 3,
+      equipment: initialProfile?.equipment || "none",
+      trainingExperience: initialProfile?.trainingExperience || "beginner",
+      ageYears: String(initialProfile?.ageYears || 25),
+      heightCm: String(initialProfile?.heightCm || 175),
+      weightKg: String(initialProfile?.weightKg || 70),
+      notes: initialProfile?.notes || "",
     },
   });
 
@@ -151,6 +160,7 @@ export default function FitnessProfileManagement() {
 
       if (res.ok) {
         await mutate(resData, { revalidate: true });
+        router.refresh();
         showAlert({
           title: "موفقیت‌آمیز",
           text: "پروفایل ورزشی شما با موفقیت بروزرسانی شد.",
@@ -243,7 +253,7 @@ export default function FitnessProfileManagement() {
       dir="rtl"
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <FitnessProfileSidebar />
+        <FitnessProfileSidebar profile={profile ?? initialProfile} />
 
         <div className="lg:col-span-2 bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 md:p-8 shadow-xl">
           <div className="flex items-center gap-2 mb-6">

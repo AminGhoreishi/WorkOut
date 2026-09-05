@@ -1,6 +1,65 @@
 import { Activity, Scale } from "lucide-react";
+import {
+  GOAL_OPTIONS,
+  EXPERIENCE_OPTIONS,
+  EQUIPMENT_OPTIONS,
+} from "@/constants/onboarding";
+import type { FitnessProfileSidebarProps } from "@/types/fitness-profile";
 
-export default function FitnessProfileSidebar() {
+export default function FitnessProfileSidebar({
+  profile,
+}: FitnessProfileSidebarProps) {
+  const height = profile?.heightCm ?? 0;
+  const weight = profile?.weightKg ?? 0;
+  const age = profile?.ageYears ?? 0;
+
+  const bmi =
+    height >= 100 && weight >= 30
+      ? parseFloat((weight / ((height / 100) * (height / 100))).toFixed(1))
+      : 0;
+
+  const getBmiBadge = (val: number) => {
+    if (val === 0) {
+      return {
+        label: "ثبت نشده",
+        className:
+          "text-neutral-400 bg-neutral-500/20 border-neutral-500/30",
+      };
+    }
+    if (val < 18.5) {
+      return {
+        label: "کم‌وزنی",
+        className: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      };
+    }
+    if (val < 25) {
+      return {
+        label: "نرمال",
+        className: "text-amber-300 bg-amber-500/20 border-amber-500/30",
+      };
+    }
+    if (val < 30) {
+      return {
+        label: "اضافه‌وزن",
+        className: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      };
+    }
+    return {
+      label: "چاقی",
+      className: "text-amber-500 bg-amber-500/10 border-amber-500/20",
+    };
+  };
+
+  const bmiBadge = getBmiBadge(bmi);
+  const goalLabel =
+    GOAL_OPTIONS.find((g) => g.val === profile?.goal)?.label ?? "ثبت نشده";
+  const experienceLabel =
+    EXPERIENCE_OPTIONS.find((e) => e.val === profile?.trainingExperience)?.label ??
+    "ثبت نشده";
+  const equipmentLabel =
+    EQUIPMENT_OPTIONS.find((eq) => eq.val === profile?.equipment)?.label ??
+    "ثبت نشده";
+
   return (
     <div className="lg:col-span-1 space-y-6">
       <div className="bg-white/[0.03] backdrop-blur-lg border border-amber-500/15 rounded-2xl p-6 flex flex-col items-center shadow-xl relative overflow-hidden">
@@ -27,10 +86,12 @@ export default function FitnessProfileSidebar() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs sm:text-lg font-bold ss02">
-                22.9
+                {bmi > 0 ? bmi : "—"}
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full border font-semibold text-amber-300 bg-amber-500/20 border-amber-500/30">
-                نرمال
+              <span
+                className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${bmiBadge.className}`}
+              >
+                {bmiBadge.label}
               </span>
             </div>
           </div>
@@ -41,7 +102,7 @@ export default function FitnessProfileSidebar() {
                 قد (CM)
               </span>
               <span className="text-xs sm:text-base font-bold mt-1 block ss02">
-                175
+                {height > 0 ? height : "—"}
               </span>
             </div>
             <div className="bg-white/5 border border-amber-500/10 rounded-xl p-3 text-center">
@@ -49,7 +110,7 @@ export default function FitnessProfileSidebar() {
                 وزن (KG)
               </span>
               <span className="text-xs sm:text-base font-bold mt-1 block ss02">
-                70
+                {weight > 0 ? weight : "—"}
               </span>
             </div>
             <div className="bg-white/5 border border-amber-500/10 rounded-xl p-3 text-center">
@@ -57,7 +118,7 @@ export default function FitnessProfileSidebar() {
                 سن (سال)
               </span>
               <span className="text-xs sm:text-base font-bold mt-1 block ss02">
-                25
+                {age > 0 ? age : "—"}
               </span>
             </div>
           </div>
@@ -66,19 +127,19 @@ export default function FitnessProfileSidebar() {
             <div className="flex justify-between items-center text-xs">
               <span className="text-neutral-400">هدف ورزشی:</span>
               <span className="text-amber-300 font-semibold truncate max-w-[140px]">
-                آمادگی جسمانی عمومی
+                {goalLabel}
               </span>
             </div>
             <div className="flex justify-between items-center text-xs">
               <span className="text-neutral-400">سابقه ورزشی:</span>
               <span className="text-amber-300 font-semibold truncate max-w-[140px]">
-                متوسط
+                {experienceLabel}
               </span>
             </div>
             <div className="flex justify-between items-center text-xs">
               <span className="text-neutral-400">تجهیزات در دسترس:</span>
               <span className="text-amber-300 font-semibold truncate max-w-[140px]">
-                تجهیزات پایه خانگی
+                {equipmentLabel}
               </span>
             </div>
           </div>
