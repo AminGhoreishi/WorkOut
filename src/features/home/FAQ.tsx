@@ -4,7 +4,7 @@ import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer"
 
 export default function FAQ() {
   return (
-    <section className="max-sm:py-10 py-12 sm:py-20 bg-neutral-950/90 font-danaMed">
+    <section className="max-sm:py-10 py-12 sm:pb-20 bg-neutral-950/90 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="down" duration={0.6}>
           <div className="text-center mb-10 sm:mb-16">

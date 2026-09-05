@@ -5,11 +5,14 @@ export default function PackageFeatures({ features }: PackageFeaturesProps) {
   if (!features || features.length === 0) return null;
 
   return (
-    <section className="py-12 sm:py-20 font-danaMed">
+    <section className="py-12 sm:py-0 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-xl! sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-4 font-morabbaReg">
-            لیست کامل امکانات
+          <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-4 font-morabbaReg">
+            لیست کامل{" "}
+            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+              امکانات
+            </span>
           </h2>
           <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto rounded-full mt-3 sm:mt-4" />
         </div>
