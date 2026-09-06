@@ -7,13 +7,13 @@ import Testimonials from "@/features/home/Testimonials";
 
 export default function HomeTemplate() {
   return (
-    <>
+    <div className="flex flex-col">
       <HeroSection />
       <WhyChooseUs />
       <WorkoutPlans />
       <LatestArticles />
       <Testimonials />
       <FAQ />
-    </>
+    </div>
   );
 }

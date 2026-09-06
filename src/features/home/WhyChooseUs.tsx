@@ -52,7 +52,7 @@ const transformationSteps = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="relative py-20 lg:py-28 overflow-hidden font-danaMed">
+    <section className="relative py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden font-danaMed">
       <div className="absolute top-1/3 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-yellow-500/10 rounded-full blur-[140px] pointer-events-none" />
 

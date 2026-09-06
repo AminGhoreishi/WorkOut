@@ -4,10 +4,10 @@ import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer"
 
 export default function FAQ() {
   return (
-    <section className="max-sm:py-10 py-12 sm:pb-20 bg-neutral-950/90 font-danaMed">
+    <section className="relative pt-10 sm:pt-12 md:pt-14 lg:pt-16 pb-16 sm:pb-20 md:pb-24 lg:pb-28 bg-neutral-950/90 font-danaMed">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="down" duration={0.6}>
-          <div className="text-center mb-10 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
             <h2 className="text-xl sm:text-3xl md:text-4xl font-bold font-morabbaReg text-white mb-3 sm:mb-4">
               سوالات{" "}
               <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">

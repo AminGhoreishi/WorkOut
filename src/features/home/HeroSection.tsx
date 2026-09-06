@@ -9,7 +9,7 @@ export default function HeroSection() {
       <div className="absolute -top-24 right-1/4 w-[450px] h-[450px] bg-amber-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
       <div className="absolute top-1/2 left-10 w-[350px] h-[350px] bg-yellow-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <section className="relative z-10 py-12 md:py-20 lg:py-28">
+      <section className="relative z-10 pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-10 sm:pb-12 md:pb-14 lg:pb-16">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-right">
             <ScrollReveal direction="down" delay={0.1} duration={0.6}>
