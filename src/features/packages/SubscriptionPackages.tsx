@@ -13,7 +13,7 @@ export default function SubscriptionPackages({
       <div className="absolute top-1/2 left-10 w-[400px] h-[400px] bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <section className="pt-12 pb-12 relative z-10">
-        <div className="container mx-auto 2text-center flex flex-col items-center gap-4">
+        <div className="container mx-auto text-center flex flex-col items-center gap-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-[0_0_15px_rgba(234,179,8,0.15)]">
             <BsTrophyFill className="w-4 h-4 text-amber-400" />
             <span>تعرفه پکیج‌های تخصصی استارفیت</span>
@@ -38,7 +38,7 @@ export default function SubscriptionPackages({
         </div>
       </section>
 
-      <section className="pb-20 relative z-10 px-4 sm:px-6 lg:px-8">
+      <section className="pb-20 relative z-10">
         <div className="container mx-auto">
           <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-950 to-neutral-900/90 border border-amber-500/30 rounded-3xl p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden group">
             <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />

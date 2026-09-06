@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BiCheck, BiDumbbell } from "react-icons/bi";
 import { BsArrowLeft, BsStarFill } from "react-icons/bs";
-import type { PackagesGridProps } from "@/types/package";
+import type { PackagesGridProps, SubscriptionPackageFeature } from "@/types/package";
 
 export { PackagesSkeleton } from "./PackagesSkeleton";
 
@@ -13,7 +13,7 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
           key={pkg._id || pkg.id}
           className={`relative overflow-hidden backdrop-blur-lg rounded-2xl p-6 sm:p-8 hover:bg-neutral-900 transition-all flex flex-col justify-between ${
             pkg.popular
-              ? "bg-gradient-to-b from-amber-500/20 via-amber-950/30 to-neutral-900/95 border border-amber-500/35 md:border-2 md:border-amber-400 md:scale-105 shadow-[0_0_30px_rgba(234,179,8,0.15)] z-10"
+              ? "bg-gradient-to-b from-amber-500/20 via-amber-950/30 to-neutral-900/95 border border-amber-500/35 md:border-2 md:border-amber-400 ring-1 ring-amber-400/30 shadow-[0_0_30px_rgba(234,179,8,0.2)] z-10"
               : "bg-neutral-900/80 border border-amber-500/20 hover:border-amber-400/50 shadow-[0_0_20px_rgba(234,179,8,0.05)]"
           }`}
         >
@@ -55,37 +55,41 @@ export default function PackagesGrid({ packages }: PackagesGridProps) {
             </div>
 
             <ul className="space-y-4 mb-8">
-              {pkg.features?.map((feature: any, index: number) => (
-                <li
-                  key={index}
-                  className="flex items-start gap-3 text-xs sm:text-sm text-neutral-300"
-                >
-                  <div
-                    className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                      feature.included !== false
-                        ? "bg-amber-500/10 border border-amber-500/30"
-                        : "bg-red-500/10 border border-red-500/30"
-                    }`}
+              {pkg.features?.map((feature: SubscriptionPackageFeature | string, index: number) => {
+                const isIncluded = typeof feature === "string" ? true : feature.included !== false;
+                const featureName = typeof feature === "string" ? feature : feature.name;
+                return (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-xs sm:text-sm text-neutral-300"
                   >
-                    <BiCheck
-                      className={`w-3.5 h-3.5 ${
-                        feature.included !== false
-                          ? "text-amber-400"
-                          : "text-red-400"
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                        isIncluded
+                          ? "bg-amber-500/10 border border-amber-500/30"
+                          : "bg-red-500/10 border border-red-500/30"
                       }`}
-                    />
-                  </div>
-                  <span
-                    className={
-                      feature.included !== false
-                        ? "text-neutral-300"
-                        : "text-neutral-500 line-through"
-                    }
-                  >
-                    {typeof feature === "string" ? feature : feature.name}
-                  </span>
-                </li>
-              ))}
+                    >
+                      <BiCheck
+                        className={`w-3.5 h-3.5 ${
+                          isIncluded
+                            ? "text-amber-400"
+                            : "text-red-400"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={
+                        isIncluded
+                          ? "text-neutral-300"
+                          : "text-neutral-500 line-through"
+                      }
+                    >
+                      {featureName}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

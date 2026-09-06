@@ -23,7 +23,7 @@
   margin-inline: auto;
 
   @variant md {
-    padding-inline: px;
+    padding-inline: 16px;
   }
 
   @variant lg {
