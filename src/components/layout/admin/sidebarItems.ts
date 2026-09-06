@@ -12,7 +12,6 @@ import {
   CreditCard,
   UserCog,
   Heart,
-  Activity,
   Salad,
   Utensils,
   Trophy,
@@ -212,13 +211,6 @@ export function getUserMenuItems(
           href: "/dashboard/progress",
         },
         {
-          id: "bmi",
-          label: "شاخص توده بدنی (BMI)",
-          icon: Activity,
-          badge: null,
-          href: "/dashboard/bmi",
-        },
-        {
           id: "nutrition",
           label: "تغذیه و کالری‌شمار",
           icon: Salad,
@@ -348,13 +340,6 @@ export function getMobileMenuItems(hasRole?: boolean): MenuSection[] {
             icon: TrendingUp,
             badge: null,
             href: "/dashboard/progress",
-          },
-          {
-            id: "bmi",
-            label: "شاخص توده بدنی (BMI)",
-            icon: Activity,
-            badge: null,
-            href: "/dashboard/bmi",
           },
           {
             id: "nutrition",
