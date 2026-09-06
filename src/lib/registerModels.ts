@@ -6,7 +6,6 @@ import User from "@/models/User";
 import WorkoutPlan from "@/models/WorkoutPlan";
 import WorkoutProgram from "@/models/WorkoutProgram";
 import WorkoutDay from "@/models/WorkoutDay";
-import WorkoutExercise from "@/models/WorkoutExercise";
 import Video from "@/models/Video";
 import Workoutmonth from "@/models/Workoutmonth";
 import Ban from "@/models/Ban";
@@ -21,7 +20,6 @@ export default function registerModels() {
     WorkoutPlan,
     WorkoutProgram,
     WorkoutDay,
-    WorkoutExercise,
     Video,
     Workoutmonth,
     Ban,

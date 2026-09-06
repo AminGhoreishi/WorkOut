@@ -1,14 +1,15 @@
 import dbConnect from "@/lib/dbConnect";
 import WorkoutPlan from "@/models/WorkoutPlan";
-import WorkoutDay from "@/models/WorkoutDay";
-import WorkoutExercise from "@/models/WorkoutExercise";
+import WorkoutProgram from "@/models/WorkoutProgram";
 import Subscription from "@/models/Subscription";
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import "@/models/Video"
+import "@/models/Video";
 
-export async function GET(req: NextRequest) {
+import type { IProgramDay } from "@/types/workout";
+
+export async function GET(_req: NextRequest) {
   try {
     await dbConnect();
 
@@ -48,24 +49,23 @@ export async function GET(req: NextRequest) {
         { status: 404 },
       );
 
-    const days = await WorkoutDay.find({ planId: plan._id }).sort({
-      sortOrder: 1,
-    });
+    const programDoc = await WorkoutProgram.findOne({ planId: plan._id })
+      .populate({
+        path: "programs.exercises.videoId",
+        select: "url thumbnailUrl title",
+      })
+      .populate({
+        path: "programs.exercises.videoId2",
+        select: "url thumbnailUrl title",
+      })
+      .lean();
 
-    const dayIds = days.map((d) => d._id);
-    const exercises = await WorkoutExercise.find({ dayId: { $in: dayIds } })
-      .populate("videoId", "url thumbnailUrl title")
-      .populate("videoId2", "url thumbnailUrl title")
-      .sort({ sortOrder: 1 });
-
-    const daysWithExercises = days.map((day) => ({
-      _id: day._id,
-      dayName: day.dayName,
-      muscleGroup: day.muscleGroup,
-      sortOrder: day.sortOrder,
-      exercises: exercises.filter(
-        (e) => e.dayId.toString() === day._id.toString(),
-      ),
+    const daysWithExercises = (programDoc?.programs || []).map((p: IProgramDay, idx: number) => ({
+      _id: p._id ? String(p._id) : `day-${idx}`,
+      dayName: p.day,
+      muscleGroup: p.muscleGroup,
+      sortOrder: idx + 1,
+      exercises: p.exercises || [],
     }));
 
     return NextResponse.json({
@@ -77,7 +77,8 @@ export async function GET(req: NextRequest) {
       },
       days: daysWithExercises,
     });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "خطا در سرور";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }

@@ -1,7 +1,5 @@
 import WorkoutPlanModel from "@/models/WorkoutPlan";
 import WorkoutProgramModel from "@/models/WorkoutProgram";
-import WorkoutDayModel from "@/models/WorkoutDay";
-import WorkoutExerciseModel from "@/models/WorkoutExercise";
 import type {
   DashboardUser,
   DashboardSubscription,
@@ -138,36 +136,6 @@ export async function processDashboardData(
           sets: totalSets,
         };
       });
-    } else {
-      const days = await WorkoutDayModel.find({ planId: workoutPlan._id })
-        .sort({ sortOrder: 1 })
-        .lean();
-
-      if (days.length > 0) {
-        const dayIds = days.map((d) => d._id);
-        const exercises = await WorkoutExerciseModel.find({
-          dayId: { $in: dayIds },
-        })
-          .sort({ sortOrder: 1 })
-          .lean();
-
-        workoutDaysProps = days.map((day) => {
-          const dayExercises = exercises.filter(
-            (e) => e.dayId.toString() === day._id.toString()
-          );
-          const totalSets = dayExercises.reduce(
-            (sum: number, ex: { sets?: number }) => sum + (ex.sets || 0),
-            0
-          );
-          return {
-            day: day.dayName || "",
-            type: day.muscleGroup || "تمرین عمومی",
-            duration: `${Math.max(dayExercises.length * 10, 20)} دقیقه`,
-            done: false,
-            sets: totalSets,
-          };
-        });
-      }
     }
   }
 

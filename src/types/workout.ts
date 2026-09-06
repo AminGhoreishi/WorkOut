@@ -108,20 +108,6 @@ export interface VideoInfo {
   createdAt?: string;
 }
 
-export interface WorkoutExercise {
-  _id: string;
-  dayId: string;
-  videoId?: VideoInfo | null;
-  videoId2?: VideoInfo | null;
-  name: string;
-  sets: number;
-  reps: string;
-  weight?: number | string;
-  restSec: number;
-  sortOrder: number;
-  isComplete?: boolean;
-}
-
 export interface ExerciseItem {
   _id: string;
   name: string;
@@ -200,6 +186,7 @@ export interface ProgramDayExercisesDetailProps {
 }
 
 export interface IProgramDay {
+  _id?: unknown;
   day: string;
   muscleGroup: string;
   exercises: IProgramExercise[];
@@ -261,20 +248,6 @@ export interface IWorkoutDay extends Document {
   updatedAt: Date;
 }
 
-export interface IWorkoutExercise extends Document {
-  dayId: mongoose.Types.ObjectId;
-  videoId?: mongoose.Types.ObjectId;
-  videoId2?: mongoose.Types.ObjectId;
-  name: string;
-  sets: number;
-  reps: string;
-  weight?: number;
-  restSec: number;
-  sortOrder: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface WorkoutPlanFormInputs {
   title: string;
   description: string;
@@ -284,24 +257,6 @@ export interface WorkoutDayFormInputs {
   dayName: string;
   muscleGroup: string;
   sortOrder: number;
-}
-
-export interface WorkoutExerciseFormInputs {
-  name: string;
-  sets: number;
-  reps: string;
-  weight?: number | string;
-  restSec: number;
-  videoId: string;
-  videoId2: string;
-  sortOrder: number;
-}
-
-export interface WorkoutPlanModalProps {
-  selectedPackageForPlan: PackageInfo;
-  onClose: () => void;
-  videos: VideoInfo[];
-  setWatchingVideo: (video: VideoInfo | null) => void;
 }
 
 export interface EditSubscriptionFormInputs {
@@ -417,23 +372,6 @@ export interface CreatePlanFormProps {
   selectedPackage: PackageInfo;
   selectedUser?: UserInfo | null;
   onSuccess: (plan: WorkoutPlan) => void;
-}
-
-export interface WorkoutExerciseFormProps {
-  editingExercise: WorkoutExercise | null;
-  selectedDayId: string;
-  videos: VideoInfo[];
-  onSuccess: () => void;
-  onCancel: () => void;
-  defaultSortOrder: number;
-}
-
-export interface WorkoutExercisesSectionProps {
-  selectedDay: WorkoutDay;
-  exercises: WorkoutExercise[];
-  videos: VideoInfo[];
-  onFetchExercises: (dayId?: string) => void;
-  onDeleteExercise?: (id: string) => void;
 }
 
 export interface EditPlanInfoFormProps {
