@@ -162,7 +162,7 @@ export default function CreateMetricModal({
               className="px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold rounded-xl text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 cursor-pointer flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              ثبت متس جدید
+              ثبت رکورد جدید
             </button>
           </div>
         </form>

@@ -10,6 +10,8 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import { showAlert } from "@/utils/alert";
 import type { CreatePRModalProps, PRFormInput, TestMetricItem } from "@/types/pr";
+import { DEFAULT_CATEGORIES, DEFAULT_UNITS } from "@/validators/progress";
+import { CATEGORY_MAP, UNIT_MAP } from "@/constants/pr";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -28,9 +30,9 @@ export default function CreatePRModal({
     formState: { errors },
   } = useForm<PRFormInput>({
     defaultValues: {
-      category: "strength",
+      category: "قدرتی",
       testName: "",
-      unit: "kg",
+      unit: "کیلوگرم",
       date: new Date().toISOString().split("T")[0],
       notes: "",
     },
@@ -49,8 +51,12 @@ export default function CreatePRModal({
       const first = metrics[0];
       setValue("metricId", first._id);
       setValue("testName", first.name);
-      if (first.category) setValue("category", first.category);
-      if (first.unit) setValue("unit", first.unit);
+      if (first.category) {
+        setValue("category", CATEGORY_MAP[first.category] || first.category);
+      }
+      if (first.unit) {
+        setValue("unit", UNIT_MAP[first.unit] || first.unit);
+      }
     }
   }, [metrics, isOpen, setValue]);
 
@@ -60,8 +66,12 @@ export default function CreatePRModal({
     if (selected) {
       setValue("metricId", selected._id);
       setValue("testName", selected.name);
-      if (selected.category) setValue("category", selected.category);
-      if (selected.unit) setValue("unit", selected.unit);
+      if (selected.category) {
+        setValue("category", CATEGORY_MAP[selected.category] || selected.category);
+      }
+      if (selected.unit) {
+        setValue("unit", UNIT_MAP[selected.unit] || selected.unit);
+      }
     }
   };
 
@@ -71,8 +81,8 @@ export default function CreatePRModal({
       return;
     }
 
-    if (!data.testName && !data.metricId) {
-      showAlert("خطا", "لطفاً یک متس ارزیابی انتخاب کنید.", "error");
+    if (!data.testName?.trim() && !data.metricId) {
+      showAlert("خطا", "لطفاً نام حرکت یا یک متس ارزیابی را وارد کنید.", "error");
       return;
     }
 
@@ -133,10 +143,6 @@ export default function CreatePRModal({
           className="p-6 pb-8 space-y-5 overflow-y-auto flex-1"
           dir="rtl"
         >
-          <input type="hidden" {...register("testName")} />
-          <input type="hidden" {...register("category")} />
-          <input type="hidden" {...register("unit")} />
-
           <div>
             <label className="block text-white/80 text-sm mb-2">
               انتخاب متس ارزیابی (Metric)
@@ -150,7 +156,7 @@ export default function CreatePRModal({
               ) : (
                 metrics.map((m) => (
                   <option key={m._id} value={m._id}>
-                    {m.name} ({m.unit})
+                    {m.name} ({UNIT_MAP[m.unit] || m.unit})
                   </option>
                 ))
               )}
@@ -159,14 +165,65 @@ export default function CreatePRModal({
 
           <div>
             <label className="block text-white/80 text-sm mb-2">
-              مقدار رکورد
+              نام حرکت یا تست ورزشی <span className="text-amber-400">*</span>
+            </label>
+            <input
+              type="text"
+              {...register("testName", { required: true })}
+              placeholder="مثلا: پرس سینه، اسکات، دوی ۴۰ متر..."
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm"
+            />
+            {errors.testName && (
+              <p className="text-red-400 text-xs mt-1">
+                وارد کردن نام تست الزامی است.
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-white/80 text-sm mb-2">
+                دسته‌بندی <span className="text-amber-400">*</span>
+              </label>
+              <select
+                {...register("category", { required: true })}
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
+              >
+                {DEFAULT_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-white/80 text-sm mb-2">
+                واحد اندازه‌گیری <span className="text-amber-400">*</span>
+              </label>
+              <select
+                {...register("unit", { required: true })}
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
+              >
+                {DEFAULT_UNITS.map((u) => (
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-white/80 text-sm mb-2">
+              مقدار رکورد <span className="text-amber-400">*</span>
             </label>
             <input
               type="number"
               step="any"
               {...register("value", { required: true, valueAsNumber: true })}
               placeholder="مثال: ۱۰۰ یا ۲.۹۵"
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-left text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-left text-sm ss02"
             />
             {errors.value && (
               <p className="text-red-400 text-xs mt-1">
@@ -176,7 +233,9 @@ export default function CreatePRModal({
           </div>
 
           <div>
-            <label className="block text-white/80 text-sm mb-2">تاریخ ثبت (شمسی)</label>
+            <label className="block text-white/80 text-sm mb-2">
+              تاریخ ثبت (شمسی) <span className="text-amber-400">*</span>
+            </label>
             <Controller
               control={control}
               name="date"
@@ -220,7 +279,7 @@ export default function CreatePRModal({
               {...register("notes")}
               rows={3}
               placeholder="یادداشت مربی (اختیاری)..."
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400 text-sm resize-none"
             />
           </div>
 
