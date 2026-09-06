@@ -4,7 +4,7 @@ import NutritionPageContent from "@/features/dashboard/nutrition/NutritionConten
 import NutritionSkeleton from "@/features/dashboard/nutrition/NutritionSkeleton";
 
 export const metadata: Metadata = {
-  title: "استار فیت | مدیریت تغذیه و کالری‌شمار روزانه",
+  title: "مدیریت تغذیه و کالری‌شمار روزانه",
   description:
     "ثبت روزانه وعده‌های غذایی، کنترل کالری دریافتی، پروتئین و هیدراتاسیون بدن در استار فیت",
 };

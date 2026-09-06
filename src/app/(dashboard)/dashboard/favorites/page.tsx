@@ -9,7 +9,7 @@ import type { FavoriteArticleItem } from "@/types/favorites";
 import { connection } from "next/server";
 
 export const metadata = {
-  title: "استارفیت | مقالات علاقه‌مندی‌های من",
+  title: "مقالات علاقه‌مندی‌های من",
   description:
     "مدیریت و مشاهده مقالات علمی و ورزشی نشانه‌گذاری شده در استارفیت",
 };

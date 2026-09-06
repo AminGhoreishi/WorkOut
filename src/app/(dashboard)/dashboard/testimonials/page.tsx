@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import UserTestimonialsManagement from "@/features/dashboard/testimonials/UserTestimonialsManagement";
 
 export const metadata: Metadata = {
-  title: "نظرات و تجربیات | استار فیت",
+  title: "نظرات و تجربیات",
   description: "مدیریت و ثبت نظرات و تجربیات شاگردان استارفیت",
 };
 

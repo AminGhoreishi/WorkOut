@@ -7,7 +7,7 @@ import DiscountsManagement from "@/features/admin/discounts/DiscountsManagement"
 import type { DiscountStatsData } from "@/types/discount";
 
 export const metadata: Metadata = {
-  title: "مدیریت کدهای تخفیف | استار فیت",
+  title: "مدیریت کدهای تخفیف",
   description: "مدیریت و پیکربندی کدهای تخفیف سیستم استار فیت",
 };
 

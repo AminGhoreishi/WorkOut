@@ -2,7 +2,7 @@ import PersonalRecords from "@/features/admin/pr/PersonalRecords";
 import type { AdminPRPageProps } from "@/types/pr";
 
 export const metadata = {
-  title: "استار فیت | رکوردهای شخصی (PR) - مدیریت",
+  title: "رکوردهای شخصی (PR) - مدیریت",
   description: "مدیریت رکوردهای شخصی (PR) در پنل مدیریت استار فیت",
 };
 

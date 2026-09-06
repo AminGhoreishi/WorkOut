@@ -6,7 +6,7 @@ import User from "@/models/User";
 import AdminAdminsContainer from "@/features/admin/admins/AdminAdminsContainer";
 
 export const metadata: Metadata = {
-  title: "مدیریت مدیران | استار فیت",
+  title: "مدیریت مدیران",
   description: "پنل مدیریت مدیران و حساب‌های کاربری ارشد سیستم استار فیت",
 };
 

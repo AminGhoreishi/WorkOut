@@ -9,7 +9,7 @@ import FitnessProfileManagement from "@/features/dashboard/fitness-profile/Fitne
 import type { FitnessProfileData } from "@/types/fitness-profile";
 
 export const metadata: Metadata = {
-  title: "پروفایل ورزشی من | استار فیت",
+  title: "پروفایل ورزشی من",
   description:
     "مشاهده و ویرایش مشخصات فیزیکی، اهداف ورزشی و سابقه تمرین در استار فیت",
 };

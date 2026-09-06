@@ -3,7 +3,7 @@ import AdminSendTicket from "@/features/admin/tickets/AdminSendTicket";
 import type { AdminSendTicketPageProps } from "@/types/ticket";
 
 export const metadata: Metadata = {
-  title: "ارسال تیکت به کاربر | استار فیت",
+  title: "ارسال تیکت به کاربر",
   description: "ارسال تیکت، پیام و برنامه‌های اختصاصی به کاربران استار فیت",
 };
 

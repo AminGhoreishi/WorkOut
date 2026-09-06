@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import WorkoutsManagement from "@/features/admin/workouts/WorkoutsManagement";
 
 export const metadata: Metadata = {
-  title: "مدیریت برنامه‌های تمرینی | استار فیت",
+  title: "مدیریت برنامه‌های تمرینی",
   description: "طراحی، روزبندی و سازماندهی برنامه‌های ورزشی و حرکات هر پکیج در استار فیت",
 };
 

@@ -6,7 +6,7 @@ import AdminTicketsContainer from "@/features/admin/tickets/AdminTicketsContaine
 import type { ITicketStats } from "@/types/ticket";
 
 export const metadata: Metadata = {
-  title: "مدیریت تیکت‌های پشتیبانی | استار فیت",
+  title: "مدیریت تیکت‌های پشتیبانی",
   description: "مدیریت، بررسی و پاسخگویی به تیکت‌های پشتیبانی کاربران استار فیت",
 };
 

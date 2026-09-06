@@ -11,7 +11,7 @@ import NoPackageProgressAccess from "@/features/dashboard/progress/NoPackageProg
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
-  title: "نمودار پیشرفت | استار فیت",
+  title: "نمودار پیشرفت",
   description: "مشاهده روند پیشرفت تمرینی، تغییرات وزن و آنالیز کارایی ورزشی در استار فیت",
 };
 

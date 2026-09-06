@@ -5,7 +5,7 @@ import PackagesContent from "@/features/packages/PackagesContent";
 import { PackagesSkeleton } from "@/features/packages/PackagesSkeleton";
 
 export const metadata: Metadata = {
-  title: "استار فیت | پکیج‌های اشتراک",
+  title: "پکیج‌های اشتراک",
   description: "بهترین پکیج را برای دستیابی به اهداف تناسب اندام خود انتخاب کنید.",
 };
 

@@ -5,7 +5,7 @@ import CheckoutSkeleton from "@/features/checkout/CheckoutSkeleton";
 import type { CheckoutPageProps } from "@/types/checkout";
 
 export const metadata: Metadata = {
-  title: "استار فیت | پرداخت و کارت به کارت",
+  title: "پرداخت و کارت به کارت",
   description: "انتقال وجه کارت به کارت و نهایی‌سازی سفارش در سیستم استار فیت",
 };
 

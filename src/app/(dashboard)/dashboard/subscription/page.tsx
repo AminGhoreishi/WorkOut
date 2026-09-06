@@ -11,7 +11,7 @@ import SubscriptionView from "@/features/subscription/SubscriptionView";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
-  title: "اشتراک من | استار فیت",
+  title: "اشتراک من",
   description:
     "مدیریت اشتراک فعال، دسترسی به برنامه‌های ورزشی و سوابق تراکنش‌ها",
 };

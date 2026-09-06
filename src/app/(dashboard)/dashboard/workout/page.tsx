@@ -10,7 +10,7 @@ import { connection } from "next/server";
 import Fitnessprofile from "@/models/Fitnessprofile";
 
 export const metadata: Metadata = {
-  title: "برنامه تمرینی من | استار فیت",
+  title: "برنامه تمرینی من",
   description: "مشاهده برنامه تمرینی اختصاصی، آموزش حرکات و ثبت رکوردهای ورزشی در استار فیت",
 };
 

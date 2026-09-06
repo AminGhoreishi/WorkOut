@@ -2,11 +2,11 @@ import Articles from "@/features/articles/Articles";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "مقالات تخصصی ورزشی و تغذیه | استارفیت",
+  title: "مقالات تخصصی ورزشی و تغذیه",
   description:
     "جدیدترین مقالات آموزشی بدنسازی، برنامه غذایی، مکمل‌ها و برنامه‌های تمرینی تحت نظر امیرحسین میرافتابی در سامانه استارفیت",
   openGraph: {
-    title: "مقالات تخصصی ورزشی و تغذیه | استارفیت",
+    title: "مقالات تخصصی ورزشی و تغذیه",
     description: "جدیدترین مقالات آموزشی بدنسازی، تغذیه و سلامت استارفیت",
   },
 };

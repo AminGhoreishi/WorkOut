@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import FoodsContainer from "@/features/admin/foods/FoodsContainer";
 
 export const metadata: Metadata = {
-  title: "بانک غذاها | استار فیت",
+  title: "بانک غذاها",
   description: "مدیریت، افزودن و ارزش‌گذاری اقلام غذایی در بانک داده‌های استار فیت",
 };
 

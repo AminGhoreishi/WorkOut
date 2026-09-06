@@ -33,12 +33,12 @@ export async function generateMetadata({
 
     if (!pkg) {
       return {
-        title: "استار فیت | پکیج یافت نشد",
+        title: "پکیج یافت نشد",
       };
     }
 
     return {
-      title: `استار فیت | پکیج ${pkg.name}`,
+      title: `پکیج ${pkg.name}`,
       description:
         pkg.tagline ||
         pkg.description ||
@@ -46,7 +46,7 @@ export async function generateMetadata({
     };
   } catch {
     return {
-      title: "استار فیت | پکیج ورزشی",
+      title: "پکیج ورزشی",
     };
   }
 }

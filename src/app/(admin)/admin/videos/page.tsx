@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import VideosPageModule from "@/features/admin/videos/VideosPageModule";
 
 export const metadata: Metadata = {
-  title: "مدیریت ویدیوها | استار فیت",
+  title: "مدیریت ویدیوها",
   description: "بانک کلیه ویدیوهای آموزشی حرکات ورزشی و بدنسازی استار فیت",
 };
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PackagesManagement from "@/features/admin/package/PackagesManagement";
 
 export const metadata: Metadata = {
-  title: "مدیریت پکیج‌ها | استار فیت",
+  title: "مدیریت پکیج‌ها",
   description: "مدیریت، ایجاد و بهینه‌سازی پکیج‌های اشتراک سیستم استار فیت",
 };
 

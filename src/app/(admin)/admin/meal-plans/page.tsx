@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import MealPlansManagement from "@/features/admin/meal-plan/MealPlansManagement";
 
 export const metadata: Metadata = {
-  title: "مدیریت برنامه‌های غذایی | استار فیت",
+  title: "مدیریت برنامه‌های غذایی",
   description: "مدیریت، ایجاد و تخصیص برنامه‌های غذایی به پکیج‌های استار فیت",
 };
 

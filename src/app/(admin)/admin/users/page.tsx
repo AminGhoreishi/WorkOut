@@ -5,7 +5,7 @@ import AdminUsers from "@/features/admin/users/AdminUsers";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
-  title: "مدیریت کاربران | استار فیت",
+  title: "مدیریت کاربران",
   description: "پنل مدیریت کاربران، نقش‌ها و دسترسی‌های سامانه استار فیت",
 };
 

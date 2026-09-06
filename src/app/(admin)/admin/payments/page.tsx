@@ -8,7 +8,7 @@ import AdminPayments from "@/features/admin/payments/AdminPayments";
 import type { AdminPaymentStats } from "@/types/admin-payments";
 
 export const metadata: Metadata = {
-  title: "استار فیت | مدیریت و تایید پرداخت‌ها",
+  title: "مدیریت و تایید پرداخت‌ها",
   description: "بررسی، تایید یا رد فیش‌های کارت به کارت کاربران در سیستم استار فیت",
 };
 

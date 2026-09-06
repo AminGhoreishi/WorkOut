@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import SubscriptionPageContent from "@/features/subscription/SubscriptionContent";
 
 export const metadata: Metadata = {
-  title: "استار فیت | برنامه‌های تمرینی",
+  title: "برنامه‌های تمرینی",
   description: "مشاهده برنامه‌های تمرینی و ساختار گروه‌های ورزشی در سیستم استار فیت",
 };
 

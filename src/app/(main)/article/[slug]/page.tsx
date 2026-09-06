@@ -29,7 +29,7 @@ export async function generateMetadata({
   try {
     decodedSlug = decodeURIComponent(slug);
   } catch {
-    return { title: "مقاله یافت نشد | استارفیت" };
+    return { title: "مقاله یافت نشد" };
   }
 
   try {
@@ -39,7 +39,7 @@ export async function generateMetadata({
       .lean();
 
     if (!blog) {
-      return { title: "مقاله یافت نشد | استارفیت" };
+      return { title: "مقاله یافت نشد" };
     }
 
     const title = blog.seoTitle || blog.title;
@@ -49,16 +49,16 @@ export async function generateMetadata({
       "مطالعه جدیدترین مقالات تخصصی ورزشی، تغذیه و سلامت در استارفیت";
 
     return {
-      title: `${title} | استارفیت`,
+      title,
       description,
       openGraph: {
-        title: `${title} | استارفیت`,
+        title,
         description,
         images: blog.image ? [{ url: blog.image }] : [],
       },
     };
   } catch {
-    return { title: "مقاله ورزشی | استارفیت" };
+    return { title: "مقاله ورزشی" };
   }
 }
 

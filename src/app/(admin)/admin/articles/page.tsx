@@ -7,7 +7,7 @@ import type { AdminBlogStats } from "@/types/blog";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
-  title: "مدیریت مقالات | استار فیت",
+  title: "مدیریت مقالات",
   description: "مشاهده، افزودن، ویرایش و مدیریت تمامی مقالات سامانه استارفیت",
 };
 

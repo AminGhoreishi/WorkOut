@@ -32,19 +32,19 @@ export async function generateMetadata({
 
     if (!pkg) {
       return {
-        title: "استار فیت | پکیج یافت نشد",
+        title: "پکیج یافت نشد",
       };
     }
 
     return {
-      title: `استار فیت | خرید ${pkg.name}`,
+      title: `خرید ${pkg.name}`,
       description:
         pkg.tagline ||
         `تکمیل سفارش و فعال‌سازی آنلاین اشتراک ${pkg.name} در سیستم استار فیت`,
     };
   } catch {
     return {
-      title: "استار فیت | تکمیل سفارش",
+      title: "تکمیل سفارش",
     };
   }
 }

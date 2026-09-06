@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import UserTickets from "@/features/dashboard/tickets/UserTickets";
 
 export const metadata: Metadata = {
-  title: "تیکت‌های پشتیبانی | استار فیت",
+  title: "تیکت‌های پشتیبانی",
   description: "مدیریت تیکت‌ها، مشاوره ورزشی و بررسی فرم حرکات در استار فیت",
 };
 
