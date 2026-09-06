@@ -16,7 +16,7 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-neutral-900 border border-amber-500/30 shadow-[0_0_15px_rgba(234,179,8,0.15)]">
                 <Image
-                  src="/android-chrome-192x192.png"
+                  src="/images/logo.webp"
                   alt="لوگوی استار فیت"
                   width={36}
                   height={36}

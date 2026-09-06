@@ -46,7 +46,7 @@ export default function Header({
               className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-2 group"
             >
               <Image
-                src="/android-chrome-192x192.png"
+                src="/images/logo.webp"
                 alt="لوگوی استارفیت"
                 width={36}
                 height={36}

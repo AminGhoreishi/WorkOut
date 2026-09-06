@@ -12,7 +12,6 @@ import {
   Sparkles,
   Target,
   ShieldCheck,
-  ExternalLink,
 } from "lucide-react";
 
 export const metadata = {
@@ -136,28 +135,16 @@ export default function IntroducePage() {
             </div>
 
             <div className="lg:col-span-6 flex justify-center">
-              <a
-                href="/images/coach-certificate.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative rounded-2xl overflow-hidden border-2 border-amber-500/30 hover:border-amber-400/70 transition-all duration-500 shadow-2xl shadow-amber-500/10 group cursor-zoom-in max-w-lg w-full"
-                title="مشاهده با کیفیت کامل"
-              >
+              <div className="relative rounded-2xl overflow-hidden border-2 border-amber-500/30 shadow-2xl shadow-amber-500/10 max-w-lg w-full">
                 <Image
-                  src="/images/coach-certificate.jpg"
+                  src="/images/coach-certificate.webp"
                   alt="گواهینامه رسمی مربیگری فدراسیون آمادگی جسمانی - امیرحسین میرآفتابی"
                   width={1024}
                   height={713}
-                  className="w-full h-auto object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-500"
+                  className="w-full h-auto object-contain rounded-xl"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
-                  <span className="bg-amber-400 text-neutral-950 text-xs font-bold px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg">
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    مشاهده تصویر با کیفیت اصلی
-                  </span>
-                </div>
-              </a>
+              </div>
             </div>
           </div>
         </section>

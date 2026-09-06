@@ -70,7 +70,7 @@ export default function MobileMenu({
               className="flex items-center gap-2.5 group"
             >
               <Image
-                src="/android-chrome-192x192.png"
+                src="/images/logo.webp"
                 alt="لوگوی استارفیت"
                 width={34}
                 height={34}

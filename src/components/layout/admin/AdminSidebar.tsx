@@ -105,7 +105,7 @@ export default function AdminSidebar({ isAdmin = false }) {
             <>
               <Link href="/" className="flex items-center gap-2 group">
                 <Image
-                  src="/android-chrome-192x192.png"
+                  src="/images/logo.webp"
                   alt="استار فیت"
                   width={32}
                   height={32}

@@ -77,7 +77,7 @@ export default function HeroSection() {
             <ScrollReveal direction="zoom-in" delay={0.3} duration={0.7}>
               <div className="relative w-full max-w-md lg:max-w-none mx-auto aspect-[4/5] rounded-3xl overflow-hidden border border-amber-500/30 bg-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
                 <Image
-                  src="/images/hero/IMG_20260817_194425_183.jpg"
+                  src="/images/hero/IMG_20260817_194425_183.webp"
                   alt="تمرینات اختصاصی استارفیت"
                   fill
                   sizes="(max-width: 1024px) 100vw, 500px"
