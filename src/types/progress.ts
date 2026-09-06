@@ -36,6 +36,7 @@ export interface UserFitnessProfile {
 
 export interface UserProgressHistoryProps {
   sortedRecords: UserPRRecord[];
+  onDeleteSuccess?: () => void;
 }
 
 export interface NewPRRecordInput {
@@ -51,6 +52,7 @@ export interface AddProgressRecordModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  activeTest?: string;
 }
 
 export interface NoPackageProgressAccessProps {

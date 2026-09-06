@@ -223,13 +223,19 @@ export default function ProgressChartManagement() {
           )}
         </div>
 
-        {records.length > 0 && <ProgressHistoryTable sortedRecords={sortedRecords} />}
+        {records.length > 0 && (
+          <ProgressHistoryTable
+            sortedRecords={sortedRecords}
+            onDeleteSuccess={() => mutatePRData()}
+          />
+        )}
       </div>
 
       <AddProgressRecordModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => mutatePRData()}
+        activeTest={activeTest}
       />
     </div>
   );

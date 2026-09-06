@@ -1,47 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { X, PlusCircle, AlertCircle, Loader2 } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import type { AddProgressRecordModalProps, NewPRRecordInput } from "@/types/progress";
-import {
-  DEFAULT_CATEGORIES,
-  DEFAULT_UNITS,
-  validateProgressRecordInput,
-} from "@/validators/progress";
+import { DEFAULT_CATEGORIES, DEFAULT_UNITS } from "@/validators/progress";
 
 export default function AddProgressRecordModal({
   isOpen,
   onClose,
   onSuccess,
+  activeTest,
 }: AddProgressRecordModalProps) {
-  const [formData, setFormData] = useState<NewPRRecordInput>({
-    testName: "",
-    category: "قدرتی",
-    value: "",
-    unit: "کیلوگرم",
-    date: new Date().toISOString().split("T")[0],
-    notes: "",
-  });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [serverError, setServerError] = useState<string>("");
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<NewPRRecordInput>({
+    defaultValues: {
+      testName: activeTest || "",
+      category: "قدرتی",
+      value: "",
+      unit: "کیلوگرم",
+      date: new Date().toISOString().split("T")[0],
+      notes: "",
+    },
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        testName: activeTest || "",
+        category: "قدرتی",
+        value: "",
+        unit: "کیلوگرم",
+        date: new Date().toISOString().split("T")[0],
+        notes: "",
+      });
+      setServerError("");
+    }
+  }, [isOpen, activeTest, reset]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage("");
+  const onSubmit = async (data: NewPRRecordInput) => {
+    setServerError("");
 
-    const validationError = validateProgressRecordInput(formData);
-    if (validationError) {
-      setErrorMessage(validationError);
+    const finalTestName = data.testName.trim();
+    if (!finalTestName) {
+      setServerError("نام حرکت یا تست ورزشی نمی‌تواند خالی باشد.");
       return;
     }
-
-    const finalTestName = formData.testName.trim();
 
     try {
       setIsSubmitting(true);
@@ -51,20 +69,20 @@ export default function AddProgressRecordModal({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
+          ...data,
           testName: finalTestName,
-          value: Number(formData.value),
+          value: Number(data.value),
         }),
       });
 
-      const data = await res.json();
+      const resData = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "خطا در ثبت رکورد جدید");
+        throw new Error(resData.message || "خطا در ثبت رکورد جدید");
       }
 
-      setFormData({
-        testName: "",
+      reset({
+        testName: activeTest || "",
         category: "قدرتی",
         value: "",
         unit: "کیلوگرم",
@@ -74,7 +92,7 @@ export default function AddProgressRecordModal({
       onSuccess();
       onClose();
     } catch (err: unknown) {
-      setErrorMessage(
+      setServerError(
         err instanceof Error ? err.message : "خطای غیرمنتظره‌ای رخ داد."
       );
     } finally {
@@ -96,19 +114,20 @@ export default function AddProgressRecordModal({
             </h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="text-white/50 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+            className="text-white/50 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {errorMessage && (
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 font-danaMed">
+          {serverError && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{errorMessage}</span>
+              <span>{serverError}</span>
             </div>
           )}
 
@@ -119,12 +138,16 @@ export default function AddProgressRecordModal({
             <input
               type="text"
               placeholder="مثلا: پرس سینه، اسکات، پلانک..."
-              value={formData.testName}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, testName: e.target.value }))
-              }
+              {...register("testName", {
+                required: "نام حرکت یا تست ورزشی الزامی است.",
+              })}
               className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
             />
+            {errors.testName && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.testName.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -133,11 +156,8 @@ export default function AddProgressRecordModal({
                 دسته‌بندی
               </label>
               <select
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, category: e.target.value }))
-                }
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                {...register("category")}
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
               >
                 {DEFAULT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -152,11 +172,8 @@ export default function AddProgressRecordModal({
                 واحد اندازه‌گیری <span className="text-amber-400">*</span>
               </label>
               <select
-                value={formData.unit}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, unit: e.target.value }))
-                }
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                {...register("unit")}
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
               >
                 {DEFAULT_UNITS.map((u) => (
                   <option key={u} value={u}>
@@ -176,39 +193,59 @@ export default function AddProgressRecordModal({
                 type="number"
                 step="any"
                 placeholder="مثلا: 80"
-                value={formData.value}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, value: e.target.value }))
-                }
+                {...register("value", {
+                  required: "مقدار رکورد الزامی است.",
+                  validate: (val) =>
+                    !isNaN(Number(val)) && Number(val) > 0
+                      ? true
+                      : "مقدار باید یک عدد مثبت باشد.",
+                })}
                 className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 ss02"
               />
+              {errors.value && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.value.message}
+                </p>
+              )}
             </div>
 
             <div>
               <label className="block text-xs text-white/70 mb-1.5 font-medium">
-                تاریخ ثبت (شمسی)
+                تاریخ ثبت (شمسی) <span className="text-amber-400">*</span>
               </label>
-              <DatePicker
-                value={formData.date ? new Date(formData.date) : new Date()}
-                onChange={(date) => {
-                  if (date) {
-                    const jsDate = date.toDate();
-                    const year = jsDate.getFullYear();
-                    const month = String(jsDate.getMonth() + 1).padStart(2, "0");
-                    const day = String(jsDate.getDate()).padStart(2, "0");
-                    setFormData((prev) => ({ ...prev, date: `${year}-${month}-${day}` }));
-                  } else {
-                    setFormData((prev) => ({ ...prev, date: "" }));
-                  }
-                }}
-                calendar={persian}
-                locale={persian_fa}
-                calendarPosition="bottom-right"
-                portal
-                className="bg-dark"
-                inputClass="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 text-right cursor-pointer"
-                containerClassName="w-full"
+              <Controller
+                control={control}
+                name="date"
+                rules={{ required: "انتخاب تاریخ الزامی است." }}
+                render={({ field: { onChange, value } }) => (
+                  <DatePicker
+                    value={value ? new Date(value) : new Date()}
+                    onChange={(date) => {
+                      if (date) {
+                        const jsDate = date.toDate();
+                        const year = jsDate.getFullYear();
+                        const month = String(jsDate.getMonth() + 1).padStart(2, "0");
+                        const day = String(jsDate.getDate()).padStart(2, "0");
+                        onChange(`${year}-${month}-${day}`);
+                      } else {
+                        onChange("");
+                      }
+                    }}
+                    calendar={persian}
+                    locale={persian_fa}
+                    calendarPosition="bottom-right"
+                    portal
+                    className="bg-dark"
+                    inputClass="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 text-right cursor-pointer"
+                    containerClassName="w-full"
+                  />
+                )}
               />
+              {errors.date && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.date.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -219,10 +256,7 @@ export default function AddProgressRecordModal({
             <textarea
               rows={2}
               placeholder="مثلا: احساس انرژی خوب، ۳ تکرار آخر با کمک..."
-              value={formData.notes}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, notes: e.target.value }))
-              }
+              {...register("notes")}
               className="w-full bg-neutral-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
             />
           </div>
@@ -232,14 +266,14 @@ export default function AddProgressRecordModal({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors"
+              className="px-4 py-2 text-xs text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors cursor-pointer"
             >
               انصراف
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 text-xs font-semibold text-neutral-950 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 rounded-xl transition-colors flex items-center gap-2"
+              className="px-5 py-2 text-xs font-semibold text-neutral-950 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
