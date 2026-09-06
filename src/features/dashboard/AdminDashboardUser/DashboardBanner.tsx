@@ -30,7 +30,7 @@ export default function DashboardBanner({
           </p>
         </div>
         <Link
-          href="/dashboard/subscription"
+          href="/dashboard/workout"
           className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-neutral-950 transition-all hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.2)] bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500"
         >
           <Play size={16} className="fill-neutral-950" />

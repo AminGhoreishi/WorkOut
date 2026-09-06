@@ -1,4 +1,5 @@
 import WorkoutPlanModel from "@/models/WorkoutPlan";
+import WorkoutProgramModel from "@/models/WorkoutProgram";
 import WorkoutDayModel from "@/models/WorkoutDay";
 import WorkoutExerciseModel from "@/models/WorkoutExercise";
 import type {
@@ -7,6 +8,10 @@ import type {
   DashboardWorkoutDay,
   DashboardTicket,
   DashboardWishlistItem,
+  RawDbUser,
+  RawDbSubscription,
+  RawDbTicket,
+  RawDbWishlist,
 } from "@/types/user-dashboard";
 
 export interface DashboardDataResult {
@@ -18,19 +23,19 @@ export interface DashboardDataResult {
 }
 
 export async function processDashboardData(
-  dbUser: any,
-  activeSubscriptionDoc: any,
-  dbTickets: any[],
-  dbWishlist: any[]
+  dbUser: RawDbUser,
+  activeSubscriptionDoc: RawDbSubscription | null,
+  dbTickets: RawDbTicket[],
+  dbWishlist: RawDbWishlist[]
 ): Promise<DashboardDataResult> {
-  const activeSubscription = activeSubscriptionDoc as any;
+  const activeSubscription = activeSubscriptionDoc;
 
   let subscriptionProps: DashboardSubscription | null = null;
   let workoutDaysProps: DashboardWorkoutDay[] = [];
 
   if (activeSubscription) {
-    const startsAt = new Date(activeSubscription.startsAt);
-    const endsAt = new Date(activeSubscription.endsAt);
+    const startsAt = new Date(activeSubscription.startsAt || Date.now());
+    const endsAt = new Date(activeSubscription.endsAt || Date.now());
     const now = new Date();
     const totalTime = endsAt.getTime() - startsAt.getTime();
     const remainingTime = endsAt.getTime() - now.getTime();
@@ -60,18 +65,85 @@ export async function processDashboardData(
       endDate: endDateString,
       nextPayment: formattedPrice,
     };
+  }
 
-    if (activeSubscription.packageId?._id) {
-      const workoutPlan = await WorkoutPlanModel.findOne({
+  const weekOrder: Record<string, number> = {
+    "شنبه": 0,
+    "یکشنبه": 1,
+    "یک‌شنبه": 1,
+    "دوشنبه": 2,
+    "دو‌شنبه": 2,
+    "سه‌شنبه": 3,
+    "سه شنبه": 3,
+    "چهارشنبه": 4,
+    "چهار‌شنبه": 4,
+    "پنج‌شنبه": 5,
+    "پنج شنبه": 5,
+    "جمعه": 6,
+  };
+
+  let workoutPlan = null;
+  if (activeSubscription?.packageId?._id) {
+    workoutPlan = await WorkoutPlanModel.findOne({
+      packageId: activeSubscription.packageId._id,
+      userId: dbUser._id,
+      isActive: true,
+    }).lean();
+
+    if (!workoutPlan) {
+      workoutPlan = await WorkoutPlanModel.findOne({
         packageId: activeSubscription.packageId._id,
         isActive: true,
       }).lean();
+    }
+  }
 
-      if (workoutPlan) {
-        const days = await WorkoutDayModel.find({ planId: workoutPlan._id })
-          .sort({ sortOrder: 1 })
-          .lean();
+  if (!workoutPlan && dbUser?._id) {
+    workoutPlan = await WorkoutPlanModel.findOne({
+      userId: dbUser._id,
+      isActive: true,
+    }).lean();
+  }
 
+  if (workoutPlan) {
+    const workoutProgram = await WorkoutProgramModel.findOne({
+      planId: workoutPlan._id,
+    }).lean();
+
+    if (
+      workoutProgram &&
+      Array.isArray(workoutProgram.programs) &&
+      workoutProgram.programs.length > 0
+    ) {
+      const sortedPrograms = [...workoutProgram.programs].sort((a, b) => {
+        const orderA = weekOrder[a.day?.trim() || ""] ?? 99;
+        const orderB = weekOrder[b.day?.trim() || ""] ?? 99;
+        return orderA - orderB;
+      });
+
+      workoutDaysProps = sortedPrograms.map((p) => {
+        const exercises = p.exercises || [];
+        const totalSets = exercises.reduce(
+          (sum: number, ex: { sets?: number }) => sum + (ex.sets || 0),
+          0
+        );
+        const isComplete =
+          exercises.length > 0 &&
+          exercises.every((ex: { isComplete?: boolean }) => !!ex.isComplete);
+        return {
+          day: p.day || "",
+          type: p.muscleGroup || "تمرین عمومی",
+          duration: `${Math.max(exercises.length * 10, 20)} دقیقه`,
+          done: isComplete,
+          sets: totalSets,
+        };
+      });
+    } else {
+      const days = await WorkoutDayModel.find({ planId: workoutPlan._id })
+        .sort({ sortOrder: 1 })
+        .lean();
+
+      if (days.length > 0) {
         const dayIds = days.map((d) => d._id);
         const exercises = await WorkoutExerciseModel.find({
           dayId: { $in: dayIds },
@@ -84,13 +156,13 @@ export async function processDashboardData(
             (e) => e.dayId.toString() === day._id.toString()
           );
           const totalSets = dayExercises.reduce(
-            (sum, ex) => sum + (ex.sets || 0),
+            (sum: number, ex: { sets?: number }) => sum + (ex.sets || 0),
             0
           );
           return {
             day: day.dayName || "",
-            type: day.muscleGroup || "",
-            duration: `${dayExercises.length * 10} دقیقه`,
+            type: day.muscleGroup || "تمرین عمومی",
+            duration: `${Math.max(dayExercises.length * 10, 20)} دقیقه`,
             done: false,
             sets: totalSets,
           };
@@ -99,7 +171,7 @@ export async function processDashboardData(
     }
   }
 
-  const ticketsProps: DashboardTicket[] = (dbTickets || []).map((t: any) => {
+  const ticketsProps: DashboardTicket[] = (dbTickets || []).map((t) => {
     let persianStatus = "در حال بررسی";
     if (t.status === "answered") persianStatus = "پاسخ داده شده";
     if (t.status === "closed") persianStatus = "بسته شده";
@@ -135,7 +207,7 @@ export async function processDashboardData(
   };
 
   const wishlistProps: DashboardWishlistItem[] = (dbWishlist || [])
-    .map((w: any) => {
+    .map((w) => {
       const b = w.blogId;
       if (!b) return null;
       return {

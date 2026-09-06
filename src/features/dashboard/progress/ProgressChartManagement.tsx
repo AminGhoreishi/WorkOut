@@ -12,11 +12,11 @@ import {
   Tooltip,
   Legend,
   Filler,
-  ChartOptions,
-  ChartData,
+  type ChartOptions,
+  type ChartData,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { TrendingUp, Award, Scale, Dumbbell, Plus } from "lucide-react";
+import { TrendingUp, Award, Plus } from "lucide-react";
 import type { UserPRRecord, UserFitnessProfile } from "@/types/progress";
 import ProgressHistoryTable from "./ProgressHistoryTable";
 import { ProgressLoadingState, ProgressErrorState } from "./ProgressStateViews";
@@ -198,7 +198,7 @@ export default function ProgressChartManagement() {
                   >
                     <ComboboxInput
                       placeholder="انتخاب آزمون..."
-                      className="h-9 w-full sm:w-48 bg-neutral-900 border-white/10 rounded-xl px-2 text-xs focus-within:border-amber-400 [&_input]:text-xs [&_input]:text-white [&_input]:placeholder:text-white/40"
+                      className="h-9 w-full sm:w-48 bg-neutral-900 border-white/10 rounded-xl px-2 text-xs focus-within:!border-amber-400 focus-within:!ring-1 focus-within:!ring-amber-400/30 has-[[data-slot=input-group-control]:focus-visible]:!border-amber-400 has-[[data-slot=input-group-control]:focus-visible]:!ring-1 has-[[data-slot=input-group-control]:focus-visible]:!ring-amber-400/30 transition-colors [&_input]:text-xs [&_input]:text-white [&_input]:placeholder:text-white/40"
                     />
                     <ComboboxContent className="bg-neutral-900 border border-white/10 text-white rounded-xl shadow-2xl p-1 z-50">
                       <ComboboxEmpty className="text-white/40 text-xs py-2 px-3">

@@ -41,13 +41,6 @@ export interface DashboardWishlistItem {
   views: number;
 }
 
-export interface UpcomingSessionItem {
-  title: string;
-  time: string;
-  type: string;
-  icon: string;
-}
-
 export interface UserDashboardProps {
   initialUser: DashboardUser;
   initialSubscription: DashboardSubscription | null;
@@ -80,3 +73,47 @@ export interface ActiveSubscriptionProps {
 export interface WishlistArticlesProps {
   wishlist: DashboardWishlistItem[];
 }
+
+export interface RawDbUser {
+  _id?: unknown;
+  fullName?: string;
+  username?: string;
+  email?: string;
+  role?: string;
+  createdAt?: string | Date;
+}
+
+export interface RawDbSubscription {
+  _id?: unknown;
+  startsAt?: string | Date;
+  endsAt?: string | Date;
+  status?: string;
+  packageId?: {
+    _id?: unknown;
+    name?: string;
+    price?: number;
+  } | null;
+  coachId?: {
+    fullName?: string;
+  } | null;
+}
+
+export interface RawDbTicket {
+  _id: { toString(): string } | string;
+  subject?: string;
+  status?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
+export interface RawDbWishlist {
+  blogId?: {
+    _id?: { toString(): string } | string;
+    title?: string;
+    slug?: string;
+    image?: string;
+    category?: string;
+    views?: number;
+  } | null;
+}
+

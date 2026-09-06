@@ -4,7 +4,6 @@ import type { UserDashboardProps } from "@/types/user-dashboard";
 import DashboardBanner from "./DashboardBanner";
 import WeeklyWorkouts from "./WeeklyWorkouts";
 import DashboardStats from "./DashboardStats";
-import UpcomingSessions from "./UpcomingSessions";
 import RecentTickets from "./RecentTickets";
 import ActiveSubscription from "./ActiveSubscription";
 import WishlistArticles from "./WishlistArticles";
@@ -52,11 +51,7 @@ export default function UserDashboard({
             <WeeklyWorkouts recentWorkouts={recentWorkouts} />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <UpcomingSessions />
-
-            <RecentTickets recentTickets={recentTickets} />
-          </div>
+          <RecentTickets recentTickets={recentTickets} />
 
           <WishlistArticles wishlist={wishlist} />
 

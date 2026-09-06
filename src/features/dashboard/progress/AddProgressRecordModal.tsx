@@ -7,6 +7,15 @@ import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import type { AddProgressRecordModalProps, NewPRRecordInput } from "@/types/progress";
 import { DEFAULT_CATEGORIES, DEFAULT_UNITS } from "@/validators/progress";
 
@@ -36,6 +45,14 @@ export default function AddProgressRecordModal({
     },
   });
 
+  const [prevIsOpen, setPrevIsOpen] = useState<boolean>(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setServerError("");
+    }
+  }
+
   useEffect(() => {
     if (isOpen) {
       reset({
@@ -46,11 +63,20 @@ export default function AddProgressRecordModal({
         date: new Date().toISOString().split("T")[0],
         notes: "",
       });
-      setServerError("");
     }
   }, [isOpen, activeTest, reset]);
 
-  if (!isOpen) return null;
+  const handleOpenChange = (open: boolean, details?: { reason?: string; event?: Event }) => {
+    if (!open) {
+      if (details?.reason === "outsidePress") {
+        const target = details.event?.target as HTMLElement | null;
+        if (target?.closest?.(".rmdp-wrapper, .rmdp-container")) {
+          return;
+        }
+      }
+      onClose();
+    }
+  };
 
   const onSubmit = async (data: NewPRRecordInput) => {
     setServerError("");
@@ -101,27 +127,35 @@ export default function AddProgressRecordModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md transition-opacity">
-      <div
-        className="bg-neutral-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="bg-neutral-900 border border-white/10 rounded-2xl w-full max-w-lg p-0 overflow-hidden shadow-2xl gap-0"
         dir="rtl"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+        <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5 space-y-0">
           <div className="flex items-center gap-2 text-white">
             <PlusCircle className="w-5 h-5 text-amber-400" />
-            <h3 className="text-base font-semibold font-morabbaReg">
+            <DialogTitle className="text-base font-semibold font-morabbaReg text-white">
               ثبت رکورد یا مقدار جدید
-            </h3>
+            </DialogTitle>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="text-white/50 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10 cursor-pointer"
+          <DialogClose
+            render={
+              <button
+                type="button"
+                disabled={isSubmitting}
+                className="text-white/50 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10 cursor-pointer"
+              />
+            }
           >
             <X className="w-5 h-5" />
-          </button>
-        </div>
+            <span className="sr-only">بستن</span>
+          </DialogClose>
+          <DialogDescription className="sr-only">
+            فرم ثبت رکورد و مشخصات تمرین
+          </DialogDescription>
+        </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 font-danaMed">
           {serverError && (
@@ -261,7 +295,7 @@ export default function AddProgressRecordModal({
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+          <DialogFooter className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
             <button
               type="button"
               onClick={onClose}
@@ -284,9 +318,9 @@ export default function AddProgressRecordModal({
                 <span>ذخیره رکورد</span>
               )}
             </button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
