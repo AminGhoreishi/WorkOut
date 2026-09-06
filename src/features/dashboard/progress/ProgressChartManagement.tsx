@@ -22,6 +22,14 @@ import ProgressHistoryTable from "./ProgressHistoryTable";
 import { ProgressLoadingState, ProgressErrorState } from "./ProgressStateViews";
 import AddProgressRecordModal from "./AddProgressRecordModal";
 import ProgressStatsOverview from "./ProgressStatsOverview";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 ChartJS.register(
   CategoryScale,
@@ -181,17 +189,34 @@ export default function ProgressChartManagement() {
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
               {availableTests.length > 0 && (
                 <div className="w-full sm:w-auto">
-                  <select
+                  <Combobox
+                    items={availableTests}
                     value={activeTest}
-                    onChange={(e) => setSelectedTest(e.target.value)}
-                    className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                    onValueChange={(val) => {
+                      if (val) setSelectedTest(val);
+                    }}
                   >
-                    {availableTests.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
+                    <ComboboxInput
+                      placeholder="انتخاب آزمون..."
+                      className="h-9 w-full sm:w-48 bg-neutral-900 border-white/10 rounded-xl px-2 text-xs focus-within:border-amber-400 [&_input]:text-xs [&_input]:text-white [&_input]:placeholder:text-white/40"
+                    />
+                    <ComboboxContent className="bg-neutral-900 border border-white/10 text-white rounded-xl shadow-2xl p-1 z-50">
+                      <ComboboxEmpty className="text-white/40 text-xs py-2 px-3">
+                        آزمونی یافت نشد
+                      </ComboboxEmpty>
+                      <ComboboxList>
+                        {(test: string) => (
+                          <ComboboxItem
+                            key={test}
+                            value={test}
+                            className="text-xs text-white/80 hover:text-white hover:bg-white/5 cursor-pointer data-[highlighted]:bg-amber-400/10 data-[highlighted]:text-amber-400 rounded-lg px-2.5 py-1.5"
+                          >
+                            {test}
+                          </ComboboxItem>
+                        )}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
                 </div>
               )}
               <button

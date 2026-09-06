@@ -49,7 +49,7 @@ export default function ProgressHistoryTable({
         تاریخچه رکوردهای ثبت‌شده
       </h3>
       <div className="overflow-x-auto">
-        <table className="w-full text-right text-xs sm:text-sm text-white/80">
+        <table className="w-full text-right text-xs sm:text-sm text-white/80 whitespace-nowrap">
           <thead>
             <tr className="border-b border-white/10 text-white/50 text-xs">
               <th className="pb-3 px-4 font-medium">تاریخ ثبت</th>

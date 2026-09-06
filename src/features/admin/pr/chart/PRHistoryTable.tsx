@@ -51,7 +51,7 @@ export default function PRHistoryTable({
         تاریخچه رکوردهای ثبت‌شده
       </h3>
       <div className="overflow-x-auto">
-        <table className="w-full text-right border-collapse">
+        <table className="w-full text-right border-collapse whitespace-nowrap">
           <thead>
             <tr className="border-b border-white/10 bg-white/5 text-white/60 text-xs">
               <th className="p-3 font-semibold">تست / حرکت</th>
