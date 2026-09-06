@@ -3,6 +3,15 @@
 import { useState, useMemo, useEffect, memo } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { X, Search, Zap } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import type {
   AddFoodModalProps,
   FoodItem,
@@ -213,27 +222,41 @@ function AddFoodModal({
     }
   };
 
-  if (!isOpen) return null;
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+    }
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md font-danaMed"
-      dir="rtl"
-    >
-      <div onClick={onClose} className="fixed inset-0 z-40 bg-black/80"></div>
-      <div className="bg-neutral-950 border z-50 border-amber-500/20 rounded-3xl w-full max-w-lg p-6 shadow-2xl shadow-amber-500/10 relative">
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 left-4 p-1.5 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 text-white/60 hover:text-amber-400 transition-colors cursor-pointer"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <h3 className="text-xl text-white font-bold mb-4 flex items-center gap-2 font-morabbaReg">
-          <Zap className="w-5 h-5 text-amber-400" />
-          ثبت غذا در وعده {translateMealName(activeMealType)}
-        </h3>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="bg-neutral-950 border border-amber-500/20 rounded-3xl w-full max-w-lg p-6 shadow-2xl shadow-amber-500/10 font-danaMed gap-0"
+        dir="rtl"
+      >
+        <DialogHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/10 space-y-0 text-right mb-4">
+          <div className="flex items-center gap-2">
+            <Zap className="w-5 h-5 text-amber-400" />
+            <DialogTitle className="text-xl text-white font-bold font-morabbaReg">
+              ثبت غذا در وعده {translateMealName(activeMealType)}
+            </DialogTitle>
+          </div>
+          <DialogClose
+            render={
+              <button
+                type="button"
+                className="p-1.5 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 text-white/60 hover:text-amber-400 transition-colors cursor-pointer"
+              />
+            }
+          >
+            <X className="w-5 h-5" />
+            <span className="sr-only">بستن</span>
+          </DialogClose>
+          <DialogDescription className="sr-only">
+            فرم ثبت غذا در پایگاه داده یا به صورت دستی
+          </DialogDescription>
+        </DialogHeader>
 
         <div className="grid grid-cols-2 gap-2 mb-4 p-1 bg-neutral-900 rounded-xl border border-amber-500/20">
           <button
@@ -374,7 +397,7 @@ function AddFoodModal({
               <ManualFoodInput />
             )}
 
-            <div className="flex gap-4 mt-6 pt-4 border-t border-white/10">
+            <DialogFooter className="flex flex-row gap-4 mt-6 pt-4 border-t border-white/10 sm:justify-start">
               <button
                 type="submit"
                 disabled={
@@ -386,18 +409,21 @@ function AddFoodModal({
               >
                 ثبت وعده غذایی
               </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white py-3 rounded-xl transition-all cursor-pointer text-xs"
+              <DialogClose
+                render={
+                  <button
+                    type="button"
+                    className="px-6 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white py-3 rounded-xl transition-all cursor-pointer text-xs"
+                  />
+                }
               >
                 انصراف
-              </button>
-            </div>
+              </DialogClose>
+            </DialogFooter>
           </form>
         </FormProvider>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

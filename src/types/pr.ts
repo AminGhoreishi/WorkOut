@@ -26,6 +26,7 @@ export interface CreatePRModalProps {
   onClose: () => void;
   onSuccess?: () => void;
   userId?: string;
+  selectedTest?: string;
 }
 
 export interface PRFormInput {
@@ -63,6 +64,8 @@ export interface TestMetricItem {
 export interface PRChartProps {
   userId?: string;
   refreshKey?: number;
+  selectedTest?: string;
+  setSelectedTest?: (test: string) => void;
 }
 
 export interface PRRecordItem {

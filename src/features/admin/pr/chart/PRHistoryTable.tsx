@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Award, Trash2, Loader2 } from "lucide-react";
 import { showConfirm, showToast, showAlert } from "@/utils/alert";
 import type { PRHistoryTableProps } from "@/types/pr";
 
-export default function PRHistoryTable({
+function PRHistoryTable({
   sortedRecords,
   onDeleteSuccess,
 }: PRHistoryTableProps) {
@@ -102,3 +102,5 @@ export default function PRHistoryTable({
     </div>
   );
 }
+
+export default memo(PRHistoryTable);

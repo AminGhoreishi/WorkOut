@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
 import { X, Loader2 } from "lucide-react";
@@ -20,6 +20,7 @@ export default function CreatePRModal({
   onClose,
   onSuccess,
   userId,
+  selectedTest,
 }: CreatePRModalProps) {
   const {
     register,
@@ -27,11 +28,12 @@ export default function CreatePRModal({
     setValue,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<PRFormInput>({
     defaultValues: {
       category: "قدرتی",
-      testName: "",
+      testName: selectedTest || "",
       unit: "کیلوگرم",
       date: new Date().toISOString().split("T")[0],
       notes: "",
@@ -44,10 +46,40 @@ export default function CreatePRModal({
     isOpen ? "/api/admin/metric" : null,
     fetcher
   );
-  const metrics: TestMetricItem[] = metricsData?.metrics || [];
+  const metrics: TestMetricItem[] = useMemo(
+    () => metricsData?.metrics || [],
+    [metricsData?.metrics]
+  );
+
+  const handleClose = useCallback(() => {
+    reset({
+      category: "قدرتی",
+      testName: selectedTest || "",
+      unit: "کیلوگرم",
+      date: new Date().toISOString().split("T")[0],
+      notes: "",
+    });
+    onClose();
+  }, [reset, selectedTest, onClose]);
 
   useEffect(() => {
-    if (metrics.length > 0 && isOpen) {
+    if (!isOpen) return;
+
+    if (selectedTest) {
+      setValue("testName", selectedTest);
+      const matched = metrics.find((m) => m.name === selectedTest);
+      if (matched) {
+        setValue("metricId", matched._id);
+        if (matched.category) {
+          setValue("category", CATEGORY_MAP[matched.category] || matched.category);
+        }
+        if (matched.unit) {
+          setValue("unit", UNIT_MAP[matched.unit] || matched.unit);
+        }
+      } else {
+        setValue("metricId", "");
+      }
+    } else if (metrics.length > 0) {
       const first = metrics[0];
       setValue("metricId", first._id);
       setValue("testName", first.name);
@@ -58,22 +90,28 @@ export default function CreatePRModal({
         setValue("unit", UNIT_MAP[first.unit] || first.unit);
       }
     }
-  }, [metrics, isOpen, setValue]);
+  }, [metrics, isOpen, selectedTest, setValue]);
 
-  const handleMetricSelect = (metricId: string) => {
-    if (!metricId) return;
-    const selected = metrics.find((m) => m._id === metricId);
-    if (selected) {
-      setValue("metricId", selected._id);
-      setValue("testName", selected.name);
-      if (selected.category) {
-        setValue("category", CATEGORY_MAP[selected.category] || selected.category);
+  const handleMetricSelect = useCallback(
+    (metricId: string) => {
+      if (!metricId) {
+        setValue("metricId", "");
+        return;
       }
-      if (selected.unit) {
-        setValue("unit", UNIT_MAP[selected.unit] || selected.unit);
+      const selected = metrics.find((m) => m._id === metricId);
+      if (selected) {
+        setValue("metricId", selected._id);
+        setValue("testName", selected.name);
+        if (selected.category) {
+          setValue("category", CATEGORY_MAP[selected.category] || selected.category);
+        }
+        if (selected.unit) {
+          setValue("unit", UNIT_MAP[selected.unit] || selected.unit);
+        }
       }
-    }
-  };
+    },
+    [metrics, setValue]
+  );
 
   const onSubmit = async (data: PRFormInput) => {
     if (!userId) {
@@ -101,7 +139,13 @@ export default function CreatePRModal({
 
       if (res.ok) {
         showAlert("موفقیت", "رکورد شخصی با موفقیت ثبت شد", "success");
-        reset();
+        reset({
+          category: "قدرتی",
+          testName: selectedTest || "",
+          unit: "کیلوگرم",
+          date: new Date().toISOString().split("T")[0],
+          notes: "",
+        });
         if (onSuccess) onSuccess();
         onClose();
       } else {
@@ -121,7 +165,7 @@ export default function CreatePRModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       <div className="relative w-full max-w-lg bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl z-10 min-h-[580px] max-h-[92vh] flex flex-col font-danaMed">
@@ -131,7 +175,7 @@ export default function CreatePRModal({
           </h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="text-white/60 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -148,17 +192,21 @@ export default function CreatePRModal({
               انتخاب متس ارزیابی (Metric)
             </label>
             <select
+              value={watch("metricId") || ""}
               onChange={(e) => handleMetricSelect(e.target.value)}
               className="w-full bg-neutral-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm cursor-pointer"
             >
               {metrics.length === 0 ? (
                 <option value="">در حال بارگذاری یا هیچ متسی ثبت نشده است...</option>
               ) : (
-                metrics.map((m) => (
-                  <option key={m._id} value={m._id}>
-                    {m.name} ({UNIT_MAP[m.unit] || m.unit})
-                  </option>
-                ))
+                <>
+                  <option value="">انتخاب از لیست متس‌ها...</option>
+                  {metrics.map((m) => (
+                    <option key={m._id} value={m._id}>
+                      {m.name} ({UNIT_MAP[m.unit] || m.unit})
+                    </option>
+                  ))}
+                </>
               )}
             </select>
           </div>
@@ -286,7 +334,7 @@ export default function CreatePRModal({
           <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white rounded-xl text-sm transition-all duration-200 cursor-pointer"
             >
               انصراف

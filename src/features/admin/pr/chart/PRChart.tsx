@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import useSWR from "swr";
 import {
   Chart as ChartJS,
@@ -12,14 +12,18 @@ import {
   Tooltip,
   Legend,
   Filler,
-  ChartOptions,
-  ChartData,
+  type ChartOptions,
+  type ChartData,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { TrendingUp, Award } from "lucide-react";
-import type { PRChartProps, PRRecordItem, PRUserApiResponse } from "@/types/pr";
-import PRHistoryTable from "./PRHistoryTable";
+import type {
+  PRChartProps,
+  PRRecordItem,
+  PRUserApiResponse,
+} from "@/types/pr";
 import { PRNoUserSelected, PRLoadingState, PRErrorState } from "./PRStateViews";
+import PRHistoryTable from "./PRHistoryTable";
 
 ChartJS.register(
   CategoryScale,
@@ -38,9 +42,54 @@ const fetcher = (url: string) =>
     return res.json();
   });
 
-export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
-  const [selectedTest, setSelectedTest] = useState<string>("");
+const CHART_OPTIONS: ChartOptions<"line"> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "top" as const,
+      labels: {
+        color: "rgba(255, 255, 255, 0.7)",
+        font: {
+          family: "Vazirmatn, Tahoma, sans-serif",
+          size: 13,
+        },
+      },
+    },
+    tooltip: {
+      rtl: true,
+      titleFont: { family: "Vazirmatn, Tahoma" },
+      bodyFont: { family: "Vazirmatn, Tahoma" },
+    },
+  },
+  scales: {
+    y: {
+      grid: {
+        color: "rgba(255, 255, 255, 0.05)",
+      },
+      ticks: {
+        color: "rgba(255, 255, 255, 0.6)",
+        font: { family: "Vazirmatn, Tahoma" },
+      },
+    },
+    x: {
+      grid: {
+        display: false,
+      },
+      ticks: {
+        color: "rgba(255, 255, 255, 0.6)",
+        font: { family: "Vazirmatn, Tahoma" },
+      },
+    },
+  },
+};
 
+export default function PRChart({
+  userId,
+  refreshKey = 0,
+  selectedTest = "",
+  setSelectedTest,
+}: PRChartProps) {
   const {
     data: prData,
     isLoading: isLoadingPR,
@@ -65,8 +114,9 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
 
   const records: PRRecordItem[] = prData?.records || [];
 
-  const availableTests = Array.from(
-    new Set(records.map((r) => r.testName).filter(Boolean)),
+  const availableTests = useMemo(
+    () => Array.from(new Set(records.map((r) => r.testName).filter(Boolean))),
+    [records]
   );
 
   const activeTest =
@@ -74,85 +124,56 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
       ? selectedTest
       : availableTests[0] || "";
 
-  const filteredRecords = records.filter(
-    (r) => r.testName === activeTest,
-  );
-
-  const sortedRecords = [...filteredRecords].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-  );
-
-  const labels = sortedRecords.map((r) => {
-    try {
-      return new Date(r.date).toLocaleDateString("fa-IR");
-    } catch {
-      return r.date;
+  useEffect(() => {
+    if (availableTests.length > 0 && (!selectedTest || !availableTests.includes(selectedTest))) {
+      setSelectedTest?.(availableTests[0]);
     }
-  });
+  }, [availableTests, selectedTest, setSelectedTest]);
 
-  const chartValues = sortedRecords.map((r) => r.value);
-  const currentUnit = sortedRecords[0]?.unit || "";
+  const sortedRecords = useMemo(() => {
+    return records
+      .filter((r) => r.testName === activeTest)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [records, activeTest]);
 
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top" as const,
-        labels: {
-          color: "rgba(255, 255, 255, 0.7)",
-          font: {
-            family: "Vazirmatn, Tahoma, sans-serif",
-            size: 13,
-          },
-        },
-      },
-      tooltip: {
-        rtl: true,
-        titleFont: { family: "Vazirmatn, Tahoma" },
-        bodyFont: { family: "Vazirmatn, Tahoma" },
-      },
-    },
-    scales: {
-      y: {
-        grid: {
-          color: "rgba(255, 255, 255, 0.05)",
-        },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.6)",
-          font: { family: "Vazirmatn, Tahoma" },
-        },
-      },
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.6)",
-          font: { family: "Vazirmatn, Tahoma" },
-        },
-      },
-    },
-  };
+  const { labels, chartValues, currentUnit } = useMemo(() => {
+    const lbls = sortedRecords.map((r) => {
+      try {
+        return new Date(r.date).toLocaleDateString("fa-IR");
+      } catch {
+        return r.date;
+      }
+    });
+    const vals = sortedRecords.map((r) => r.value);
+    const unit = sortedRecords[0]?.unit || "";
+    return { labels: lbls, chartValues: vals, currentUnit: unit };
+  }, [sortedRecords]);
 
-  const chartDataConfig: ChartData<"line"> = {
-    labels,
-    datasets: [
-      {
-        fill: true,
-        label: `مقدار رکورد (${currentUnit})`,
-        data: chartValues,
-        borderColor: "rgb(251, 191, 36)",
-        backgroundColor: "rgba(245, 158, 11, 0.15)",
-        tension: 0.35,
-        pointBackgroundColor: "rgb(234, 179, 8)",
-        pointBorderColor: "#fff",
-        pointBorderWidth: 2,
-        pointHoverRadius: 8,
-        pointRadius: 5,
-      },
-    ],
-  };
+  const chartDataConfig: ChartData<"line"> = useMemo(
+    () => ({
+      labels,
+      datasets: [
+        {
+          fill: true,
+          label: `مقدار رکورد (${currentUnit})`,
+          data: chartValues,
+          borderColor: "rgb(251, 191, 36)",
+          backgroundColor: "rgba(245, 158, 11, 0.15)",
+          tension: 0.35,
+          pointBackgroundColor: "rgb(234, 179, 8)",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointHoverRadius: 8,
+          pointRadius: 5,
+        },
+      ],
+    }),
+    [labels, chartValues, currentUnit]
+  );
+
+  const handleDeleteSuccess = useCallback(() => {
+    mutatePR();
+  }, [mutatePR]);
 
   if (!userId) {
     return <PRNoUserSelected />;
@@ -186,7 +207,7 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
             <div className="w-full sm:w-auto">
               <select
                 value={activeTest}
-                onChange={(e) => setSelectedTest(e.target.value)}
+                onChange={(e) => setSelectedTest?.(e.target.value)}
                 className="w-full sm:w-auto bg-neutral-900 border border-white/10 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
               >
                 {availableTests.map((t) => (
@@ -206,14 +227,14 @@ export default function PRChart({ userId, refreshKey = 0 }: PRChartProps) {
           </div>
         ) : (
           <div className="h-80 w-full relative">
-            <Line options={options} data={chartDataConfig} />
+            <Line options={CHART_OPTIONS} data={chartDataConfig} />
           </div>
         )}
       </div>
 
       <PRHistoryTable
         sortedRecords={sortedRecords}
-        onDeleteSuccess={() => mutatePR()}
+        onDeleteSuccess={handleDeleteSuccess}
       />
     </div>
   );

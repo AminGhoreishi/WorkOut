@@ -6,7 +6,7 @@ export default function NutritionSkeleton() {
       className="font-danaMed pt-4 md:pt-8 bg-neutral-950 min-h-screen text-white animate-pulse"
       dir="rtl"
     >
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-amber-500/10 border border-amber-500/20 rounded-xl" />
