@@ -64,6 +64,7 @@ export default function FitnessProfileManagement({
   } = useForm<FitnessFormInputs>({
     mode: "all",
     defaultValues: {
+      gender: initialProfile?.gender || "male",
       goal: initialProfile?.goal || "general_fitness",
       sessionsPerWeek: initialProfile?.sessionsPerWeek || 3,
       equipment: initialProfile?.equipment || "none",
@@ -80,6 +81,7 @@ export default function FitnessProfileManagement({
   useEffect(() => {
     if (profile) {
       reset({
+        gender: profile.gender || "male",
         goal: profile.goal || "general_fitness",
         sessionsPerWeek: profile.sessionsPerWeek || 3,
         equipment: profile.equipment || "none",
@@ -99,6 +101,7 @@ export default function FitnessProfileManagement({
   const watchedExperience = watch("trainingExperience");
   const watchedHeight = watch("heightCm") || "175";
   const watchedWeight = watch("weightKg") || "70";
+  const watchedGender = watch("gender") || "male";
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -142,6 +145,7 @@ export default function FitnessProfileManagement({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          gender: data.gender || "male",
           goal: data.goal,
           sessionsPerWeek: data.sessionsPerWeek,
           equipment: data.equipment,
@@ -306,6 +310,8 @@ export default function FitnessProfileManagement({
                 errors={errors}
                 watchedHeight={watchedHeight}
                 watchedWeight={watchedWeight}
+                watchedGender={watchedGender}
+                setValue={setValue}
                 bmi={bmi}
                 bmiCategory={bmiCategory}
               />

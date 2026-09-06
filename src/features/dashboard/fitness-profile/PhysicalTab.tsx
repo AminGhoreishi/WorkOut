@@ -1,4 +1,4 @@
-import { Activity } from "lucide-react";
+import { Activity, User } from "lucide-react";
 import type { PhysicalTabProps } from "@/types/fitness-profile";
 
 export default function PhysicalTab({
@@ -6,11 +6,47 @@ export default function PhysicalTab({
   errors,
   watchedHeight,
   watchedWeight,
+  watchedGender,
+  setValue,
   bmi,
   bmiCategory,
 }: PhysicalTabProps) {
   return (
     <div className="space-y-5 animate-fadeIn">
+      <input type="hidden" {...register("gender")} />
+
+      <div>
+        <label className="block text-neutral-300 text-xs mb-2 font-medium">
+          جنسیت
+        </label>
+        <div className="grid grid-cols-2 gap-3 max-w-md">
+          <button
+            type="button"
+            onClick={() => setValue("gender", "male")}
+            className={`py-2.5 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm ${
+              watchedGender === "male"
+                ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10"
+                : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <User className="w-4 h-4" />
+            <span>آقا</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setValue("gender", "female")}
+            className={`py-2.5 px-4 rounded-xl border text-center transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm ${
+              watchedGender === "female"
+                ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-md shadow-amber-500/10"
+                : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <User className="w-4 h-4" />
+            <span>خانم</span>
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
           <label className="block text-neutral-300 text-xs mb-2 font-medium">

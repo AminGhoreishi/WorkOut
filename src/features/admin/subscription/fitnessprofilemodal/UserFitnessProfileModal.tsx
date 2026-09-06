@@ -66,7 +66,8 @@ export default function UserFitnessProfileModal({
           data.profile.heightCm,
           data.profile.ageYears,
           data.profile.sessionsPerWeek,
-          data.profile.goal
+          data.profile.goal,
+          data.profile.gender || "male"
         )
       : null;
 

@@ -14,6 +14,8 @@ export type EquipmentOption = "none" | "home_basic" | "gym_full";
 
 export type TrainingExperienceOption = "beginner" | "intermediate" | "advanced";
 
+export type GenderOption = "male" | "female";
+
 export type FitnessProfileTab = "physical" | "training" | "photos";
 
 export interface GoalOptionItem {
@@ -37,6 +39,7 @@ export interface EquipmentOptionItem {
 export interface FitnessProfile {
   _id?: string;
   userId?: string;
+  gender?: GenderOption;
   goal: FitnessGoal;
   sessionsPerWeek: number;
   equipment: EquipmentOption;
@@ -51,6 +54,7 @@ export interface FitnessProfile {
 }
 
 export interface FitnessProfileData {
+  gender?: GenderOption;
   goal: FitnessGoal;
   sessionsPerWeek: number;
   equipment: EquipmentOption;
@@ -63,6 +67,7 @@ export interface FitnessProfileData {
 }
 
 export interface FitnessFormInputs {
+  gender: GenderOption;
   goal: FitnessGoal;
   sessionsPerWeek: number;
   equipment: EquipmentOption;
@@ -74,6 +79,7 @@ export interface FitnessFormInputs {
 }
 
 export interface OnboardingFormInputs {
+  gender?: GenderOption;
   goal: FitnessGoal;
   sessionsPerWeek: number;
   equipment: EquipmentOption;
@@ -114,6 +120,8 @@ export interface PhysicalTabProps {
   errors: FieldErrors<FitnessFormInputs>;
   watchedHeight: string;
   watchedWeight: string;
+  watchedGender: GenderOption;
+  setValue: UseFormSetValue<FitnessFormInputs>;
   bmi: number;
   bmiCategory: BMICategoryDisplay;
 }

@@ -16,12 +16,14 @@ const VALID_GOALS = [
 
 const VALID_EQUIPMENT = ["none", "home_basic", "gym_full"];
 const VALID_EXPERIENCE = ["beginner", "intermediate", "advanced"];
+const VALID_GENDERS = ["male", "female"];
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_IMAGE_BUFFER_SIZE = 5 * 1024 * 1024;
 
 function sanitizeProfile(doc: any) {
   if (!doc) return null;
   return {
+    gender: doc.gender || "male",
     goal: doc.goal,
     sessionsPerWeek: doc.sessionsPerWeek,
     equipment: doc.equipment,
@@ -79,6 +81,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const {
+      gender,
       goal,
       sessionsPerWeek,
       equipment,
@@ -90,6 +93,7 @@ export async function POST(req: NextRequest) {
       notes,
     } = body;
 
+    const sanitizedGender = VALID_GENDERS.includes(gender) ? gender : "male";
     const parsedSessions = Number(sessionsPerWeek);
     const parsedAge = Number(ageYears);
     const parsedHeight = Number(heightCm);
@@ -151,6 +155,7 @@ export async function POST(req: NextRequest) {
     let profile = await FitnessProfile.findOne({ userId: session.user.id });
 
     if (profile) {
+      profile.gender = sanitizedGender;
       profile.goal = goal;
       profile.sessionsPerWeek = parsedSessions;
       profile.equipment = equipment;
@@ -164,6 +169,7 @@ export async function POST(req: NextRequest) {
     } else {
       profile = await FitnessProfile.create({
         userId: session.user.id,
+        gender: sanitizedGender,
         goal,
         sessionsPerWeek: parsedSessions,
         equipment,

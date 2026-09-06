@@ -9,6 +9,11 @@ const FitnessProfileSchema = new Schema<IFitnessProfile>(
       required: true,
       unique: true,
     },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      default: "male",
+    },
     goal: {
       type: String,
       enum: [

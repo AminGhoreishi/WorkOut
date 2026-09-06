@@ -23,6 +23,7 @@ export interface UserPRRecord {
 }
 
 export interface UserFitnessProfile {
+  gender?: "male" | "female";
   goal?: string;
   sessionsPerWeek?: number;
   equipment?: string;

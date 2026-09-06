@@ -125,6 +125,12 @@ export default function FitnessProfileSidebar({
 
           <div className="bg-amber-500/5 border border-amber-500/15 rounded-xl p-4 space-y-3">
             <div className="flex justify-between items-center text-xs">
+              <span className="text-neutral-400">جنسیت:</span>
+              <span className="text-amber-300 font-semibold">
+                {profile?.gender === "female" ? "خانم" : "آقا"}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-xs">
               <span className="text-neutral-400">هدف ورزشی:</span>
               <span className="text-amber-300 font-semibold truncate max-w-[140px]">
                 {goalLabel}
