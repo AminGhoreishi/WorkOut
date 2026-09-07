@@ -41,6 +41,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "این سفارش قبلاً پرداخت شده است" }, { status: 400 });
     }
 
+    if (order.status === "failed" || order.status === "refunded") {
+      return NextResponse.json({ message: "این سفارش لغو شده یا ناموفق است و امکان ثبت پرداخت ندارد" }, { status: 400 });
+    }
+
+    const orderTime = order.createdAt ? new Date(order.createdAt).getTime() : null;
+    if (orderTime && Date.now() - orderTime > 24 * 60 * 60 * 1000) {
+      return NextResponse.json({ message: "مهلت پرداخت این سفارش به پایان رسیده است" }, { status: 400 });
+    }
+
     if (paymentRef) {
       order.paymentRef = paymentRef;
       order.status = "pending";

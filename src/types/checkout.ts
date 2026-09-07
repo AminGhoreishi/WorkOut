@@ -53,3 +53,11 @@ export interface CheckoutCardSectionProps {
   isSubmitting: boolean;
   formatNumber: (num: number) => string;
 }
+
+export interface CheckoutErrorViewProps {
+  title: string;
+  description: string;
+  actionText?: string;
+  actionHref?: string;
+  iconType?: "error" | "expired" | "not-found" | "server";
+}
