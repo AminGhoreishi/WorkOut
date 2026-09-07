@@ -8,7 +8,7 @@ import {
   Apple,
   Package,
 } from "lucide-react";
-import type { UserMealPlanResponse, MealPlanData } from "@/types/meal-plan";
+import type { UserMealPlanResponse, MealPlanData, MealPlanApiError } from "@/types/meal-plan";
 import MealSection from "./MealSection";
 import MealPlansSkeleton from "./MealPlansSkeleton";
 import MealPlansError from "./MealPlansError";
@@ -16,29 +16,44 @@ import MealPlansEmpty from "./MealPlansEmpty";
 
 const fetcher = async (url: string): Promise<UserMealPlanResponse> => {
   const res = await fetch(url);
+  if (res.status === 401) {
+    const error: MealPlanApiError = new Error("UNAUTHORIZED");
+    error.status = 401;
+    throw error;
+  }
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "خطا در دریافت اطلاعات برنامه غذایی");
+    const error: MealPlanApiError = new Error(errorData.message || "خطا در دریافت اطلاعات برنامه غذایی");
+    error.status = res.status;
+    throw error;
   }
   return res.json();
 };
 
 export default function UserMealPlansManagement() {
-  const { data, isLoading, error } = useSWR<UserMealPlanResponse>(
+  const { data, isLoading, error } = useSWR<UserMealPlanResponse, MealPlanApiError>(
     "/api/user/meal-plan",
     fetcher,
     {
       dedupingInterval: 60000,
       revalidateOnFocus: false,
+      shouldRetryOnError: (err) => err?.status !== 401,
     }
   );
+
+  const isUnauthorized = error?.status === 401;
 
   if (isLoading) {
     return <MealPlansSkeleton />;
   }
 
   if (error) {
-    return <MealPlansError message={error.message} />;
+    return (
+      <MealPlansError
+        message={error.message}
+        isUnauthorized={isUnauthorized}
+      />
+    );
   }
 
   const plan: MealPlanData | null = data?.plan || null;

@@ -169,8 +169,13 @@ export interface MealSectionProps {
   badgeColor: string;
 }
 
+export interface MealPlanApiError extends Error {
+  status?: number;
+}
+
 export interface MealPlansErrorProps {
   message?: string;
+  isUnauthorized?: boolean;
 }
 
 export interface MealPlansEmptyProps {
