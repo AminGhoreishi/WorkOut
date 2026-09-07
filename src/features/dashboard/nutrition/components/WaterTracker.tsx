@@ -1,17 +1,14 @@
 import { memo } from "react";
-import { useSWRConfig } from "swr";
 import { Droplet, Plus } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import type { WaterTrackerProps } from "@/types/nutrition";
 
 const WaterTracker: React.FC<WaterTrackerProps> = ({
-  selectedDate,
   targetWater,
   waterIntake,
   onWaterChange,
   isLoading,
 }) => {
-  const { mutate } = useSWRConfig();
   const currentWater = waterIntake || 0;
   const safeTargetWater = targetWater > 0 ? targetWater : 2500;
   const waterPercent = Math.min(
@@ -19,57 +16,15 @@ const WaterTracker: React.FC<WaterTrackerProps> = ({
     Math.round((currentWater / safeTargetWater) * 100),
   );
 
-  const handleAddWater = async (amount: number) => {
+  const handleAddWater = (amount: number) => {
     if (isLoading) return;
-    const previousAmount = currentWater;
     const newAmount = Math.min(10000, currentWater + amount);
     onWaterChange(newAmount);
-
-    try {
-      const res = await fetch("/api/nutrition", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          date: selectedDate,
-          waterIntake: newAmount,
-        }),
-      });
-      if (!res.ok) {
-        onWaterChange(previousAmount);
-      } else {
-        mutate(`/api/nutrition?date=${selectedDate}`);
-      }
-    } catch {
-      onWaterChange(previousAmount);
-    }
   };
 
-  const handleResetWater = async () => {
+  const handleResetWater = () => {
     if (isLoading) return;
-    const previousAmount = currentWater;
     onWaterChange(0);
-
-    try {
-      const res = await fetch("/api/nutrition", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          date: selectedDate,
-          waterIntake: 0,
-        }),
-      });
-      if (!res.ok) {
-        onWaterChange(previousAmount);
-      } else {
-        mutate(`/api/nutrition?date=${selectedDate}`);
-      }
-    } catch {
-      onWaterChange(previousAmount);
-    }
   };
 
   return (

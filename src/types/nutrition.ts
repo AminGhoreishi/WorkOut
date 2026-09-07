@@ -269,11 +269,20 @@ export interface UseNutritionActionsParams {
   activeMealType: keyof MealData;
   mutate: KeyedMutator<NutritionLog | null>;
   setIsModalOpen: (isOpen: boolean) => void;
+  setIsEditingTarget?: (isOpen: boolean) => void;
 }
 
 export interface UseNutritionActionsReturn {
   handleDeleteFood: (mealType: keyof MealData, itemId: string) => Promise<void>;
-  handleSaveFood: (newItem: FoodItem) => void;
-  handleWaterChange: (newAmount: number) => void;
+  handleSaveFood: (newItem: FoodItem) => Promise<void>;
+  handleWaterChange: (newAmount: number) => Promise<void>;
+  handleSaveTargets: (
+    calories: number,
+    protein: number,
+    carbs: number,
+    fat: number,
+    water: number,
+    reqCalories?: number,
+  ) => Promise<void>;
 }
 

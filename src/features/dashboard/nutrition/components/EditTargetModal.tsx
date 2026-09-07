@@ -1,5 +1,4 @@
 import { useState, useEffect, memo } from "react";
-import { useSWRConfig } from "swr";
 import { Flame, Plus } from "lucide-react";
 import type { EditTargetModalProps } from "@/types/nutrition";
 import FitnessCalorieCalculator from "../FitnessCalorieCalculator";
@@ -7,15 +6,12 @@ import FitnessCalorieCalculator from "../FitnessCalorieCalculator";
 const EditTargetModal: React.FC<EditTargetModalProps> = ({
   isOpen,
   onClose,
-  userId,
-  selectedDate,
   targetCalories,
   requiredCalories = 2200,
   targetMacros,
   targetWater,
   onSaveTargets,
 }) => {
-  const { mutate } = useSWRConfig();
   const [tempTargetCalories, setTempTargetCalories] = useState(
     targetCalories.toString(),
   );
@@ -48,7 +44,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const calories = Math.max(0, parseInt(tempTargetCalories) || 2200);
     const reqCalories = Math.max(0, parseInt(tempRequiredCalories) || 2200);
     const protein = Math.max(0, parseInt(tempTargetProtein) || 140);
@@ -57,30 +53,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
     const water = Math.max(0, parseInt(tempTargetWater) || 2500);
 
     onSaveTargets(calories, protein, carbs, fat, water, reqCalories);
-
-    try {
-      const response = await fetch("/api/nutrition", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tempTargetCalories: calories,
-          tempRequiredCalories: reqCalories,
-          tempTargetProtein: protein,
-          tempTargetCarbs: carbs,
-          tempTargetFat: fat,
-          tempTargetWater: water,
-          date: selectedDate,
-        }),
-      });
-
-      if (response.ok) {
-        mutate((key: unknown) => typeof key === "string" && key.startsWith("/api/nutrition"));
-      }
-    } catch {
-      mutate((key: unknown) => typeof key === "string" && key.startsWith("/api/nutrition"));
-    }
+    onClose();
   };
 
   return (

@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import type {
   FoodItem,
   MealData,
-  NutritionLog,
   UseNutritionActionsParams,
   UseNutritionActionsReturn,
 } from "@/types/nutrition";
@@ -10,7 +9,6 @@ import type {
 export default function useNutritionActions({
   userId,
   selectedDate,
-  logData,
   currentMeals,
   currentWater,
   targetCalories,
@@ -19,6 +17,7 @@ export default function useNutritionActions({
   activeMealType,
   mutate,
   setIsModalOpen,
+  setIsEditingTarget,
 }: UseNutritionActionsParams): UseNutritionActionsReturn {
   const handleDeleteFood = useCallback(
     async (mealType: keyof MealData, itemId: string) => {
@@ -31,83 +30,92 @@ export default function useNutritionActions({
         [mealType]: updatedMeal,
       };
 
-      const updatedLog: NutritionLog = {
-        _id: logData?._id || "",
-        userId,
-        date: selectedDate,
-        meals: updatedMealsForDate,
-        waterIntake: currentWater,
-        targetCalories,
-        targetProtein: targetMacros.protein,
-        targetCarbs: targetMacros.carbs,
-        targetFat: targetMacros.fat,
-        targetWater,
-      };
-
-      mutate(updatedLog, false);
-
-      try {
-        const response = await fetch("/api/nutrition", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      await mutate(
+        async () => {
+          const response = await fetch("/api/nutrition", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: selectedDate,
+              meals: updatedMealsForDate,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("خطا در حذف غذا");
+          }
+          return response.json();
+        },
+        {
+          optimisticData: (current) => {
+            if (!current) return null;
+            return {
+              ...current,
+              meals: updatedMealsForDate,
+            };
           },
-          body: JSON.stringify({
-            date: selectedDate,
-            meals: updatedMealsForDate,
-          }),
-        });
-        if (!response.ok) {
-          mutate();
-        } else {
-          mutate();
-        }
-      } catch {
-        mutate();
-      }
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        },
+      );
     },
-    [
-      currentMeals,
-      currentWater,
-      targetCalories,
-      targetMacros,
-      targetWater,
-      logData?._id,
-      selectedDate,
-      userId,
-      mutate,
-    ],
+    [currentMeals, selectedDate, mutate],
   );
 
   const handleSaveFood = useCallback(
-    (newItem: FoodItem) => {
+    async (newItem: FoodItem) => {
       const updatedMeals = {
         ...currentMeals,
         [activeMealType]: [...(currentMeals[activeMealType] || []), newItem],
       };
 
-      const updatedLog: NutritionLog = {
-        _id: logData?._id || "",
-        userId,
-        date: selectedDate,
-        meals: updatedMeals,
-        waterIntake: currentWater,
-        targetCalories,
-        targetProtein: targetMacros.protein,
-        targetCarbs: targetMacros.carbs,
-        targetFat: targetMacros.fat,
-        targetWater,
-      };
-
-      mutate(updatedLog, false);
       setIsModalOpen(false);
+
+      await mutate(
+        async () => {
+          const response = await fetch("/api/nutrition", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: selectedDate,
+              meals: updatedMeals,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("خطا در ذخیره غذا");
+          }
+          return response.json();
+        },
+        {
+          optimisticData: (current) => {
+            return {
+              _id: current?._id || "",
+              userId,
+              date: selectedDate,
+              meals: updatedMeals,
+              waterIntake: current?.waterIntake ?? currentWater,
+              targetCalories: current?.targetCalories ?? targetCalories,
+              targetProtein: current?.targetProtein ?? targetMacros.protein,
+              targetCarbs: current?.targetCarbs ?? targetMacros.carbs,
+              targetFat: current?.targetFat ?? targetMacros.fat,
+              targetWater: current?.targetWater ?? targetWater,
+            };
+          },
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        },
+      );
     },
     [
       currentMeals,
       activeMealType,
-      logData?._id,
-      userId,
       selectedDate,
+      userId,
       currentWater,
       targetCalories,
       targetMacros,
@@ -118,19 +126,124 @@ export default function useNutritionActions({
   );
 
   const handleWaterChange = useCallback(
-    (newAmount: number) => {
-      if (logData) {
-        mutate({ ...logData, waterIntake: newAmount }, false);
-      } else {
-        mutate();
-      }
+    async (newAmount: number) => {
+      await mutate(
+        async () => {
+          const response = await fetch("/api/nutrition", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: selectedDate,
+              waterIntake: newAmount,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("خطا در ثبت آب");
+          }
+          return response.json();
+        },
+        {
+          optimisticData: (current) => {
+            return {
+              _id: current?._id || "",
+              userId,
+              date: selectedDate,
+              meals: current?.meals || currentMeals,
+              waterIntake: newAmount,
+              targetCalories: current?.targetCalories ?? targetCalories,
+              targetProtein: current?.targetProtein ?? targetMacros.protein,
+              targetCarbs: current?.targetCarbs ?? targetMacros.carbs,
+              targetFat: current?.targetFat ?? targetMacros.fat,
+              targetWater: current?.targetWater ?? targetWater,
+            };
+          },
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        },
+      );
     },
-    [logData, mutate],
+    [
+      selectedDate,
+      userId,
+      currentMeals,
+      targetCalories,
+      targetMacros,
+      targetWater,
+      mutate,
+    ],
+  );
+
+  const handleSaveTargets = useCallback(
+    async (
+      calories: number,
+      protein: number,
+      carbs: number,
+      fat: number,
+      water: number,
+      reqCalories?: number,
+    ) => {
+      setIsEditingTarget?.(false);
+
+      await mutate(
+        async () => {
+          const response = await fetch("/api/nutrition", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              tempTargetCalories: calories,
+              tempRequiredCalories: reqCalories ?? calories,
+              tempTargetProtein: protein,
+              tempTargetCarbs: carbs,
+              tempTargetFat: fat,
+              tempTargetWater: water,
+              date: selectedDate,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("خطا در ذخیره اهداف");
+          }
+          return response.json();
+        },
+        {
+          optimisticData: (current) => {
+            return {
+              _id: current?._id || "",
+              userId,
+              date: selectedDate,
+              meals: current?.meals || currentMeals,
+              waterIntake: current?.waterIntake ?? currentWater,
+              targetCalories: calories,
+              targetProtein: protein,
+              targetCarbs: carbs,
+              targetFat: fat,
+              targetWater: water,
+            };
+          },
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        },
+      );
+    },
+    [
+      selectedDate,
+      userId,
+      currentMeals,
+      currentWater,
+      mutate,
+      setIsEditingTarget,
+    ],
   );
 
   return {
     handleDeleteFood,
     handleSaveFood,
     handleWaterChange,
+    handleSaveTargets,
   };
 }

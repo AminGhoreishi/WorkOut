@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, memo } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { X, Search, Zap } from "lucide-react";
 import {
   Dialog,
@@ -36,7 +36,6 @@ function AddFoodModal({
   selectedDate,
   currentMeals,
 }: AddFoodModalProps) {
-  const { mutate } = useSWRConfig();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedPresetFood, setSelectedPresetFood] = useState<Food | null>(
@@ -182,29 +181,6 @@ function AddFoodModal({
     }
 
     onSaveFood(newItem);
-
-    const updatedMeals = {
-      ...currentMeals,
-      [activeMealType]: [...(currentMeals[activeMealType] || []), newItem],
-    };
-
-    try {
-      const response = await fetch("/api/nutrition", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          date: selectedDate,
-          meals: updatedMeals,
-        }),
-      });
-      if (response.ok) {
-        mutate(`/api/nutrition?date=${selectedDate}`);
-      }
-    } catch {
-      mutate(`/api/nutrition?date=${selectedDate}`);
-    }
   };
 
   const translateMealName = (type: string) => {

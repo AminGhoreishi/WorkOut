@@ -135,20 +135,25 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
       ? Math.min(100, Math.round((dailyTotals.calories / targetCalories) * 100))
       : 0;
 
-  const { handleDeleteFood, handleSaveFood, handleWaterChange } =
-    useNutritionActions({
-      userId,
-      selectedDate,
-      logData,
-      currentMeals,
-      currentWater,
-      targetCalories,
-      targetMacros,
-      targetWater,
-      activeMealType,
-      mutate,
-      setIsModalOpen,
-    });
+  const {
+    handleDeleteFood,
+    handleSaveFood,
+    handleWaterChange,
+    handleSaveTargets,
+  } = useNutritionActions({
+    userId,
+    selectedDate,
+    logData,
+    currentMeals,
+    currentWater,
+    targetCalories,
+    targetMacros,
+    targetWater,
+    activeMealType,
+    mutate,
+    setIsModalOpen,
+    setIsEditingTarget,
+  });
 
   const handleAddFoodClick = useCallback((mealType: keyof MealData) => {
     setActiveMealType(mealType);
@@ -252,29 +257,7 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
         targetCalories={targetCalories > 0 ? targetCalories : 2200}
         targetMacros={targetMacros}
         targetWater={targetWater}
-        onSaveTargets={(calories, protein, carbs, fat, water) => {
-          mutate(
-            (prev) => ({
-              _id: prev?._id || "",
-              userId,
-              date: selectedDate,
-              meals: prev?.meals || {
-                breakfast: [],
-                lunch: [],
-                dinner: [],
-                snack: [],
-              },
-              waterIntake: prev?.waterIntake || 0,
-              targetCalories: calories,
-              targetProtein: protein,
-              targetCarbs: carbs,
-              targetFat: fat,
-              targetWater: water,
-            }),
-            false,
-          );
-          setIsEditingTarget(false);
-        }}
+        onSaveTargets={handleSaveTargets}
       />
     </div>
   );
