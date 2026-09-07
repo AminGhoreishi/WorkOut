@@ -4,7 +4,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Plus, Utensils } from "lucide-react";
 import AppPagination from "@/components/common/AppPagination";
-import type { FoodItem, PackageItem, MealPlanData, UserItem, MealPlansApiResponse } from "@/types/meal-plan";
+import type { PackageItem, MealPlanData, MealPlansApiResponse } from "@/types/meal-plan";
 import MealPlanForm from "./MealPlanForm";
 import MealPlanList from "./MealPlanList";
 
@@ -30,8 +30,6 @@ export default function MealPlansManagement() {
   } = useSWR<MealPlansApiResponse>(`/api/admin/meal-plan?page=${currentPage}`, fetcher);
 
   const { data: packagesData } = useSWR<{ packages: PackageItem[] }>("/api/admin/package", fetcher);
-  const { data: users = [] } = useSWR<UserItem[]>("/api/admin/subscription/users", fetcher);
-  const { data: foods = [] } = useSWR<FoodItem[]>("/api/food?all=true", fetcher);
 
   const handleEditClick = (plan: MealPlanData) => {
     setEditingPlan(plan);
@@ -81,8 +79,6 @@ export default function MealPlansManagement() {
         {showForm && (
           <MealPlanForm
             packages={packagesData?.packages || []}
-            users={users}
-            foods={foods}
             editingPlan={editingPlan}
             onCancel={handleCancelForm}
             onSubmitSuccess={handleSubmitSuccess}

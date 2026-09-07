@@ -1,5 +1,4 @@
 import type { MealSectionProps } from "@/types/meal-plan";
-import { calculateItemNutrients, calculateMealTotals } from "./mealPlanHelpers";
 
 export default function MealSection({
   title,
@@ -7,8 +6,6 @@ export default function MealSection({
   items = [],
   badgeColor,
 }: MealSectionProps) {
-  const totals = calculateMealTotals(items);
-
   return (
     <div className="bg-white/5 border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-between font-danaMed" dir="rtl">
       <div>
@@ -22,10 +19,6 @@ export default function MealSection({
               <p className="text-xs text-neutral-400 mt-0.5">{items.length} آیتم غذایی</p>
             </div>
           </div>
-          <div className="text-left">
-            <span className="text-sm font-bold text-amber-400 ss02">{totals.calories}</span>
-            <span className="text-xs text-neutral-400 mr-1">کالری</span>
-          </div>
         </div>
 
         {items.length === 0 ? (
@@ -33,29 +26,25 @@ export default function MealSection({
         ) : (
           <div className="space-y-3">
             {items.map((item, index) => {
-              const nutrients = calculateItemNutrients(item);
-              const foodName = item.foodId?.name || "ماده غذایی نامشخص";
-              const unit = item.unit || item.foodId?.unit || "";
+              const foodName = item.name || (typeof item.foodId === "object" ? item.foodId?.name : "") || "ماده غذایی";
+              const unit = item.unit || (typeof item.foodId === "object" ? item.foodId?.unit : "") || "";
 
               return (
                 <div
                   key={index}
-                  className="bg-white/[0.03] border border-white/5 hover:border-amber-500/20 p-3.5 rounded-xl flex items-center justify-between transition-all"
+                  className="bg-white/[0.03] border border-white/5 hover:border-amber-500/20 p-3.5 rounded-xl flex items-center justify-between gap-3 transition-all min-w-0"
                 >
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-semibold text-white mb-1">{foodName}</h4>
-                    <p className="text-xs text-neutral-400 ss02">
-                      مقدار: {item.quantity} {unit}
-                    </p>
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                    <h4 className="text-xs sm:text-sm font-semibold text-white truncate" title={foodName}>
+                      {foodName}
+                    </h4>
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs ss02">
-                    <span className="text-neutral-300 font-semibold">{nutrients.calories} کالری</span>
-                    <div className="hidden sm:flex items-center gap-2 text-neutral-400 border-r border-white/10 pr-3">
-                      <span>P: {nutrients.protein}g</span>
-                      <span>C: {nutrients.carbs}g</span>
-                      <span>F: {nutrients.fat}g</span>
-                    </div>
+                  <div className="text-left shrink-0">
+                    <span className="text-xs font-semibold text-amber-400 ss02 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-xl whitespace-nowrap">
+                      {item.quantity} {unit}
+                    </span>
                   </div>
                 </div>
               );
@@ -63,14 +52,6 @@ export default function MealSection({
           </div>
         )}
       </div>
-
-      {items.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-around text-xs text-neutral-400 ss02">
-          <span>پروتئین: <strong className="text-amber-400">{totals.protein}g</strong></span>
-          <span>کربوهیدرات: <strong className="text-amber-400">{totals.carbs}g</strong></span>
-          <span>چربی: <strong className="text-amber-400">{totals.fat}g</strong></span>
-        </div>
-      )}
     </div>
   );
 }

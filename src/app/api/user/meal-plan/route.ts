@@ -53,15 +53,26 @@ export async function GET() {
       }
     }
 
+    const hasActiveSubscription = Boolean(
+      await Subscription.exists({
+        userId: session.user.id,
+        status: { $in: ["active", "trial"] },
+        endsAt: { $gt: new Date() },
+      })
+    );
+
     if (!plan) {
       return NextResponse.json({
         success: true,
         plan: null,
-        message: "برنامه غذایی فعال برای شما ثبت نشده است.",
+        hasSubscription: hasActiveSubscription,
+        message: hasActiveSubscription
+          ? "مربی در حال ایجاد برنامه غذایی شما است."
+          : "برای دریافت برنامه غذایی، ابتدا یک پکیج فعال تهیه کنید.",
       });
     }
 
-    return NextResponse.json({ success: true, plan });
+    return NextResponse.json({ success: true, plan, hasSubscription: true });
   } catch (error: unknown) {
     const errMessage =
       error instanceof Error ? error.message : "خطا در دریافت اطلاعات برنامه غذایی";

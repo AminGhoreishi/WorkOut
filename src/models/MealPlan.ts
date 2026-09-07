@@ -3,8 +3,9 @@ import { IMealPlan } from "@/types/nutrition";
 
 const MealPlanItemSchema = new Schema(
   {
-    foodId: { type: Schema.Types.ObjectId, ref: "Food", required: true },
-    quantity: { type: Schema.Types.Mixed, required: true },
+    foodId: { type: Schema.Types.ObjectId, ref: "Food", required: false },
+    name: { type: String, required: false, default: "" },
+    quantity: { type: Schema.Types.Mixed, required: false, default: "" },
     unit: { type: String, required: false, default: "" },
   },
   { _id: false }

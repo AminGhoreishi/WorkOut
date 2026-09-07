@@ -1,5 +1,6 @@
 import type mongoose from "mongoose";
 import type { Document } from "mongoose";
+import type { UseFormRegister, FieldErrors, Control, UseFormWatch, UseFormSetValue } from "react-hook-form";
 
 export interface FoodItem {
   _id: string;
@@ -20,7 +21,8 @@ export interface PackageItem {
 }
 
 export interface PlanMealItem {
-  foodId: FoodItem | null;
+  foodId?: FoodItem | string | null;
+  name?: string;
   quantity: string | number;
   unit?: string;
 }
@@ -47,22 +49,26 @@ export interface IMealPlan extends Document {
   packageId?: mongoose.Types.ObjectId;
   isActive: boolean;
   breakfast?: {
-    foodId: mongoose.Types.ObjectId;
+    foodId?: mongoose.Types.ObjectId;
+    name?: string;
     quantity: string | number;
     unit?: string;
   }[];
   lunch?: {
-    foodId: mongoose.Types.ObjectId;
+    foodId?: mongoose.Types.ObjectId;
+    name?: string;
     quantity: string | number;
     unit?: string;
   }[];
   dinner?: {
-    foodId: mongoose.Types.ObjectId;
+    foodId?: mongoose.Types.ObjectId;
+    name?: string;
     quantity: string | number;
     unit?: string;
   }[];
   snack?: {
-    foodId: mongoose.Types.ObjectId;
+    foodId?: mongoose.Types.ObjectId;
+    name?: string;
     quantity: string | number;
     unit?: string;
   }[];
@@ -78,8 +84,8 @@ export interface UserItem {
 }
 
 export interface MealPlanFormItemInput {
-  foodId: string;
-  name?: string;
+  foodId?: string;
+  name: string;
   quantity: string | number;
   unit?: string;
 }
@@ -99,7 +105,7 @@ export interface MealPlanFormInputs {
 export interface MealPlanFormProps {
   packages: PackageItem[];
   users?: UserItem[];
-  foods: FoodItem[];
+  foods?: FoodItem[];
   editingPlan: MealPlanData | null;
   onCancel: () => void;
   onSubmitSuccess: () => void;
@@ -128,13 +134,15 @@ export interface MealPlanItemProps {
 }
 
 export interface MealPlanFormFieldsProps {
-  register: any;
-  errors: any;
-  control: any;
-  watch: any;
-  packages: PackageItem[];
+  register: UseFormRegister<MealPlanFormInputs>;
+  errors: FieldErrors<MealPlanFormInputs>;
+  control: Control<MealPlanFormInputs>;
+  setValue?: UseFormSetValue<MealPlanFormInputs>;
+  initialUser?: { _id: string; fullName?: string; username?: string } | null;
+  watch?: UseFormWatch<MealPlanFormInputs>;
+  packages?: PackageItem[];
   users?: UserItem[];
-  foods: FoodItem[];
+  foods?: FoodItem[];
   isSubmitting: boolean;
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -150,6 +158,7 @@ export interface MealPlansApiResponse {
 export interface UserMealPlanResponse {
   success: boolean;
   plan: MealPlanData | null;
+  hasSubscription?: boolean;
   message?: string;
 }
 
@@ -158,4 +167,13 @@ export interface MealSectionProps {
   icon: React.ElementType;
   items: PlanMealItem[];
   badgeColor: string;
+}
+
+export interface MealPlansErrorProps {
+  message?: string;
+}
+
+export interface MealPlansEmptyProps {
+  hasSubscription?: boolean;
+  message?: string;
 }

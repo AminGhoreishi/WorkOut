@@ -6,10 +6,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { BiDumbbell, BiArrowBack } from "react-icons/bi";
 import { BsShieldCheck, BsPencilSquare, BsArrowClockwise } from "react-icons/bs";
 import { signIn } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
 import { toEnglishDigits } from "@/utils/numbers";
-import type { AuthApiResponse, OtpFormInputs } from "@/types/auth";
+import type { AuthApiResponse } from "@/types/auth";
+
+const OTP_LENGTH = 5;
 
 function OtpFormContent() {
   const searchParams = useSearchParams();
@@ -24,6 +24,7 @@ function OtpFormContent() {
       ? rawCallbackUrl
       : "/dashboard";
 
+  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(120);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isResending, setIsResending] = useState<boolean>(false);
@@ -31,29 +32,16 @@ function OtpFormContent() {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<OtpFormInputs>({
-    defaultValues: {
-      code: "",
-    },
-  });
-
-  const codeValue = watch("code") || "";
-
+  // اعتبارسنجی شماره تماس ورودی
   useEffect(() => {
     if (!phone || !/^09\d{9}$/.test(phone)) {
       router.replace("/login");
     }
   }, [phone, router]);
 
+  // شمارنده معکوس ارسال مجدد
   useEffect(() => {
     if (timeLeft <= 0) return;
-
     const intervalId = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
@@ -67,79 +55,18 @@ function OtpFormContent() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handleDigitChange = (index: number, val: string) => {
-    setServerError("");
-    setSuccessMessage("");
-    const cleanVal = toEnglishDigits(val).replace(/\D/g, "");
-    if (!cleanVal && val !== "") return;
-
-    const digit = cleanVal.slice(-1);
-    const codeArr = ["", "", "", "", ""];
-    for (let i = 0; i < 5; i++) {
-      codeArr[i] = codeValue[i] || "";
-    }
-    codeArr[index] = digit;
-    const newCode = codeArr.join("");
-    setValue("code", newCode);
-
-    if (digit && index < 4) {
-      inputRefs.current[index + 1]?.focus();
-    }
-
-    if (codeArr.every((d) => d !== "")) {
-      submitCode(newCode);
-    }
-  };
-
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Backspace") {
-      if (!codeValue[index] && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-      }
-    } else if (e.key === "ArrowLeft" && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    } else if (e.key === "ArrowRight" && index < 4) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setServerError("");
-    setSuccessMessage("");
-    const rawPasted = e.clipboardData.getData("text");
-    const cleanDigits = toEnglishDigits(rawPasted).replace(/\D/g, "").slice(0, 5);
-
-    if (!cleanDigits) return;
-
-    setValue("code", cleanDigits);
-    const targetIndex = Math.min(cleanDigits.length, 4);
-    inputRefs.current[targetIndex]?.focus();
-
-    if (cleanDigits.length === 5) {
-      submitCode(cleanDigits);
-    }
-  };
-
   const submitCode = async (codeToSubmit: string) => {
-    if (codeToSubmit.length < 5 || isSubmitting) {
-      return;
-    }
+    if (codeToSubmit.length < OTP_LENGTH || isSubmitting) return;
 
     setServerError("");
     setSuccessMessage("");
     setIsSubmitting(true);
+
     try {
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone,
-          code: codeToSubmit,
-        }),
+        body: JSON.stringify({ phone, code: codeToSubmit }),
       });
 
       const resData: AuthApiResponse = await res.json().catch(() => ({
@@ -172,8 +99,74 @@ function OtpFormContent() {
     }
   };
 
-  const onSubmit: SubmitHandler<OtpFormInputs> = (data) => {
-    submitCode(data.code);
+  const handleDigitChange = (index: number, val: string) => {
+    setServerError("");
+    const cleanDigits = toEnglishDigits(val).replace(/\D/g, "");
+
+    
+    if (cleanDigits.length > 1) {
+      applyPastedCode(cleanDigits);
+      return;
+    }
+
+    const char = cleanDigits.slice(-1);
+    const nextDigits = [...digits];
+    nextDigits[index] = char;
+    setDigits(nextDigits);
+
+    
+    if (char && index < OTP_LENGTH - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+
+    
+    const fullCode = nextDigits.join("");
+    if (fullCode.length === OTP_LENGTH && nextDigits.every((d) => d !== "")) {
+      submitCode(fullCode);
+    }
+  };
+
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Backspace") {
+      if (!digits[index] && index > 0) {
+        const nextDigits = [...digits];
+        nextDigits[index - 1] = "";
+        setDigits(nextDigits);
+        inputRefs.current[index - 1]?.focus();
+      }
+    } else if (e.key === "ArrowLeft" && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === "ArrowRight" && index < OTP_LENGTH - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const applyPastedCode = (pastedText: string) => {
+    const clean = toEnglishDigits(pastedText).replace(/\D/g, "").slice(0, OTP_LENGTH);
+    if (!clean) return;
+
+    const nextDigits = Array(OTP_LENGTH).fill("");
+    for (let i = 0; i < clean.length; i++) {
+      nextDigits[i] = clean[i];
+    }
+    setDigits(nextDigits);
+
+    const targetIndex = Math.min(clean.length, OTP_LENGTH - 1);
+    inputRefs.current[targetIndex]?.focus();
+
+    if (clean.length === OTP_LENGTH) {
+      submitCode(clean);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setServerError("");
+    setSuccessMessage("");
+    applyPastedCode(e.clipboardData.getData("text"));
   };
 
   const handleResendCode = async () => {
@@ -182,12 +175,14 @@ function OtpFormContent() {
     setServerError("");
     setSuccessMessage("");
     setIsResending(true);
+
     try {
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone, type: "login" }),
       });
+
       const resData: AuthApiResponse = await res.json().catch(() => ({
         message: "خطا در دریافت پاسخ از سرور",
       }));
@@ -195,7 +190,7 @@ function OtpFormContent() {
 
       if (res.ok) {
         setTimeLeft(120);
-        setValue("code", "", { shouldValidate: true });
+        setDigits(Array(OTP_LENGTH).fill(""));
         inputRefs.current[0]?.focus();
         setSuccessMessage("کد تایید جدید ارسال شد");
       } else {
@@ -206,6 +201,8 @@ function OtpFormContent() {
       setServerError("خطایی در ارتباط با سرور رخ داد");
     }
   };
+
+  const currentCode = digits.join("");
 
   return (
     <div
@@ -223,7 +220,6 @@ function OtpFormContent() {
               استارفیت
             </span>
           </Link>
-         
         </div>
 
         <div className="bg-zinc-950/85 backdrop-blur-2xl border border-amber-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(245,158,11,0.08)] rounded-3xl p-6 sm:p-8 relative overflow-hidden">
@@ -272,15 +268,16 @@ function OtpFormContent() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <input
-              type="hidden"
-              {...register("code")}
-            />
-
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitCode(currentCode);
+            }}
+            className="space-y-6"
+          >
             <div>
               <div className="flex justify-center gap-2.5 sm:gap-3" dir="ltr">
-                {[0, 1, 2, 3, 4].map((index) => (
+                {digits.map((digit, index) => (
                   <input
                     key={index}
                     ref={(el) => {
@@ -288,8 +285,9 @@ function OtpFormContent() {
                     }}
                     type="text"
                     inputMode="numeric"
-                    maxLength={1}
-                    value={codeValue[index] || ""}
+                    autoComplete={index === 0 ? "one-time-code" : "off"}
+                    maxLength={index === 0 ? OTP_LENGTH : 1}
+                    value={digit}
                     onChange={(e) => handleDigitChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
@@ -314,7 +312,7 @@ function OtpFormContent() {
                   disabled={isResending}
                   className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-bold cursor-pointer transition-colors disabled:opacity-50"
                 >
-                  <BsArrowClockwise className="w-4 h-4" />
+                  <BsArrowClockwise className={`w-4 h-4 ${isResending ? "animate-spin" : ""}`} />
                   <span>{isResending ? "در حال ارسال..." : "ارسال مجدد کد"}</span>
                 </button>
               )}
@@ -329,8 +327,8 @@ function OtpFormContent() {
 
             <button
               type="submit"
-              disabled={isSubmitting || codeValue.length < 5}
-              className="w-full bg-gradient-to-r  from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 sm:py-4 rounded-2xl transition-all text-sm sm:text-base cursor-pointer shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transform hover:-translate-y-0.5"
+              disabled={isSubmitting || currentCode.length < OTP_LENGTH}
+              className="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 disabled:opacity-50 text-zinc-950 font-bold py-3.5 sm:py-4 rounded-2xl transition-all text-sm sm:text-base cursor-pointer shadow-[0_0_25px_rgba(234,179,8,0.3)] hover:shadow-[0_0_35px_rgba(234,179,8,0.5)] transform hover:-translate-y-0.5"
             >
               {isSubmitting ? "در حال تایید..." : "تایید و ورود به سیستم"}
             </button>

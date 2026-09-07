@@ -1,7 +1,7 @@
 import type { PlanMealItem } from "@/types/meal-plan";
 
 export function calculateItemNutrients(item: PlanMealItem) {
-  if (!item.foodId) {
+  if (!item.foodId || typeof item.foodId === "string") {
     return { calories: 0, protein: 0, carbs: 0, fat: 0 };
   }
 

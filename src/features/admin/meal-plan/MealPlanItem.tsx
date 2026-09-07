@@ -110,15 +110,19 @@ export default function MealPlanItem({
                 ) : (
                   <ul className="space-y-1.5 max-h-40 overflow-y-auto pr-0.5">
                     {meal.items
-                      ?.filter((item) => item && item.foodId !== null)
-                      .map((item, foodIndex) => (
-                        <li key={foodIndex} className="text-xs text-gray-300 flex justify-between gap-2">
-                          <span className="truncate">{item.foodId?.name || "غذا"}</span>
-                          <span className="text-emerald-400 font-semibold ss02 text-[11px] shrink-0">
-                            {item.quantity} {item.unit || item.foodId?.unit || ""}
-                          </span>
-                        </li>
-                      ))}
+                      ?.filter((item) => item && (item.name || item.foodId))
+                      .map((item, foodIndex) => {
+                        const foodName = item.name || (typeof item.foodId === "object" ? item.foodId?.name : "") || "غذا";
+                        const foodUnit = item.unit || (typeof item.foodId === "object" ? item.foodId?.unit : "") || "";
+                        return (
+                          <li key={foodIndex} className="text-xs text-gray-300 flex justify-between gap-2">
+                            <span className="truncate">{foodName}</span>
+                            <span className="text-emerald-400 font-semibold ss02 text-[11px] shrink-0">
+                              {item.quantity} {foodUnit}
+                            </span>
+                          </li>
+                        );
+                      })}
                   </ul>
                 )}
               </div>

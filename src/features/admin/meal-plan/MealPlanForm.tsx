@@ -15,8 +15,6 @@ import MealPlanFormFields from "./MealPlanFormFields";
 
 export default function MealPlanForm({
   packages = [],
-  users = [],
-  foods = [],
   editingPlan,
   onCancel,
   onSubmitSuccess,
@@ -26,6 +24,7 @@ export default function MealPlanForm({
     handleSubmit,
     reset,
     control,
+    setValue,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<MealPlanFormInputs>({
@@ -49,19 +48,19 @@ export default function MealPlanForm({
     if (editingPlan) {
       const mapMealItems = (items: PlanMealItem[]) => {
         return (items || [])
-          .filter((item) => item && item.foodId)
+          .filter((item) => item && (item.name || item.foodId))
           .map((item) => {
-            const foodIdStr = typeof item.foodId === "object" ? item.foodId?._id : item.foodId;
-            const foodNameStr = typeof item.foodId === "object" ? item.foodId?.name : "";
-            const matchedFood = foods.find((f) => String(f._id) === String(foodIdStr));
+            const foodIdStr = typeof item.foodId === "object" ? item.foodId?._id : (item.foodId || "");
+            const foodNameStr = typeof item.foodId === "object" ? item.foodId?.name : (item.name || "");
+            const foodUnitStr = typeof item.foodId === "object" ? item.foodId?.unit : (item.unit || "");
             return {
               foodId: String(foodIdStr || ""),
-              name: foodNameStr || matchedFood?.name || "غذا",
-              quantity: item.quantity !== undefined && item.quantity !== null ? String(item.quantity) : "100 گرم",
-              unit: item.unit || matchedFood?.unit || "",
+              name: item.name || foodNameStr || "غذا",
+              quantity: item.quantity !== undefined && item.quantity !== null && String(item.quantity).trim() !== "" ? String(item.quantity) : "۱ واحد",
+              unit: item.unit || foodUnitStr || "",
             };
           })
-          .filter((item) => item.foodId.trim() !== "");
+          .filter((item) => item.name.trim() !== "");
       };
 
       reset({
@@ -82,12 +81,12 @@ export default function MealPlanForm({
     try {
       const sanitizeMeal = (items: MealPlanFormItemInput[]) =>
         (items || [])
-          .filter((item) => item && item.foodId && String(item.foodId).trim() !== "")
+          .filter((item) => item && item.name && String(item.name).trim() !== "")
           .map((item) => {
-            const rawQty = item.quantity !== undefined && item.quantity !== null ? String(item.quantity).trim() : "100 گرم";
+            const rawQty = item.quantity !== undefined && item.quantity !== null ? String(item.quantity).trim() : "";
             return {
-              foodId: String(item.foodId).trim(),
-              quantity: rawQty || "100 گرم",
+              name: String(item.name).trim(),
+              quantity: rawQty || "۱ واحد",
               unit: item.unit ? String(item.unit).trim() : "",
             };
           });
@@ -171,10 +170,18 @@ export default function MealPlanForm({
         register={register}
         errors={errors}
         control={control}
+        setValue={setValue}
+        initialUser={
+          editingPlan?.userId && typeof editingPlan.userId === "object"
+            ? {
+                _id: String(editingPlan.userId._id || ""),
+                fullName: editingPlan.userId.fullName,
+                username: editingPlan.userId.username,
+              }
+            : null
+        }
         watch={watch}
         packages={packages}
-        users={users}
-        foods={foods}
         isSubmitting={isSubmitting}
         onCancel={onCancel}
         onSubmit={handleSubmit(onSubmit)}

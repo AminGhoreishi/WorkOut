@@ -21,8 +21,9 @@ const mealPlanSchema = {
     items: {
       type: "object",
       props: {
-        foodId: { type: "string", empty: false },
-        quantity: [{ type: "string", empty: false }, { type: "number" }],
+        name: { type: "string", empty: false, messages: { stringEmpty: "نام غذا نباید خالی باشد." } },
+        foodId: { type: "string", optional: true, nullable: true },
+        quantity: [{ type: "string", optional: true, nullable: true }, { type: "number", optional: true }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -33,8 +34,9 @@ const mealPlanSchema = {
     items: {
       type: "object",
       props: {
-        foodId: { type: "string", empty: false },
-        quantity: [{ type: "string", empty: false }, { type: "number" }],
+        name: { type: "string", empty: false, messages: { stringEmpty: "نام غذا نباید خالی باشد." } },
+        foodId: { type: "string", optional: true, nullable: true },
+        quantity: [{ type: "string", optional: true, nullable: true }, { type: "number", optional: true }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -45,8 +47,9 @@ const mealPlanSchema = {
     items: {
       type: "object",
       props: {
-        foodId: { type: "string", empty: false },
-        quantity: [{ type: "string", empty: false }, { type: "number" }],
+        name: { type: "string", empty: false, messages: { stringEmpty: "نام غذا نباید خالی باشد." } },
+        foodId: { type: "string", optional: true, nullable: true },
+        quantity: [{ type: "string", optional: true, nullable: true }, { type: "number", optional: true }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
@@ -57,8 +60,9 @@ const mealPlanSchema = {
     items: {
       type: "object",
       props: {
-        foodId: { type: "string", empty: false },
-        quantity: [{ type: "string", empty: false }, { type: "number" }],
+        name: { type: "string", empty: false, messages: { stringEmpty: "نام غذا نباید خالی باشد." } },
+        foodId: { type: "string", optional: true, nullable: true },
+        quantity: [{ type: "string", optional: true, nullable: true }, { type: "number", optional: true }],
         unit: { type: "string", optional: true, nullable: true },
       },
     },
