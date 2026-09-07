@@ -12,6 +12,7 @@ import type {
   MealItem,
   NutritionLog,
   NutritionTrackerProps,
+  NutritionApiError,
 } from "@/types/nutrition";
 import WaterTracker from "./components/WaterTracker";
 import AddFoodModal from "./components/AddFoodModal";
@@ -21,13 +22,19 @@ import NutritionDateSelector from "./components/NutritionDateSelector";
 import NutritionMacrosCard from "./components/NutritionMacrosCard";
 import NutritionCalorieStats from "./components/NutritionCalorieStats";
 import NutritionCalorieHeader from "./NutritionCalorieHeader";
+import NutritionError from "./components/NutritionError";
 import useNutritionActions from "@/hooks/useNutritionActions";
 import { getLocalDateString } from "@/utils/date";
 
 const fetcher = async (url: string): Promise<NutritionLog | null> => {
   const res = await fetch(url);
   if (!res.ok) {
-    return null;
+    const errorData = await res.json().catch(() => ({}));
+    const error: NutritionApiError = new Error(
+      errorData.message || "خطا در دریافت اطلاعات تغذیه و کالری‌شمار",
+    );
+    error.status = res.status;
+    throw error;
   }
   return res.json();
 };
@@ -52,15 +59,27 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   const {
     data: logData,
     isLoading: isLoadingMeals,
+    error,
     mutate,
-  } = useSWR<NutritionLog | null>(
+  } = useSWR<NutritionLog | null, NutritionApiError>(
     `/api/nutrition?date=${selectedDate}`,
     fetcher,
     {
       revalidateOnFocus: false,
       dedupingInterval: 5000,
+      shouldRetryOnError: (err) => err?.status !== 401,
     },
   );
+
+  if (error) {
+    return (
+      <NutritionError
+        message={error.message}
+        isUnauthorized={error.status === 401}
+        onRetry={() => mutate()}
+      />
+    );
+  }
 
   const targetCalories = logData?.targetCalories ?? 0;
   const targetMacros = useMemo(
@@ -244,9 +263,6 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
         onClose={() => setIsModalOpen(false)}
         activeMealType={activeMealType}
         onSaveFood={handleSaveFood}
-        userId={userId}
-        selectedDate={selectedDate}
-        currentMeals={currentMeals}
       />
 
       <EditTargetModal

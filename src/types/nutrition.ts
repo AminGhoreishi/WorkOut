@@ -97,9 +97,16 @@ export interface AddFoodModalProps {
   onClose: () => void;
   activeMealType: keyof MealData;
   onSaveFood: (newItem: FoodItem) => void;
-  userId: string;
-  selectedDate: string;
-  currentMeals: MealData;
+}
+
+export interface NutritionApiError extends Error {
+  status?: number;
+}
+
+export interface NutritionErrorProps {
+  message?: string;
+  isUnauthorized?: boolean;
+  onRetry?: () => void;
 }
 
 export interface MealPlanItem {

@@ -14,9 +14,9 @@ function NutritionMacrosCard({
       </h4>
 
       <div>
-        <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-          <span className="text-amber-300">پروتئین (عضله‌ساز)</span>
-          <span className="text-neutral-400 flex items-center gap-1 ss02">
+        <div className="flex justify-between items-center text-[10px] sm:text-xs mb-1 gap-2 min-w-0">
+          <span className="text-amber-300 truncate">پروتئین (عضله‌ساز)</span>
+          <span className="text-neutral-400 flex items-center gap-1 ss02 shrink-0">
             {dailyTotals.protein} /{" "}
             {targetsLoaded ? (
               `${targetMacros.protein}g`
@@ -36,9 +36,9 @@ function NutritionMacrosCard({
       </div>
 
       <div>
-        <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-          <span className="text-amber-400">کربوهیدرات (انرژی)</span>
-          <span className="text-neutral-400 flex items-center gap-1 ss02">
+        <div className="flex justify-between items-center text-[10px] sm:text-xs mb-1 gap-2 min-w-0">
+          <span className="text-amber-400 truncate">کربوهیدرات (انرژی)</span>
+          <span className="text-neutral-400 flex items-center gap-1 ss02 shrink-0">
             {dailyTotals.carbs} /{" "}
             {targetsLoaded ? (
               `${targetMacros.carbs}g`
@@ -58,9 +58,9 @@ function NutritionMacrosCard({
       </div>
 
       <div>
-        <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-          <span className="text-yellow-400">چربی (هورمون‌ساز)</span>
-          <span className="text-neutral-400 flex items-center gap-1 ss02">
+        <div className="flex justify-between items-center text-[10px] sm:text-xs mb-1 gap-2 min-w-0">
+          <span className="text-yellow-400 truncate">چربی (هورمون‌ساز)</span>
+          <span className="text-neutral-400 flex items-center gap-1 ss02 shrink-0">
             {dailyTotals.fat} /{" "}
             {targetsLoaded ? (
               `${targetMacros.fat}g`

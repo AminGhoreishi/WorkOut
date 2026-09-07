@@ -46,14 +46,14 @@ const MealsGrid: React.FC<MealsGridProps> = ({
             key={mealType}
             className="bg-white/5 border border-white/10 rounded-2xl p-5 shadow-lg flex flex-col justify-between"
           >
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-white/5">
-              <div className="flex items-center gap-2">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-white/5 gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 {mealIcon}
-                <h4 className="text-white font-bold text-sm sm:text-base">
+                <h4 className="text-white font-bold text-sm sm:text-base truncate">
                   {translateMealName(mealType)}
                 </h4>
               </div>
-              <span className="text-white/60 text-[10px] sm:text-xs bg-white/5 border border-white/5 px-2 py-1 rounded-md ss02">
+              <span className="text-white/60 text-[10px] sm:text-xs bg-white/5 border border-white/5 px-2 py-1 rounded-md ss02 shrink-0">
                 {mealCalories} کالری
               </span>
             </div>
@@ -65,24 +65,28 @@ const MealsGrid: React.FC<MealsGridProps> = ({
                 mealItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex justify-between items-center bg-white/5 border border-white/5 hover:border-white/10 px-3 py-2 rounded-xl text-[11px] sm:text-xs transition-colors"
+                    className="flex justify-between items-center bg-white/5 border border-white/5 hover:border-white/10 px-3 py-2 rounded-xl text-[11px] sm:text-xs transition-colors gap-3"
                   >
-                    <div>
-                      <span className="text-white/90 font-medium block text-xs sm:text-sm">
+                    <div className="min-w-0 flex-1">
+                      <span
+                        className="text-white/90 font-medium block text-xs sm:text-sm truncate"
+                        title={item.name}
+                      >
                         {item.name}
                       </span>
-                      <span className="text-white/40 text-[9px] sm:text-[10px] block mt-0.5 ss02">
+                      <span className="text-white/40 text-[9px] sm:text-[10px] block mt-0.5 ss02 truncate">
                         {item.quantity} {item.unit} | پ: {item.protein || 0}g، ک:{" "}
                         {item.carbs || 0}g، چ: {item.fat || 0}g
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <span className="text-white/80 font-semibold text-xs sm:text-sm ss02">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                      <span className="text-white/80 font-semibold text-xs sm:text-sm ss02 shrink-0">
                         {item.calories || 0} kcal
                       </span>
                       <button
+                        type="button"
                         onClick={() => onDeleteFood(mealType, item.id)}
-                        className="text-white/30 hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-white/5 cursor-pointer"
+                        className="text-white/30 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-white/5 cursor-pointer shrink-0"
                         title="حذف غذا"
                       >
                         <Trash2 className="w-4 h-4" />

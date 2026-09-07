@@ -33,8 +33,6 @@ function AddFoodModal({
   onClose,
   activeMealType,
   onSaveFood,
-  selectedDate,
-  currentMeals,
 }: AddFoodModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -51,15 +49,6 @@ function AddFoodModal({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const popularFoodsKey = isOpen
-    ? `/api/food?isAddModal=true&type=${activeMealType}`
-    : null;
-  const { data: dbFoodsData, isLoading: isFetchingPopular } = useSWR<Food[]>(
-    popularFoodsKey,
-    foodFetcher,
-    { revalidateOnFocus: false, dedupingInterval: 10000 }
-  );
-
   const searchFoodsKey =
     isOpen && debouncedSearchQuery.trim()
       ? `/api/food?search=${encodeURIComponent(debouncedSearchQuery)}&isAddModal=true&type=${activeMealType}`
@@ -70,7 +59,6 @@ function AddFoodModal({
     { revalidateOnFocus: false, dedupingInterval: 5000 }
   );
 
-  const dbFoods = useMemo(() => dbFoodsData || [], [dbFoodsData]);
   const searchResults = useMemo(
     () => searchResultsData || [],
     [searchResultsData]
@@ -101,12 +89,6 @@ function AddFoodModal({
       reset();
     }
   }, [isOpen, reset]);
-
-  const popularFoods = useMemo(() => {
-    return dbFoods.filter(
-      (f) => f.type === activeMealType || f.type === "all"
-    );
-  }, [dbFoods, activeMealType]);
 
   const handleSelectPreset = (food: Food) => {
     setSelectedPresetFood(food);
@@ -300,39 +282,6 @@ function AddFoodModal({
                     <div className="text-center py-4 text-white/40 text-xs">
                       غذایی پیدا نشد. می‌توانید از تب «ثبت به صورت دستی» استفاده
                       کنید.
-                    </div>
-                  ) : !selectedPresetFood ? (
-                    <div className="space-y-2">
-                      <p className="text-amber-400/80 text-[10px] font-bold uppercase tracking-wider mb-2">
-                        غذاهای پر مصرف:
-                      </p>
-                      {isFetchingPopular ? (
-                        <div className="text-center py-4 text-white/30 text-xs">
-                          در حال بارگذاری غذاها...
-                        </div>
-                      ) : popularFoods.length === 0 ? (
-                        <div className="text-center py-4 text-white/30 text-xs">
-                          غذایی برای این وعده یافت نشد.
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-2 gap-2">
-                          {popularFoods.slice(0, 6).map((food) => (
-                            <button
-                              type="button"
-                              key={food._id}
-                              onClick={() => handleSelectPreset(food)}
-                              className="text-right text-xs bg-white/5 hover:bg-white/10 hover:text-white text-white/70 border border-white/5 px-3 py-2.5 rounded-xl transition-all cursor-pointer"
-                            >
-                              <span className="block font-medium">
-                                {food.name}
-                              </span>
-                              <span className="block text-[9px] text-white/40 mt-0.5 ss02">
-                                {food.calories} kcal / {food.unit}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   ) : null}
                 </div>

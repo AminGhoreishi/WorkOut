@@ -20,11 +20,11 @@ function NutritionDateSelector({
   };
 
   return (
-    <div className="flex items-center justify-between w-full sm:w-auto bg-white/5 border border-amber-500/15 rounded-2xl p-1 gap-1">
+    <div className="flex items-center justify-between w-full sm:w-auto bg-white/5 border border-amber-500/15 rounded-2xl p-1 gap-1 min-w-0">
       <button
         type="button"
         onClick={() => changeDate("prev")}
-        className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer"
+        className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer shrink-0"
         title="دیروز"
       >
         <ChevronRight className="w-4 h-4 sm:w-5 h-5" />
@@ -38,16 +38,16 @@ function NutritionDateSelector({
             onDateChange(todayStr);
           }
         }}
-        className="px-3 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white rounded-xl hover:bg-amber-500/10 transition-all cursor-pointer select-none flex-1 text-center flex items-center justify-center gap-1.5"
+        className="px-2 sm:px-6 py-2 text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white rounded-xl hover:bg-amber-500/10 transition-all cursor-pointer select-none flex-1 min-w-0 text-center flex items-center justify-center gap-1.5"
       >
         {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />}
-        <span className="ss02">{getPersianDateLabel(selectedDate)}</span>
+        <span className="ss02 truncate">{getPersianDateLabel(selectedDate)}</span>
       </button>
 
       <button
         type="button"
         onClick={() => changeDate("next")}
-        className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer"
+        className="p-2 rounded-xl text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all cursor-pointer shrink-0"
         title="فردا"
       >
         <ChevronLeft className="w-4 h-4 sm:w-5 h-5" />
