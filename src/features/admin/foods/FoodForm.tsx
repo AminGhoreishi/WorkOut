@@ -31,21 +31,33 @@ export default function FoodForm({
             )}
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-gray-400">کالری (Kcal)</label>
-            <input
-              type="number"
-              {...register("calories", {
-                required: "وارد کردن کالری الزامی است.",
-                min: { value: 0, message: "کالری نمیتواند منفی باشد." },
-                valueAsNumber: true,
-              })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
-              placeholder="0"
-            />
-            {errors.calories && (
-              <span className="text-[10px] text-red-400">{errors.calories.message}</span>
-            )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-gray-400">کالری (Kcal)</label>
+              <input
+                type="number"
+                {...register("calories", {
+                  required: "وارد کردن کالری الزامی است.",
+                  min: { value: 0, message: "کالری نمیتواند منفی باشد." },
+                  valueAsNumber: true,
+                })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all ss02"
+                placeholder="0"
+              />
+              {errors.calories && (
+                <span className="text-[10px] text-red-400">{errors.calories.message}</span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-gray-400">واحد اندازه‌گیری</label>
+              <input
+                type="text"
+                {...register("unit")}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all placeholder:text-white/40"
+                placeholder="مثال: گرم، کف دست، قاشق، عدد"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">

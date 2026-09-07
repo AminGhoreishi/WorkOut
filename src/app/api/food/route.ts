@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    const { name, calories, protein, carbs, fat, isActive, type } = body;
+    const { name, calories, protein, carbs, fat, unit, isActive, type } = body;
     if (!name || calories === undefined) {
       return NextResponse.json(
         { message: "نام غذا و کالری الزامی است." },
@@ -101,6 +101,7 @@ export async function POST(req: NextRequest) {
       protein: protein || 0,
       carbs: carbs || 0,
       fat: fat || 0,
+      unit: unit ? unit.trim() : "گرم",
       type: type || "all",
       isActive: isActive !== undefined ? isActive : true,
     });

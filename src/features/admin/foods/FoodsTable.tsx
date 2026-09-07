@@ -212,7 +212,10 @@ const FoodsTable = forwardRef<FoodsTableRef, FoodsTableProps>(
                       className="hover:bg-white/5 transition-colors"
                     >
                       <td className="py-3.5 pr-2 font-semibold text-white">
-                        {food.name}
+                        <div>{food.name}</div>
+                        <span className="text-[11px] text-gray-400 font-normal block mt-0.5 ss02">
+                          واحد: {food.unit || "گرم"}
+                        </span>
                       </td>
                       <td className="py-3.5 text-center font-bold text-white ss02">
                         {food.calories}
