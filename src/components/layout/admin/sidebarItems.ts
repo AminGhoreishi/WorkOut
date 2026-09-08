@@ -7,6 +7,7 @@ import {
   Calendar,
   BookOpen,
   MessageSquare,
+  MessageSquareQuote,
   Dumbbell,
   Ticket,
   CreditCard,
@@ -83,6 +84,13 @@ export function getAdminMenuItems(
           icon: MessageSquare,
           badge: counts.comments > 0 ? formatNumber(counts.comments) : "۰",
           href: "/admin/comments",
+        },
+        {
+          id: "admin-testimonials",
+          label: "نظرات شاگردان",
+          icon: MessageSquareQuote,
+          badge: null,
+          href: "/admin/testimonials",
         },
         {
           id: "workouts",
