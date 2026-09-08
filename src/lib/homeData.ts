@@ -3,11 +3,13 @@ import BlogModel from "@/models/Blog";
 import UserModel from "@/models/User";
 import PackageModel from "@/models/Package";
 import PackageFeatureModel from "@/models/Packagefeature";
+import TestimonialModel from "@/models/Testimonial";
 import { connection } from "next/server";
 import type {
   HomeArticleItem,
   HomeWorkoutPlanItem,
   HomeStats,
+  TestimonialItem,
 } from "@/types/components";
 
 export async function getHomeArticles(): Promise<HomeArticleItem[]> {
@@ -134,4 +136,37 @@ export async function getHomeStats(): Promise<HomeStats> {
     todayUsersCount: formatPersianNumber(todayCount),
     trendText,
   };
+}
+
+export async function getHomeTestimonials(): Promise<TestimonialItem[]> {
+  await connection();
+  await dbConnect();
+  const dbTestimonials = await TestimonialModel.find({ isVisible: true })
+    .select("_id name role avatar badge rating comment achievement createdAt userId")
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .populate("userId", "fullName username avatar role")
+    .lean();
+
+  if (!dbTestimonials || dbTestimonials.length === 0) {
+    return [];
+  }
+
+  return dbTestimonials.map((item: any) => {
+    const user = item.userId;
+    const resolvedName =
+      user?.fullName || user?.username || item.name || "ورزشکار استارفیت";
+    const resolvedAvatar = user?.avatar || item.avatar || "";
+
+    return {
+      id: item._id.toString(),
+      name: resolvedName,
+      role: item.role || "شاگرد استارفیت",
+      avatar: resolvedAvatar,
+      badge: item.badge || "ورزشکار",
+      rating: typeof item.rating === "number" ? item.rating : 5,
+      comment: item.comment,
+      achievement: item.achievement || "",
+    };
+  });
 }

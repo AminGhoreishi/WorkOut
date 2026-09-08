@@ -136,6 +136,25 @@ export interface TestimonialItem {
   comment: string;
   achievement: string;
 }
+
+export interface TestimonialCategoryOption {
+  key: string;
+  label: string;
+}
+
+export interface TestimonialStatItem {
+  value: string;
+  label: string;
+  description: string;
+}
+
+export interface TestimonialsProps {
+  testimonials?: TestimonialItem[];
+}
+
+export interface TestimonialsListProps {
+  testimonials: TestimonialItem[];
+}
 export interface BubbleProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive" | null;
   align?: "start" | "end";

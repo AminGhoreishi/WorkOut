@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { danaMedium, danaLight, danaBold, morabbaReg } from "./fonts";
 import NextTopLoader from "nextjs-toploader";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: {
@@ -34,9 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" className={cn("font-sans", geist.variable)}>
+    <html lang="fa" dir="rtl">
       <body
-        className={`${danaMedium.variable} ${danaLight.variable} ${danaBold.variable} ${morabbaReg.variable} min-h-screen bg-neutral-950 text-white selection:bg-amber-500 selection:text-black`}
+        className={`${danaMedium.variable} ${danaLight.variable} ${danaBold.variable} ${morabbaReg.variable} min-h-screen bg-neutral-950 text-white selection:bg-amber-500 selection:text-black font-danaMed`}
       >
         <NextTopLoader
           color="#eab308"
