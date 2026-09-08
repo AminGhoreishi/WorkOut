@@ -103,6 +103,7 @@ export default function MobileMenu({
                       <Link
                         key={item.href}
                         href={item.href}
+                        prefetch={false}
                         onClick={onClose}
                         className={`w-full flex items-center justify-between px-1 py-2.5 transition-all duration-200 group ${
                           isActive
@@ -165,6 +166,7 @@ export default function MobileMenu({
               {role === "admin" ? (
                 <Link
                   href="/admin"
+                  prefetch={false}
                   onClick={onClose}
                   className="flex items-center justify-between w-full bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-yellow-500/10 hover:from-amber-500/30 hover:to-yellow-500/20 border border-amber-500/40 text-amber-300 font-bold py-2.5 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)] text-sm active:scale-[0.98]"
                 >
@@ -177,6 +179,7 @@ export default function MobileMenu({
               ) : (
                 <Link
                   href="/dashboard"
+                  prefetch={false}
                   onClick={onClose}
                   className="flex items-center justify-between w-full bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-yellow-500/10 hover:from-amber-500/30 hover:to-yellow-500/20 border border-amber-500/40 text-amber-300 font-bold py-2.5 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)] text-sm active:scale-[0.98]"
                 >
@@ -204,6 +207,7 @@ export default function MobileMenu({
           ) : (
             <Link
               href="/login"
+              prefetch={false}
               onClick={onClose}
               className="flex items-center justify-center gap-2.5 w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(234,179,8,0.25)] hover:shadow-[0_0_25px_rgba(234,179,8,0.4)] active:scale-[0.98] transition-all text-sm"
             >

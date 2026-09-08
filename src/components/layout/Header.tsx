@@ -5,9 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Dumbbell } from "lucide-react";
+import useSWR from "swr";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
-import type { HeaderProps } from "@/types/components";
+import HeaderAuthSkeleton from "./HeaderAuthSkeleton";
+import type { HeaderProps, HeaderSession } from "@/types/components";
+import { getSession } from "next-auth/react";
 
 export default function Header({
   user,
@@ -16,6 +19,17 @@ export default function Header({
 }: HeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  const { data: session, isLoading } = useSWR(
+    "user-session",
+    () => getSession(),
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
+    }
+  );
+
+  const currentUser = user ?? session?.user;
 
   const getLinkClass = (href: string) => {
     const isActive = pathname === href;
@@ -61,16 +75,16 @@ export default function Header({
               <Link href="/" className={getLinkClass("/")}>
                 خانه
               </Link>
-              <Link href="/packages" className={getLinkClass("/packages")}>
+              <Link href="/packages" prefetch={false} className={getLinkClass("/packages")}>
                 پکیج‌ها
               </Link>
-              <Link href="/nutrition" className={getLinkClass("/nutrition")}>
+              <Link href="/nutrition" prefetch={false} className={getLinkClass("/nutrition")}>
                 کالری شمار
               </Link>
-              <Link href="/articles" className={getLinkClass("/articles")}>
+              <Link href="/articles" prefetch={false} className={getLinkClass("/articles")}>
                 مقالات
               </Link>
-              <Link href="/about" className={getLinkClass("/about")}>
+              <Link href="/about" prefetch={false} className={getLinkClass("/about")}>
                 درباره ما
               </Link>
             </div>
@@ -78,16 +92,19 @@ export default function Header({
             <div className="hidden lg:flex items-center">
               {authSlot ? (
                 authSlot
-              ) : user ? (
+              ) : isLoading && !currentUser ? (
+                <HeaderAuthSkeleton />
+              ) : currentUser ? (
                 <UserDropdown
-                  username={user.username || ""}
-                  avatar={user.avatar || ""}
-                  email={user.email || ""}
-                  role={user.role || ""}
+                  username={currentUser.username || ""}
+                  avatar={currentUser.avatar || ""}
+                  email={currentUser.email || ""}
+                  role={currentUser.role || ""}
                 />
               ) : (
                 <Link
                   href="/login"
+                  prefetch={false}
                   className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold px-6 py-2 rounded-xl transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)]"
                 >
                   ورود / ثبت نام
@@ -97,6 +114,7 @@ export default function Header({
 
             <Link
               href="/dashboard/workout"
+              prefetch={false}
               className="lg:hidden p-2 text-neutral-300 hover:text-amber-400 transition-colors"
               aria-label="پکیج‌های ورزشی"
             >
@@ -109,10 +127,10 @@ export default function Header({
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        role={user?.role}
-        username={user?.username}
-        email={user?.email}
-        avatar={user?.avatar}
+        role={currentUser?.role}
+        username={currentUser?.username}
+        email={currentUser?.email}
+        avatar={currentUser?.avatar}
         mobileAuthSlot={mobileAuthSlot}
         getLinkClass={getLinkClass}
       />

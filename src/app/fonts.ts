@@ -10,12 +10,14 @@ export const danaLight = localFont({
   src: "../../public/fonts/woff2/Dana-Light.woff2",
   display: "swap",
   variable: "--font-danaLight",
+  preload: false,
 });
 
 export const danaBold = localFont({
   src: "../../public/fonts/woff2/Dana-DemiBold.woff2",
   display: "swap",
   variable: "--font-danaDemiBold",
+  preload: false,
 });
 
 export const morabbaReg = localFont({

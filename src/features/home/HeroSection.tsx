@@ -33,6 +33,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 font-danaMed pt-2">
               <Link
                 href="/packages"
+                prefetch={false}
                 className="bg-gradient-to-r max-sm:text-sm from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-bold px-8 py-4 rounded-2xl shadow-[0_0_30px_rgba(234,179,8,0.35)] hover:shadow-[0_0_40px_rgba(234,179,8,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2.5 text-base"
               >
                 <span>مشاهده پکیج‌ها</span>
@@ -40,6 +41,7 @@ export default function HeroSection() {
               </Link>
               <Link
                 href="/about"
+                prefetch={false}
                 className="bg-neutral-900/80 max-sm:text-sm hover:bg-neutral-800 border border-neutral-700/60 hover:border-amber-500/40 text-neutral-200 hover:text-white font-semibold px-7 py-4 rounded-2xl transition-all backdrop-blur-md flex items-center justify-center gap-2 text-base"
               >
                 <span>درباره استارفیت</span>
@@ -71,7 +73,6 @@ export default function HeroSection() {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 450px, 500px"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 priority
-                fetchPriority="high"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-90 pointer-events-none" />
 
