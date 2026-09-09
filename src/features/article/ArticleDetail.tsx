@@ -132,7 +132,11 @@ export default function ArticleDetail({
               articleId={article._id}
               articleTitle={article.title}
               userId={userId}
-              initialLikeCount={article?.likedUsers?.length || 0}
+              initialLikeCount={
+                typeof article.likes === "number"
+                  ? article.likes
+                  : article?.likedUsers?.length || 0
+              }
               totalComments={totalComments}
               isLiked={isLiked}
               isWished={isWished}
