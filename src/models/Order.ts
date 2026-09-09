@@ -23,5 +23,7 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: true, versionKey: false },
 );
 
+OrderSchema.index({ status: 1, createdAt: -1 });
+
 export default mongoose.models.Order ||
   mongoose.model<IOrder>("Order", OrderSchema);

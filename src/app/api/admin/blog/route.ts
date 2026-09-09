@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadFileToS3, deleteFileFromS3 } from "@/lib/arvan";
 import { validateBlog, validateBlogUpdate } from "@/validators/blog";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 async function generateUniqueSlug(title: string): Promise<string> {
   const baseSlug = title
@@ -210,6 +211,10 @@ export async function POST(req: NextRequest) {
       views: 0,
     });
 
+    revalidateTag("articles", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/articles");
+
     return NextResponse.json({ success: true, blog }, { status: 201 });
   } catch (error: any) {
     console.error("POST /api/admin/blog error:", error.message);
@@ -329,6 +334,13 @@ export async function PUT(req: NextRequest) {
 
     await blog.save();
 
+    revalidateTag("articles", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/articles");
+    if (blog.slug) {
+      revalidatePath(`/article/${blog.slug}`);
+    }
+
     return NextResponse.json({ success: true, blog });
   } catch (error: any) {
     return NextResponse.json(
@@ -378,6 +390,13 @@ export async function DELETE(req: NextRequest) {
     }
 
     await Blog.findByIdAndDelete(id);
+
+    revalidateTag("articles", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/articles");
+    if (blog.slug) {
+      revalidatePath(`/article/${blog.slug}`);
+    }
 
     return NextResponse.json({
       success: true,

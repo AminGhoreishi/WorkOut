@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import Pagination from "@/components/common/Pagination";
+import AppPagination from "@/components/common/AppPagination";
 import { showAlert, showConfirm } from "@/utils/alert";
 import { formatNumber } from "@/utils/numbers";
 import {
@@ -414,13 +414,12 @@ export default function ArticleList({ onStatsChange }: ArticleListProps) {
           </div>
         )}
 
-        {!isTableLoading && articles.length > 0 && (
+        {!isTableLoading && articles.length > 0 && totalPages > 1 && (
           <div className="p-4">
-            <Pagination
+            <AppPagination
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={total}
-              pageSize={10}
               onPageChange={setCurrentPage}
             />
           </div>

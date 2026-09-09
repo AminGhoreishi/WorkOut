@@ -47,3 +47,20 @@ export const formatPersianDate = (
 };
 
 export const formatDate = formatPersianDate;
+
+export const getStartOfShamsiMonth = (): Date => {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-US-u-ca-persian", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(now);
+  const pDay = parseInt(
+    parts.find((p) => p.type === "day")?.value || "1",
+    10,
+  );
+  const start = new Date(now);
+  start.setDate(start.getDate() - (pDay - 1));
+  start.setHours(0, 0, 0, 0);
+  return start;
+};

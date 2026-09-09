@@ -34,5 +34,7 @@ SubscriptionSchema.virtual("pr", {
   justOne: false,
 });
 
+SubscriptionSchema.index({ userId: 1, status: 1, endsAt: -1 });
+
 export default mongoose.models.Subscription ||
   mongoose.model<ISubscriptionDocument>("Subscription", SubscriptionSchema);

@@ -14,18 +14,22 @@ export default async function AdminDashboardAdmin({
 }: AdminDashboardAdminProps) {
   await dbConnect();
 
-  const users = await User.find({}, "username email fullName role status createdAt")
+  const users = await User.find(
+    {},
+    "username email fullName role status createdAt",
+  )
     .sort({ createdAt: -1 })
-    .limit(5);
+    .limit(5)
+    .lean();
 
-  const formattedUsers = users.map((u) => ({
+  const formattedUsers = users.map((u: any) => ({
     _id: u._id.toString(),
     username: u.username || "",
     email: u.email || "",
     fullName: u.fullName || "",
     role: u.role || "user",
     status: u.status || "active",
-    createdAt: u.createdAt ? u.createdAt.toISOString() : new Date().toISOString(),
+    createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : new Date().toISOString(),
   }));
 
   return (
@@ -37,7 +41,7 @@ export default async function AdminDashboardAdmin({
         monthlyIncome={monthlyIncome}
       />
 
-      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <RecentUsers users={formattedUsers} />
         <RecentComments />
       </div>

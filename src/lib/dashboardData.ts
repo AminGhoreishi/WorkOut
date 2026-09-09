@@ -81,61 +81,75 @@ export async function processDashboardData(
   };
 
   let workoutPlan = null;
-  if (activeSubscription?.packageId?._id) {
-    workoutPlan = await WorkoutPlanModel.findOne({
+  const planConditions = [];
+
+  if (activeSubscription?.packageId?._id && dbUser?._id) {
+    planConditions.push({
       packageId: activeSubscription.packageId._id,
       userId: dbUser._id,
       isActive: true,
-    }).lean();
+    });
+  }
+  if (activeSubscription?.packageId?._id) {
+    planConditions.push({
+      packageId: activeSubscription.packageId._id,
+      isActive: true,
+    });
+  }
+  if (dbUser?._id) {
+    planConditions.push({
+      userId: dbUser._id,
+      isActive: true,
+    });
+  }
 
-    if (!workoutPlan) {
+  if (planConditions.length > 0) {
+    try {
       workoutPlan = await WorkoutPlanModel.findOne({
-        packageId: activeSubscription.packageId._id,
-        isActive: true,
+        $or: planConditions,
       }).lean();
+    } catch {
+      workoutPlan = null;
     }
   }
 
-  if (!workoutPlan && dbUser?._id) {
-    workoutPlan = await WorkoutPlanModel.findOne({
-      userId: dbUser._id,
-      isActive: true,
-    }).lean();
-  }
-
   if (workoutPlan) {
-    const workoutProgram = await WorkoutProgramModel.findOne({
-      planId: workoutPlan._id,
-    }).lean();
+    try {
+      const workoutProgram = await WorkoutProgramModel.findOne({
+        planId: workoutPlan._id,
+      }).lean();
 
-    if (
-      workoutProgram &&
-      Array.isArray(workoutProgram.programs) &&
-      workoutProgram.programs.length > 0
-    ) {
-      const sortedPrograms = [...workoutProgram.programs].sort((a, b) => {
-        const orderA = weekOrder[a.day?.trim() || ""] ?? 99;
-        const orderB = weekOrder[b.day?.trim() || ""] ?? 99;
-        return orderA - orderB;
-      });
+      if (
+        workoutProgram &&
+        Array.isArray(workoutProgram.programs) &&
+        workoutProgram.programs.length > 0
+      ) {
+        const sortedPrograms = [...workoutProgram.programs].sort((a, b) => {
+          const orderA = weekOrder[a.day?.trim() || ""] ?? 99;
+          const orderB = weekOrder[b.day?.trim() || ""] ?? 99;
+          return orderA - orderB;
+        });
 
-      workoutDaysProps = sortedPrograms.map((p) => {
-        const exercises = p.exercises || [];
-        const totalSets = exercises.reduce(
-          (sum: number, ex: { sets?: number }) => sum + (ex.sets || 0),
-          0
-        );
-        const isComplete =
-          exercises.length > 0 &&
-          exercises.every((ex: { isComplete?: boolean }) => !!ex.isComplete);
-        return {
-          day: p.day || "",
-          type: p.muscleGroup || "تمرین عمومی",
-          duration: `${Math.max(exercises.length * 10, 20)} دقیقه`,
-          done: isComplete,
-          sets: totalSets,
-        };
-      });
+        workoutDaysProps = sortedPrograms.map((p) => {
+          const exercises = p.exercises || [];
+          const totalSets = exercises.reduce(
+            (sum: number, ex: { sets?: number }) => sum + (ex.sets || 0),
+            0,
+          );
+          const isComplete =
+            exercises.length > 0 &&
+            exercises.every((ex: { isComplete?: boolean }) => !!ex.isComplete);
+          return {
+            day: p.day || "",
+            type: p.muscleGroup || "تمرین عمومی",
+            duration: `${Math.max(exercises.length * 10, 20)} دقیقه`,
+            done: isComplete,
+            sets: totalSets,
+          };
+        });
+      }
+    } catch {
+      workoutDaysProps = [];
     }
   }
 

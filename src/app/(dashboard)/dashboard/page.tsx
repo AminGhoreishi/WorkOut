@@ -18,30 +18,28 @@ const registerPageModels = () => {
 
 export default async function Page() {
   await connection();
-  registerModels();
-  registerPageModels();
-
-  try {
-    await dbConnect();
-  } catch {
-    redirect("/login");
-  }
 
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.id) {
     redirect("/login");
   }
 
+  registerModels();
+  registerPageModels();
+
+  await dbConnect();
+
   const userId = session.user.id;
 
-  const [dbUser, activeSubscriptionDoc, dbTickets, dbWishlist] =
-    await Promise.all([
+  const [dbUserRes, activeSubscriptionRes, dbTicketsRes, dbWishlistRes] =
+    await Promise.allSettled([
       UserModel.findById(userId).lean(),
       SubscriptionModel.findOne({
         userId,
         status: { $in: ["active", "trial"] },
         endsAt: { $gt: new Date() },
       })
+        .sort({ endsAt: -1, createdAt: -1 })
         .populate("packageId")
         .populate("coachId")
         .lean(),
@@ -49,12 +47,33 @@ export default async function Page() {
         .sort({ updatedAt: -1 })
         .limit(3)
         .lean(),
-      WishModel.find({ userId }).populate("blogId").lean(),
+      WishModel.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .populate({
+          path: "blogId",
+          select: "title slug image category views",
+        })
+        .lean(),
     ]);
 
+  if (dbUserRes.status === "rejected") {
+    throw new Error("خطا در برقراری ارتباط با سرور پایگاه داده");
+  }
+
+  const dbUser = dbUserRes.value;
   if (!dbUser) {
     redirect("/login");
   }
+
+  const activeSubscriptionDoc =
+    activeSubscriptionRes.status === "fulfilled"
+      ? activeSubscriptionRes.value
+      : null;
+  const dbTickets =
+    dbTicketsRes.status === "fulfilled" ? dbTicketsRes.value : [];
+  const dbWishlist =
+    dbWishlistRes.status === "fulfilled" ? dbWishlistRes.value : [];
 
   const {
     userProps,
@@ -66,7 +85,7 @@ export default async function Page() {
     dbUser,
     activeSubscriptionDoc,
     dbTickets,
-    dbWishlist
+    dbWishlist,
   );
 
   return (
