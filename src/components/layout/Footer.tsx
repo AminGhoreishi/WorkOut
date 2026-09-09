@@ -1,7 +1,11 @@
-import { BsInstagram, BsChevronLeft, BsHeadset } from "react-icons/bs";
+import {
+  BsInstagram,
+  BsTelegram,
+  BsChevronLeft,
+  BsHeadset,
+} from "react-icons/bs";
 import Link from "next/link";
 import Image from "next/image";
-import { FiMessageCircle } from "react-icons/fi";
 import { CgMail } from "react-icons/cg";
 
 export default function Footer() {
@@ -41,11 +45,13 @@ export default function Footer() {
                 <BsInstagram className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
               </a>
               <a
-                href="#"
+                href="https://t.me/Starfitaaa"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="تلگرام استارفیت"
                 className="w-10 h-10 bg-neutral-900/90 hover:bg-gradient-to-tr hover:from-amber-500 hover:to-yellow-400 border border-neutral-800 hover:border-amber-400/50 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(234,179,8,0.35)] hover:-translate-y-1 group"
               >
-                <FiMessageCircle className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
+                <BsTelegram className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
               </a>
               <a
                 href="#"
@@ -121,7 +127,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <Link
-                      href="/dashboard/workouts"
+                      href="/dashboard/workout"
                       className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5 group"
                     >
                       <BsChevronLeft className="w-3 h-3 text-amber-500/50 group-hover:text-amber-400 group-hover:-translate-x-1 transition-all" />

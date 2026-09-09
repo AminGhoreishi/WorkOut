@@ -17,10 +17,10 @@ export const getHomeArticles = unstable_cache(
     try {
       await dbConnect();
       const latestBlogs = await BlogModel.find({ status: "published" })
-        .select("title slug excerpt image category content authorId createdAt")
+        .select("title slug excerpt image category authorId createdAt")
         .sort({ createdAt: -1 })
         .limit(3)
-        .populate("authorId")
+        .populate("authorId", "fullName username avatar")
         .lean();
 
       return latestBlogs.map((blog: any) => {
@@ -32,16 +32,14 @@ export const getHomeArticles = unstable_cache(
           day: "numeric",
         }).format(new Date(blog.createdAt));
 
-        const wordCount = blog.content ? blog.content.split(/\s+/).length : 0;
-        const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+        const readingTime = 5;
 
         return {
           id: blog._id.toString(),
           title: blog.title,
           slug: blog.slug,
           excerpt:
-            blog.excerpt ||
-            (blog.content ? blog.content.substring(0, 100) + "..." : ""),
+            blog.excerpt || "مطالعه مقاله ورزشی و راهنمای تخصصی در استارفیت",
           image: blog.image || "",
           category: blog.category,
           readingTime: `${readingTime} دقیقه مطالعه`,

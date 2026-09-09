@@ -10,7 +10,7 @@ export default function LatestArticles() {
     <section className="relative py-10 sm:py-12 md:py-14 lg:py-16 bg-neutral-950/80 font-danaMed">
       <div className="container mx-auto">
         <ScrollReveal direction="down" duration={0.6}>
-          <div className="flex justify-between items-end mb-8 sm:mb-10 md:mb-12">
+          <div className="flex flex-wrap sm:flex-nowrap justify-between items-start sm:items-end gap-4 mb-8 sm:mb-10 md:mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-morabbaReg">
                 جدیدترین{" "}
