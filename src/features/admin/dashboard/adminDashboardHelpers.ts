@@ -1,4 +1,4 @@
-import type { StatusMapItem, RoleMapItem } from "@/types/admin";
+import type { StatusMapItem, RoleMapItem, AdminDashboardAdminProps } from "@/types/admin";
 
 export const gradients = [
   "from-amber-500/20 to-yellow-600/10 text-amber-300 border-amber-500/30",
@@ -34,3 +34,23 @@ export const roleMap: Record<string, RoleMapItem> = {
     bg: "bg-yellow-500/10 text-yellow-300 border border-yellow-500/30",
   },
 };
+
+export function extractDashboardStats([
+  usersRes,
+  blogsRes,
+  ticketsRes,
+  revenueRes,
+]: [
+  PromiseSettledResult<number>,
+  PromiseSettledResult<number>,
+  PromiseSettledResult<number>,
+  PromiseSettledResult<{ total: number }[]>,
+]): AdminDashboardAdminProps {
+  return {
+    usersCount: usersRes.status === "fulfilled" ? usersRes.value : 0,
+    publishedBlogsCount: blogsRes.status === "fulfilled" ? blogsRes.value : 0,
+    openTicketsCount: ticketsRes.status === "fulfilled" ? ticketsRes.value : 0,
+    monthlyIncome:
+      revenueRes.status === "fulfilled" ? revenueRes.value[0]?.total || 0 : 0,
+  };
+}
