@@ -84,11 +84,11 @@ export interface SubscriptionStats {
 }
 
 export interface SubscriptionStatsProps {
-  stats: SubscriptionStats;
+  stats?: SubscriptionStats | null;
 }
 
 export interface SubscriptionsManagementProps {
-  stats: SubscriptionStats;
+  initialStats?: SubscriptionStats;
 }
 
 export interface MealPlanModalProps {

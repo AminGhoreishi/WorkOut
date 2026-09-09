@@ -6,6 +6,8 @@ const formatNumber = (num: number) => {
 };
 
 export default function SubscriptionStats({ stats }: SubscriptionStatsProps) {
+  const isLoading = !stats;
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 font-danaMed">
       <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
@@ -14,7 +16,11 @@ export default function SubscriptionStats({ stats }: SubscriptionStatsProps) {
           <Users className="w-5 h-5 text-purple-400" />
         </div>
         <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
-          {formatNumber(stats.total)}
+          {isLoading ? (
+            <div className="h-7 w-14 bg-white/10 rounded animate-pulse" />
+          ) : (
+            formatNumber(stats.total)
+          )}
         </div>
       </div>
 
@@ -24,7 +30,11 @@ export default function SubscriptionStats({ stats }: SubscriptionStatsProps) {
           <Check className="w-5 h-5 text-emerald-400" />
         </div>
         <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
-          {formatNumber(stats.active)}
+          {isLoading ? (
+            <div className="h-7 w-14 bg-white/10 rounded animate-pulse" />
+          ) : (
+            formatNumber(stats.active)
+          )}
         </div>
       </div>
 
@@ -34,7 +44,11 @@ export default function SubscriptionStats({ stats }: SubscriptionStatsProps) {
           <Clock className="w-5 h-5 text-blue-400" />
         </div>
         <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
-          {formatNumber(stats.trial)}
+          {isLoading ? (
+            <div className="h-7 w-14 bg-white/10 rounded animate-pulse" />
+          ) : (
+            formatNumber(stats.trial)
+          )}
         </div>
       </div>
 
@@ -44,7 +58,11 @@ export default function SubscriptionStats({ stats }: SubscriptionStatsProps) {
           <X className="w-5 h-5 text-red-400" />
         </div>
         <div className="text-sm sm:text-3xl text-white font-bold font-morabbaReg ss02">
-          {formatNumber(stats.expired)}
+          {isLoading ? (
+            <div className="h-7 w-14 bg-white/10 rounded animate-pulse" />
+          ) : (
+            formatNumber(stats.expired)
+          )}
         </div>
       </div>
     </div>

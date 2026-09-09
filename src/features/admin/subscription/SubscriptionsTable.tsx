@@ -89,7 +89,11 @@ const SubscriptionsTable = forwardRef<SubscriptionsTableRef, SubscriptionsTableP
       }
     }, [error]);
 
- 
+    useEffect(() => {
+      if (data?.stats) {
+        onStatsUpdate?.(data.stats);
+      }
+    }, [data?.stats, onStatsUpdate]);
 
     const formatDate = (dateString?: string) => {
       if (!dateString) return "-";

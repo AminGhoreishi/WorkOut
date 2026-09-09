@@ -1,20 +1,15 @@
 "use client";
 
 import { useState, useRef } from "react";
-import type {
-  SubscriptionItem,
-  SubscriptionsTableRef,
-} from "@/types/workout";
-import type { SubscriptionsManagementProps } from "@/types/subscription";
+import type { SubscriptionItem, SubscriptionsTableRef } from "@/types/workout";
+import type { SubscriptionStats as SubscriptionStatsData } from "@/types/subscription";
 import SubscriptionsTable from "./SubscriptionsTable";
 import EditSubscriptionModal from "./EditSubscriptionModal";
 import SubscriptionStats from "./SubscriptionStats";
 
-export default function SubscriptionsManagement({
-  stats,
-}: SubscriptionsManagementProps) {
+export default function SubscriptionsManagement() {
   const tableRef = useRef<SubscriptionsTableRef>(null);
-
+  const [currentStats, setCurrentStats] = useState<SubscriptionStatsData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSubscription, setSelectedSubscription] =
     useState<SubscriptionItem | null>(null);
@@ -34,10 +29,11 @@ export default function SubscriptionsManagement({
           </p>
         </div>
 
-        <SubscriptionStats stats={stats} />
+        <SubscriptionStats stats={currentStats} />
 
         <SubscriptionsTable
           ref={tableRef}
+          onStatsUpdate={setCurrentStats}
           onEdit={(sub) => {
             setSelectedSubscription(sub);
             setShowEditModal(true);

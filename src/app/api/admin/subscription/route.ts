@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Subscription from "@/models/Subscription";
 import User from "@/models/User";
@@ -8,6 +10,18 @@ import mongoose from "mongoose";
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
+
+    const session = await getServerSession(authOptions);
+    if (
+      !session?.user?.id ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز. فقط مدیران و مربیان امکان دسترسی دارند." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || "1";
     const limit = searchParams.get("limit") || "10";
@@ -39,18 +53,38 @@ export async function GET(req: NextRequest) {
       query.userId = { $in: userIds };
     }
 
-    const subscriptions = await Subscription.find(query)
-      .populate("userId", "username fullName email phone avatar")
-      .populate("packageId", "name slug colorClass price")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit))
-      .lean();
+    const [
+      subscriptions,
+      total,
+      totalStats,
+      activeStats,
+      trialStats,
+      expiredStats,
+    ] = await Promise.all([
+      Subscription.find(query)
+        .populate("userId", "username fullName email phone avatar")
+        .populate("packageId", "name slug colorClass price")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Subscription.countDocuments(query),
+      Subscription.countDocuments({}),
+      Subscription.countDocuments({ status: "active" }),
+      Subscription.countDocuments({ status: "trial" }),
+      Subscription.countDocuments({ status: "expired" }),
+    ]);
 
-    const total = await Subscription.countDocuments(query);
     const totalPages = Math.ceil(total / Number(limit));
 
-    return NextResponse.json({ subscriptions, total, totalPages });
+    const stats = {
+      total: totalStats,
+      active: activeStats,
+      trial: trialStats,
+      expired: expiredStats,
+    };
+
+    return NextResponse.json({ subscriptions, total, totalPages, stats });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -59,13 +93,30 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
+
+    const session = await getServerSession(authOptions);
+    if (
+      !session?.user?.id ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز. فقط مدیران و مربیان امکان دسترسی دارند." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { userId, packageId, status, startsAt, endsAt } = body;
 
-    if (!userId || !packageId) {
+    if (
+      !userId ||
+      !packageId ||
+      !mongoose.Types.ObjectId.isValid(userId) ||
+      !mongoose.Types.ObjectId.isValid(packageId)
+    ) {
       return NextResponse.json(
-        { message: "کاربر و پکیج الزامی هستند" },
-        { status: 400 },
+        { message: "شناسه کاربر و پکیج معتبر الزامی هستند" },
+        { status: 400 }
       );
     }
 
@@ -77,7 +128,7 @@ export async function POST(req: NextRequest) {
       endsAt: endsAt
         ? new Date(endsAt)
         : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      orderId: new mongoose.Types.ObjectId(), // Generate dummy orderId for manual subscriptions
+      orderId: new mongoose.Types.ObjectId(),
     });
 
     return NextResponse.json({ subscription }, { status: 201 });
@@ -89,13 +140,25 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
+
+    const session = await getServerSession(authOptions);
+    if (
+      !session?.user?.id ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز. فقط مدیران و مربیان امکان دسترسی دارند." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { id, status, startsAt, endsAt, coachId } = body;
 
-    if (!id) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { message: "شناسه اشتراک الزامی است" },
-        { status: 400 },
+        { message: "شناسه اشتراک نامعتبر است" },
+        { status: 400 }
       );
     }
 
@@ -122,13 +185,25 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await dbConnect();
+
+    const session = await getServerSession(authOptions);
+    if (
+      !session?.user?.id ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { message: "دسترسی غیرمجاز. فقط مدیران و مربیان امکان دسترسی دارند." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!id) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { message: "شناسه اشتراک الزامی است" },
-        { status: 400 },
+        { message: "شناسه اشتراک نامعتبر است" },
+        { status: 400 }
       );
     }
 

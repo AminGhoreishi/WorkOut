@@ -57,6 +57,12 @@ export interface SubscriptionsApiResponse {
   subscriptions: SubscriptionItem[];
   total: number;
   totalPages: number;
+  stats?: {
+    total: number;
+    active: number;
+    trial: number;
+    expired: number;
+  };
 }
 
 export interface IWeeklyAdvice {
