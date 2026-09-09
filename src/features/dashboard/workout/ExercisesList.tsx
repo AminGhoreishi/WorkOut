@@ -300,7 +300,11 @@ export default function ExercisesList({
                     className="flex items-center gap-1.5 px-3 py-2 text-sm sm:text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-xl transition-all cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
-                    <span>ویدیو آموزش</span>
+                    <span>
+                      {exercise.videoId?.url && exercise.videoId2?.url
+                        ? "ویدیوهای آموزش"
+                        : "ویدیو آموزش"}
+                    </span>
                   </button>
                 )}
               </div>
@@ -387,14 +391,19 @@ export default function ExercisesList({
                           );
                           setOpenDropdownId(null);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${playingVideo === exercise._id
+                        className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                          playingVideo === exercise._id
                             ? "bg-amber-500/20 text-amber-300 font-bold"
                             : "text-neutral-300 hover:bg-white/5"
-                          }`}
+                        }`}
                       >
                         <div className="flex items-center gap-2">
                           <Play className="w-4 h-4 text-amber-400 fill-current" />
-                          <span>مشاهده ویدیو آموزش</span>
+                          <span>
+                            {exercise.videoId?.url && exercise.videoId2?.url
+                              ? "مشاهده ویدیوهای آموزش"
+                              : "مشاهده ویدیو آموزش"}
+                          </span>
                         </div>
                         {playingVideo === exercise._id && (
                           <span className="text-xs text-amber-400 font-bold">
@@ -411,19 +420,54 @@ export default function ExercisesList({
             {playingVideo === exercise._id &&
               (exercise.videoId?.url || exercise.videoId2?.url) && (
                 <div className="px-5 pb-5 border-t border-white/5 pt-4">
-                  <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center border border-amber-500/20 shadow-lg">
-                    <video
-                      src={
-                        exercise.videoId?.url || exercise.videoId2?.url || ""
-                      }
-                      controls
-                      poster={
-                        exercise.videoId?.thumbnailUrl ||
-                        exercise.videoId2?.thumbnailUrl ||
-                        ""
-                      }
-                      className="w-full h-full object-contain"
-                    />
+                  <div
+                    className={
+                      exercise.videoId?.url && exercise.videoId2?.url
+                        ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+                        : "w-full"
+                    }
+                  >
+                    {exercise.videoId?.url && (
+                      <div className="space-y-2">
+                        {exercise.videoId2?.url && (
+                          <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5 font-danaMed">
+                            <Play className="w-3 h-3 fill-current" />
+                            <span>
+                              {exercise.videoId.title || "زاویه اول"}
+                            </span>
+                          </div>
+                        )}
+                        <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center border border-amber-500/20 shadow-lg">
+                          <video
+                            src={exercise.videoId.url}
+                            controls
+                            poster={exercise.videoId.thumbnailUrl || ""}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {exercise.videoId2?.url && (
+                      <div className="space-y-2">
+                        {exercise.videoId?.url && (
+                          <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5 font-danaMed">
+                            <Play className="w-3 h-3 fill-current" />
+                            <span>
+                              {exercise.videoId2.title || "زاویه دوم"}
+                            </span>
+                          </div>
+                        )}
+                        <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center border border-amber-500/20 shadow-lg">
+                          <video
+                            src={exercise.videoId2.url}
+                            controls
+                            poster={exercise.videoId2.thumbnailUrl || ""}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
