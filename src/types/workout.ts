@@ -306,6 +306,11 @@ export interface ExercisesListProps {
   dayId?: string;
 }
 
+export interface UserWorkoutDataResult {
+  plan: WorkoutPlan | null;
+  workoutDays: DayItem[];
+}
+
 export interface WorkoutViewProps {
   subscription?: {
     packageId?: {
@@ -313,9 +318,11 @@ export interface WorkoutViewProps {
       name?: string;
       tagline?: string;
     };
-  };
+  } | null;
   userId?: string;
   hasFitnessProfile?: boolean;
+  initialPlan?: WorkoutPlan | null;
+  initialWorkoutDays?: DayItem[];
 }
 
 export interface NoWorkoutPlanProps {

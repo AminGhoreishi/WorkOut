@@ -18,14 +18,17 @@ function UserWorkoutDaysGrid({
             key={day._id}
             type="button"
             onClick={() => onSelectDayId(day._id)}
-            className={`flex flex-col items-center justify-center py-3.5 px-2 rounded-xl transition-all duration-200 border text-center cursor-pointer ${
+            title={day.muscleGroup || day.dayName}
+            className={`group shrink-0 min-w-[110px] sm:min-w-0 sm:w-full snap-start flex flex-col items-center justify-center py-3 px-2.5 rounded-xl transition-all duration-200 border text-center cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
               isActive
-                ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-lg"
-                : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-400 hover:text-white"
+                ? "bg-gradient-to-b from-amber-500/20 to-amber-500/10 border-amber-500 text-amber-300 font-bold shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/30"
+                : "bg-neutral-900/60 hover:bg-neutral-800/80 border-white/5 text-neutral-400 hover:text-white hover:border-white/10"
             }`}
           >
-            <span className="text-sm font-bold">{day.dayName}</span>
-            <span className="text-sm sm:text-[10px] mt-1 opacity-70 truncate max-w-full">
+            <span className="text-xs sm:text-sm font-bold tracking-tight">
+              {day.dayName}
+            </span>
+            <span className="text-[11px] sm:text-xs mt-1 opacity-80 truncate max-w-full block">
               {isRest ? "ریکاوری" : day.muscleGroup}
             </span>
           </button>

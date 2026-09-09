@@ -5,9 +5,10 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import registerModels from "@/lib/registerModels";
 import Subscription from "@/models/Subscription";
+import Fitnessprofile from "@/models/Fitnessprofile";
 import WorkoutView from "@/features/dashboard/workout/WorkoutView";
 import { connection } from "next/server";
-import Fitnessprofile from "@/models/Fitnessprofile";
+import { getUserWorkoutData } from "@/lib/workoutData";
 
 export const metadata: Metadata = {
   title: "برنامه تمرینی من",
@@ -31,11 +32,31 @@ export default async function UserWorkoutPage() {
     .populate("packageId", "tagline isActive name")
     .lean();
 
-  const hasFitnessProfile = Boolean(await Fitnessprofile.exists({ userId: session.user.id }));
+  const packageId = subscription?.packageId?._id
+    ? String(subscription.packageId._id)
+    : undefined;
+
+  const [hasFitnessProfileDoc, workoutData] = await Promise.all([
+    Fitnessprofile.exists({ userId: session.user.id }),
+    getUserWorkoutData(session.user.id, packageId),
+  ]);
+
+  console.log(workoutData);
+  
+
+  const hasFitnessProfile = Boolean(hasFitnessProfileDoc);
 
   const plainSubscription = subscription
     ? JSON.parse(JSON.stringify(subscription))
     : null;
 
-  return <WorkoutView subscription={plainSubscription} userId={session.user.id} hasFitnessProfile={hasFitnessProfile} />;
+  return (
+    <WorkoutView
+      subscription={plainSubscription}
+      userId={session.user.id}
+      hasFitnessProfile={hasFitnessProfile}
+      initialPlan={workoutData.plan}
+      initialWorkoutDays={workoutData.workoutDays}
+    />
+  );
 }
