@@ -5,6 +5,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { showAlert } from "@/utils/alert";
 import { formatToPersianWithCommas, parsePersianPrice } from "@/utils/price";
 import type { PackageFormData, PackageModalProps } from "@/types/package";
+import { getRandomPackageColorClass } from "./packageHelpers";
 
 export default function PackageModal({
   isOpen,
@@ -55,8 +56,11 @@ export default function PackageModal({
         ? formData.featuresText.split("\n").filter((f) => f.trim() !== "")
         : [];
 
+      const colorClass = editingPackage?.colorClass || getRandomPackageColorClass();
+
       const payload = {
         ...formData,
+        colorClass,
         features,
         price: {
           monthly: parsePersianPrice(formData.price.monthly),
@@ -96,28 +100,26 @@ export default function PackageModal({
 
   return (
     <div
-      onClick={handleCloseModal}
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-danaMed"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 font-danaMed"
       dir="rtl"
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-gradient-to-br from-neutral-900 via-neutral-850 to-neutral-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-gradient-to-br from-neutral-900 via-neutral-850 to-neutral-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[94vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col"
       >
-        <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/90 backdrop-blur-lg z-10">
-          <h2 className="text-2xl text-white font-bold font-morabbaReg">
+        <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-neutral-900/95 backdrop-blur-lg z-10 shrink-0">
+          <h2 className="text-xl sm:text-2xl text-white font-bold font-morabbaReg">
             {editingPackage ? "ویرایش پکیج" : "ایجاد پکیج جدید"}
           </h2>
           <button
             type="button"
             onClick={handleCloseModal}
-            className="text-white/60 hover:text-white transition-colors cursor-pointer text-xl"
+            className="text-white/60 hover:text-white transition-colors cursor-pointer text-xl p-1"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-4 sm:p-6 space-y-4">
           <div>
             <label className="block text-white mb-2 text-xs">نام پکیج</label>
             <input
@@ -193,7 +195,7 @@ export default function PackageModal({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-white mb-2 text-xs">آیکون پکیج</label>
               <input
@@ -201,15 +203,6 @@ export default function PackageModal({
                 placeholder="مثال: Package"
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
                 {...register("icon")}
-              />
-            </div>
-            <div>
-              <label className="block text-white mb-2 text-xs">کلاس رنگی</label>
-              <input
-                type="text"
-                placeholder="text-amber-400"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400 text-sm"
-                {...register("colorClass")}
               />
             </div>
             <div>
@@ -275,7 +268,7 @@ export default function PackageModal({
             </label>
           </div>
 
-          <div className="p-6 border-t border-white/10 flex gap-3 bg-neutral-900/90 -mx-6 -mb-6 sticky bottom-0 backdrop-blur-lg">
+          <div className="p-4 sm:p-6 border-t border-white/10 flex gap-3 bg-neutral-900/95 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 sticky bottom-0 backdrop-blur-lg shrink-0 mt-4">
             <button
               type="submit"
               disabled={isSubmitting}

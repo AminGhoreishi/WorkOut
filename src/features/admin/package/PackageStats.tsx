@@ -9,26 +9,34 @@ const PackageStats = memo(function PackageStats({
   formatNumber,
 }: PackageStatsProps) {
   const stats = useMemo<IPackageStats>(() => {
-    const totalUsers = packages.reduce(
-      (sum, pkg) => sum + (pkg.studentCount || 0),
-      0,
-    );
-    const totalRevenue = packages.reduce(
-      (sum, pkg) => sum + (pkg.price?.monthly || 0) * (pkg.studentCount || 0),
-      0,
-    );
-    const activeCount = packages.filter((p) => p.isActive).length;
-    const mostPopularPackage = packages.find((p) => p.isPopular) || packages[0];
+    const validPackages = Array.isArray(packages) ? packages.filter(Boolean) : [];
+
+    const totalUsers = validPackages.reduce((sum, pkg) => {
+      const count = Number(pkg.studentCount);
+      return sum + (Number.isFinite(count) ? count : 0);
+    }, 0);
+
+    const totalRevenue = validPackages.reduce((sum, pkg) => {
+      const price = Number(pkg.price?.monthly);
+      const count = Number(pkg.studentCount);
+      const safePrice = Number.isFinite(price) ? price : 0;
+      const safeCount = Number.isFinite(count) ? count : 0;
+      return sum + safePrice * safeCount;
+    }, 0);
+
+    const activeCount = validPackages.filter((p) => p.isActive).length;
+    const mostPopularPackage =
+      validPackages.find((p) => p.isPopular) || validPackages[0];
+
+    const popularCount = Number(mostPopularPackage?.studentCount);
 
     return {
-      totalCount: packages.length,
+      totalCount: validPackages.length,
       activeCount,
       totalUsers,
       totalRevenue,
-      mostPopularName: mostPopularPackage ? mostPopularPackage.name : "—",
-      mostPopularCount: mostPopularPackage
-        ? mostPopularPackage.studentCount || 0
-        : 0,
+      mostPopularName: mostPopularPackage?.name || "—",
+      mostPopularCount: Number.isFinite(popularCount) ? popularCount : 0,
     };
   }, [packages]);
 

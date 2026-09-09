@@ -38,8 +38,10 @@ export default function Footer() {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="#"
+                href="https://www.instagram.com/star.fit10?stkn=N2x3MDhzN3pvNDJq"
                 aria-label="اینستاگرام استارفیت"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-neutral-900/90 hover:bg-gradient-to-tr hover:from-amber-500 hover:to-yellow-400 border border-neutral-800 hover:border-amber-400/50 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(234,179,8,0.35)] hover:-translate-y-1 group"
               >
                 <BsInstagram className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
@@ -52,13 +54,6 @@ export default function Footer() {
                 className="w-10 h-10 bg-neutral-900/90 hover:bg-gradient-to-tr hover:from-amber-500 hover:to-yellow-400 border border-neutral-800 hover:border-amber-400/50 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(234,179,8,0.35)] hover:-translate-y-1 group"
               >
                 <BsTelegram className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
-              </a>
-              <a
-                href="#"
-                aria-label="ایمیل پشتیبانی استارفیت"
-                className="w-10 h-10 bg-neutral-900/90 hover:bg-gradient-to-tr hover:from-amber-500 hover:to-yellow-400 border border-neutral-800 hover:border-amber-400/50 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(234,179,8,0.35)] hover:-translate-y-1 group"
-              >
-                <CgMail className="w-5 h-5 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
               </a>
             </div>
           </div>

@@ -54,7 +54,7 @@ export type PackageFormData = {
   tagline: string;
   description: string;
   icon: string;
-  colorClass: string;
+  colorClass?: string;
   tier: string;
   isPopular: boolean;
   isActive: boolean;
@@ -86,7 +86,7 @@ export interface PackageListProps {
   setShowCreateModal: (show: boolean) => void;
   reset: (values: PackageFormData) => void;
   formatNumber: (num: number) => string;
-  onDeleteSuccess?: () => void;
+  onDeleteSuccess?: (deletedId?: string) => void;
 }
 
 export interface PackageModalProps {

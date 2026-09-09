@@ -45,28 +45,60 @@ export default function PackagesManagement() {
     formState: { errors, isSubmitting },
   } = useForm<PackageFormData>();
 
+  const handleOpenCreateModal = () => {
+    setEditingPackage(null);
+    reset({
+      name: "",
+      slug: "",
+      tagline: "",
+      description: "",
+      icon: "",
+      colorClass: "",
+      tier: "basic",
+      isPopular: false,
+      isActive: true,
+      price: { monthly: "" },
+      featuresText: "",
+    });
+    setShowCreateModal(true);
+  };
+
+  const handleDeleteSuccess = (deletedId?: string) => {
+    if (deletedId) {
+      mutate(
+        (current) => {
+          if (!current) return current;
+          return {
+            ...current,
+            packages: current.packages.filter((p) => p._id !== deletedId),
+          };
+        },
+        { revalidate: true }
+      );
+    } else {
+      mutate();
+    }
+  };
+
   return (
     <div
-      className="min-h-screen bg-gradient-to-br bg-black/30  md:p-8 font-danaMed"
+      className="min-h-screen bg-gradient-to-br bg-black/30 p-4 sm:p-6 md:p-8 font-danaMed"
       dir="rtl"
     >
-      <div className="container mx-auto pt-8">
+      <div className="container mx-auto pt-4 md:pt-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl mb-2 text-white font-morabbaReg font-bold">
+            <h1 className="text-2xl sm:text-3xl mb-2 text-white font-morabbaReg font-bold">
               مدیریت پکیج‌ها
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="text-white/60 text-xs sm:text-sm">
               مشاهده، ویرایش و مدیریت پکیج‌های اشتراک سیستم استار فیت
             </p>
           </div>
           <button
             type="button"
-            onClick={() => {
-              setEditingPackage(null);
-              setShowCreateModal(true);
-            }}
-            className="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-6 py-3 rounded-lg flex items-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all cursor-pointer text-sm"
+            onClick={handleOpenCreateModal}
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 font-bold px-6 py-3 rounded-lg flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all cursor-pointer text-sm"
           >
             <Plus className="w-5 h-5" />
             ایجاد پکیج جدید
@@ -83,7 +115,7 @@ export default function PackagesManagement() {
           setShowCreateModal={setShowCreateModal}
           reset={reset}
           formatNumber={formatNumber}
-          onDeleteSuccess={() => mutate()}
+          onDeleteSuccess={handleDeleteSuccess}
         />
 
         <PackageModal

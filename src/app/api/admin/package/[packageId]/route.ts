@@ -1,7 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
 import Package from "@/models/Package";
 import PackageFeature from "@/models/Packagefeature";
+import Subscription from "@/models/Subscription";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function PUT(
   req: NextRequest,
@@ -41,6 +43,10 @@ export async function PUT(
 
     const updatedFeatures = await PackageFeature.find({ packageId }).sort({ sortOrder: 1 });
 
+    revalidateTag("packages", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/packages");
+
     return NextResponse.json({
       success: true,
       package: {
@@ -65,17 +71,40 @@ export async function DELETE(
     const resolvedParams = await params;
     const packageId = resolvedParams.packageId;
 
-    const pkg = await Package.findByIdAndDelete(packageId);
+    const pkg = await Package.findById(packageId);
     if (!pkg) {
-      return NextResponse.json({ error: "Package not found" }, { status: 404 });
+      return NextResponse.json({ error: "پکیج یافت نشد" }, { status: 404 });
     }
 
+    const activeSubCount = await Subscription.countDocuments({
+      packageId,
+      status: { $in: ["trial", "active"] },
+    });
+
+    if ((pkg.studentCount && pkg.studentCount > 0) || activeSubCount > 0) {
+      return NextResponse.json(
+        {
+          error:
+            "این پکیج دارای کاربران دارای اشتراک فعال است و امکان حذف آن وجود ندارد. لطفاً پکیج را در وضعیت «غیرفعال» قرار دهید.",
+        },
+        { status: 400 }
+      );
+    }
+
+    await Package.findByIdAndDelete(packageId);
     await PackageFeature.deleteMany({ packageId });
 
-    return NextResponse.json({ success: true, message: "Package deleted successfully" });
+    revalidateTag("packages", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/packages");
+
+    return NextResponse.json({
+      success: true,
+      message: "پکیج با موفقیت حذف شد",
+    });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Failed to delete package" },
+      { error: error?.message || "خطا در حذف پکیج" },
       { status: 500 }
     );
   }

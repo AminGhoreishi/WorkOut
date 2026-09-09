@@ -42,3 +42,17 @@ export const getStatusBadge = (active: boolean) =>
       غیرفعال
     </span>
   );
+
+export const getRandomPackageColorClass = () => {
+  const colors = [
+    "text-amber-400",
+    "text-blue-400",
+    "text-purple-400",
+    "text-emerald-400",
+    "text-cyan-400",
+    "text-rose-400",
+    "text-orange-400",
+    "text-yellow-400",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};

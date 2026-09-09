@@ -2,12 +2,27 @@ import dbConnect from "@/lib/dbConnect";
 import Package from "@/models/Package";
 import PackageFeature from "@/models/Packagefeature";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     const data = await req.json();
     const { features, ...packageData } = data;
+
+    if (!packageData.colorClass) {
+      const colors = [
+        "text-amber-400",
+        "text-blue-400",
+        "text-purple-400",
+        "text-emerald-400",
+        "text-cyan-400",
+        "text-rose-400",
+        "text-orange-400",
+        "text-yellow-400",
+      ];
+      packageData.colorClass = colors[Math.floor(Math.random() * colors.length)];
+    }
 
     const pkg = await Package.create(packageData);
 
@@ -23,6 +38,10 @@ export async function POST(req: NextRequest) {
     }
 
     const createdFeatures = await PackageFeature.find({ packageId: pkg._id }).sort({ sortOrder: 1 });
+
+    revalidateTag("packages", { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/packages");
 
     return NextResponse.json({
       success: true,
