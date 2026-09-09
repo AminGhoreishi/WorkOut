@@ -3,12 +3,16 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
+import registerModels from "@/lib/registerModels";
 import Order from "@/models/Order";
 import AdminPayments from "@/features/admin/payments/AdminPayments";
-import type { AdminPaymentStats } from "@/types/admin-payments";
+import type {
+  AdminPaymentsApiResponse,
+  AdminPaymentStats,
+} from "@/types/admin-payments";
 
 export const metadata: Metadata = {
-  title: "مدیریت و تایید پرداخت‌ها",
+  title: "استار فیت | مدیریت و تایید پرداخت‌ها",
   description: "بررسی، تایید یا رد فیش‌های کارت به کارت کاربران در سیستم استار فیت",
 };
 
@@ -19,10 +23,18 @@ export default async function AdminPaymentsPage() {
     redirect("/login");
   }
 
+  registerModels();
   await dbConnect();
 
-  const [pendingCount, paidCount, failedCount, totalPaidAgg] =
+  const [orders, totalPending, pendingCount, paidCount, failedCount, totalPaidAgg] =
     await Promise.all([
+      Order.find({ status: "pending" })
+        .populate("userId", "fullName username email phone")
+        .populate("packageId", "name tagline")
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean(),
+      Order.countDocuments({ status: "pending" }),
       Order.countDocuments({ status: "pending" }),
       Order.countDocuments({ status: "paid" }),
       Order.countDocuments({ status: "failed" }),
@@ -33,6 +45,7 @@ export default async function AdminPaymentsPage() {
     ]);
 
   const totalAmount = totalPaidAgg[0]?.total || 0;
+  const totalPages = Math.ceil(totalPending / 10);
 
   const initialStats: AdminPaymentStats = {
     pendingCount,
@@ -41,5 +54,14 @@ export default async function AdminPaymentsPage() {
     totalAmount,
   };
 
-  return <AdminPayments initialStats={initialStats} />;
+  const initialData: AdminPaymentsApiResponse = {
+    orders: JSON.parse(JSON.stringify(orders)),
+    total: totalPending,
+    totalPages,
+    stats: initialStats,
+  };
+
+  return (
+    <AdminPayments initialData={initialData} initialStats={initialStats} />
+  );
 }

@@ -43,4 +43,26 @@ export interface AdminPaymentsApiResponse {
 
 export interface AdminPaymentsProps {
   initialStats?: AdminPaymentStats;
+  initialData?: AdminPaymentsApiResponse;
+}
+
+export interface PaymentActionMessage {
+  text: string;
+  type: "success" | "error";
+}
+
+export interface PaymentActionAlertProps {
+  message: PaymentActionMessage | null;
+  onClose: () => void;
+}
+
+export interface PaymentStatsProps {
+  stats: AdminPaymentStats;
+}
+
+export interface PaymentTableProps {
+  stats: AdminPaymentStats;
+  initialData?: AdminPaymentsApiResponse;
+  onStatsUpdate?: (stats: AdminPaymentStats) => void;
+  onActionMessage?: (message: PaymentActionMessage | null) => void;
 }
