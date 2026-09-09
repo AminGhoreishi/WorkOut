@@ -20,6 +20,7 @@ import type {
 } from "@/types/nutrition";
 import ManualFoodInput from "../ManualFoodInput";
 import { useForm, FormProvider } from "react-hook-form";
+import { parseFoodUnit, MANUAL_FOOD_UNITS } from "../nutritionHelpers";
 
 const foodFetcher = async (url: string): Promise<Food[]> => {
   const res = await fetch(url);
@@ -68,7 +69,8 @@ function AddFoodModal({
     defaultValues: {
       manualName: "",
       manualCalories: "",
-      foodQuantity: "100",
+      foodQuantity: "1",
+      manualUnit: "عدد",
       manualProtein: "",
       manualCarbs: "",
       manualFat: "",
@@ -93,16 +95,8 @@ function AddFoodModal({
   const handleSelectPreset = (food: Food) => {
     setSelectedPresetFood(food);
     setSearchQuery(food.name);
-    const unit = food.unit || "";
-    if (
-      unit.includes("عدد") ||
-      unit.includes("پیمانه") ||
-      unit.includes("سیخ")
-    ) {
-      setValue("foodQuantity", "1");
-    } else {
-      setValue("foodQuantity", "100");
-    }
+    const unitInfo = parseFoodUnit(food.unit);
+    setValue("foodQuantity", String(unitInfo.baseQty));
   };
 
   const handleSave = async (values: FoodFormValues) => {
@@ -110,17 +104,23 @@ function AddFoodModal({
 
     if (isManualInput) {
       if (!values.manualName || !values.manualCalories) return;
-      const qty = Math.max(0.1, parseFloat(values.foodQuantity) || 1);
-      const cals = (parseFloat(values.manualCalories) || 0) * qty;
-      const prot = (parseFloat(values.manualProtein) || 0) * qty;
-      const crbs = (parseFloat(values.manualCarbs) || 0) * qty;
-      const ft = (parseFloat(values.manualFat) || 0) * qty;
+      const unitVal = values.manualUnit || "عدد";
+      const unitConfig = MANUAL_FOOD_UNITS.find((u) => u.value === unitVal);
+      const baseQty = unitConfig?.baseQty || 1;
+      const minQty = unitConfig?.minQty || 0.1;
+      const qty = Math.max(minQty, parseFloat(values.foodQuantity) || baseQty);
+      const multiplier = baseQty > 0 ? qty / baseQty : 1;
+
+      const cals = (parseFloat(values.manualCalories) || 0) * multiplier;
+      const prot = (parseFloat(values.manualProtein) || 0) * multiplier;
+      const crbs = (parseFloat(values.manualCarbs) || 0) * multiplier;
+      const ft = (parseFloat(values.manualFat) || 0) * multiplier;
 
       newItem = {
         id: Date.now().toString(),
         name: values.manualName.trim(),
         quantity: qty,
-        unit: "واحد",
+        unit: unitVal,
         calories: Math.round(cals),
         protein: Math.round(prot * 10) / 10,
         carbs: Math.round(crbs * 10) / 10,
@@ -128,31 +128,16 @@ function AddFoodModal({
       };
     } else {
       if (!selectedPresetFood) return;
-      const qty = Math.max(0.1, parseFloat(values.foodQuantity) || 100);
-
-      let multiplier = 1;
-      let unitStr = "گرم";
-      const presetUnit = selectedPresetFood.unit || "";
-
-      if (presetUnit.includes("عدد")) {
-        multiplier = qty;
-        unitStr = "عدد";
-      } else if (presetUnit.includes("پیمانه")) {
-        multiplier = qty;
-        unitStr = "پیمانه";
-      } else if (presetUnit.includes("سیخ")) {
-        multiplier = qty;
-        unitStr = "سیخ";
-      } else {
-        multiplier = qty / 100;
-        unitStr = "گرم";
-      }
+      const unitInfo = parseFoodUnit(selectedPresetFood.unit);
+      const minQty = unitInfo.isWeight ? 1 : 0.1;
+      const qty = Math.max(minQty, parseFloat(values.foodQuantity) || unitInfo.baseQty);
+      const multiplier = unitInfo.baseQty > 0 ? qty / unitInfo.baseQty : 1;
 
       newItem = {
         id: Date.now().toString(),
         name: selectedPresetFood.name,
         quantity: qty,
-        unit: unitStr,
+        unit: unitInfo.unitLabel,
         calories: Math.round(selectedPresetFood.calories * multiplier),
         protein:
           Math.round((selectedPresetFood.protein || 0) * multiplier * 10) / 10,
@@ -179,6 +164,16 @@ function AddFoodModal({
         return type;
     }
   };
+
+  const selectedUnitInfo = useMemo(() => {
+    return parseFoodUnit(selectedPresetFood?.unit);
+  }, [selectedPresetFood?.unit]);
+
+  const watchedQuantity = watch("foodQuantity");
+  const currentQuantityNum = parseFloat(watchedQuantity) || 0;
+  const liveMultiplier =
+    selectedUnitInfo.baseQty > 0 ? currentQuantityNum / selectedUnitInfo.baseQty : 1;
+  const liveCalories = Math.round((selectedPresetFood?.calories || 0) * liveMultiplier);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -219,7 +214,13 @@ function AddFoodModal({
         <div className="grid grid-cols-2 gap-2 mb-4 p-1 bg-neutral-900 rounded-xl border border-amber-500/20">
           <button
             type="button"
-            onClick={() => setIsManualInput(false)}
+            onClick={() => {
+              setIsManualInput(false);
+              if (selectedPresetFood) {
+                const unitInfo = parseFoodUnit(selectedPresetFood.unit);
+                setValue("foodQuantity", String(unitInfo.baseQty));
+              }
+            }}
             className={`py-2 text-xs rounded-lg transition-all cursor-pointer font-bold ${
               !isManualInput
                 ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 shadow-md shadow-amber-500/20"
@@ -230,7 +231,16 @@ function AddFoodModal({
           </button>
           <button
             type="button"
-            onClick={() => setIsManualInput(true)}
+            onClick={() => {
+              setIsManualInput(true);
+              const currentUnit = watch("manualUnit") || "عدد";
+              const unitConfig = MANUAL_FOOD_UNITS.find((u) => u.value === currentUnit);
+              const currentQty = parseFloat(watch("foodQuantity"));
+              if (!currentQty || (currentUnit === "عدد" && currentQty > 50)) {
+                setValue("manualUnit", currentUnit);
+                setValue("foodQuantity", String(unitConfig?.baseQty || 1));
+              }
+            }}
             className={`py-2 text-xs rounded-lg transition-all cursor-pointer font-bold ${
               isManualInput
                 ? "bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-neutral-950 shadow-md shadow-amber-500/20"
@@ -293,27 +303,58 @@ function AddFoodModal({
                         {selectedPresetFood.name}
                       </span>
                       <span className="text-amber-400 text-xs bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 rounded-full font-bold">
-                        {selectedPresetFood.calories} کالری پایه
+                        {currentQuantityNum > 0
+                          ? `${liveCalories} کالری (${currentQuantityNum} ${selectedUnitInfo.unitLabel})`
+                          : `${selectedPresetFood.calories} کالری در ${selectedPresetFood.unit || "واحد"}`}
                       </span>
                     </div>
 
                     <div>
-                      <label className="block text-white/80 mb-2 text-xs">
-                        مقدار مصرفی (
-                        {(selectedPresetFood.unit || "").includes("عدد")
-                          ? "عدد"
-                          : (selectedPresetFood.unit || "").includes("پیمانه")
-                            ? "پیمانه"
-                            : (selectedPresetFood.unit || "").includes("سیخ")
-                              ? "سیخ"
-                              : "گرم"}
-                        ):
-                      </label>
-                      <input
-                        type="number"
-                        {...register("foodQuantity")}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm"
-                      />
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="text-white/80 text-xs">
+                          مقدار مصرفی ({selectedUnitInfo.unitLabel}):
+                        </label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const current = parseFloat(watch("foodQuantity")) || 0;
+                            const step = selectedUnitInfo.isWeight
+                              ? (selectedUnitInfo.baseQty >= 50 ? 25 : 5)
+                              : 1;
+                            const nextVal = Math.round((current + step) * 10) / 10;
+                            setValue("foodQuantity", String(nextVal));
+                          }}
+                          className="w-10 h-10 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/30 text-white flex items-center justify-center text-lg font-bold transition-all cursor-pointer select-none"
+                        >
+                          +
+                        </button>
+                        <input
+                          type="number"
+                          step="any"
+                          min="0.1"
+                          {...register("foodQuantity")}
+                          className="flex-1 text-center bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-amber-400 text-sm font-bold"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const current = parseFloat(watch("foodQuantity")) || 0;
+                            const step = selectedUnitInfo.isWeight
+                              ? (selectedUnitInfo.baseQty >= 50 ? 25 : 5)
+                              : 1;
+                            const minVal = selectedUnitInfo.isWeight
+                              ? 5
+                              : (selectedUnitInfo.baseQty <= 0.5 ? 0.25 : 0.5);
+                            const nextVal = Math.max(minVal, Math.round((current - step) * 10) / 10);
+                            setValue("foodQuantity", String(nextVal));
+                          }}
+                          className="w-10 h-10 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/30 text-white flex items-center justify-center text-lg font-bold transition-all cursor-pointer select-none"
+                        >
+                          -
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

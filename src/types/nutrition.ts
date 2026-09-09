@@ -214,10 +214,21 @@ export interface WaterTrackerProps {
   isLoading: boolean;
 }
 
+export interface ManualFoodUnitOption {
+  value: string;
+  label: string;
+  baseQty: number;
+  step: number;
+  minQty: number;
+  placeholderName?: string;
+  placeholderCal?: string;
+}
+
 export interface FoodFormValues {
   manualName: string;
   manualCalories: string;
   foodQuantity: string;
+  manualUnit?: string;
   manualProtein: string;
   manualCarbs: string;
   manualFat: string;
@@ -291,5 +302,11 @@ export interface UseNutritionActionsReturn {
     water: number,
     reqCalories?: number,
   ) => Promise<void>;
+}
+
+export interface FoodUnitInfo {
+  isWeight: boolean;
+  unitLabel: string;
+  baseQty: number;
 }
 
