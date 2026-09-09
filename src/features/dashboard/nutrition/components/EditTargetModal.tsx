@@ -62,7 +62,7 @@ const EditTargetModal: React.FC<EditTargetModalProps> = ({
       dir="rtl"
     >
       <div onClick={onClose} className="fixed inset-0 z-40 bg-black/80"></div>
-      <div className="bg-neutral-900 border z-50 border-amber-500/20 rounded-3xl w-full max-w-md p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div className="bg-neutral-900 border z-50 border-amber-500/20 rounded-3xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative max-h-[85dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         <button
           onClick={onClose}
           className="absolute top-4 left-4 p-1 rounded-lg bg-white/5 hover:bg-amber-500/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"

@@ -1,5 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import NutritionLog from "@/models/NutritionLog";
+import FitnessProfile from "@/models/Fitnessprofile";
+import { calculateNutritionTargets } from "@/utils/fitnessProfile";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -45,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     const log = await NutritionLog.findOneAndUpdate(
       { userId, date },
-      updateFields,
-      { upsert: true, new: true, runValidators: true }
+      { $set: updateFields },
+      { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
     );
 
     return NextResponse.json(log, { status: 200 });
@@ -82,7 +84,66 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const log = await NutritionLog.findOne({ userId, date }, "-__v -updatedAt");
+    let log = await NutritionLog.findOne({ userId, date }, "-__v -updatedAt").lean();
+
+    if (!log) {
+      const latestLog = await NutritionLog.findOne(
+        { userId, targetCalories: { $gt: 0 } },
+        "targetCalories targetProtein targetCarbs targetFat targetWater"
+      )
+        .sort({ updatedAt: -1, date: -1 })
+        .lean();
+
+      let targetCalories = latestLog?.targetCalories;
+      let targetProtein = latestLog?.targetProtein;
+      let targetCarbs = latestLog?.targetCarbs;
+      let targetFat = latestLog?.targetFat;
+      let targetWater = latestLog?.targetWater;
+
+      if (!targetCalories) {
+        const profile = await FitnessProfile.findOne({ userId }).lean();
+        if (
+          profile &&
+          profile.weightKg &&
+          profile.heightCm &&
+          profile.ageYears
+        ) {
+          const calculated = calculateNutritionTargets(
+            Number(profile.weightKg),
+            Number(profile.heightCm),
+            Number(profile.ageYears),
+            profile.sessionsPerWeek || 4,
+            profile.goal || "muscle_gain",
+            profile.gender || "male"
+          );
+          targetCalories = calculated.targetCalories;
+          targetProtein = calculated.proteinGrams;
+          targetCarbs = calculated.carbsGrams;
+          targetFat = calculated.fatGrams;
+          targetWater = 2500;
+        }
+      }
+
+      if (targetCalories) {
+        log = {
+          userId,
+          date,
+          meals: {
+            breakfast: [],
+            lunch: [],
+            dinner: [],
+            snack: [],
+          },
+          waterIntake: 0,
+          targetCalories: targetCalories || 2000,
+          targetProtein: targetProtein || 120,
+          targetCarbs: targetCarbs || 220,
+          targetFat: targetFat || 65,
+          targetWater: targetWater || 2500,
+        };
+      }
+    }
+
     return NextResponse.json(log || null, { status: 200 });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : "خطای سرور در دریافت اطلاعات تغذیه.";

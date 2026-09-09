@@ -21,17 +21,19 @@ export default function useNutritionActions({
 }: UseNutritionActionsParams): UseNutritionActionsReturn {
   const handleDeleteFood = useCallback(
     async (mealType: keyof MealData, itemId: string) => {
-      const updatedMeal = (currentMeals[mealType] || []).filter(
-        (item) => item.id !== itemId,
-      );
-
-      const updatedMealsForDate = {
-        ...currentMeals,
-        [mealType]: updatedMeal,
-      };
-
       await mutate(
-        async () => {
+        async (currentCache) => {
+          const baseMeals = currentCache?.meals || currentMeals;
+          const currentList = baseMeals[mealType] || [];
+          const updatedMeal = currentList.filter((item) => {
+            const currentId = item.id || (item as { _id?: string })._id;
+            return currentId !== itemId;
+          });
+          const updatedMealsForDate = {
+            ...baseMeals,
+            [mealType]: updatedMeal,
+          };
+
           const response = await fetch("/api/nutrition", {
             method: "POST",
             headers: {
@@ -50,9 +52,18 @@ export default function useNutritionActions({
         {
           optimisticData: (current) => {
             if (!current) return null;
+            const baseMeals = current.meals || currentMeals;
+            const currentList = baseMeals[mealType] || [];
+            const updatedMeal = currentList.filter((item) => {
+              const currentId = item.id || (item as { _id?: string })._id;
+              return currentId !== itemId;
+            });
             return {
               ...current,
-              meals: updatedMealsForDate,
+              meals: {
+                ...baseMeals,
+                [mealType]: updatedMeal,
+              },
             };
           },
           rollbackOnError: true,
@@ -66,15 +77,16 @@ export default function useNutritionActions({
 
   const handleSaveFood = useCallback(
     async (newItem: FoodItem) => {
-      const updatedMeals = {
-        ...currentMeals,
-        [activeMealType]: [...(currentMeals[activeMealType] || []), newItem],
-      };
-
       setIsModalOpen(false);
 
       await mutate(
-        async () => {
+        async (currentCache) => {
+          const baseMeals = currentCache?.meals || currentMeals;
+          const updatedMeals = {
+            ...baseMeals,
+            [activeMealType]: [...(baseMeals[activeMealType] || []), newItem],
+          };
+
           const response = await fetch("/api/nutrition", {
             method: "POST",
             headers: {
@@ -92,6 +104,11 @@ export default function useNutritionActions({
         },
         {
           optimisticData: (current) => {
+            const baseMeals = current?.meals || currentMeals;
+            const updatedMeals = {
+              ...baseMeals,
+              [activeMealType]: [...(baseMeals[activeMealType] || []), newItem],
+            };
             return {
               _id: current?._id || "",
               userId,

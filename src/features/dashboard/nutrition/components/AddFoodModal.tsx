@@ -52,7 +52,7 @@ function AddFoodModal({
 
   const searchFoodsKey =
     isOpen && debouncedSearchQuery.trim()
-      ? `/api/food?search=${encodeURIComponent(debouncedSearchQuery)}&isAddModal=true&type=${activeMealType}`
+      ? `/api/food?search=${encodeURIComponent(debouncedSearchQuery)}&isAddModal=true`
       : null;
   const { data: searchResultsData, isLoading: isSearching } = useSWR<Food[]>(
     searchFoodsKey,
@@ -185,7 +185,7 @@ function AddFoodModal({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="bg-neutral-950 border border-amber-500/20 rounded-3xl w-full max-w-lg p-6 shadow-2xl shadow-amber-500/10 font-danaMed gap-0"
+        className="bg-neutral-950 border border-amber-500/20 rounded-3xl w-full max-w-lg p-5 sm:p-6 shadow-2xl shadow-amber-500/10 font-danaMed gap-0 max-h-[85dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain pb-[max(1.25rem,env(safe-area-inset-bottom))]"
         dir="rtl"
       >
         <DialogHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/10 space-y-0 text-right mb-4">

@@ -190,6 +190,8 @@ export interface NutritionCalorieStatsProps {
   caloriesRemaining: number;
   calPercent: number;
   targetsLoaded: boolean;
+  isOverCalorie?: boolean;
+  caloriesSurplus?: number;
 }
 
 export interface NutritionCalorieHeaderProps {
@@ -310,3 +312,52 @@ export interface FoodUnitInfo {
   baseQty: number;
 }
 
+export interface FitnessProfileNutritionCardProps {
+  profile: import("./fitness-profile").FitnessProfile | null | undefined;
+  isLoading: boolean;
+  calculatedCalories?: number | null;
+}
+
+export interface DailyTotals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+export interface CalculatedNutritionTargets {
+  bmr: number;
+  tdee: number;
+  targetCalories: number;
+  surplusOrDeficit: number;
+  proteinGrams: number;
+  proteinKcal: number;
+  fatGrams: number;
+  fatKcal: number;
+  carbsGrams: number;
+  carbsKcal: number;
+  proteinPercent: number;
+  fatPercent: number;
+  carbsPercent: number;
+}
+
+export interface UseNutritionCalculationsParams {
+  logData: NutritionLog | null | undefined;
+  profile: import("./fitness-profile").FitnessProfile | null | undefined;
+  isLoadingMeals: boolean;
+}
+
+export interface UseNutritionCalculationsReturn {
+  targetCalories: number;
+  targetMacros: TargetMacros;
+  targetWater: number;
+  currentMeals: MealData;
+  currentWater: number;
+  targetsLoaded: boolean;
+  dailyTotals: DailyTotals;
+  isOverCalorie: boolean;
+  caloriesSurplus: number;
+  caloriesRemaining: number;
+  calPercent: number;
+  calculatedNutrition: CalculatedNutritionTargets | null;
+}

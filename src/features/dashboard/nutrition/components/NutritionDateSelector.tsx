@@ -10,12 +10,12 @@ function NutritionDateSelector({
 }: NutritionDateSelectorProps) {
   const changeDate = (direction: "next" | "prev") => {
     const [year, month, day] = selectedDate.split("-").map(Number);
-    const date = new Date(year, month - 1, day);
-    date.setDate(date.getDate() + (direction === "next" ? 1 : -1));
+    const date = new Date(Date.UTC(year, month - 1, day));
+    date.setUTCDate(date.getUTCDate() + (direction === "next" ? 1 : -1));
 
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
+    const y = date.getUTCFullYear();
+    const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const d = String(date.getUTCDate()).padStart(2, "0");
     onDateChange(`${y}-${m}-${d}`);
   };
 

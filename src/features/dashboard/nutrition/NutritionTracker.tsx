@@ -1,19 +1,18 @@
 "use client";
 
-import { useState, useMemo, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition } from "react";
 import useSWR from "swr";
 import {
   Salad,
   Utensils,
 } from "lucide-react";
 import type {
-  FoodItem,
   MealData,
-  MealItem,
   NutritionLog,
   NutritionTrackerProps,
   NutritionApiError,
 } from "@/types/nutrition";
+import type { FitnessProfileApiResponse } from "@/types/fitness-profile";
 import WaterTracker from "./components/WaterTracker";
 import AddFoodModal from "./components/AddFoodModal";
 import EditTargetModal from "./components/EditTargetModal";
@@ -23,7 +22,10 @@ import NutritionMacrosCard from "./components/NutritionMacrosCard";
 import NutritionCalorieStats from "./components/NutritionCalorieStats";
 import NutritionCalorieHeader from "./NutritionCalorieHeader";
 import NutritionError from "./components/NutritionError";
+import FitnessProfileNutritionCard from "./components/FitnessProfileNutritionCard";
 import useNutritionActions from "@/hooks/useNutritionActions";
+import useMidnightDateSync from "@/hooks/useMidnightDateSync";
+import useNutritionCalculations from "@/hooks/useNutritionCalculations";
 import { getLocalDateString } from "@/utils/date";
 
 const fetcher = async (url: string): Promise<NutritionLog | null> => {
@@ -39,6 +41,14 @@ const fetcher = async (url: string): Promise<NutritionLog | null> => {
   return res.json();
 };
 
+const profileFetcher = async (
+  url: string,
+): Promise<FitnessProfileApiResponse> => {
+  const res = await fetch(url);
+  if (!res.ok) return {};
+  return res.json();
+};
+
 export default function NutritionTracker({ userId }: NutritionTrackerProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
     getLocalDateString(0),
@@ -50,6 +60,8 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
       setSelectedDate(newDate);
     });
   }, []);
+
+  useMidnightDateSync(setSelectedDate);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMealType, setActiveMealType] =
@@ -71,88 +83,32 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
     },
   );
 
-  if (error) {
-    return (
-      <NutritionError
-        message={error.message}
-        isUnauthorized={error.status === 401}
-        onRetry={() => mutate()}
-      />
+  const { data: profileData, isLoading: isLoadingProfile } =
+    useSWR<FitnessProfileApiResponse>(
+      "/api/user/fitness-profile",
+      profileFetcher,
+      { revalidateOnFocus: false },
     );
-  }
 
-  const targetCalories = logData?.targetCalories ?? 0;
-  const targetMacros = useMemo(
-    () => ({
-      protein: logData?.targetProtein ?? 140,
-      carbs: logData?.targetCarbs ?? 240,
-      fat: logData?.targetFat ?? 70,
-    }),
-    [logData?.targetProtein, logData?.targetCarbs, logData?.targetFat],
-  );
-  const targetWater = logData?.targetWater ?? 2500;
+  const profile = profileData?.profile;
 
-  const currentMeals = useMemo<MealData>(() => {
-    if (!logData || !logData.meals) {
-      return {
-        breakfast: [],
-        lunch: [],
-        dinner: [],
-        snack: [],
-      };
-    }
-
-    const mapItems = (items: MealItem[] = []): FoodItem[] =>
-      items.map((item, idx) => ({
-        id: item.id || item._id || `item-${idx}`,
-        name: item.name || "",
-        quantity: item.quantity || 1,
-        unit: item.unit || "واحد",
-        calories: item.calories || 0,
-        protein: item.protein || 0,
-        carbs: item.carbs || 0,
-        fat: item.fat || 0,
-      }));
-
-    return {
-      breakfast: mapItems(logData.meals.breakfast),
-      lunch: mapItems(logData.meals.lunch),
-      dinner: mapItems(logData.meals.dinner),
-      snack: mapItems(logData.meals.snack),
-    };
-  }, [logData]);
-
-  const currentWater = logData?.waterIntake ?? 0;
-  const targetsLoaded = !isLoadingMeals;
-
-  const dailyTotals = useMemo(() => {
-    let calories = 0;
-    let protein = 0;
-    let carbs = 0;
-    let fat = 0;
-
-    Object.values(currentMeals).forEach((mealItems) => {
-      (mealItems || []).forEach((item: FoodItem) => {
-        calories += item.calories || 0;
-        protein += item.protein || 0;
-        carbs += item.carbs || 0;
-        fat += item.fat || 0;
-      });
-    });
-
-    return {
-      calories: Math.round(calories),
-      protein: Math.round(protein * 10) / 10,
-      carbs: Math.round(carbs * 10) / 10,
-      fat: Math.round(fat * 10) / 10,
-    };
-  }, [currentMeals]);
-
-  const caloriesRemaining = Math.max(0, targetCalories - dailyTotals.calories);
-  const calPercent =
-    targetCalories > 0
-      ? Math.min(100, Math.round((dailyTotals.calories / targetCalories) * 100))
-      : 0;
+  const {
+    targetCalories,
+    targetMacros,
+    targetWater,
+    currentMeals,
+    currentWater,
+    targetsLoaded,
+    dailyTotals,
+    isOverCalorie,
+    caloriesSurplus,
+    caloriesRemaining,
+    calPercent,
+  } = useNutritionCalculations({
+    logData,
+    profile,
+    isLoadingMeals,
+  });
 
   const {
     handleDeleteFood,
@@ -208,53 +164,74 @@ export default function NutritionTracker({ userId }: NutritionTrackerProps) {
         </div>
 
         <div className={`transition-opacity duration-200 ${isPendingDate ? "opacity-60" : "opacity-100"}`}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-            <div className="lg:col-span-8 bg-white/[0.03] border border-amber-500/15 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
-
-              <NutritionCalorieHeader
-                targetCalories={targetCalories}
-                targetsLoaded={targetsLoaded}
-                onEditTarget={() => setIsEditingTarget(true)}
+          {error ? (
+            <div className="mb-8">
+              <NutritionError
+                message={error.message}
+                isUnauthorized={error.status === 401}
+                onRetry={() => mutate()}
               />
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+                <div className="lg:col-span-8 bg-white/[0.03] border border-amber-500/15 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10" />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                <NutritionCalorieStats
-                  consumedCalories={dailyTotals.calories}
-                  caloriesRemaining={caloriesRemaining}
-                  calPercent={calPercent}
-                  targetsLoaded={targetsLoaded}
-                />
+                  <NutritionCalorieHeader
+                    targetCalories={targetCalories}
+                    targetsLoaded={targetsLoaded}
+                    onEditTarget={() => setIsEditingTarget(true)}
+                  />
 
-                <NutritionMacrosCard
-                  dailyTotals={dailyTotals}
-                  targetMacros={targetMacros}
-                  targetsLoaded={targetsLoaded}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <NutritionCalorieStats
+                      consumedCalories={dailyTotals.calories}
+                      caloriesRemaining={caloriesRemaining}
+                      calPercent={calPercent}
+                      targetsLoaded={targetsLoaded}
+                      isOverCalorie={isOverCalorie}
+                      caloriesSurplus={caloriesSurplus}
+                    />
+
+                    <NutritionMacrosCard
+                      dailyTotals={dailyTotals}
+                      targetMacros={targetMacros}
+                      targetsLoaded={targetsLoaded}
+                    />
+                  </div>
+                </div>
+
+                <WaterTracker
+                  selectedDate={selectedDate}
+                  targetWater={targetWater}
+                  userId={userId}
+                  waterIntake={currentWater}
+                  onWaterChange={handleWaterChange}
+                  isLoading={isLoadingMeals}
                 />
               </div>
-            </div>
 
-            <WaterTracker
-              selectedDate={selectedDate}
-              targetWater={targetWater}
-              userId={userId}
-              waterIntake={currentWater}
-              onWaterChange={handleWaterChange}
-              isLoading={isLoadingMeals}
+              <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2 font-morabbaReg">
+                <Utensils className="w-5 h-5 text-amber-400" />
+                وعده‌های غذایی امروز
+              </h3>
+
+              <MealsGrid
+                currentMeals={currentMeals}
+                isLoadingMeals={isLoadingMeals}
+                onDeleteFood={handleDeleteFood}
+                onAddFoodClick={handleAddFoodClick}
+              />
+            </>
+          )}
+
+          <div className="mt-8">
+            <FitnessProfileNutritionCard
+              profile={profile}
+              isLoading={isLoadingProfile}
             />
           </div>
-
-          <h3 className="text-lg sm:text-xl text-white font-bold mb-6 flex items-center gap-2 font-morabbaReg">
-            <Utensils className="w-5 h-5 text-amber-400" />
-            وعده‌های غذایی امروز
-          </h3>
-
-          <MealsGrid
-            currentMeals={currentMeals}
-            isLoadingMeals={isLoadingMeals}
-            onDeleteFood={handleDeleteFood}
-            onAddFoodClick={handleAddFoodClick}
-          />
         </div>
       </div>
 
