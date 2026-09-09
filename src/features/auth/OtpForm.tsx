@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BiDumbbell, BiArrowBack } from "react-icons/bi";
 import { BsShieldCheck, BsPencilSquare, BsArrowClockwise } from "react-icons/bs";
@@ -11,7 +11,7 @@ import type { AuthApiResponse } from "@/types/auth";
 
 const OTP_LENGTH = 5;
 
-function OtpFormContent() {
+export default function OtpForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -32,14 +32,12 @@ function OtpFormContent() {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // اعتبارسنجی شماره تماس ورودی
   useEffect(() => {
     if (!phone || !/^09\d{9}$/.test(phone)) {
       router.replace("/login");
     }
   }, [phone, router]);
 
-  // شمارنده معکوس ارسال مجدد
   useEffect(() => {
     if (timeLeft <= 0) return;
     const intervalId = setInterval(() => {
@@ -206,7 +204,7 @@ function OtpFormContent() {
 
   return (
     <div
-      className="min-h-screen bg-black font-danaMed flex items-center justify-center p-4 sm:p-6 relative overflow-hidden"
+      className="min-h-screen bg-black font-danaMed ss02 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden"
       dir="rtl"
     >
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
@@ -251,7 +249,7 @@ function OtpFormContent() {
             <p className="text-zinc-400 text-xs sm:text-sm">
               کد ۵ رقمی پیامک‌شده به شماره زیر را وارد کنید:
             </p>
-            <span className="inline-block mt-2 font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg text-sm sm:text-base dir-ltr">
+            <span className="inline-block mt-2 font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg text-sm sm:text-base dir-ltr ss02">
               {phone || "---"}
             </span>
           </div>
@@ -291,7 +289,7 @@ function OtpFormContent() {
                     onChange={(e) => handleDigitChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
-                    className="w-11 h-14 sm:w-13 sm:h-16 bg-zinc-900/80 border border-amber-500/25 rounded-2xl text-center text-amber-300 font-bold text-xl sm:text-2xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40 focus:scale-105 transition-all shadow-inner"
+                    className="w-11 h-14 sm:w-13 sm:h-16 bg-zinc-900/80 border border-amber-500/25 rounded-2xl text-center text-amber-300 font-bold text-xl sm:text-2xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40 focus:scale-105 transition-all shadow-inner ss02"
                   />
                 ))}
               </div>
@@ -301,7 +299,7 @@ function OtpFormContent() {
               {timeLeft > 0 ? (
                 <div className="flex items-center gap-1.5 text-zinc-400">
                   <span>ارسال مجدد کد تا</span>
-                  <span className="font-mono font-bold text-amber-400 bg-zinc-900 px-2 py-0.5 rounded-md border border-zinc-800">
+                  <span className="font-bold text-amber-400 bg-zinc-900 px-2 py-0.5 rounded-md border border-zinc-800 ss02">
                     {formatTime(timeLeft)}
                   </span>
                 </div>
@@ -342,19 +340,5 @@ function OtpFormContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function OtpForm() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-amber-400 font-danaMed text-xs sm:text-sm">
-          بارگذاری...
-        </div>
-      }
-    >
-      <OtpFormContent />
-    </Suspense>
   );
 }
