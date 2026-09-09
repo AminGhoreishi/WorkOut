@@ -4,6 +4,7 @@ import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -66,6 +67,9 @@ export async function POST(req: NextRequest) {
       achievement: achievement?.trim() || "",
       isVisible: true,
     });
+
+    revalidateTag("testimonials", { expire: 0 });
+    revalidatePath("/");
 
     return NextResponse.json(
       { success: true, testimonial: newTestimonial },

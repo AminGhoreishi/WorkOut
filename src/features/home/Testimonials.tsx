@@ -1,10 +1,20 @@
-import { getHomeTestimonials } from "@/lib/homeData";
+import { Suspense } from "react";
+import TestimonialsCardsSection from "./TestimonialsCardsSection";
+import TestimonialsCardsSkeleton from "./TestimonialsCardsSkeleton";
 import TestimonialsList from "./TestimonialsList";
 import type { TestimonialsProps } from "@/types/components";
 
-export default async function Testimonials({
+export default function Testimonials({
   testimonials,
 }: TestimonialsProps = {}) {
-  const data = testimonials || (await getHomeTestimonials());
-  return <TestimonialsList testimonials={data} />;
+  if (testimonials) {
+    return <TestimonialsList testimonials={testimonials} />;
+  }
+
+  return (
+    <Suspense fallback={<TestimonialsCardsSkeleton />}>
+      <TestimonialsCardsSection />
+    </Suspense>
+  );
 }
+

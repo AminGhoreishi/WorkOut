@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Testimonial from "@/models/Testimonial";
 import User from "@/models/User";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function GET(req: NextRequest) {
   try {
@@ -109,6 +110,9 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    revalidateTag("testimonials", { expire: 0 });
+    revalidatePath("/");
+
     return NextResponse.json(
       {
         success: true,
@@ -163,6 +167,9 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
+    revalidateTag("testimonials", { expire: 0 });
+    revalidatePath("/");
+
     return NextResponse.json(
       {
         success: true,
@@ -175,6 +182,38 @@ export async function PATCH(req: NextRequest) {
     const err = error as Error;
     return NextResponse.json(
       { success: false, message: err.message || "خطا در بروزرسانی وضعیت نظر" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (
+      !session ||
+      (session.user.role !== "admin" && session.user.role !== "coach")
+    ) {
+      return NextResponse.json(
+        { success: false, message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
+
+    revalidateTag("testimonials", { expire: 0 });
+    revalidatePath("/");
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "کش نظرات با موفقیت بروزرسانی شد",
+      },
+      { status: 200 }
+    );
+  } catch (error: unknown) {
+    const err = error as Error;
+    return NextResponse.json(
+      { success: false, message: err.message || "خطایی رخ داد" },
       { status: 500 }
     );
   }

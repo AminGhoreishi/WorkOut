@@ -1,5 +1,3 @@
-"use client";
-
 import { MessageSquareQuote } from "lucide-react";
 import AdminTestimonialsTable from "./AdminTestimonialsTable";
 
