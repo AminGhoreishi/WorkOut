@@ -170,6 +170,14 @@ const VideosManagement = forwardRef<VideosManagementRef, VideosManagementProps>(
                         alt={vid.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
+                    ) : vid.url ? (
+                      <video
+                        src={`${vid.url}#t=0.001`}
+                        preload="metadata"
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none"
+                      />
                     ) : (
                       <Film className="w-8 h-8 text-white/20" />
                     )}

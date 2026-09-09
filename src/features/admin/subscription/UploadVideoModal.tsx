@@ -1,21 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Loader2, Check } from "lucide-react";
 import type { UploadVideoModalProps } from "@/types/workout";
 import { showAlert } from "@/utils/alert";
+import { extractVideoFirstFrame } from "@/utils/video";
 
 export default function UploadVideoModal({
   onClose,
   onUploadSuccess,
 }: UploadVideoModalProps) {
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [thumbnailBlob, setThumbnailBlob] = useState<Blob | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [extractingThumbnail, setExtractingThumbnail] = useState(false);
   const [newVideoTitle, setNewVideoTitle] = useState("");
   const [newVideoDesc, setNewVideoDesc] = useState("");
   const [newVideoLevel, setNewVideoLevel] = useState("beginner");
   const [newVideoDuration, setNewVideoDuration] = useState("");
   const [newVideoTags, setNewVideoTags] = useState("");
   const [uploadingVideo, setUploadingVideo] = useState(false);
+
+  const handleFileChange = async (file: File | null) => {
+    setVideoFile(file);
+    if (!file) {
+      setThumbnailBlob(null);
+      setThumbnailPreview(null);
+      return;
+    }
+
+    setExtractingThumbnail(true);
+    try {
+      const result = await extractVideoFirstFrame(file);
+      setThumbnailBlob(result.thumbnailBlob);
+      setThumbnailPreview(result.previewUrl);
+      if (result.durationSec > 0) {
+        setNewVideoDuration(String(result.durationSec));
+      }
+    } catch {
+      setThumbnailBlob(null);
+      setThumbnailPreview(null);
+    } finally {
+      setExtractingThumbnail(false);
+    }
+  };
 
   const handleUploadVideo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +60,9 @@ export default function UploadVideoModal({
     try {
       const formData = new FormData();
       formData.append("videoFile", videoFile);
+      if (thumbnailBlob) {
+        formData.append("thumbnailFile", thumbnailBlob, "thumbnail.jpg");
+      }
       formData.append("title", newVideoTitle);
       formData.append("description", newVideoDesc);
       formData.append("level", newVideoLevel);
@@ -113,11 +145,32 @@ export default function UploadVideoModal({
                 type="file"
                 accept="video/*"
                 onChange={(e) =>
-                  setVideoFile(e.target.files?.[0] || null)
+                  handleFileChange(e.target.files?.[0] || null)
                 }
                 className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white text-sm sm:text-xs focus:outline-none focus:border-amber-400"
                 required
               />
+              {extractingThumbnail && (
+                <div className="flex items-center gap-2 text-xs text-amber-400 mt-2">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>در حال ساخت خودکار تامبنیل از فریم اول ویدیو...</span>
+                </div>
+              )}
+              {thumbnailPreview && !extractingThumbnail && (
+                <div className="relative aspect-video max-h-36 rounded-xl overflow-hidden border border-white/10 bg-black mt-2">
+                  <Image
+                    src={thumbnailPreview}
+                    alt="پیش‌نمایش تامبنیل"
+                    fill
+                    unoptimized
+                    className="object-cover"
+                  />
+                  <span className="absolute bottom-2 right-2 bg-black/80 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-md font-semibold flex items-center gap-1 z-10">
+                    <Check className="w-3 h-3" />
+                    تامبنیل خودکار از فریم اول ویدیو
+                  </span>
+                </div>
+              )}
             </div>
 
             <div>

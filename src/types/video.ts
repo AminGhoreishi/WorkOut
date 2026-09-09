@@ -12,3 +12,10 @@ export interface IVideo extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface VideoThumbnailResult {
+  thumbnailBlob: Blob;
+  previewUrl: string;
+  durationSec: number;
+}
+
