@@ -15,6 +15,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { mutate } from "swr";
 import type { MobileMenuProps } from "@/types/components";
 import { getMobileMenuItems } from "@/components/layout/admin/sidebarItems";
 
@@ -192,8 +193,9 @@ export default function MobileMenu({
               )}
 
               <button
-                onClick={() => {
+                onClick={async () => {
                   onClose();
+                  await mutate("user-session", null, false);
                   signOut({ redirect: true, callbackUrl: "/login" });
                 }}
                 className="flex items-center justify-between w-full bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-bold py-2.5 px-4 rounded-xl transition-all text-sm active:scale-[0.98] group"

@@ -9,7 +9,7 @@ import useSWR from "swr";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
 import HeaderAuthSkeleton from "./HeaderAuthSkeleton";
-import type { HeaderProps, HeaderSession } from "@/types/components";
+import type { HeaderProps } from "@/types/components";
 import { getSession } from "next-auth/react";
 
 export default function Header({
@@ -24,8 +24,7 @@ export default function Header({
     "user-session",
     () => getSession(),
     {
-      revalidateOnFocus: false,
-      dedupingInterval: 60000,
+      revalidateOnFocus: true,
     }
   );
 

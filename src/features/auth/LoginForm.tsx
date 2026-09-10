@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { BiDumbbell, BiUser, BiPhone } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { signIn } from "next-auth/react";
+import { mutate } from "swr";
 import { useRouter, useSearchParams } from "next/navigation";
 import type {
   LoginFormData,
@@ -115,6 +116,7 @@ function LoginFormContent() {
         return;
       }
 
+      await mutate("user-session");
       router.push(callbackUrl);
       router.refresh();
     } catch {

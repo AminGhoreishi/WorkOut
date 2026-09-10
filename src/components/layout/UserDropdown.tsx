@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { mutate } from "swr";
 import { BiUser, BiLogOut, BiCog, BiShieldAlt2 } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import Image from "next/image";
@@ -121,12 +122,13 @@ export default function UserDropdown({
 
       <div className="border-t border-amber-500/15 py-1.5">
         <button
-          onClick={() =>
+          onClick={async () => {
+            await mutate("user-session", null, false);
             signOut({
               redirect: true,
               callbackUrl: "/login",
-            })
-          }
+            });
+          }}
           className="flex items-center gap-3 px-4 py-2.5 text-red-400 hover:bg-red-500/10 transition-colors text-xs sm:text-sm font-medium w-full cursor-pointer"
         >
           <BiLogOut className="w-4 h-4" />

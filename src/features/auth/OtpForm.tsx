@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { BiDumbbell, BiArrowBack } from "react-icons/bi";
 import { BsShieldCheck, BsPencilSquare, BsArrowClockwise } from "react-icons/bs";
 import { signIn } from "next-auth/react";
+import { mutate } from "swr";
 import { toEnglishDigits } from "@/utils/numbers";
 import type { AuthApiResponse } from "@/types/auth";
 
@@ -89,6 +90,7 @@ export default function OtpForm() {
         return;
       }
 
+      await mutate("user-session");
       router.push(callbackUrl);
       router.refresh();
     } catch {
